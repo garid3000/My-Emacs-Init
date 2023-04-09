@@ -625,6 +625,7 @@
   "Lr"  '(revert-buffer-quick                   :which-key "(L)-(r)evert")
   "Lw"  '(consult-buffer-other-window           :which-key "(L)-(w)indow")
   "Lf"  '(consult-buffer-other-frame            :which-key "(L)-(f)rame")
+  "Le"  '(eval-buffer                           :which-key "(L)-(e)val")
   "Lb"  '(ibuffer                               :which-key "(L)-i(b)uffer")
   "Li"  '(ibuffer                               :which-key "(L)-(i)buffer")
   "Ln"  '(rename-buffer                         :which-key "(L)-re(n)ame")
