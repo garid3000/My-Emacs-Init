@@ -742,8 +742,6 @@
   "ri"  '(org-roam-node-insert                  :which-key "(r)oam-(i)nsert")
 
 
-  "zh" '(highlight-symbol-at-point              :which-key "(z)-(h)ighlight")
-  "zH" '(unhighlight-regexp                     :which-key "(z)-(H)ighlight-off")
 
   ;; "ora"  '((lambda () (interactive) TODO to test this
   ;; (org-id-get-create)
@@ -823,12 +821,17 @@
   "ce"  '(calc-embedded                                 :which-key "(c)alc-(e)mbedded")
   "cF"  '(full-calc                                     :which-key "(c)alc-(F)ull")
 
-  "ar"  '(align-regexp-untabify                         :which-key "(a)lign-(r)egexp")
+  "za"  '(align-regexp-untabify                          :which-key "(z)-reg-(a)lign")
+  "zr"  '(replace-regexp                                 :which-key "(z)-reg-(r)eplace")
+  "zh" '(highlight-symbol-at-point                       :which-key "(z)-(h)ighlight")
+  "zH" '(unhighlight-regexp                              :which-key "(z)-(H)ighlight-off")
 
   "q"   '(format-all-buffer                             :which-key "(q)-format-buffer")
   "gp"  '(hydra-garid_gtd_step1_is_actionable/body      :which-key "(g)pt-(p)rocessing")
   )
 #+end_src
+
+#+RESULTS:
 
 ** the other keybinding
 #+begin_src emacs-lisp
@@ -963,6 +966,8 @@
    '((eval setq org-download-image-dir
 	   (concat "./"
 		   (file-name-base buffer-file-name)))))
+ '(package-selected-packages
+   '(consult-eglot laas zoom zig-mode xelb writeroom-mode which-key vterm vertico-posframe use-package undo-fu typescript-mode tree-sitter-langs toc-org tmr svg-tag-mode sudo-utils sr-speedbar sqlite spray shrink-path selectric-mode scad-mode rust-mode ripgrep rg restart-emacs rainbow-delimiters pyvenv python-x python-mode prescient ppp popup-kill-ring popper pfuture ox-hugo org-web-tools org-tree-slide org-tanglesync org-sidebar org-present org-pomodoro org-noter-pdftools org-hyperscheduler org-fragtog org-edna org-download org-contrib org-contacts org-bullets org-auto-tangle org-agenda-property orderless olivetti ob-tmux ob-rust notmuch nord-theme no-littering multi-term mew matlab-mode mastodon marginalia macrostep latex-math-preview kind-icon keyfreq jupyter ivy-posframe ibuffer-sidebar hydra highlight-indentation hide-lines helpful gtags-mode gruvbox-theme graphviz-dot-mode grammarly go-translate go-mode gnuplot ggtags general geiser-mit format-all forge flyspell-lazy flymake-python-pyflakes flycheck-aspell evil-tex evil-terminal-cursor-changer evil-org evil-nerd-commenter evil-collection eterm-256color eshell-git-prompt eradio emms-player-simple-mpv embark-consult emacsql-sqlite emacs-everywhere elfeed-score eglot edwina dumb-jump dracula-theme dired-single dired-sidebar dired-open dired-hide-dotfiles desktop-environment deft darkroom csv-mode crux corfu-terminal corfu-doc consult-yasnippet consult-org-roam company-ctags company-box command-log-mode citar-org-roam citar-embark cfrs cdlatex bui browse-kill-ring bibtex-completion auto-package-update async-await arduino-mode all-the-icons-dired all-the-icons-completion agtags ace-window 2048-game))
  '(safe-local-variable-values
    '((eval setq org-download-image-dir
 	   (concat "./"
