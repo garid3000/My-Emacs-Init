@@ -695,6 +695,13 @@
   "od" '((lambda () (interactive) (org-deadline ""))        :which-key "(o-d)eadline")
 
 
+  "oft" '((lambda () (interactive) (consult-line "name tab"))    :which-key "(o-f)ind-(t)able")
+  "ofe" '((lambda () (interactive) (consult-line "name eq"))     :which-key "(o-f)ind-(e)q")
+  "off" '((lambda () (interactive) (consult-line "name fig"))    :which-key "(o-f)ind-(f)ig")
+  "ofd" '((lambda () (interactive) (consult-line "downloaded"))  :which-key "(o-f)ind-(d)ownload")
+  "ofn" '((lambda () (interactive) (consult-line "name"))        :which-key "(o-f)ind-(n)ame")
+  "ofs" '((lambda () (interactive) (consult-line "begin_src"))   :which-key "(o-f)ind-(s)ource")
+
   ;; "ost"  '((lambda () (interactive)
   ;;                     (org-set-tags-command) ; sets images size
   ;;                     )                                                                                      :which-key "afs")
