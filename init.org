@@ -27,6 +27,39 @@
   (package-install 'use-package))
 (eval-when-compile (require 'use-package))
 #+end_src
+* Vi Movement Related
+** vim-undo
+#+begin_src emacs-lisp
+  ;; Vim style undo not needed for emacs 28
+  (use-package undo-fu)
+#+end_src
+** evil
+#+begin_src emacs-lisp
+;; Vim Bindings
+(use-package evil
+  :demand t
+  :bind (("<escape>" . keyboard-escape-quit     )
+         ("M-j"      . evil-scroll-line-down    )
+         ("M-k"      . evil-scroll-line-up      )
+         ("M-d"      . evil-scroll-page-down    )
+         ("M-u"      . evil-scroll-page-up      ))
+  :init
+  ;; (setq evil-search-module 'evil-search)
+  (setq evil-want-keybinding	nil)
+  (setq evil-want-C-i-jump	nil)
+  ;; no vim insert bindings
+  (setq evil-undo-system 'undo-fu)
+  :config (evil-mode 1))
+#+end_src
+** evil-collection
+#+begin_src emacs-lisp
+  ;;; Vim Bindings Everywhere else
+  (use-package evil-collection
+    :after evil
+    :config
+    (setq evil-want-integration t)
+    (evil-collection-init))
+#+end_src
 * Theme & Colors
 ** Font
 #+begin_src emacs-lisp
@@ -79,54 +112,22 @@
   (global-hl-line-mode 1)
 #+end_src
 
-* Vi Movement Related
-** vim-undo
-#+begin_src emacs-lisp
-  ;; Vim style undo not needed for emacs 28
-  (use-package undo-fu)
-#+end_src
-** evil
-#+begin_src emacs-lisp
-;; Vim Bindings
-(use-package evil
-  :demand t
-  :bind (("<escape>" . keyboard-escape-quit     )
-         ("M-j"      . evil-scroll-line-down    )
-         ("M-k"      . evil-scroll-line-up      )
-         ("M-d"      . evil-scroll-page-down    )
-         ("M-u"      . evil-scroll-page-up      ))
-  :init
-  ;; (setq evil-search-module 'evil-search)
-  (setq evil-want-keybinding	nil)
-  (setq evil-want-C-i-jump	nil)
-  ;; no vim insert bindings
-  (setq evil-undo-system 'undo-fu)
-  :config (evil-mode 1))
-#+end_src
-** evil-collection
-#+begin_src emacs-lisp
-  ;;; Vim Bindings Everywhere else
-  (use-package evil-collection
-    :after evil
-    :config
-    (setq evil-want-integration t)
-    (evil-collection-init))
-#+end_src
-* M-x related
+* M-x related 
 ** vertico
 #+begin_src emacs-lisp
 (use-package vertico
   :ensure t
   :bind (:map vertico-map
-              ("C-j"   . vertico-next        )
-              ("C-k"   . vertico-previous    )
-              ("C-f"   . vertico-exit        )
-              ("C-g"   . vertico-grid-mode   )
-              ("C-h"   . vertico-grid-left   )
-              ("C-l"   . vertico-grid-right  )
-              ("C-u"   . vertico-scroll-up   )
-              ("C-d"   . vertico-scroll-down )
-              ("C-S-g" . vertico-last        ))
+              ("C-j"   . vertico-next        ) ("M-j"   . vertico-next        )
+              ("C-k"   . vertico-previous    ) ("M-k"   . vertico-previous    )
+              ("C-f"   . vertico-exit        ) ("M-f"   . vertico-exit        )
+              ("C-g"   . vertico-grid-mode   ) ("M-g"   . vertico-grid-mode   )
+              ("C-h"   . vertico-grid-left   ) ("M-h"   . vertico-grid-left   )
+              ("C-l"   . vertico-grid-right  ) ("M-l"   . vertico-grid-right  )
+              ("C-u"   . vertico-scroll-up   ) ("M-u"   . vertico-scroll-up   )
+              ("C-d"   . vertico-scroll-down ) ("M-d"   . vertico-scroll-down )
+              ("C-S-g" . vertico-last        ) ("M-S-g" . vertico-last        )
+              ("M-n"   . vertico-next        ) ("M-p"   . vertico-previous    ))
   :custom (vertico-cycle t)
   :init (vertico-mode))
 #+end_src
@@ -148,12 +149,15 @@
 #+end_src
 ** orderless
 #+begin_src emacs-lisp
-  (use-package orderless
-    :ensure t
-    :custom
-    (completion-styles '(orderless basic))
-    (completion-category-overrides
-     '((file (styles basic partial-completion)))))
+(use-package orderless
+  :ensure t
+  ;; :commands (orderless)
+  :custom
+  (completion-styles '(orderless basic))
+  ;; (completion-styles '(orderless flex))
+  ;;(completion-category-overrides
+   '((file (styles basic partial-completion)))
+  )
 #+end_src
 ** savehist
 #+begin_src emacs-lisp
@@ -439,11 +443,11 @@
 ** org-bullet
 #+begin_src emacs-lisp
 (use-package org-bullets
-    :after org
-    :hook (org-mode . org-bullets-mode)
-    :custom
-    (org-bullets-bullet-list
-     '("◉ " "○ " "● " "○ " "● " "○ " "● ")))
+  :after org
+  :hook (org-mode . org-bullets-mode)
+  :custom
+  (org-bullets-bullet-list
+   '("◉ " "○ " "● " "○ " "● " "○ " "● ")))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ;; Replace list hyphen with dot				    ;;
 ;; ;; (font-lock-add-keywords 'org-mode				    ;;
@@ -452,7 +456,40 @@
 ;; 	      (match-beginning 1) (match-end 1) "•"))))))	    ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 #+end_src
+** org-tree-slide
+#+begin_src emacs-lisp
+(use-package org-tree-slide)
+#+end_src
 * Development Environment / Programming
+** Corfu
+#+begin_src emacs-lisp
+;; corfu settings are taken from Gavin-Freeborn's (YT) configuraiton
+(use-package corfu
+  :custom
+  (corfu-cycle t)               ; allow cycling
+  (corfu-auto t)                ; enable auto completion
+  (corfu-auto-prefix 2)         ; enable auto completion
+  (corfu-auto-delay 0.0)        ; enabling auto completion
+  (corfu-quit-at-boundary 'seperator)
+  (corfu-echo-documentation 0.25)
+  (corfu-preview-current 'insert)
+  (corfu-preselect-first nil)
+  :bind ( :map corfu-map
+        ("M-SPC"        . corfu-insert-separator        )
+        ;; ("SPC"        . corfu-insert-separator        )
+        ;; ("*"            . corfu-insert-separator        )
+        ;("M-SPC" . (lambda () (interactive) (insert #x268b))) 
+        ("RET"          . nil                           )
+        ("TAB"          . corfu-next                    )
+        ([tab]          . corfu-next                    )
+        ("S-TAB"        . corfu-previous                )
+        ([backtab]      . corfu-previous                )
+        ("S-<return>"   . corfu-insert                  )
+        ("M-h"          . corfu-insert                  ))
+  :init
+  (global-corfu-mode)
+  (corfu-history-mode))
+#+end_src
 ** Yassnippets
 #+begin_src emacs-lisp
 (use-package yasnippet
@@ -493,6 +530,10 @@
 #+begin_src emacs-lisp
   ;; (use-package ripgrep)
   (use-package rg)
+#+end_src
+** parenthesis: (electric-pair-mode)
+#+begin_src emacs-lisp
+(electric-pair-mode 1)
 #+end_src
 * Garid
 ** sending current project to IP
@@ -535,10 +576,17 @@
 ** scripted el in emacs/garid
 #+begin_src emacs-lisp
 (add-to-list 'load-path (expand-file-name "~/.config/emacs/garid"))
+(add-to-list 'load-path (expand-file-name "~/.config/emacs/Emacs-TeQ"))
+
 (register-input-method
  "mongolian" "Mongolian" 'quail-use-package
  "MN-" "(Монгол) - Mongolian Keyboard Layout"
  "mongolian-input-method.el")
+
+(register-input-method
+ "TeQ-Math" "Emacs-Teq-Latex" 'quail-use-package
+ "TeQ-" "TeQ-Math input"
+ "Emacs-TeQ.el")
 
 (load "~/.config/emacs/garid/garids-abbrev-typos.el")	;; garid typos
 (load "~/.config/emacs/garid/garid-gtd.el")		;; garid typos
@@ -571,7 +619,17 @@
 
 #+RESULTS:
 : align-regexp
-
+** toging asldfkjasd
+#+begin_src emacs-lisp
+(defun toggle_input_method_mn_teq ()
+  (interactive)
+  (if (string= default-input-method nil )
+      (set-input-method "mongolian")
+    (if (string= default-input-method "TeQ-Math")
+	(set-input-method "mongolian")
+      (if (string= default-input-method "mongolian")
+	  (set-input-method "TeQ-Math")))))
+#+end_src
 * Keybinding
 ** Global keybinding:
 #+begin_src emacs-lisp
@@ -588,6 +646,7 @@
 (global-set-key (kbd "M-S") 'avy-goto-char-2)
 (global-set-key (kbd "M-s") 'avy-goto-char)
 (global-set-key (kbd "C-/") 'comment-line)
+(global-set-key (kbd "C-|") 'toggle_input_method_mn_teq)
 #+end_src
 ** general main
 #+begin_src emacs-lisp
@@ -622,31 +681,32 @@
 
   "ZQ"  '(kill-emacs                            :which-key "quit")
   "l"   '(consult-buffer                        :which-key "(l)ist-buffers")
-  "Lr"  '(revert-buffer-quick                   :which-key "(L)-(r)evert")
-  "Lw"  '(consult-buffer-other-window           :which-key "(L)-(w)indow")
-  "Lf"  '(consult-buffer-other-frame            :which-key "(L)-(f)rame")
-  "Le"  '(eval-buffer                           :which-key "(L)-(e)val")
-  "Lb"  '(ibuffer                               :which-key "(L)-i(b)uffer")
-  "Li"  '(ibuffer                               :which-key "(L)-(i)buffer")
-  "Ln"  '(rename-buffer                         :which-key "(L)-re(n)ame")
-  "Lp"  '(switch-to-prev-buffer                 :which-key "(L)-(p)rev")
-  "LP"  '(switch-to-next-buffer                 :which-key "(L)-(P)next")
-  "Ld"  '(crux-delete-file-and-buffer           :which-key "(L)-(d)delete")
-  "bn"  '(rename-buffer                         :which-key "(b)-(n)ame")
+  "Lr"  '(revert-buffer-quick                   :which-key "(L-r)evert")
+  "Lw"  '(consult-buffer-other-window           :which-key "(L-w)indow")
+  "Lf"  '(consult-buffer-other-frame            :which-key "(L-f)rame")
+  "Le"  '(eval-buffer                           :which-key "(L-e)val")
+  "Lb"  '(ibuffer                               :which-key "(L-(b)uffer")
+  "Li"  '(ibuffer                               :which-key "(L-i)buffer")
+  "Ln"  '(rename-buffer                         :which-key "(L-n)ame")
+  "Lp"  '(switch-to-prev-buffer                 :which-key "(L-p)rev")
+  "LP"  '(switch-to-next-buffer                 :which-key "(L-P)next")
+  "Ld"  '(crux-delete-file-and-buffer           :which-key "(L-d)delete")
+  "bn"  '(rename-buffer                         :which-key "(b-n)ame")
 
-  "cc"  '(lsp-bridge-diagnostic-jump-next       :which-key "adf")
-  "co"  '(consult-org-heading                   :which-key "(c)onsult-(o)rg")
-  "cm"  '(consult-imenu                         :which-key "(c)onsult-i(m)enu")
-  "cM"  '(consult-man                           :which-key "(c)onsult-(M)an")
-  "cr"  '(consult-ripgrep                       :which-key "(c)onsult-(r)ipgrep")
-  "cf"  '(consult-git-grep                      :which-key "(c)onsult-(f)gitgrep")
-  "cg"  '(consult-goto-line                     :which-key "(c)onsult-(g)oto-line")
-  "cp"  '(consult-project-buffer                :which-key "(c)onsult-(p)roject")
+  "ca"  '(calc                                  :which-key "(ca)lc")
+  "cc"  '(lsp-bridge-diagnostic-jump-next       :which-key "lsp-bridge-")
+  "co"  '(consult-org-heading                   :which-key "(c-o)rg")
+  "cm"  '(consult-imenu                         :which-key "(c-i(m)enu")
+  "cM"  '(consult-man                           :which-key "(c-M)an")
+  "cr"  '(consult-ripgrep                       :which-key "(c-r)ipgrep")
+  "cf"  '(consult-git-grep                      :which-key "(c-f)gitgrep")
+  "cg"  '(consult-goto-line                     :which-key "(c-g)oto-line")
+  "cp"  '(consult-project-buffer                :which-key "(c-p)roject")
 
   "bm"  '(consult-bookmark                      :which-key "(b)ook(m)ark-consult")
-  "bs"  '(bookmark-set                          :which-key "(b)ookmark-(s)et")
-  "bd"  '(bookmark-delete                       :which-key "(b)ookmark-(d)elete")
-  "bD"  '(bookmark-delete-all                   :which-key "(b)ookmark-(D)eletall")
+  "bs"  '(bookmark-set                          :which-key "(b)m-(s)et")
+  "bd"  '(bookmark-delete                       :which-key "(b)m-(d)elete")
+  "bD"  '(bookmark-delete-all                   :which-key "(b)m-(D)eletall")
 
   "mg"   '(magit-status                         :which-key "(m)a(g)it")
 
@@ -654,16 +714,16 @@
   "ws"  '(eww-search-words                      :which-key "(w)eb-(s)earch")
   ;; "wi"  '(evil-insert                        :which-key "(w)eb-(i)nsert"                  )
 
-  "pf"  '(project-find-file                     :which-key "(p)roj-(f)ile")
-  "pd"  '(project-find-dir                      :which-key "(p)roj-(d)ir")
-  "pc"  '(project-compile                       :which-key "(p)roj-(c)ompile")
-  "pe"  '(project-eshell                        :which-key "(p)roj-(e)shell")
-  "ps"  '(project-find-regexp                   :which-key "(p)roj-(s)find-regexp")
-  "pr"  '(project-query-replace-regexp          :which-key "(p)roj-(r)eplace")
-  "pk"  '(project-kill-buffers                  :which-key "(p)roj-(k)ill-buffers")
-  "pl"  '(consult-project-buffer                :which-key "(p)roj-(l)ist-buffers")
-  "pL"  '(project-list-buffers                  :which-key "(p)roj-(L)ist-buffers")
-  "pp"  '(gry/project-send                      :which-key "(p)roj-(p)send")
+  "pf"  '(project-find-file                     :which-key "(p-f)ile")
+  "pd"  '(project-find-dir                      :which-key "(p-d)ir")
+  "pc"  '(project-compile                       :which-key "(p-c)ompile")
+  "pe"  '(project-eshell                        :which-key "(p-e)shell")
+  "ps"  '(project-find-regexp                   :which-key "(p-s)find-regexp")
+  "pr"  '(project-query-replace-regexp          :which-key "(p-r)eplace")
+  "pk"  '(project-kill-buffers                  :which-key "(p-k)ill-buffers")
+  "pl"  '(consult-project-buffer                :which-key "(p-l)ist-buffers")
+  "pL"  '(project-list-buffers                  :which-key "(p-L)ist-buffers")
+  "pp"  '(gry/project-send                      :which-key "(p-p)send")
 
   "e"   '(eshell                                :which-key "(e)shell")
   "E"   '(elfeed                                :which-key "(E)lfeed")
@@ -678,7 +738,7 @@
   "oE"  '((lambda () (interactive) (find-file-other-frame "~/.config/emacs/init.el"))
           :which-key "(o)pen-(E)macs-init.el")
 
-  "om"  '(org-refile          :which-key "(o)-(m)ove-subtree")
+  "om"  '(org-refile          :which-key "(o-m)ove-subtree")
   ","   '(org-ctrl-c-ctrl-c   :which-key "C-c C-c")
   "<"   '(recompile           :which-key "recompile")
 
@@ -689,6 +749,7 @@
   "otd"  '((lambda () (interactive) (org-todo "DONE"))      :which-key "(o-t)odo-(d)one")
   "otc"  '((lambda () (interactive) (org-todo "CANCELLED")) :which-key "(o-t)odo-(c)ancel")
   "otp"  '((lambda () (interactive) (org-todo "PROCESSED")) :which-key "(o-t)odo-(p)rocessed")
+  "otn"  '((lambda () (interactive) (org-todo ""))          :which-key "(o-t)odo-(n)one")
 
   "os"  '(org-schedule                                      :which-key "(o-s)chedule")
   "oa"  '(org-agenda                                        :which-key "(o-a)genda")
@@ -713,35 +774,35 @@
   "oy"   '(org-copy-subtree                     :which-key "(o-y)ank-subtree")
 
 
+  "oxb"  '(org-beamer-export-to-pdf             :which-key "(o-x)-(b)eamer")
+  "oxB"   '((lambda () (interactive)
+	      (org-beamer-export-to-pdf nil t))
+            :which-key "(o-x)port-subtree-(P)df")
   "oxp"  '(org-latex-export-to-pdf              :which-key "(o-x)port-(p)df")
-  "oxP"   '((lambda () (interactive) (org-latex-export-to-pdf nil t))
-            :which-key "(o)-(x)port-subtree-(P)df")
-  "oxsp"  '((lambda () (interactive) (org-latex-export-to-pdf nil t))
-            :which-key "(o)-(x)port-subtree-(P)df")
+  "oxP"   '((lambda () (interactive)
+	      (org-latex-export-to-pdf nil t))
+            :which-key "(o-x)port-subtree-(P)df")
 
 
-  "oxo"  '(gry/org-open-pdf                             :which-key "(o)-(x)-(P)df-open")
-  "oxb"  '(org-beamer-export-to-pdf                     :which-key "(o)-(x)-(b)eamer")
-  "old"  '(org-toggle-link-n-emphasis                   :which-key "(o)-(l)ink-(d)isplay")
-  "oil"  '((lambda () (interactive) (org-insert-link))  :which-key "(o)-(i)nsert-(l)ink")
-  "oip"  '(org-download-clipboard                       :which-key "(o)-(i)mage-(p)aste-clipboard")
-  "oit"  '(org-toggle-inline-images                     :which-key "(o)-(i)mage-(t)oggle")
-  "oib"  '(org-cite-insert                              :which-key "(o)-(i)nsert-(c)ite")
+  "oxo"  '(gry/org-open-pdf                             :which-key "(o-x)-(P)df-open")
+  "old"  '(org-toggle-link-n-emphasis                   :which-key "(o-l)ink-(d)isplay")
+  "oil"  '((lambda () (interactive) (org-insert-link))  :which-key "(o-i)nsert-(l)ink")
+  "oip"  '(org-download-clipboard                       :which-key "(o-i)mage-(p)aste-clipboard")
+  "oit"  '(org-toggle-inline-images                     :which-key "(o-i)mage-(t)oggle")
+  "oib"  '(org-cite-insert                              :which-key "(o-i)nsert-(c)ite")
 
-  "oisn"  '((lambda () (interactive) (setq org-image-actual-width '(800)))      :which-key "(o)-(i)-(s)ize-(n)ormal")
-  "oisb"  '((lambda () (interactive) (setq org-image-actual-width '(1500)))     :which-key "(o)-(i)-(s)ize-(b)ig")
-  "oiss"  '((lambda () (interactive) (setq org-image-actual-width '(400)))      :which-key "(o)-(i)-(s)ize-(s)mall")
+  "oisn"  '((lambda () (interactive) (setq org-image-actual-width '(800)))      :which-key "(o-i-s)ize-(n)ormal")
+  "oisb"  '((lambda () (interactive) (setq org-image-actual-width '(1500)))     :which-key "(o-i-s)ize-(b)ig")
+  "oiss"  '((lambda () (interactive) (setq org-image-actual-width '(400)))      :which-key "(o-i-s)ize-(s)mall")
 
-  "oc"  '(org-capture                           :which-key "(o)-(c)apture")
-  "oo"  '(org-open-at-point                     :which-key "(o)-(o)pen")
+  "oc"  '(org-capture                           :which-key "(o-c)apture")
+  "oo"  '(org-open-at-point                     :which-key "(o-o)pen")
 
   ;;orgroams
-  "rl"  '(org-roam-buffer-toggle                :which-key "(r)oam-(l)toggle")
-  "rL"  '(org-roam-buffer-display-dedicated     :which-key "(r)oam-(L)dedicated")
-  "rf"  '(org-roam-node-find                    :which-key "(r)oam-(f)ind")
-  "ri"  '(org-roam-node-insert                  :which-key "(r)oam-(i)nsert")
-
-
+  "rl"  '(org-roam-buffer-toggle                :which-key "(r-l)toggle")
+  "rL"  '(org-roam-buffer-display-dedicated     :which-key "(r-L)dedicated")
+  "rf"  '(org-roam-node-find                    :which-key "(r-f)ind")
+  "ri"  '(org-roam-node-insert                  :which-key "(r-i)nsert")
 
   ;; "ora"  '((lambda () (interactive) TODO to test this
   ;; (org-id-get-create)
@@ -750,14 +811,14 @@
   ;; )                                                                                                  :which-key "afs")
 
   ;;org-roam-dailies
-  "rn" '(org-roam-dailies-capture-today         :which-key "(r)oam-daily-(n)ew-capture")
-  "rr" '(org-roam-dailies-goto-today            :which-key "(r)oam-daily-(t)oday")
-  "rt" '(org-roam-dailies-goto-tomorrow         :which-key "(r)oam-daily-(T)omorrow")
-  "ry" '(org-roam-dailies-goto-yesterday        :which-key "(r)oam-daily-(y)esterday")
-  "rD" '(org-roam-dailies-capture-date          :which-key "(r)oam-daily-(d)ate")
-  "rd" '(org-roam-dailies-goto-date             :which-key "(r)oam-daily-goto-(D)ate")
-  "r>" '(org-roam-dailies-goto-next-note        :which-key "(r)oam-daily-(>)next")
-  "r<" '(org-roam-dailies-goto-previous-note    :which-key "(r)oam-daily-(<)prev")
+  "rn" '(org-roam-dailies-capture-today         :which-key "(r)-daily-(n)ew-capture")
+  "rr" '(org-roam-dailies-goto-today            :which-key "(r)-daily-(t)oday")
+  "rt" '(org-roam-dailies-goto-tomorrow         :which-key "(r)-daily-(T)omorrow")
+  "ry" '(org-roam-dailies-goto-yesterday        :which-key "(r)-daily-(y)esterday")
+  "rD" '(org-roam-dailies-capture-date          :which-key "(r)-daily-(d)ate")
+  "rd" '(org-roam-dailies-goto-date             :which-key "(r)-daily-goto-(D)ate")
+  "r>" '(org-roam-dailies-goto-next-note        :which-key "(r)-daily-(>)next")
+  "r<" '(org-roam-dailies-goto-previous-note    :which-key "(r)-daily-(<)prev")
 
   "rp"  '((lambda () (interactive)
             (find-file "~/roamnotes/20230329145157-gtd_projects_multi_steps.org"))
@@ -785,30 +846,22 @@
 
   "sl4" '((lambda () (interactive) (setq display-line-numbers-width 4)) :which-key "(s)ys-number(l)ine-(4)")
   "sl3" '((lambda () (interactive) (setq display-line-numbers-width 3)) :which-key "(s)ys-number(l)ine-(3)")
-  "srf" '((lambda () (interactive) (recentf-open-files))                :which-key "(s)ys-(r)ecent-(f)iles")
-  "st"  '(gry/open-term-at              :which-key "(s)ys-(t)erminal")
-  "sd"  '(gry/distraction-free-on       :which-key "(s)ys-(d)istraction-free-on")
-  "sD"  '(gry/distraction-free-off      :which-key "(s)ys-(D)istraction-free-off")
-  "sns" '(crux-create-scratch-buffer    :which-key "(s)ys-(n)ew-(s)cratch-buf")
-  "ss"  '((lambda () (interactive) (shell-command "flameshot gui"))     :which-key "(s)ys-(s)creenshot")
+  "srf" '((lambda () (interactive) (recentf-open-files))                :which-key "(s-r)ecent-(f)iles")
+  "st"  '(gry/open-term-at              :which-key "(s-t)erminal")
+  "sd"  '(gry/distraction-free-on       :which-key "(s-d)istraction-free-on")
+  "sD"  '(gry/distraction-free-off      :which-key "(s-D)istraction-free-off")
+  "sns" '(crux-create-scratch-buffer    :which-key "(s-n)ew-(s)cratch-buf")
+  "ss"  '((lambda () (interactive) (shell-command "flameshot gui"))     :which-key "(s-s)creenshot")
   "slm" '(scroll-lock-mode                                              :which-key "(s)croll-(l)ock-(m)ode")
   "scl"  '((lambda () (interactive)
              (command-log-mode)
              (global-command-log-mode)
              (clm/open-command-log-buffer))
-           :which-key "(s)ys-(c)md-(l)og")
+           :which-key "(s-c)md-(l)og")
 
-  "svl" '(global-display-fill-column-indicator-mode     :which-key "(s)croll-(l)ock-(m)ode")
+  "svl" '(global-display-fill-column-indicator-mode     :which-key "(s-v)ertical-(l)ine")
 
 
-  ;; ispell related
-  "isw" '(ispell-word                       :which-key "(is)pell-(w)ord")
-  "isr" '(ispell-region                     :which-key "(is)pell-(r)egion")
-  "isC" '(ispell-comments-and-strings       :which-key "(is)pell-(C)omment-full")
-  "isc" '(ispell-comment-or-string-at-point :which-key "(is)pell-(c)omment-here")
-  "isb" '(ispell-buffer                     :which-key "(is)pell-(b)uffer")
-  "ism" '(ispell-message                    :which-key "(is)pell-(m)essage")
-  "isq" '(ispell-kill-ispell                :which-key "(is)pell-(q)uit")
 
 
   "rg"  '(rg                                            :which-key "(r)ip-(g)rep")
@@ -836,10 +889,29 @@
 ** the other keybinding
 #+begin_src emacs-lisp
 (rune/leader-keys-other
-    "l"  '(consult-buffer-other-frame   :which-key "afs")
-    "f"  '(find-file-other-frame        :which-key "(F)ind-file-other-frame")
-    )
-    ;; "M-SPC"  '(comint-dynamic-complete-filename                             :which-key "com")
+  "f"  '(find-file-other-frame                  :which-key "(f)ile-other-frame"         )
+  "lr"  '(revert-buffer-quick                   :which-key "(l-r)evert"                 )
+  "lw"  '(consult-buffer-other-window           :which-key "(l-w)indow"                 )
+  "lf"  '(consult-buffer-other-frame            :which-key "(l-f)rame"                  )
+  "le"  '(eval-buffer                           :which-key "(l-e)val"                   )
+  "lb"  '(ibuffer                               :which-key "(l-b)uffer"                 )
+  "li"  '(ibuffer                               :which-key "(l-i)buffer"                )
+  "ln"  '(rename-buffer                         :which-key "(l-n)ame"                   )
+  "lp"  '(switch-to-prev-buffer                 :which-key "(l-p)rev"                   )
+  "lP"  '(switch-to-next-buffer                 :which-key "(l-P)next"                  )
+  "ld"  '(crux-delete-file-and-buffer           :which-key "(l-d)elete"                 )
+  "ln"  '(rename-buffer                         :which-key "(b-n)ame"                   )
+  
+  ;; ispell related
+  "sw" '(ispell-word                            :which-key "(s)pell-(w)ord"             )
+  "sr" '(ispell-region                          :which-key "(s)pell-(r)egion"           )
+  "sC" '(ispell-comments-and-strings            :which-key "(s)pell-(C)omment-full"     )
+  "sc" '(ispell-comment-or-string-at-point      :which-key "(s)pell-(c)omment-here"     )
+  "sb" '(ispell-buffer                          :which-key "(s)pell-(b)uffer"           )
+  "sm" '(ispell-message                         :which-key "(s)pell-(m)essage"          )
+  "sq" '(ispell-kill-ispell                     :which-key "(s)pell-(q)uit"             ))
+
+;; "M-SPC"  '(comint-dynamic-complete-filename  :which-key "com"			)
 #+end_src
 * System:
 ** Recent files
@@ -902,7 +974,7 @@
        :engines (list (gts-bing-engine) (gts-google-engine))
        :render	(gts-buffer-render)))
 #+end_src
-** writeroom?
+** writeroom
 #+begin_src emacs-lisp
 (use-package writeroom-mode
   :ensure t
@@ -918,7 +990,7 @@
   :ensure t
   :custom ((setq org-hyperscheduler-readonly-mode nil)))
 #+end_src
-** Spray
+** spray
 #+begin_src emacs-lisp
 (use-package spray
     :ensure t
@@ -974,84 +1046,3 @@
 		   (file-name-base buffer-file-name))))))
 #+end_src
 
-* COMMENT old
-#+begin_src emacs-lisp
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; (defun yas-try-key-from-dot (_start-point)									 ;;
-;;   "As `yas-key-syntaxes' element, look for dot delimited key."				 ;;
-;;   (skip-chars-backward "^.")													 ;;
-;;   (backward-char))															 ;;
-;; 																				 ;;
-;; (defun my-yas-expand ()														 ;;
-;;   (interactive)																 ;;
-;;   (let ((yas-key-syntaxes (append yas-key-syntaxes '(yas-try-key-from-dot)))) ;;
-;;     (yas-expand)))															 ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-#+end_src
-
-
-* COMMENT just comments;
-#+begin_src emacs-lisp
-;; org babel languages
-;; this added for compiling openscad using
-;; following link https://emacs.stackexchange.com/questions/61439/how-to-write-a-basic-org-babel-execute-function-for-a-new-language
-;; (use-package hide-lines) <- not sure
-;; (autoload 'hide-lines "hide-lines" "Hide lines based on a regexp" t)
-;; (global-set-key "\C-ch" 'hide-lines)
-
-;; copied from
-;; https://github.com/daviwil/emacs-from-scratch/blob/master/show-notes/Emacs-05.org
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;                              ;;
-;; (use-package org-tanglesync                                                                  ;;
-;;   :hook ((org-mode . org-tanglesync-mode)                                                    ;;
-;;          ;; enable watch-mode globally:                                                      ;;
-;;          ((prog-mode text-mode) . org-tanglesync-watch-mode))                                ;;
-;;   :custom                                                                                    ;;
-;;   (org-tanglesync-watch-files '("conf.org" "myotherconf.org"))                               ;;
-;;   :bind                                                                                      ;;
-;;   (( "C-c M-i" . org-tanglesync-process-buffer-interactive)                                  ;;
-;;    ( "C-c M-a" . org-tanglesync-process-buffer-automatic)))                                  ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;                              ;;
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;              ;;
-;; (use-package org-tree-slide)                                                                 ;;
-;; (with-eval-after-load "org-tree-slide"                                                       ;;
-;;     (defvar my-hide-org-meta-line-p nil)                                                     ;;
-;;     (defun my-hide-org-meta-line ()                                                          ;;
-;;      (interactive)                                                                           ;;
-;;      (setq my-hide-org-meta-line-p t)                                                        ;;
-;;      (set-face-attribute 'org-meta-line nil                                                  ;;
-;;                                          :foreground (face-attribute 'default :background))) ;;
-;;     (defun my-show-org-meta-line ()                                                          ;;
-;;      (interactive)                                                                           ;;
-;;      (setq my-hide-org-meta-line-p nil)                                                      ;;
-;;      (set-face-attribute 'org-meta-line nil :foreground nil))                                ;;
-;;                                                                                              ;;
-;;     (defun my-toggle-org-meta-line ()                                                        ;;
-;;      (interactive)                                                                           ;;
-;;      (if my-hide-org-meta-line-p                                                             ;;
-;;              (my-show-org-meta-line) (my-hide-org-meta-line)))                               ;;
-;;     (add-hook 'org-tree-slide-play-hook #'my-hide-org-meta-line)                             ;;
-;;     (add-hook 'org-tree-slide-stop-hook #'my-show-org-meta-line))                            ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;              ;;
-
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;       ;;
-;; (defun +private/treemacs-back-and-forth ()           ;;
-;;   (interactive)                                      ;;
-;;   (if (treemacs-is-treemacs-window-selected?)        ;;
-;;       (aw-flip-window)                               ;;
-;;     (treemacs-select-window)))                       ;;
-;; ;(setq treemacs-text-scale -3)                       ;;
-;; ;(setq treemacs-text-scale 0)                        ;;
-;; (treemacs-resize-icons 18)                           ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;       ;;
-
-;; (defun my-org-latex-yas ()
-;; "Activate org and LaTeX yas expansion in org-mode buffers."
-;; (yas-minor-mode)
-;; (yas-activate-extra-mode 'latex-mode))
-;; (add-hook 'org-mode-hook #'my-org-latex-yas)
-#+end_src
