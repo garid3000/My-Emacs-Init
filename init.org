@@ -463,31 +463,41 @@
 * Development Environment / Programming
 ** Corfu
 #+begin_src emacs-lisp
-;; corfu settings are taken from Gavin-Freeborn's (YT) configuraiton
+;; from https://github.com/Gavinok/emacs.d/blob/3ccc6e35feb2903442c9f7625fba081d93a2fa36/init.el#L614
 (use-package corfu
+  ;; Optional customizations
   :custom
-  (corfu-cycle t)               ; allow cycling
-  (corfu-auto t)                ; enable auto completion
-  (corfu-auto-prefix 2)         ; enable auto completion
-  (corfu-auto-delay 0.0)        ; enabling auto completion
-  (corfu-quit-at-boundary 'seperator)
-  (corfu-echo-documentation 0.25)
-  (corfu-preview-current 'insert)
+  (corfu-cycle t)                 ; Allows cycling through candidates
+  (corfu-auto t)                  ; Enable auto completion
+  (corfu-auto-prefix 2)
+  (corfu-auto-delay 0.0)
+  (corfu-popupinfo-delay '(0.5 . 0.2))
+  (corfu-preview-current 'insert) ; Do not preview current candidate
   (corfu-preselect-first nil)
-  :bind ( :map corfu-map
-        ("M-SPC"        . corfu-insert-separator        )
-        ("RET"          . nil                           )
-        ;; ("TAB"       . corfu-next                    )
-        ;; ([tab]       . corfu-next                    )
-        ("TAB"          . nil                           )
-        ([tab]          . nil                           )
-        ;; ("S-TAB"     . corfu-previous                )
-        ;; ([backtab]   . corfu-previous                )
-        ("S-<return>"   . corfu-insert                  )
-        ("M-h"          . corfu-insert                  ))
+  (corfu-on-exact-match nil)      ; Don't auto expand tempel snippets
+
+  ;; Optionally use TAB for cycling, default is `corfu-complete'.
+  :bind (:map corfu-map
+              ("M-SPC"      . corfu-insert-separator)
+              ("TAB"        . nil); corfu-next)
+              ([tab]        . nil); corfu-next)
+              ;("S-TAB"     . corfu-previous)
+              ("M-k"        . corfu-previous)
+              ("M-j"        . corfu-next)
+              ("S-<return>" . corfu-insert)
+              ("M-h"        . corfu-insert)
+              ("RET"        . nil))
+
   :init
   (global-corfu-mode)
-  (corfu-history-mode))
+  (corfu-history-mode)
+  (corfu-popupinfo-mode) ; Popup completion info
+  :config
+  (add-hook 'eshell-mode-hook
+            (lambda () (setq-local corfu-quit-at-boundary t
+				   corfu-quit-no-match t
+				   corfu-auto nil)
+              (corfu-mode))))
 #+end_src
 ** Yassnippets
 #+begin_src emacs-lisp
