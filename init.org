@@ -803,6 +803,7 @@
   "rL"  '(org-roam-buffer-display-dedicated     :which-key "(r-L)dedicated")
   "rf"  '(org-roam-node-find                    :which-key "(r-f)ind")
   "ri"  '(org-roam-node-insert                  :which-key "(r-i)nsert")
+  "rI"  '(org-roam-node-insert-immediate        :which-key "(r-I)nsert-immediate")
 
   ;; "ora"  '((lambda () (interactive) TODO to test this
   ;; (org-id-get-create)
@@ -860,9 +861,10 @@
            :which-key "(s-c)md-(l)og")
 
   "svl" '(global-display-fill-column-indicator-mode     :which-key "(s-v)ertical-(l)ine")
+  "sw" '(whitespace-mode                                :which-key "(s-w)hitespace")
 
-
-
+  "sco" '(corfu-mode                                    :which-key "(s-c)orfu-(m)ode")
+  "se"  '(eglot                                         :which-key "(s-e)glot")
 
   "rg"  '(rg                                            :which-key "(r)ip-(g)rep")
 
