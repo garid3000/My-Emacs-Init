@@ -847,6 +847,9 @@
   "rw"  '((lambda () (interactive)
             (find-file "~/roamnotes/20220908065223-phd.org"))
           :which-key "(r-w)writing")
+
+  "ruim"   '(org-roam-ui-mode :which-key "(r-ui)-(m)ode")
+
   ;; org code movement
   "j"   '(org-next-block     :which-key "")
   "k"   '(org-previous-block :which-key "")
