@@ -26,6 +26,7 @@
   (package-refresh-contents)
   (package-install 'use-package))
 (eval-when-compile (require 'use-package))
+(use-package auto-package-update) ; Helps with update
 #+end_src
 * Vi Movement Related
 ** vim-undo
