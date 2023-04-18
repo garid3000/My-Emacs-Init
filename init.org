@@ -782,6 +782,7 @@
   "oa"  '(org-agenda                                        :which-key "(o-a)genda"               )
   "od" '((lambda () (interactive) (org-deadline ""))        :which-key "(o-d)eadline"             )
 
+  "onm"  '(org-num-mode                                     :which-key "(o-n)um-(m)ode"           )
 
   "oft" '((lambda () (interactive) (consult-line "name tab"))    :which-key "(o-f)ind-(t)able"    )
   "ofe" '((lambda () (interactive) (consult-line "name eq"))     :which-key "(o-f)ind-(e)q"       )
