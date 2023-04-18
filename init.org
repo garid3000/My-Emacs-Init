@@ -386,7 +386,8 @@
 ;; (global-display-fill-column-indicator-mode)
 (use-package org-contacts
   :ensure t
-  :custom (org-contacts-files ' ("~/Documents/contacts.org")))
+  :custom (org-contacts-files
+           '("~/roamnotes/20230417200051-org_contacs.org")))
 #+end_src
 ** bibliograph
 #+begin_src emacs-lisp
@@ -760,6 +761,8 @@
   "ob"  '((lambda () (interactive) (find-file "~/Documents/bib/references.bib"))
           :which-key "(o)pen-(b)ookmark")
   "oE"  '((lambda () (interactive) (find-file "~/.config/emacs/init.el"))
+          :which-key "(o)pen-(E)macs-init.el")
+  "oC"  '((lambda () (interactive) (find-file "~/roamnotes/20230417200051-org_contacs.org"))
           :which-key "(o)pen-(E)macs-init.el")
 
   "om"  '(org-refile          :which-key "(o-m)ove-subtree")
