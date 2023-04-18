@@ -1045,6 +1045,10 @@
 #+begin_src emacs-lisp
 (use-package format-all)
 #+end_src
+** academic
+#+begin_src emacs-lisp
+(use-package academic-phrases)
+#+end_src
 * Web related
 ** browswer
 #+begin_src emacs-lisp
