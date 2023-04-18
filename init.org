@@ -69,7 +69,8 @@
 
 ** Theme
 #+begin_src emacs-lisp
-(eshell-git-prompt-use-theme 'powerline)
+(use-package eshell-git-prompt
+  :config (eshell-git-prompt-use-theme 'powerline))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -81,7 +82,8 @@
  '(mode-line-inactive ((t (:background nil)))))
 
 ;; (load-theme 'modus-vivendi)
-(load-theme 'gruvbox-dark-hard t)
+(use-package gruvbox-theme
+  :config (load-theme 'gruvbox-dark-hard t))
 
 ;; (unless (display-graphic-p)
 ;; (require 'evil-terminal-cursor-changer)
@@ -220,7 +222,7 @@
   (setq org-todo-keywords
         '((sequence
            "TODO(t)"  "STARTED(s)"  "WAITING(w)"
-	   "|"
+           "|"
            "PROCESSED(p)" "DONE(d)" "CANCELLED(c)")))
   (setq org-todo-keyword-faces
         '(("TODO"       . org-warning   )
@@ -460,6 +462,10 @@
 #+begin_src emacs-lisp
 (use-package org-tree-slide)
 #+end_src
+** org-roam-ui
+#+begin_src emacs-lisp
+(use-package org-roam-ui)
+#+end_src
 * Development Environment / Programming
 ** Corfu
 #+begin_src emacs-lisp
@@ -544,6 +550,10 @@
 #+begin_src emacs-lisp
 (electric-pair-mode 1)
 #+end_src
+** magit
+#+begin_src emacs-lisp
+(use-package magit)
+#+end_src
 * Garid
 ** sending current project to IP
 #+begin_src emacs-lisp
@@ -590,15 +600,16 @@
 (register-input-method
  "mongolian" "Mongolian" 'quail-use-package
  "MN-" "(Монгол) - Mongolian Keyboard Layout"
- "mongolian-input-method.el")
+ "cyrillic-mongolian.el")
+
 
 (register-input-method
  "TeQ-Math" "Emacs-Teq-Latex" 'quail-use-package
  "TeQ-" "TeQ-Math input"
  "Emacs-TeQ.el")
 
-(load "~/.config/emacs/garid/garids-abbrev-typos.el")	;; garid typos
-(load "~/.config/emacs/garid/garid-gtd.el")		;; garid typos
+;;(load "~/.config/emacs/garid/garids-abbrev-typos.el")	;; garid typos
+;;(load "~/.config/emacs/garid/garid-gtd.el")		;; garid typos
 
 ;; (setq path-to-ctags "/usr/bin/ctags")
 ;; (defun create-tags (dir-name)
@@ -609,6 +620,7 @@
 (fset 'gry-calc-horizontal-concat
       (kmacro-lambda-form [?v ?t tab ?v ?t ?| ?v ?t] 0 "%d"))
 #+end_src
+
 ** align regexp untabify
 #+begin_src emacs-lisp
 (defun align-regexp-untabify (beg end)
@@ -718,6 +730,8 @@
   "bD"  '(bookmark-delete-all                   :which-key "(b)m-(D)eletall"       )
 
   "mg"   '(magit-status                         :which-key "(m)a(g)it"             )
+  "mm"   '(mu4e                                 :which-key "(mu)4e"                )
+  "mn"   '(mu4e-compose-new                     :which-key "(m)4e-(n)ew"           )
 
   "wo"  '(eww-open-in-new-buffer                :which-key "(w)eb-(o)pen"          )
   "ws"  '(eww-search-words                      :which-key "(w)eb-(s)earch"        )
@@ -744,7 +758,7 @@
           :which-key "(o)pen-(e)macs-init.org")
   "ob"  '((lambda () (interactive) (find-file "~/Documents/bib/references.bib"))
           :which-key "(o)pen-(b)ookmark")
-  "oE"  '((lambda () (interactive) (find-file-other-frame "~/.config/emacs/init.el"))
+  "oE"  '((lambda () (interactive) (find-file "~/.config/emacs/init.el"))
           :which-key "(o)pen-(E)macs-init.el")
 
   "om"  '(org-refile          :which-key "(o-m)ove-subtree")
@@ -784,12 +798,10 @@
 
 
   "oxb"  '(org-beamer-export-to-pdf             :which-key "(o-x)-(b)eamer")
-  "oxB"   '((lambda () (interactive)
-	      (org-beamer-export-to-pdf nil t))
+  "oxB"   '((lambda () (interactive) (org-beamer-export-to-pdf nil t))
             :which-key "(o-x)port-subtree-(P)df")
   "oxp"  '(org-latex-export-to-pdf              :which-key "(o-x)port-(p)df")
-  "oxP"   '((lambda () (interactive)
-	      (org-latex-export-to-pdf nil t))
+  "oxP"   '((lambda () (interactive) (org-latex-export-to-pdf nil t))
             :which-key "(o-x)port-subtree-(P)df")
 
 
@@ -974,7 +986,7 @@
 * Misc Packages
 ** translate
 #+begin_src emacs-lisp
-(require 'go-translate)
+(use-package go-translate)
 (setq gts-translate-list '(("en" "ja")))
 (setq gts-default-translator
       (gts-translator
@@ -1006,8 +1018,24 @@
 #+end_src
 ** write good
 #+begin_src emacs-lisp
-  (add-to-list 'load-path "/home/garid/.config/emacs/writegood-mode")
-  (require 'writegood-mode)
+(add-to-list 'load-path "/home/garid/.config/emacs/writegood-mode")
+(use-package writegood-mode)
+#+end_src
+** Motionwindon
+#+begin_src emacs-lisp
+(use-package ace-window)
+#+end_src
+** crux
+#+begin_src emacs-lisp
+(use-package crux)
+#+end_src
+** command-log-mode
+#+begin_src emacs-lisp
+(use-package command-log-mode)
+#+end_src
+** format-all
+#+begin_src emacs-lisp
+(use-package format-all)
 #+end_src
 * Web related
 ** browswer
