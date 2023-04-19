@@ -61,6 +61,12 @@
     (setq evil-want-integration t)
     (evil-collection-init))
 #+end_src
+** evil-surround
+#+begin_src emacs-lisp
+(use-package evil-surround
+  :after evil
+  :config (global-evil-surround-mode))
+#+end_src
 * Theme & Colors
 ** Font
 #+begin_src emacs-lisp
@@ -556,6 +562,10 @@
 #+begin_src emacs-lisp
 (use-package magit)
 #+end_src
+** eglot
+#+begin_src emacs-lisp
+(use-package eglot)
+#+end_src
 * Garid
 ** sending current project to IP
 #+begin_src emacs-lisp
@@ -722,7 +732,8 @@
   "cm"  '(consult-imenu                         :which-key "(c-i(m)enu"            )
   "cM"  '(consult-man                           :which-key "(c-M)an"               )
   "cr"  '(consult-ripgrep                       :which-key "(c-r)ipgrep"           )
-  "cf"  '(consult-git-grep                      :which-key "(c-f)gitgrep"          )
+  ;; "cf"  '(consult-git-grep                      :which-key "(c-f)gitgrep"       )
+  "cf"  '(consult-flymake                       :which-key "(c-f)lymake"           )
   "cg"  '(consult-goto-line                     :which-key "(c-g)oto-line"         )
   "cp"  '(consult-project-buffer                :which-key "(c-p)roject"           )
 
