@@ -1060,6 +1060,10 @@
 #+begin_src emacs-lisp
 (use-package academic-phrases)
 #+end_src
+** hydra
+#+begin_src emacs-lisp
+(use-package hydra)
+#+end_src
 * Web related
 ** browswer
 #+begin_src emacs-lisp
