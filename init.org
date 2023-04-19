@@ -70,8 +70,8 @@
 * Theme & Colors
 ** Font
 #+begin_src emacs-lisp
-(set-face-attribute             'default nil :font "Iosevka Gry" :height 120)
-(setq default-frame-alist       '((font . "Iosevka Gry")))
+(set-face-attribute       'default nil :font "Iosevka Gry" :height 120)
+(setq default-frame-alist '((font . "Iosevka Gry")))
 #+end_src
 
 ** Theme
@@ -126,17 +126,19 @@
 #+begin_src emacs-lisp
 (use-package vertico
   :ensure t
-  :bind (:map vertico-map
-              ("C-j"   . vertico-next        ) ("M-j"   . vertico-next        )
-              ("C-k"   . vertico-previous    ) ("M-k"   . vertico-previous    )
-              ("C-f"   . vertico-exit        ) ("M-f"   . vertico-exit        )
-              ("C-g"   . vertico-grid-mode   ) ("M-g"   . vertico-grid-mode   )
-              ("C-h"   . vertico-grid-left   ) ("M-h"   . vertico-grid-left   )
-              ("C-l"   . vertico-grid-right  ) ("M-l"   . vertico-grid-right  )
-              ("C-u"   . vertico-scroll-up   ) ("M-u"   . vertico-scroll-up   )
-              ("C-d"   . vertico-scroll-down ) ("M-d"   . vertico-scroll-down )
-              ("C-S-g" . vertico-last        ) ("M-S-g" . vertico-last        )
-              ("M-n"   . vertico-next        ) ("M-p"   . vertico-previous    ))
+  :bind
+  (
+   :map vertico-map
+   ("C-j"   . vertico-next        ) ("M-j"   . vertico-next        )
+   ("C-k"   . vertico-previous    ) ("M-k"   . vertico-previous    )
+   ("C-f"   . vertico-exit        ) ("M-f"   . vertico-exit        )
+   ("C-g"   . vertico-grid-mode   ) ("M-g"   . vertico-grid-mode   )
+   ("C-h"   . vertico-grid-left   ) ("M-h"   . vertico-grid-left   )
+   ("C-l"   . vertico-grid-right  ) ("M-l"   . vertico-grid-right  )
+   ("C-u"   . vertico-scroll-up   ) ("M-u"   . vertico-scroll-up   )
+   ("C-d"   . vertico-scroll-down ) ("M-d"   . vertico-scroll-down )
+   ("C-S-g" . vertico-last        ) ("M-S-g" . vertico-last        )
+   ("M-n"   . vertico-next        ) ("M-p"   . vertico-previous    ))
   :custom (vertico-cycle t)
   :init (vertico-mode))
 #+end_src
@@ -285,11 +287,13 @@
   "Default format function for a headline.
   See `org-latex-format-headline-function' for details."
   (concat
-   (and todo (format "{\\framebox{\\bfseries\\rfamily\\color{%s} %s}} "
-                     (pcase todo-type ('todo "olive") ('done "teal")) todo))
+   (and todo
+        (format "{\\framebox{\\bfseries\\rfamily\\color{%s} %s}} "
+                (pcase todo-type ('todo "olive") ('done "teal")) todo))
    (and priority (format "\\framebox{\\#%c} " priority)) text
-   (and tags (format "\\hfill{}\\textsc{%s}"
-                     (mapconcat #'org-latex--protect-text tags ":")))))
+   (and tags
+        (format "\\hfill{}\\textsc{%s}"
+                (mapconcat #'org-latex--protect-text tags ":")))))
 #+end_src
 ** org-babel
 #+begin_src emacs-lisp
@@ -305,14 +309,17 @@
 #+end_src
 ** dw/org-mode-setup
 #+begin_src emacs-lisp
-  (defun dw/org-mode-setup ()
-      (org-indent-mode) ;;;;;this for lag ;(variable-pitch-mode 1)
-      (auto-fill-mode 0)
-      (visual-line-mode 1)
-      ;; (setq evil-auto-indent nil)      ;;turned off on fed 06, to see what happens
-      ;; (setq org-latex-active-timestamp-format    "\\textcolor{orange}{\\texttt{%s}}")
-      ;; (setq org-latex-inactive-timestamp-format  "\\textcolor{blue}{\\texttt{%s}}")
-      )
+(defun dw/org-mode-setup ()
+  (org-indent-mode) ;;;;;this for lag ;(variable-pitch-mode 1)
+  (auto-fill-mode 0)
+  (visual-line-mode 1)
+  ;; (setq evil-auto-indent nil)
+  ;;          turned off on fed 06, to see what happens
+  ;; (setq org-latex-active-timestamp-format
+  ;;          "\\textcolor{orange}{\\texttt{%s}}")
+  ;; (setq org-latex-inactive-timestamp-format
+  ;;          "\\textcolor{blue}{\\texttt{%s}}")
+  )
 #+end_src
 ** org toggle link n emphisis
 #+begin_src emacs-lisp
@@ -427,24 +434,24 @@
 ** org tmux babel
 #+begin_src emacs-lisp
 (use-package ob-tmux
-    ;; Install package automatically (optional)
-    :ensure t
-    :custom
-    (org-babel-default-header-args:tmux
-     '((:results . "silent")	;
-       (:session . "default")	; default tmux session to send code to
-       (:socket  . nil)))	; default tmux socket to communicate with
-    ;; The tmux sessions are prefixed with the following string.
-    ;; You can customize this if you like.
-    (org-babel-tmux-session-prefix "ob-")
-    ;; The terminal that will be used.
-    ;; You can also customize the options passed to the terminal.
-    ;; The default terminal is "gnome-terminal" with options "--".
-    (org-babel-tmux-terminal "st")
-    (org-babel-tmux-terminal-opts '("-T" "ob-tmux" "-e"))
-    ;; Finally, if your tmux is not in your $PATH for whatever reason, you
-    ;; may set the path to the tmux binary as follows:
-    (org-babel-tmux-location "/usr/bin/tmux"))
+  ;; Install package automatically (optional)
+  :ensure t
+  :custom
+  (org-babel-default-header-args:tmux
+   '((:results . "silent")	;
+     (:session . "default")	; default tmux session to send code to
+     (:socket  . nil)))	; default tmux socket to communicate with
+  ;; The tmux sessions are prefixed with the following string.
+  ;; You can customize this if you like.
+  (org-babel-tmux-session-prefix "ob-")
+  ;; The terminal that will be used.
+  ;; You can also customize the options passed to the terminal.
+  ;; The default terminal is "gnome-terminal" with options "--".
+  (org-babel-tmux-terminal "st")
+  (org-babel-tmux-terminal-opts '("-T" "ob-tmux" "-e"))
+  ;; Finally, if your tmux is not in your $PATH for whatever reason, you
+  ;; may set the path to the tmux binary as follows:
+  (org-babel-tmux-location "/usr/bin/tmux"))
 #+end_src
 ** org-indent
 #+begin_src emacs-lisp
@@ -495,7 +502,7 @@
               ("M-SPC"      . corfu-insert-separator)
               ("TAB"        . nil); corfu-next)
               ([tab]        . nil); corfu-next)
-              ;("S-TAB"     . corfu-previous)
+              ;;("S-TAB"     . corfu-previous)
               ("M-k"        . corfu-previous)
               ("M-j"        . corfu-next)
               ("S-<return>" . corfu-insert)
@@ -516,22 +523,22 @@
 ** Yassnippets
 #+begin_src emacs-lisp
 (use-package yasnippet
-    :config
-    (setq yas/triggers-in-field t); Enable nested triggering of snippets
-    ;; (setq yas-key-syntaxes (append yas-key-syntaxes '(yas-try-key-from-dot)))
-    (yas-global-mode 1)
+  :config
+  (setq yas/triggers-in-field t); Enable nested triggering of snippets
+  ;; (setq yas-key-syntaxes (append yas-key-syntaxes '(yas-try-key-from-dot)))
+  (yas-global-mode 1)
 
-    (defcustom yas-new-snippet-default "\
+  (defcustom yas-new-snippet-default "\
   # -*- mode: snippet -*-
   # contributor: Garid Zorigoo <garidzorigoo@gmail.com>
   # name: $1
   # key: ${2:${1:$(yas--key-from-desc yas-text)}}
   # --
   $0`(yas-escape-text yas-selected-text)`"
-      "Default snippet to use when creating a new snippet.
+    "Default snippet to use when creating a new snippet.
   If nil, don't use any snippet."
-      :type 'string)
-    )
+    :type 'string)
+  )
 #+end_src
 ** LSP-bridges
 #+begin_src emacs-lisp
@@ -543,16 +550,16 @@
 #+end_src
 ** scad
 #+begin_src emacs-lisp
-  (use-package scad-mode)
+(use-package scad-mode)
 #+end_src
 ** c
 #+begin_src emacs-lisp
-  (setq-default c-basic-offset 4)
+(setq-default c-basic-offset 4)
 #+end_src
 ** rg
 #+begin_src emacs-lisp
-  ;; (use-package ripgrep)
-  (use-package rg)
+;; (use-package ripgrep)
+(use-package rg)
 #+end_src
 ** parenthesis: (electric-pair-mode)
 #+begin_src emacs-lisp
@@ -584,7 +591,7 @@
   (turn-off-evil-mode)
   (display-line-numbers-mode -1)
   (set-face-attribute 'default nil :font "Iosevka Etoile" :height 140))
-  ;; (set-face-attribute 'default nil :font "Terminus" :height 140)
+;; (set-face-attribute 'default nil :font "Terminus" :height 140)
 
 (defun gry/distraction-free-off ()
   (interactive)
@@ -637,7 +644,8 @@
 #+begin_src emacs-lisp
 (defun align-regexp-untabify (beg end)
   (interactive "r")
-  (align-regexp beg end (concat "\\(\\s-*\\)" (read-string "Align regexp: ")) )
+  (align-regexp beg end
+                (concat "\\(\\s-*\\)" (read-string "Align regexp: ")))
   (untabify beg end))
 #+end_src
 ** noTabs:
@@ -928,44 +936,43 @@
 ** the other keybinding
 #+begin_src emacs-lisp
 (rune/leader-keys-other
-  "f"  '(find-file-other-frame                  :which-key "(f)ile-other-frame"         )
-  "lr"  '(revert-buffer-quick                   :which-key "(l-r)evert"                 )
-  "lw"  '(consult-buffer-other-window           :which-key "(l-w)indow"                 )
-  "lf"  '(consult-buffer-other-frame            :which-key "(l-f)rame"                  )
-  "le"  '(eval-buffer                           :which-key "(l-e)val"                   )
-  "lb"  '(ibuffer                               :which-key "(l-b)uffer"                 )
-  "li"  '(ibuffer                               :which-key "(l-i)buffer"                )
-  "ln"  '(rename-buffer                         :which-key "(l-n)ame"                   )
-  "lp"  '(switch-to-prev-buffer                 :which-key "(l-p)rev"                   )
-  "lP"  '(switch-to-next-buffer                 :which-key "(l-P)next"                  )
-  "ld"  '(crux-delete-file-and-buffer           :which-key "(l-d)elete"                 )
-  "ln"  '(rename-buffer                         :which-key "(b-n)ame"                   )
-  
+  "f"  '(find-file-other-frame             :which-key "(f)ile-other-frame"    )
+  "lr"  '(revert-buffer-quick              :which-key "(l-r)evert"            )
+  "lw"  '(consult-buffer-other-window      :which-key "(l-w)indow"            )
+  "lf"  '(consult-buffer-other-frame       :which-key "(l-f)rame"             )
+  "le"  '(eval-buffer                      :which-key "(l-e)val"              )
+  "lb"  '(ibuffer                          :which-key "(l-b)uffer"            )
+  "li"  '(ibuffer                          :which-key "(l-i)buffer"           )
+  "ln"  '(rename-buffer                    :which-key "(l-n)ame"              )
+  "lp"  '(switch-to-prev-buffer            :which-key "(l-p)rev"              )
+  "lP"  '(switch-to-next-buffer            :which-key "(l-P)next"             )
+  "ld"  '(crux-delete-file-and-buffer      :which-key "(l-d)elete"            )
+  "ln"  '(rename-buffer                    :which-key "(b-n)ame"              )
   ;; ispell related
-  "sw" '(ispell-word                            :which-key "(s)pell-(w)ord"             )
-  "sr" '(ispell-region                          :which-key "(s)pell-(r)egion"           )
-  "sC" '(ispell-comments-and-strings            :which-key "(s)pell-(C)omment-full"     )
-  "sc" '(ispell-comment-or-string-at-point      :which-key "(s)pell-(c)omment-here"     )
-  "sb" '(ispell-buffer                          :which-key "(s)pell-(b)uffer"           )
-  "sm" '(ispell-message                         :which-key "(s)pell-(m)essage"          )
-  "sq" '(ispell-kill-ispell                     :which-key "(s)pell-(q)uit"             ))
+  "sw" '(ispell-word                       :which-key "(s)pell-(w)ord"        )
+  "sr" '(ispell-region                     :which-key "(s)pell-(r)egion"      )
+  "sC" '(ispell-comments-and-strings       :which-key "(s)pell-(C)omment-full")
+  "sc" '(ispell-comment-or-string-at-point :which-key "(s)pell-(c)omment-here")
+  "sb" '(ispell-buffer                     :which-key "(s)pell-(b)uffer"      )
+  "sm" '(ispell-message                    :which-key "(s)pell-(m)essage"     )
+  "sq" '(ispell-kill-ispell                :which-key "(s)pell-(q)uit"        ))
 
 ;; "M-SPC"  '(comint-dynamic-complete-filename  :which-key "com"			)
 #+end_src
 * System:
 ** Recent files
 #+begin_src emacs-lisp
-  ;; recentf
-  (recentf-mode 1)
-  (setq recentf-exclude '("/home/garid/roamnotes/.*org")) ;; to exclude roam nodes
-  (setq recentf-max-menu-items 30)
-  (setq recentf-max-saved-items 30)
+;; recentf
+(recentf-mode 1)
+(setq recentf-exclude '("/home/garid/roamnotes/.*org")) ;; to exclude roam nodes
+(setq recentf-max-menu-items 30)
+(setq recentf-max-saved-items 30)
 #+end_src
 ** Sys term open
 #+begin_src emacs-lisp
-  (defun gry/open-term-at ()
-    (interactive)
-    (shell-command (concat "term-at " buffer-file-name)))
+(defun gry/open-term-at ()
+  (interactive)
+  (shell-command (concat "term-at " buffer-file-name)))
 #+end_src
 * Dired
 ** Core dired
@@ -983,15 +990,15 @@
 #+end_src
 ** Icons - Dired
 #+begin_src emacs-lisp
-  (use-package all-the-icons
-    :config
-    (add-to-list
-     'all-the-icons-extension-icon-alist
-     '("m"  all-the-icons-fileicon "matlab"  :face all-the-icons-orange)))
+(use-package all-the-icons
+  :config
+  (add-to-list
+   'all-the-icons-extension-icon-alist
+   '("m"  all-the-icons-fileicon "matlab"  :face all-the-icons-orange)))
 
 
-  (use-package all-the-icons-dired)
-  (add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
+(use-package all-the-icons-dired)
+(add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
 #+end_src
 ** Dired additionals
 #+begin_src emacs-lisp
@@ -1018,11 +1025,11 @@
 (use-package writeroom-mode
   :ensure t
   :bind (:map writeroom-mode-map
-              ("<backspace>"     . ignore) ("<deletechar>"    . ignore)
-              ("<delete>"        . ignore) ("<M-backspace>"   . ignore)
-              ("<M-DEL>"         . ignore) ("<up>"            . ignore)
-              ("<down>"          . ignore) ("<left>"          . ignore)
-              ("<right>"         . ignore)))
+              ("<backspace>" . ignore) ("<deletechar>"   . ignore)
+              ("<delete>"    . ignore) ("<M-backspace>"  . ignore)
+              ("<M-DEL>"     . ignore) ("<up>"           . ignore)
+              ("<down>"      . ignore) ("<left>"         . ignore)
+              ("<right>"     . ignore)))
 
 
 (use-package writeroom-mode
@@ -1067,28 +1074,28 @@
 * Web related
 ** browswer
 #+begin_src emacs-lisp
-  (setq browse-url-browser-function 'browse-url-chromium)
-  (defun gry/open-html-in-browser ()
-    (interactive) (shell-command (concat "chromium " buffer-file-name)))
+(setq browse-url-browser-function 'browse-url-chromium)
+(defun gry/open-html-in-browser ()
+  (interactive) (shell-command (concat "chromium " buffer-file-name)))
 #+end_src
 ** eww web browser
 #+begin_src emacs-lisp
-  (setq
-    browse-url-browser-function 'eww-browse-url ; Use eww as the default browser
-    shr-use-fonts  nil                          ; No special fonts
-    shr-use-colors nil                          ; No colours
-    shr-indentation 2                           ; Left-side margin
-    shr-width 85                                ; Fold text to 85 columns
-    eww-search-prefix "https://lite.duckduckgo.com/lite/?q=")    ; Use another engine for searching
+(setq
+  browse-url-browser-function 'eww-browse-url ; Use eww as the default browser
+  shr-use-fonts  nil                          ; No special fonts
+  shr-use-colors nil                          ; No colours
+  shr-indentation 2                           ; Left-side margin
+  shr-width 85                                ; Fold text to 85 columns
+  eww-search-prefix "https://lite.duckduckgo.com/lite/?q=")    ; Use another engine for searching
 #+end_src
 ** mastadon
 #+begin_src emacs-lisp
-  (use-package mastodon
-    :ensure t
-    :config
-    (mastodon-discover))
-  (setq mastodon-instance-url "https://emacs.ch"
-        mastodon-active-user "garid3000")
+(use-package mastodon
+  :ensure t
+  :config
+  (mastodon-discover))
+(setq mastodon-instance-url "https://emacs.ch"
+      mastodon-active-user "garid3000")
 #+end_src
 * Custom set variable:
 #+begin_src emacs-lisp
