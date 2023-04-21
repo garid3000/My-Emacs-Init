@@ -607,7 +607,7 @@
 
 (defun gry/org-open-pdf ()
   (interactive)
-  (shell-command
+  (call-process-shell-command
    (concat "zathura "
 	   (replace-in-string ".org" ".pdf &" buffer-file-name))))
 #+end_src
@@ -617,7 +617,7 @@
 (add-to-list 'load-path (expand-file-name "~/.config/emacs/Emacs-TeQ"))
 
 (register-input-method
- "mongolian" "Mongolian" 'quail-use-package
+ "cyrillic-mongolian" "Mongolian" 'quail-use-package
  "MN-" "(Монгол) - Mongolian Keyboard Layout"
  "cyrillic-mongolian.el")
 
@@ -665,10 +665,10 @@
 (defun toggle_input_method_mn_teq ()
   (interactive)
   (if (string= default-input-method nil )
-      (set-input-method "mongolian")
+      (set-input-method "cyrillic-mongolian")
     (if (string= default-input-method "TeQ-Math")
-	(set-input-method "mongolian")
-      (if (string= default-input-method "mongolian")
+	(set-input-method "cyrillic-mongolian")
+      (if (string= default-input-method "cyrillic-mongolian")
 	  (set-input-method "TeQ-Math")))))
 #+end_src
 * Keybinding
@@ -910,6 +910,8 @@
 
   "sco" '(corfu-mode                                    :which-key "(s-c)orfu-(m)ode"    )
   "se"  '(eglot                                         :which-key "(s-e)glot"           )
+  ;;"sim" '(set-input-mode                              :which-key "(s-i)nput-mode"      )
+  "sib" '(clone-indirect-buffer                         :which-key "(s-i)ndirect-(b)uffer")
 
   "rg"  '(rg                                            :which-key "(r)ip-(g)rep"        )
 
@@ -1071,6 +1073,27 @@
 #+begin_src emacs-lisp
 (use-package hydra)
 #+end_src
+** test popper
+#+begin_src emacs-lisp
+(use-package popper
+  :ensure t ; or :straight t
+  :bind (("C-`"   . popper-toggle-latest)
+         ("M-`"   . popper-cycle)
+         ("C-M-`" . popper-toggle-type))
+  :init
+  (setq popper-reference-buffers
+        '("\\*Messages\\*"
+          "Output\\*$"
+          "\\*Async Shell Command\\*"
+          help-mode
+          compilation-mode))
+  (popper-mode +1)
+  (popper-echo-mode +1))                ; For echo area hints
+#+end_src
+** emacs-everywhere
+#+begin_src emacs-lisp
+(use-package emacs-everywhere)
+#+end_src
 * Web related
 ** browswer
 #+begin_src emacs-lisp
@@ -1096,6 +1119,11 @@
   (mastodon-discover))
 (setq mastodon-instance-url "https://emacs.ch"
       mastodon-active-user "garid3000")
+#+end_src
+
+* Finish Notifier
+#+begin_src emacs-lisp
+(call-process-shell-command "notify-send \"Emacs\" \"Emacs server has inialized\" &") 
 #+end_src
 * Custom set variable:
 #+begin_src emacs-lisp
