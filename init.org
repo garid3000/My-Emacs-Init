@@ -683,7 +683,7 @@
 (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
 (global-set-key (kbd "M-W") 'evil-window-vnew)
 (global-set-key (kbd "M-E") 'evil-window-vsplit)
-
+(global-set-key (kbd "M-]") 'comint-dynamic-complete-filename)
 (global-set-key (kbd "M-S") 'avy-goto-char-2)
 (global-set-key (kbd "M-s") 'avy-goto-char)
 (global-set-key (kbd "C-/") 'comment-line)
