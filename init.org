@@ -481,6 +481,10 @@
 #+begin_src emacs-lisp
 (use-package org-roam-ui)
 #+end_src
+** latex
+#+begin_src emacs-lisp
+(use-package auctex)
+#+end_src
 * Development Environment / Programming
 ** Corfu
 #+begin_src emacs-lisp
