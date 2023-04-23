@@ -617,7 +617,7 @@
 #+end_src
 ** scripted el in emacs/garid
 #+begin_src emacs-lisp
-(add-to-list 'load-path (expand-file-name "~/.config/emacs/garid"))
+(add-to-list 'load-path (expand-file-name "~/.config/emacs/Emacs-Mongolian-Input-Methods/"))
 (add-to-list 'load-path (expand-file-name "~/.config/emacs/Emacs-TeQ"))
 
 (register-input-method
@@ -643,6 +643,12 @@
 (fset 'gry-calc-horizontal-concat
       (kmacro-lambda-form [?v ?t tab ?v ?t ?| ?v ?t] 0 "%d"))
 #+end_src
+
+#+RESULTS:
+: #[256 "\211\301=\203
+:  \301\300B\207\302\300\"\207" [([118 116 tab 118 116 124 118 116] 0 "%d") kmacro--extract-lambda kmacro-exec-ring-item] 4 "Keyboard macro.
+: 
+: (fn &optional ARG)" "pkmacro"]
 
 ** align regexp untabify
 #+begin_src emacs-lisp
