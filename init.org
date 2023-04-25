@@ -464,7 +464,7 @@
   :hook (org-mode . org-bullets-mode)
   :custom
   (org-bullets-bullet-list
-   '("◉ " "○ " "● " "○ " "● " "○ " "● ")))
+   '("◉" "○" "●" "○" "●" "○" "●")))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ;; Replace list hyphen with dot				    ;;
 ;; ;; (font-lock-add-keywords 'org-mode				    ;;
