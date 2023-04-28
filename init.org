@@ -95,9 +95,23 @@
 ;; (unless (display-graphic-p)
 ;; (require 'evil-terminal-cursor-changer)
 ;; (evil-terminal-cursor-changer-activate) ; or (etcc-on) )
+#+end_src
 
+** Transparency
+#+begin_src emacs-lisp
 ;;transparent emacs
 (add-to-list 'default-frame-alist '(alpha 95 95))
+
+(defun toggle-transparency ()
+  (interactive)
+  (let ((alpha (frame-parameter nil 'alpha)))
+    (if (eq
+     (if (numberp alpha)
+         alpha
+       (cdr alpha)) ; may also be nil
+     100)
+    (set-frame-parameter nil 'alpha '(95 . 95))
+      (set-frame-parameter nil 'alpha '(100 . 100)))))
 #+end_src
 ** Emacs Interface config
 #+begin_src emacs-lisp
@@ -904,6 +918,7 @@
   "sl3" '((lambda () (interactive) (setq display-line-numbers-width 3)) :which-key "(s)ys-number(l)ine-(3)")
   "srf" '((lambda () (interactive) (recentf-open-files))                :which-key "(s-r)ecent-(f)iles")
   "st"  '(gry/open-term-at              :which-key "(s-t)erminal")
+  "sT"  '(toggle-transparency           :which-key "(s-T)oggle-transparency")
   "sd"  '(gry/distraction-free-on       :which-key "(s-d)istraction-free-on")
   "sD"  '(gry/distraction-free-off      :which-key "(s-D)istraction-free-off")
   "sns" '(crux-create-scratch-buffer    :which-key "(s-n)ew-(s)cratch-buf")
