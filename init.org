@@ -1145,7 +1145,11 @@
 (setq mastodon-instance-url "https://emacs.ch"
       mastodon-active-user "garid3000")
 #+end_src
-
+** simple-httpd
+#+begin_src emacs-lisp
+(use-package simple-httpd
+  :ensure t)
+#+end_src
 * Finish Notifier
 #+begin_src emacs-lisp
 (call-process-shell-command "notify-send \"Emacs\" \"Emacs server has inialized\" &") 
