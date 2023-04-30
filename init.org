@@ -394,6 +394,12 @@
 		       '(:immediate-finish t)))))
     (apply #'org-roam-node-insert args)))
 #+end_src
+** org roam tag display during search
+#+begin_src emacs-lisp
+(setq org-roam-node-display-template
+      (concat "${title:*} "
+              (propertize "${tags:10}" 'face 'org-tag)))
+#+end_src
 * Org Misc:
 ** org download
 #+begin_src emacs-lisp
