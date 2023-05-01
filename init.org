@@ -1016,6 +1016,59 @@
   (interactive)
   (shell-command (concat "term-at " buffer-file-name)))
 #+end_src
+* Mail & contacts:
+** mu4e
+#+begin_src emacs-lisp
+;; (delete 'mu4e evil-collection-mode-list)
+;; (delete 'mu4e-conversation evil-collection-mode-list)
+
+(require 'mu4e)
+
+;; default
+(setq mu4e-maildir
+      "/home/garid/.local/share/mail/garidzorigoo@gmail.com")
+
+(setq mu4e-get-mail-command "mailsync")
+(setq mu4e-drafts-folder "/[Gmail]/Drafts")
+(setq mu4e-sent-folder   "/[Gmail]/Sent Mail")
+(setq mu4e-trash-folder  "/[Gmail]/Trash")
+
+;; dont save message to Sent msg, GMail/IMAP will take care of this
+(setq mu4e-sent-messages-behavior 'delete)
+
+;; setup some handy shortcuts
+(setq mu4e-maildir-shortcuts
+      '(("/INBOX"             . ?i)
+        ("/[Gmail]/Sent Mail" . ?s)
+        ("/[Gmail]/Trash"     . ?t)))
+
+;; allow for updating mail using 'U' in the main view:
+(setq mu4e-get-mail-command "offlineimap")
+
+;; something about ourselves
+;; I don't use a signature...
+(setq
+ user-mail-address "garidzorigoo@gmail.com"
+ user-full-name    "Garid Z."
+ message-signature "Garid Z."
+ )
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(setq smtpmail-smtp-server "smtp.gmail.com"
+      smtpmail-smtp-service 465
+      smtpmail-stream-type  'ssl)
+(setq message-send-mail-function 'smtpmail-send-it)
+#+end_src
+** org-contacts
+#+begin_src emacs-lisp
+(setq mu4e-org-contacts-file
+      "/home/garid/roamnotes/20230417200051-org_contacs.org")
+
+(add-to-list 'mu4e-headers-actions
+             '("org-contact-add" . mu4e-action-add-org-contact) t)
+(add-to-list 'mu4e-view-actions
+             '("org-contact-add" . mu4e-action-add-org-contact) t)
+#+end_src
 * Dired
 ** Core dired
 #+begin_src emacs-lisp
