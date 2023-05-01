@@ -355,15 +355,17 @@
   (org-roam-completion-everywhere t)
   (org-roam-dailies-capture-templates
    '(("d" "default" entry "* %<%I:%M %p>: %?"
-      :if-new (file+head "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n#+auto_tangle: nil\n#+STARTUP: show2levels\n"))))
+      :if-new (file+head "%<%Y-%m-%d>.org" "#+filetags: :nohtmlexport:\n#+title: %<%Y-%m-%d>\n#+auto_tangle: nil\n#+STARTUP: show2levels\n"))))
   (org-roam-capture-templates
    '(("d" "Default" plain
       "%?"
-      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+author: Garid Z.\n#+date: %U\n#+auto_tangle: nil\n")
+      :if-new (file+head
+               "%<%Y%m%d%H%M%S>-${slug}.org"
+               "#+title: ${title}\n #+filetags: :nohtmlexport:\n #+author: Garid Zorigoo\n #+date: %U\n #+auto_tangle: nil\n")
       :unnarrowed t)
      ("l" "Programming language" plain
       "* Characteristics\n\n- Family: %?\n- Inspired by: \n\n* Reference:\n\n"
-      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
+      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: :nohtmlexport:\n")
       :unnarrowed t)
      ("a" "Article/Thesis/Paper" plain
       "* Meta:\n** Date:\n** Type:\n** Author(s):\n** Category:\n** DOI:\n** Link:\n** Journal:\n** CitingID: \n** TODO added to Article HUB\n* Directory: %?\n\n* Interesting Ideas:\n\n"
@@ -371,10 +373,10 @@
       :unnarrowed t)
      ("b" "Book notes" plain
       "\n* Source\n\nAuthor: %^{Author}\nTitle: ${title}\nYear: %^{Year}\nDOI: %^{DOI}\n\n* Summary\n\n%?"
-      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
+      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: :nohtmlexport:\n")
       :unnarrowed t)
      ("p" "Project" plain "* Goals\n\n%?\n\n* Tasks\n\n** TODO Add initial tasks\n\n* Dates\n\n"
-      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: Project\n#+auto_tangle: nil")
+      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: :project:nohtmlexport:\n#+auto_tangle: nil")
 
       :unnarrowed t)
      ))
@@ -403,9 +405,11 @@
 * Org Misc:
 ** org download
 #+begin_src emacs-lisp
-  (use-package org-download
-    :ensure t
-    :config (org-download-enable))
+(use-package org-download
+  :ensure t
+  :config
+  (setq org-download-display-inline-images nil)
+  (org-download-enable))
 #+end_src
 ** org auto tangle
 #+begin_src emacs-lisp
@@ -501,7 +505,7 @@
 #+begin_src emacs-lisp
 (use-package org-roam-ui)
 #+end_src
-** latex
+** COMMENT latex
 #+begin_src emacs-lisp
 (use-package auctex)
 #+end_src
@@ -778,7 +782,9 @@
   "bm"  '(consult-bookmark                      :which-key "(b)ook(m)ark-consult"  )
   "bs"  '(bookmark-set                          :which-key "(b)m-(s)et"            )
   "bd"  '(bookmark-delete                       :which-key "(b)m-(d)elete"         )
-  "bD"  '(bookmark-delete-all                   :which-key "(b)m-(D)eletall"       )
+  "br"  '(bookmark-rename                       :which-key "(b)m-(r)ename"         )
+  ;; "bD"  '(bookmark-delete-all                   :which-key "(b)m-(D)eletall"    )
+
 
   "mg"   '(magit-status                         :which-key "(m)a(g)it"             )
   "mm"   '(mu4e                                 :which-key "(mu)4e"                )
@@ -863,6 +869,9 @@
   "old"  '(org-toggle-link-n-emphasis                   :which-key "(o-l)ink-(d)isplay"          )
   "oil"  '((lambda () (interactive) (org-insert-link))  :which-key "(o-i)nsert-(l)ink"           )
   "oip"  '(org-download-clipboard                       :which-key "(o-i)mage-(p)aste-clipboard" )
+  "oiP"  '(org-download-image                           :which-key "(o-i)mage-(P)aste-url"       )
+  "oid"  '(org-download-delete                          :which-key "(o-i)mage-(d)elete"          )
+  "oir"  '(org-download-rename-at-point                 :which-key "(o-i)mage-download-(r)ename" )
   "oit"  '(org-toggle-inline-images                     :which-key "(o-i)mage-(t)oggle"          )
   "oib"  '(org-cite-insert                              :which-key "(o-i)nsert-(c)ite"           )
 
@@ -1125,6 +1134,10 @@
 #+begin_src emacs-lisp
 (use-package emacs-everywhere)
 #+end_src
+** emacs restart
+#+begin_src emacs-lisp
+(use-package restart-emacs)
+#+end_src
 * Web related
 ** browswer
 #+begin_src emacs-lisp
@@ -1160,7 +1173,7 @@
 #+begin_src emacs-lisp
 (call-process-shell-command "notify-send \"Emacs\" \"Emacs server has inialized\" &") 
 #+end_src
-* Custom set variable:
+* COMMENT Custom set variable:
 #+begin_src emacs-lisp
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -1169,7 +1182,7 @@
  ;; If there is more than one, they won't work right.
  '(ignored-local-variable-values
    '((eval setq org-download-image-dir
-	   (concat "./"
+	   (concat "./od-imgs/"
 		   (file-name-base buffer-file-name)))))
  '(package-selected-packages
    '(consult-eglot laas zoom zig-mode xelb writeroom-mode which-key vterm vertico-posframe use-package undo-fu typescript-mode tree-sitter-langs toc-org tmr svg-tag-mode sudo-utils sr-speedbar sqlite spray shrink-path selectric-mode scad-mode rust-mode ripgrep rg restart-emacs rainbow-delimiters pyvenv python-x python-mode prescient ppp popup-kill-ring popper pfuture ox-hugo org-web-tools org-tree-slide org-tanglesync org-sidebar org-present org-pomodoro org-noter-pdftools org-hyperscheduler org-fragtog org-edna org-download org-contrib org-contacts org-bullets org-auto-tangle org-agenda-property orderless olivetti ob-tmux ob-rust notmuch nord-theme no-littering multi-term mew matlab-mode mastodon marginalia macrostep latex-math-preview kind-icon keyfreq jupyter ivy-posframe ibuffer-sidebar hydra highlight-indentation hide-lines helpful gtags-mode gruvbox-theme graphviz-dot-mode grammarly go-translate go-mode gnuplot ggtags general geiser-mit format-all forge flyspell-lazy flymake-python-pyflakes flycheck-aspell evil-tex evil-terminal-cursor-changer evil-org evil-nerd-commenter evil-collection eterm-256color eshell-git-prompt eradio emms-player-simple-mpv embark-consult emacsql-sqlite emacs-everywhere elfeed-score eglot edwina dumb-jump dracula-theme dired-single dired-sidebar dired-open dired-hide-dotfiles desktop-environment deft darkroom csv-mode crux corfu-terminal corfu-doc consult-yasnippet consult-org-roam company-ctags company-box command-log-mode citar-org-roam citar-embark cfrs cdlatex bui browse-kill-ring bibtex-completion auto-package-update async-await arduino-mode all-the-icons-dired all-the-icons-completion agtags ace-window 2048-game))
@@ -1178,4 +1191,15 @@
 	   (concat "./"
 		   (file-name-base buffer-file-name))))))
 #+end_src
-
+* Custom set variable:
+#+begin_src emacs-lisp
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(safe-local-variable-values
+   '((eval setq org-download-image-dir
+           (concat "./od-imgs/"
+                   (file-name-base buffer-file-name))))))
+#+end_src
