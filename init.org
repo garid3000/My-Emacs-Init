@@ -787,7 +787,8 @@
 
 
   "mg"   '(magit-status                         :which-key "(m)a(g)it"             )
-  "mm"   '(mu4e                                 :which-key "(mu)4e"                )
+  "mm"   '(mu4e                                 :which-key "(m)-mu4e"              )
+  "mM"   '(notmuch                              :which-key "(m)-notmuch"           )
   "mn"   '(mu4e-compose-new                     :which-key "(m)4e-(n)ew"           )
 
   "wo"  '(eww-open-in-new-buffer                :which-key "(w)eb-(o)pen"          )
@@ -1058,6 +1059,10 @@
       smtpmail-smtp-service 465
       smtpmail-stream-type  'ssl)
 (setq message-send-mail-function 'smtpmail-send-it)
+#+end_src
+** notmuch
+#+begin_src emacs-lisp
+(use-package notmuch)
 #+end_src
 ** org-contacts
 #+begin_src emacs-lisp
