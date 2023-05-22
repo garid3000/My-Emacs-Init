@@ -617,6 +617,7 @@ When nil, use the default face background."
 ** LSP-bridges
 #+begin_src emacs-lisp
 (use-package markdown-mode)
+(use-package posframe)
 (add-to-list 'load-path "/home/garid/otherGit/lsp-bridge/")
 (require 'lsp-bridge)
 (setq lsp-bridge-enable-profile t)
