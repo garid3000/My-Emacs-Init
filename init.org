@@ -189,6 +189,11 @@
 (use-package savehist
   :init (savehist-mode))
 #+end_src
+** COMMENT vertico-posframe
+#+begin_src emacs-lisp
+(use-package vertico-posframe
+  :init (vertico-posframe-mode))
+#+end_src
 * Org
 ** org
 #+begin_src emacs-lisp
@@ -218,8 +223,10 @@
           ("\\.gif\\'"   . "mpv \"%s\""		)
           ("\\.mp4\\'"   . "mpv \"%s\""		)
           ("\\.png\\'"   . "sxiv \"%s\""	)
+          ("\\.svg\\'"   . "sxiv \"%s\""	)
           ("\\.jpeg\\'"  . "sxiv \"%s\""	)
           ("\\.jpg\\'"   . "sxiv \"%s\""	)
+          ("\\.html\\'"  . "chromium \"%s\""	)
           ("\\.pdf\\'"   . "sioyek \"%s\""	)
           ("\\.mkv\\'"   . "mpv \"%s\""		)
           ("\\.xopp\\'"  . "xournalpp \"%s\""	)))
@@ -311,15 +318,16 @@
 #+end_src
 ** org-babel
 #+begin_src emacs-lisp
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '((python    . t)  (emacs-lisp . t)
-     (lisp       . t)  (latex      . t)
-     (shell      . t)  (C          . t)
-     (dot        . t)  (makefile   . t)
-     (sqlite     . t)  (js         . t)
-     ;; (jupyter   . t) ;; (rust      . t) ;(scad       . t)
-     ))
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((python    . t)  (emacs-lisp . t)
+   (lisp       . t)  (latex      . t)
+   (shell      . t)  (C          . t)
+   (dot        . t)  (makefile   . t)
+   (sqlite     . t)  (js         . t)
+   (gnuplot    . t)
+   ;; (jupyter   . t) ;; (rust      . t) ;(scad       . t)
+   ))
 #+end_src
 ** dw/org-mode-setup
 #+begin_src emacs-lisp
@@ -354,36 +362,46 @@
   (org-roam-directory "~/roamnotes")
   (org-roam-completion-everywhere t)
   (org-roam-dailies-capture-templates
-   '(("d" "default" entry "* %<%I:%M %p>: %?"
-      :if-new (file+head "%<%Y-%m-%d>.org" "#+filetags: :nohtmlexport:\n#+title: %<%Y-%m-%d>\n#+auto_tangle: nil\n#+STARTUP: show2levels\n"))))
-  (org-roam-capture-templates
-   '(("d" "Default" plain
-      "%?"
-      :if-new (file+head
-               "%<%Y%m%d%H%M%S>-${slug}.org"
-               "#+title: ${title}\n #+filetags: :nohtmlexport:\n #+author: Garid Zorigoo\n #+date: %U\n #+auto_tangle: nil\n")
-      :unnarrowed t)
-     ("l" "Programming language" plain
-      "* Characteristics\n\n- Family: %?\n- Inspired by: \n\n* Reference:\n\n"
-      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: :nohtmlexport:\n")
-      :unnarrowed t)
-     ("a" "Article/Thesis/Paper" plain
-      "* Meta:\n** Date:\n** Type:\n** Author(s):\n** Category:\n** DOI:\n** Link:\n** Journal:\n** CitingID: \n** TODO added to Article HUB\n* Directory: %?\n\n* Interesting Ideas:\n\n"
-      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: AcademicArticle\n#+startup: show1levels\n")
-      :unnarrowed t)
-     ("b" "Book notes" plain
-      "\n* Source\n\nAuthor: %^{Author}\nTitle: ${title}\nYear: %^{Year}\nDOI: %^{DOI}\n\n* Summary\n\n%?"
-      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: :nohtmlexport:\n")
-      :unnarrowed t)
-     ("p" "Project" plain "* Goals\n\n%?\n\n* Tasks\n\n** TODO Add initial tasks\n\n* Dates\n\n"
-      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: :project:nohtmlexport:\n#+auto_tangle: nil")
+   `(("d" "default" entry "* %<%I:%M %p>: %?"
+      :if-new (file+head "%<%Y-%m-%d>.org"
+                         ,(concat
+                           "#+filetags: :nohtmlexport:\n"
+                           "#+title: %<%Y-%m-%d>\n"
+                           "#+auto_tangle: nil\n"
+                           "#+startup: show2levels\n")))))
 
+  (org-roam-capture-templates
+   `(("d" "Default" plain "%?"
+      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
+                         ,(concat "#+title: ${title}\n"
+                                  "#+filetags: :nohtmlexport:\n"
+                                  "#+author: Garid Zorigoo\n"
+                                  "#+date: %U\n"
+                                  "#+auto_tangle: nil\n"))
+      :unnarrowed t)
+
+     ("l" "Programming language" plain
+      "* Characteristics\n\n- Family: %?\n- Inspired by: \n\n"
+      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
+                         ,(concat "#+title: ${title}\n"
+                                  "#+filetags: :nohtmlexport:\n"))
+      :unnarrowed t)
+
+     ("p" "Project" plain
+      "* Goals\n\n%?* Tasks\n\n** TODO Add initial tasks\n\n* Dates\n\n"
+      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
+                         ,(concat "#+title: ${title}\n"
+                                  "#+filetags: :project:nohtmlexport:\n"
+                                  "#+auto_tangle: nil"))
       :unnarrowed t)
      ))
+
   :config
   (org-roam-setup)
   (require 'org-roam-dailies)
-
+  (setq org-roam-node-display-template
+        (concat "${title:*} "
+                (propertize "${tags:30}" 'face 'org-tag)))
   (org-roam-db-autosync-mode))
 #+end_src
 ** org roam node insert immediade
@@ -396,12 +414,6 @@
 		       '(:immediate-finish t)))))
     (apply #'org-roam-node-insert args)))
 #+end_src
-** org roam tag display during search
-#+begin_src emacs-lisp
-(setq org-roam-node-display-template
-      (concat "${title:*} "
-              (propertize "${tags:10}" 'face 'org-tag)))
-#+end_src
 * Org Misc:
 ** org download
 #+begin_src emacs-lisp
@@ -409,7 +421,10 @@
   :ensure t
   :config
   (setq org-download-display-inline-images nil)
-  (org-download-enable))
+  (org-download-enable)
+  (setq org-download-edit-cmd "pinta %s")
+  ;; (setq org-download-edit-cmd "[ -f %s ] || notify-send \"orgdownload\" \"no image\"; pinta %s ")
+  )
 #+end_src
 ** org auto tangle
 #+begin_src emacs-lisp
@@ -449,6 +464,7 @@
   (citar-org-roam-mode)
   (setq citar-org-roam-note-title-template
         "Article: ${author} - ${title}\n#+subtitle: Garid's notes about this article\n#+filetags: ${tags}\n\n* Journal: ${publisher}\n* pdfpath: \n* Interesting Ideas\n")
+  (setq citar-org-roam-subdir "citar-notes")
   )
 
 ;;https://lucidmanager.org/productivity/emacs-bibtex-mode/
@@ -508,6 +524,36 @@
 ** COMMENT latex
 #+begin_src emacs-lisp
 (use-package auctex)
+#+end_src
+** ox-hugo
+#+begin_src emacs-lisp
+(use-package ox-hugo
+  :ensure t 
+  :after ox)
+#+end_src
+** COMMENT org-svg-background-transparent
+#+begin_src emacs-lisp
+(defcustom org-inline-image-background nil
+  "The color used as the default background for inline images.
+When nil, use the default face background."
+  :group 'org
+  :type '(choice color (const nil)))
+
+(defun create-image-with-background-color (args)
+  "Specify background color of Org-mode inline image through modify `ARGS'."
+  (let* ((file (car args))
+         (type (cadr args))
+         (data-p (caddr args))
+         (props (cdddr args)))
+    ;; Get this return result style from `create-image'.
+    (append (list file type data-p)
+            (list :background (or org-inline-image-background (face-background 'default)))
+            props)))
+
+(advice-add 'create-image :filter-args
+            #'create-image-with-background-color)
+
+(setq org-inline-image-background "white")
 #+end_src
 * Development Environment / Programming
 ** Corfu
@@ -570,11 +616,23 @@
 #+end_src
 ** LSP-bridges
 #+begin_src emacs-lisp
-  ;; (add-to-list 'load-path "/home/garid/otherGit/lsp-bridge/")
-  ;; (require 'lsp-bridge)
-  ;; (setq lsp-bridge-enable-profile t)
-  ;; (setq lsp-bridge-python-lsp-server "pylsp")
-  ;;  (global-lsp-bridge-mode)
+(use-package markdown-mode)
+(add-to-list 'load-path "/home/garid/otherGit/lsp-bridge/")
+(require 'lsp-bridge)
+(setq lsp-bridge-enable-profile t)
+(setq lsp-bridge-python-lsp-server "pylsp")
+;; (setq lsp-bridge-python-lsp-server "pyright")
+;; (global-lsp-bridge-mode)
+
+(define-key acm-mode-map (kbd "M-j") 'acm-select-next)
+(define-key acm-mode-map (kbd "M-k") 'acm-select-prev)
+(define-key acm-mode-map (kbd "M-d") 'acm-doc-toggle)
+(define-key acm-mode-map (kbd "M-f") 'acm-filter)
+(define-key acm-mode-map (kbd "M-H") 'acm-hide)
+(define-key acm-mode-map (kbd "M-g M-g") 'acm-select-first)
+(define-key acm-mode-map (kbd "M-G")     'acm-select-last)
+(define-key acm-mode-map (kbd "<tab>") nil)
+(define-key acm-mode-map (kbd "TAB")   nil)
 #+end_src
 ** scad
 #+begin_src emacs-lisp
@@ -601,6 +659,17 @@
 #+begin_src emacs-lisp
 (use-package eglot)
 #+end_src
+** toggling
+#+begin_src emacs-lisp
+;; (hs-toggle-hiding)
+(evil-define-key 'normal python-mode-map (kbd "<tab>") #'hs-toggle-hiding)
+
+#+end_src
+** vertical line fill-column
+#+begin_src emacs-lisp
+(setq fill-column 80)
+#+end_src
+
 * Garid
 ** sending current project to IP
 #+begin_src emacs-lisp
@@ -778,6 +847,7 @@
   "cf"  '(consult-flymake                       :which-key "(c-f)lymake"           )
   "cg"  '(consult-goto-line                     :which-key "(c-g)oto-line"         )
   "cp"  '(consult-project-buffer                :which-key "(c-p)roject"           )
+  "cd"  '(consult-dir                           :which-key "(c-d)ir"               )
 
   "bm"  '(consult-bookmark                      :which-key "(b)ook(m)ark-consult"  )
   "bs"  '(bookmark-set                          :which-key "(b)m-(s)et"            )
@@ -868,10 +938,11 @@
 
   "oxo"  '(gry/org-open-pdf                             :which-key "(o-x)-(P)df-open"            )
   "old"  '(org-toggle-link-n-emphasis                   :which-key "(o-l)ink-(d)isplay"          )
-  "oil"  '((lambda () (interactive) (org-insert-link))  :which-key "(o-i)nsert-(l)ink"           )
+  "oli"  '((lambda () (interactive) (org-insert-link))  :which-key "(o-l)ink-(i)nsert"           )
   "oip"  '(org-download-clipboard                       :which-key "(o-i)mage-(p)aste-clipboard" )
   "oiP"  '(org-download-image                           :which-key "(o-i)mage-(P)aste-url"       )
   "oid"  '(org-download-delete                          :which-key "(o-i)mage-(d)elete"          )
+  "oie"  '(org-download-edit                            :which-key "(o-i)mage-(e)dit"            )
   "oir"  '(org-download-rename-at-point                 :which-key "(o-i)mage-download-(r)ename" )
   "oit"  '(org-toggle-inline-images                     :which-key "(o-i)mage-(t)oggle"          )
   "oib"  '(org-cite-insert                              :which-key "(o-i)nsert-(c)ite"           )
@@ -938,7 +1009,7 @@
   "sd"  '(gry/distraction-free-on       :which-key "(s-d)istraction-free-on")
   "sD"  '(gry/distraction-free-off      :which-key "(s-D)istraction-free-off")
   "sns" '(crux-create-scratch-buffer    :which-key "(s-n)ew-(s)cratch-buf")
-  "ss"  '((lambda () (interactive) (shell-command "flameshot gui"))     :which-key "(s-s)creenshot")
+  "ss"  '((lambda () (interactive) (shell-command "flameshot gui --path ~/Pictures/ss/"))     :which-key "(s-s)creenshot")
   "slm" '(scroll-lock-mode                                              :which-key "(s)croll-(l)ock-(m)ode")
   "scl"  '((lambda () (interactive)
              (command-log-mode)
@@ -1086,7 +1157,7 @@
     "h" 'dired-single-up-directory
     "l" 'dired-single-buffer
     " " 'nil
-    (kbd "C-n") 'mkdir))
+    (kbd "N") 'mkdir))
 #+end_src
 ** Icons - Dired
 #+begin_src emacs-lisp
@@ -1108,6 +1179,10 @@
 ;; :bind (:map dired-sidebar-mode-map
 ;;   ("l" . dired-sidebar-find-file)
 ;;   ("h" . dired-sidebar-up-directory))
+#+end_src
+** consult-dir
+#+begin_src emacs-lisp
+(use-package consult-dir)
 #+end_src
 * Misc Packages
 ** translate
@@ -1196,14 +1271,18 @@
 #+begin_src emacs-lisp
 (use-package restart-emacs)
 #+end_src
+** graphviz
+#+begin_src emacs-lisp
+(use-package graphviz-dot-mode)
+#+end_src
 * Web related
-** browswer
+** browser
 #+begin_src emacs-lisp
 (setq browse-url-browser-function 'browse-url-chromium)
 (defun gry/open-html-in-browser ()
   (interactive) (shell-command (concat "chromium " buffer-file-name)))
 #+end_src
-** eww web browser
+** COMMENT eww web browser
 #+begin_src emacs-lisp
 (setq
   browse-url-browser-function 'eww-browse-url ; Use eww as the default browser
