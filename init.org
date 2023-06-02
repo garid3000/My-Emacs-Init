@@ -634,6 +634,11 @@ When nil, use the default face background."
 (define-key acm-mode-map (kbd "M-G")     'acm-select-last)
 (define-key acm-mode-map (kbd "<tab>") nil)
 (define-key acm-mode-map (kbd "TAB")   nil)
+(setq acm-backend-lsp-candidate-min-length 2)
+(setq acm-backend-yas-candidate-min-length 2)
+(setq acm-backend-elisp-candidate-min-length 2)
+(setq acm-backend-codeium-candidate-min-length 2)
+(setq acm-backend-search-file-words-candidate-min-length 2)
 #+end_src
 ** scad
 #+begin_src emacs-lisp
@@ -668,9 +673,56 @@ When nil, use the default face background."
 #+end_src
 ** vertical line fill-column
 #+begin_src emacs-lisp
-(setq fill-column 80)
+(setq fill-column 79)
 #+end_src
+** python stuff
+#+begin_src emacs-lisp
+;; (add-hook 'python-mode-hook '(corfu-mode -1) t)
+;; (add-hook 'python-mode-hook '(hs-minor-mode 1) t)
+;; (add-hook 'python-mode-hook '(lsp-bridge-mode) t)
 
+
+(use-package python
+  :hook
+  (python-mode . (lambda ()
+                   ;; (setq indent-tabs-mode nil)
+                   ;; (setq tab-width 4)
+                   ;; (setq python-indent-offset 4)
+                   (corfu-mode -1)
+                   (hs-minor-mode 1)
+                   (lsp-bridge-mode 1)
+                   (display-fill-column-indicator-mode 1)
+                   (setq fill-column 79)
+                   ;; (skj 1)
+                   )))
+;; (corfu-mode -1)
+
+
+(use-package python-cell
+  :hook
+  (python-mode . (lambda ()
+                   (setq python-cell-cellbreak-regexp "^[[:space:]]*#[[:space:]]==")
+                   ))
+  )
+
+;;
+;; (define-key python-cell-mode-map (kbd "M-J") nil)
+;; (define-key python-cell-mode-map (kbd "M-K") nil)
+#+end_src
+** COMMENT zig stuff
+#+begin_src emacs-lisp
+(use-package zig-mode
+  :hook
+  (zig-mode . (lambda ()
+                   (corfu-mode -1)
+                   ;; (hs-minor-mode 1)
+                   (lsp-bridge-mode 1)
+                   (display-fill-column-indicator-mode 1)
+                   (setq fill-column 79)
+                   ;; (skj 1)
+                   )))
+  )
+#+end_src
 * Garid
 ** sending current project to IP
 #+begin_src emacs-lisp
