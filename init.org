@@ -324,9 +324,17 @@
    (dot        . t)  (makefile   . t)
    (sqlite     . t)  (js         . t)
    (gnuplot    . t) (scad       . t)
-   ;; (jupyter   . t) ;; (rust      . t) 
+   ;; (jupyter   . t) ;; (rust      . t)
+   (nim . t)
    ))
 #+end_src
+** ob babel langs
+#+begin_src emacs-lisp
+(use-package ob-nim)
+#+end_src
+
+#+RESULTS:
+
 ** dw/org-mode-setup
 #+begin_src emacs-lisp
 (defun dw/org-mode-setup ()
@@ -377,6 +385,16 @@
                                   "#+author: Garid Zorigoo\n"
                                   "#+date: %U\n"
                                   "#+auto_tangle: nil\n"))
+      :unnarrowed t)
+
+     ("r" "Research" plain "* %?"
+      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}__research.org"
+                         ,(concat "#+title: ${title}\n"
+                                  "#+filetags: :research:\n"
+                                  "#+author: Garid Zorigoo\n"
+                                  "#+date: %U\n"
+                                  "#+auto_tangle: nil\n"
+                                  ))
       :unnarrowed t)
 
      ("k" "Kanji" plain "* %?"
@@ -430,6 +448,10 @@
                 (propertize "${tags:30}" 'face 'org-tag)))
   (org-roam-db-autosync-mode))
 #+end_src
+
+#+RESULTS:
+: t
+
 ** org roam node insert immediade
 #+begin_src emacs-lisp
 (defun org-roam-node-insert-immediate (arg &rest args)
@@ -467,7 +489,7 @@
   :custom (org-contacts-files
            '("~/roamnotes/20230417200051-org_contacs.org")))
 #+end_src
-** COMMENT bibliograph
+** bibliograph
 #+begin_src emacs-lisp
 (use-package citar
   :no-require
@@ -479,8 +501,9 @@
   (citar-bibliography org-cite-global-bibliography)
   ;; (setq citar-library-paths '("~/Documents/papers"))
   ;; optional: org-cite-insert is also bound to C-c C-x C-@
-  :bind
-  (:map org-mode-map :package org ("C-c b" . #'org-cite-insert)))
+  ;;:bind
+  ;;(:map org-mode-map :package org ("C-c b" . #'org-cite-insert))
+  )
 
 
 (use-package citar-org-roam
@@ -489,13 +512,17 @@
   :config
   (citar-org-roam-mode)
   (setq citar-org-roam-note-title-template
-        "Article: ${author} - ${title}\n#+subtitle: Garid's notes about this article\n#+filetags: ${tags}\n\n* Journal: ${publisher}\n* pdfpath: \n* Interesting Ideas\n")
+        "=${=key=}= - ${title}\n#+subtitle: Garid's notes on this article\n#+author: paper authors: ${author}\n#+filetags: :literature:\n\n* Ideas\n\n* Notes\n\n")
   (setq citar-org-roam-subdir "citar-notes")
   )
-
 ;;https://lucidmanager.org/productivity/emacs-bibtex-mode/
 (setq bibtex-dialect 'biblatex)
 #+end_src
+
+#+RESULTS:
+: biblatex
+
+
 
 ** COMMENT org tmux babel
 #+begin_src emacs-lisp
