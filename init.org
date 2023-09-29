@@ -470,10 +470,15 @@
   :config
   (setq org-download-display-inline-images nil)
   (org-download-enable)
-  (setq org-download-edit-cmd "pinta %s")
+  ;;(setq org-download-edit-cmd "pinta %s")
+  (setq org-download-edit-cmd "/home/garid/.garid/edit_img.sh %s")
   ;; (setq org-download-edit-cmd "[ -f %s ] || notify-send \"orgdownload\" \"no image\"; pinta %s ")
   )
 #+end_src
+
+#+RESULTS:
+: t
+
 ** org auto tangle
 #+begin_src emacs-lisp
 (use-package org-auto-tangle
