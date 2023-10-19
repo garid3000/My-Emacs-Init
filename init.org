@@ -1288,6 +1288,11 @@ When nil, use the default face background."
              '("org-contact-add" . mu4e-action-add-org-contact) t)
 #+end_src
 * Dired
+** Change ls in bsd:
+#+begin_src emacs-lisp
+(when (eq system-type 'berkeley-unix)
+  (setq insert-directory-program "gls"))
+#+end_src
 ** Core dired
 #+begin_src emacs-lisp
 (use-package dired
