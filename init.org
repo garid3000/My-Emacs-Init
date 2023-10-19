@@ -70,16 +70,23 @@
 * Theme & Colors
 ** Font
 #+begin_src emacs-lisp
-;; (set-face-attribute       'default nil :font "Iosevka Gry" :height 120) ;
-;; (setq default-frame-alist '((font . "Iosevka Gry")))
+;; if my main machine use following fonts
+;; On arch, I installed with =yay -s ttf-iosevka-term-ss06=
+(when (eq system-type 'gnu/linux)
+  (set-face-attribute       'default nil :font "Iosevka Term SS06" :height 120)
+  (setq default-frame-alist '((font . "Iosevka Term SS06")))
+  (set-fontset-font "fontset-default"
+                    'japanese-jisx0208
+                    '("DejaVu Sans" . "iso10646-1")))
 
-(set-face-attribute       'default nil :font "Iosevka Term" :height 80)
-(setq default-frame-alist '((font . "Iosevka Term")))
-
-
-(set-fontset-font "fontset-default"
-                  'japanese-jisx0208
-                  '("DejaVu Sans" . "iso10646-1"))
+;; for my openbsd machine use this font
+;; On openbsd, I installed with =pkg_add iosevka=
+(when (eq system-type 'berkeley-unix)
+  (set-face-attribute       'default nil :font "Iosevka Term" :height 80)
+  (setq default-frame-alist '((font . "Iosevka Term")))
+  (set-fontset-font "fontset-default"
+                    'japanese-jisx0208
+                    '("DejaVu Sans" . "iso10646-1")))
 #+end_src
 
 #+RESULTS:
