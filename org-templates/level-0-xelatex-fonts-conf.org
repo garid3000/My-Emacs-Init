@@ -1,0 +1,25 @@
+#+LATEX_COMPILER: xelatex
+#+LATEX_HEADER: \usepackage{fontspec}
+#+LATEX_HEADER: \usepackage[CJK]{ucharclasses} 
+#+LATEX_HEADER: \usepackage[margin=1in]{geometry}
+        
+#+LATEX_HEADER: \setmainfont{CMU Serif}                %\setmainfont{Iosevka Etoile Light}
+#+LATEX_HEADER: \setmonofont{Iosevka Term Slab Light}  %\setmonofont{DejaVu Sans Condensed}
+#+LATEX_HEADER: \newfontfamily\myregularfont{CMU Serif}
+#+LATEX_HEADER: \newfontfamily\myCJKfont{IPAMincho}
+#+LATEX_HEADER: \setTransitionsForCJK{\myCJKfont}{\myregularfont} 
+#+LATEX_HEADER: \lstset{
+#+LATEX_HEADER:   keywordstyle=\color{blue},
+#+LATEX_HEADER:   commentstyle=\color{red},
+#+LATEX_HEADER:   stringstyle=\color{cyan},
+#+LATEX_HEADER:   basicstyle=\ttfamily\footnotesize,
+#+LATEX_HEADER:   breaklines=true,             %firstnumber=1000,
+#+LATEX_HEADER:   frame=single,	                   
+#+LATEX_HEADER:   keepspaces=true,                 
+#+LATEX_HEADER:   numbers=left,                    
+#+LATEX_HEADER:   numbersep=5pt,                   
+#+LATEX_HEADER:   numberstyle=\tiny\color{red},    
+#+LATEX_HEADER:   showspaces=false,                
+#+LATEX_HEADER:   showstringspaces=false,       %showtabs=true,                  
+#+LATEX_HEADER:   stepnumber=2,                    
+#+LATEX_HEADER: }
