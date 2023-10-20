@@ -77,7 +77,8 @@
   (setq default-frame-alist '((font . "Iosevka Term SS06")))
   (set-fontset-font "fontset-default"
                     'japanese-jisx0208
-                    '("DejaVu Sans" . "iso10646-1")))
+                    '("DejaVu Sans" . "iso10646-1"))
+  (message "hello from linux"))
 
 ;; for my openbsd machine use this font
 ;; On openbsd, I installed with =pkg_add iosevka=
@@ -86,7 +87,8 @@
   (setq default-frame-alist '((font . "Iosevka Term")))
   (set-fontset-font "fontset-default"
                     'japanese-jisx0208
-                    '("DejaVu Sans" . "iso10646-1")))
+                    '("DejaVu Sans" . "iso10646-1"))
+  (message "hello from bsd"))
 #+end_src
 
 #+RESULTS:
