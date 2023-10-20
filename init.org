@@ -69,7 +69,7 @@
 #+end_src
 * Theme & Colors
 ** Font
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :results none
 ;; if my main machine use following fonts
 ;; On arch, I installed with =yay -s ttf-iosevka-term-ss06=
 (when (eq system-type 'gnu/linux)
@@ -91,10 +91,8 @@
   (message "hello from bsd"))
 #+end_src
 
-#+RESULTS:
-
 ** Theme
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :results none
 ;;(use-package eshell-git-prompt
 ;;  :config (eshell-git-prompt-use-theme 'powerline))
 
@@ -121,7 +119,7 @@
 #+end_src
 
 ** Transparency
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :results none
 ;;transparent emacs
 (add-to-list 'default-frame-alist '(alpha 95 95))
 
