@@ -163,19 +163,17 @@
 #+begin_src emacs-lisp
 (use-package vertico
   :ensure t
-  :bind
-  (
-   :map vertico-map
-   ("C-j"   . vertico-next        ) ("M-j"   . vertico-next        )
-   ("C-k"   . vertico-previous    ) ("M-k"   . vertico-previous    )
-   ("C-f"   . vertico-exit        ) ("M-f"   . vertico-exit        )
-   ;;("C-g"   . vertico-grid-mode   ) ;; ("M-g"   . vertico-grid-mode   )
-   ("C-h"   . vertico-grid-left   ) ("M-h"   . vertico-grid-left   )
-   ("C-l"   . vertico-grid-right  ) ("M-l"   . vertico-grid-right  )
-   ("C-u"   . vertico-scroll-up   ) ("M-u"   . vertico-scroll-up   )
-   ("C-d"   . vertico-scroll-down ) ("M-d"   . vertico-scroll-down )
-   ("C-S-g" . vertico-last        ) ("M-S-g" . vertico-last        )
-   ("M-n"   . vertico-next        ) ("M-p"   . vertico-previous    ))
+  :bind (:map vertico-map
+              ("C-j"   . vertico-next        ) ("M-j"   . vertico-next        )
+              ("C-k"   . vertico-previous    ) ("M-k"   . vertico-previous    )
+              ("C-f"   . vertico-exit        ) ("M-f"   . vertico-exit        )
+              ;; ("C-g"   . vertico-grid-mode   ) ;; ("M-g"   . vertico-grid-mode   )
+              ;; ("C-h"   . vertico-grid-left   ) ("M-h"   . vertico-grid-left   )
+              ;; ("C-l"   . vertico-grid-right  ) ("M-l"   . vertico-grid-right  )
+              ("C-u"   . vertico-scroll-up   ) ("M-u"   . vertico-scroll-up   )
+              ("C-d"   . vertico-scroll-down ) ("M-d"   . vertico-scroll-down )
+              ;; ("C-S-g" . vertico-last        ) ("M-S-g" . vertico-last        )
+              ("M-n"   . vertico-next        ) ("M-p"   . vertico-previous    ))
   :custom (vertico-cycle t)
   :init (vertico-mode))
 #+end_src
@@ -203,9 +201,8 @@
   :custom
   (completion-styles '(orderless basic))
   ;; (completion-styles '(orderless flex))
-  ;;(completion-category-overrides
-   '((file (styles basic partial-completion)))
-  )
+  ;; (completion-category-overrides
+  '((file (styles basic partial-completion))))
 #+end_src
 ** savehist
 #+begin_src emacs-lisp
@@ -320,41 +317,85 @@
 #+RESULTS:
 : ~/Pensieve/20231003185907-capture.org
 
-** Heading latex export style
-#+begin_src emacs-lisp
-(defun my-org-latex-format-headline-function
-    (todo todo-type priority text tags _info)
-  "Default format function for a headline.
-  See `org-latex-format-headline-function' for details."
-  (concat
-   (and todo
-        (format "{\\framebox{\\bfseries\\rfamily\\color{%s} %s}} "
-                (pcase todo-type ('todo "olive") ('done "teal")) todo))
-   (and priority (format "\\framebox{\\#%c} " priority)) text
-   (and tags
-        (format "\\hfill{}\\textsc{%s}"
-                (mapconcat #'org-latex--protect-text tags ":")))))
-#+end_src
 ** org-babel
 #+begin_src emacs-lisp
 (org-babel-do-load-languages
  'org-babel-load-languages
- '((python    . t)  (emacs-lisp . t)
-   (lisp       . t)  (latex      . t)
-   (shell      . t)  (C          . t)
-   (dot        . t)  (makefile   . t)
-   (sqlite     . t)  (js         . t)
-   (gnuplot    . t) ;;(scad       . t)
-   ;; (jupyter   . t) ;; (rust      . t)
-   (nim . t)
-   ))
+ '((python   . t)  (emacs-lisp . t)
+   (latex    . t) ;; (lisp     . t)
+   (shell    . t) ;; (C        . t)
+   (dot      . t)  (makefile   . t)
+   (sqlite   . t) ;; (js       . t)
+   (gnuplot  . t) ;; (scad     . t)
+   ;; (jupyter . t) ;; (rust   . t)
+   (nim      . t)))
 #+end_src
-** ob babel langs
+** COMMENT ob babel langs
 #+begin_src emacs-lisp
 (use-package ob-nim)
 #+end_src
 
 #+RESULTS:
+
+* Org prettiness
+** org-indent
+#+begin_src emacs-lisp
+(require 'org-indent)
+#+end_src
+** org-bullet
+#+begin_src emacs-lisp
+(use-package org-bullets
+  :after org
+  :hook (org-mode . org-bullets-mode)
+  :custom
+  (org-bullets-bullet-list
+   '("◉" "○" "●" "○" "●" "○" "●")))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; ;; Replace list hyphen with dot				    ;;
+;; ;; (font-lock-add-keywords 'org-mode				    ;;
+;; ;; '(("^ *\\([-]\\) "					    ;;
+;; (0 (prog1 () (compose-region					    ;;
+;; 	      (match-beginning 1) (match-end 1) "•"))))))	    ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+#+end_src
+** org-svg-background-transparent
+#+begin_src emacs-lisp
+(defcustom org-inline-image-background nil
+  "The color used as the default background for inline images.
+When nil, use the default face background."
+  :group 'org
+  :type '(choice color (const nil)))
+
+(defun create-image-with-background-color (args)
+  "Specify background color of Org-mode inline image through modify `ARGS'."
+  (let* ((file (car args))
+         (type (cadr args))
+         (data-p (caddr args))
+         (props (cdddr args)))
+    ;; Get this return result style from `create-image'.
+    (append (list file type data-p)
+            (list :background (or org-inline-image-background (face-background 'default)))
+            props)))
+
+(advice-add 'create-image :filter-args
+            #'create-image-with-background-color)
+
+(setq org-inline-image-background "white")
+#+end_src
+
+#+RESULTS:
+: white
+
+** org toggle link n emphisis
+Defining custom function to toggle visibily of bold, italics, and links etc.
+
+#+begin_src emacs-lisp
+(defun org-toggle-link-n-emphasis ()
+    (interactive)
+    (setq org-hide-emphasis-markers (not org-hide-emphasis-markers))
+    (org-toggle-link-display)
+    (font-lock-update))
+#+end_src
 
 ** dw/org-mode-setup
 #+begin_src emacs-lisp
@@ -370,15 +411,7 @@
   ;;          "\\textcolor{blue}{\\texttt{%s}}")
   )
 #+end_src
-** org toggle link n emphisis
-#+begin_src emacs-lisp
-(defun org-toggle-link-n-emphasis ()
-    (interactive)
-    (setq org-hide-emphasis-markers (not org-hide-emphasis-markers))
-    (org-toggle-link-display)
-    (font-lock-update))
-#+end_src
-* Org Roam:
+* Org Zettelkasten like (roam and denote)
 ** org roam
 #+begin_src emacs-lisp
 (use-package org-roam
@@ -483,37 +516,16 @@
 		       '(:immediate-finish t)))))
     (apply #'org-roam-node-insert args)))
 #+end_src
-* Org Misc:
-** org download
+** org-roam-ui
 #+begin_src emacs-lisp
-(use-package org-download
-  :ensure t
+(use-package org-roam-ui)
+#+end_src
+** denote
+#+begin_src emacs-lisp
+(use-package denote
   :config
-  (setq org-download-display-inline-images nil)
-  (org-download-enable)
-  ;;(setq org-download-edit-cmd "pinta %s")
-  (setq org-download-edit-cmd "/home/garid/.garid/edit_img.sh %s")
-  ;; (setq org-download-edit-cmd "[ -f %s ] || notify-send \"orgdownload\" \"no image\"; pinta %s ")
-  )
-#+end_src
-
-#+RESULTS:
-: t
-
-** org auto tangle
-#+begin_src emacs-lisp
-(use-package org-auto-tangle
-  :defer t
-  :hook   (org-mode . org-auto-tangle-mode)
-  :config (setq org-auto-tangle-default t))
-#+end_src
-** COMMENT org contacts
-#+begin_src emacs-lisp
-;; (global-display-fill-column-indicator-mode)
-(use-package org-contacts
-  :ensure t
-  :custom (org-contacts-files
-           '("~/roamnotes/20230417200051-org_contacs.org")))
+  (setq denote-directory (expand-file-name "~/Documents/Personal"))
+  (setq denote-known-keywords '("finance" "failures" "philosophy")))
 #+end_src
 ** bibliograph
 #+begin_src emacs-lisp
@@ -549,7 +561,64 @@
 : biblatex
 
 
+* Org Exports
+** Org latex export related
+*** Heading latex export style
+#+begin_src emacs-lisp
+(defun my-org-latex-format-headline-function
+    (todo todo-type priority text tags _info)
+  "Default format function for a headline.
+  See `org-latex-format-headline-function' for details."
+  (concat
+   (and todo
+        (format "{\\framebox{\\bfseries\\rfamily\\color{%s} %s}} "
+                (pcase todo-type ('todo "olive") ('done "teal")) todo))
+   (and priority (format "\\framebox{\\#%c} " priority)) text
+   (and tags
+        (format "\\hfill{}\\textsc{%s}"
+                (mapconcat #'org-latex--protect-text tags ":")))))
+#+end_src
+** COMMENT latex
+#+begin_src emacs-lisp
+(use-package auctex)
+#+end_src
 
+** website exports
+*** ox-hugo
+#+begin_src emacs-lisp
+(use-package ox-hugo
+  :ensure t 
+  :after ox)
+#+end_src
+* Org Misc:
+** org download
+#+begin_src emacs-lisp
+(use-package org-download
+  :ensure t
+  :config
+  (setq org-download-display-inline-images nil)
+  (org-download-enable)
+  (setq org-download-edit-cmd "/home/garid/.garid/edit_img.sh %s"))
+#+end_src
+
+#+RESULTS:
+: t
+
+** org auto tangle
+#+begin_src emacs-lisp
+(use-package org-auto-tangle
+  :defer t
+  :hook   (org-mode . org-auto-tangle-mode)
+  :config (setq org-auto-tangle-default t))
+#+end_src
+** COMMENT org contacts
+#+begin_src emacs-lisp
+;; (global-display-fill-column-indicator-mode)
+(use-package org-contacts
+  :ensure t
+  :custom (org-contacts-files
+           '("~/roamnotes/20230417200051-org_contacs.org")))
+#+end_src
 ** COMMENT org tmux babel
 #+begin_src emacs-lisp
 (use-package ob-tmux
@@ -572,81 +641,9 @@
   ;; may set the path to the tmux binary as follows:
   (org-babel-tmux-location "/usr/bin/tmux"))
 #+end_src
-** org-indent
-#+begin_src emacs-lisp
-(require 'org-indent)
-#+end_src
-** org-bullet
-#+begin_src emacs-lisp
-(use-package org-bullets
-  :after org
-  :hook (org-mode . org-bullets-mode)
-  :custom
-  (org-bullets-bullet-list
-   '("◉" "○" "●" "○" "●" "○" "●")))
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; ;; Replace list hyphen with dot				    ;;
-;; ;; (font-lock-add-keywords 'org-mode				    ;;
-;; ;; '(("^ *\\([-]\\) "					    ;;
-;; (0 (prog1 () (compose-region					    ;;
-;; 	      (match-beginning 1) (match-end 1) "•"))))))	    ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-#+end_src
 ** COMMENT org-tree-slide
 #+begin_src emacs-lisp
 (use-package org-tree-slide)
-#+end_src
-** org-roam-ui
-#+begin_src emacs-lisp
-(use-package org-roam-ui)
-#+end_src
-** COMMENT latex
-#+begin_src emacs-lisp
-(use-package auctex)
-#+end_src
-
-** ox-hugo
-#+begin_src emacs-lisp
-(use-package ox-hugo
-  :ensure t 
-  :after ox)
-#+end_src
-** org-svg-background-transparent
-#+begin_src emacs-lisp
-(defcustom org-inline-image-background nil
-  "The color used as the default background for inline images.
-When nil, use the default face background."
-  :group 'org
-  :type '(choice color (const nil)))
-
-(defun create-image-with-background-color (args)
-  "Specify background color of Org-mode inline image through modify `ARGS'."
-  (let* ((file (car args))
-         (type (cadr args))
-         (data-p (caddr args))
-         (props (cdddr args)))
-    ;; Get this return result style from `create-image'.
-    (append (list file type data-p)
-            (list :background (or org-inline-image-background (face-background 'default)))
-            props)))
-
-(advice-add 'create-image :filter-args
-            #'create-image-with-background-color)
-
-(setq org-inline-image-background "white")
-#+end_src
-
-#+RESULTS:
-: white
-
-** denote
-#+begin_src emacs-lisp
-(use-package denote
-  :config
-  (setq denote-directory (expand-file-name "~/Documents/Personal"))
-  (setq denote-known-keywords '("finance" "failures" "philosophy"))
-  
-  )
 #+end_src
 * Development Environment / Programming
 ** Corfu
@@ -713,7 +710,7 @@ When nil, use the default face background."
 
 ** COMMENT LSP-bridges
 #+begin_src emacs-lisp
-(use-package markdown-mode)
+;; (use-package markdown-mode)
 ;;(use-package posframe)
 ;;(add-to-list 'load-path "/home/garid/otherGit/lsp-bridge/")
 ;;(require 'lsp-bridge)
@@ -860,13 +857,13 @@ When nil, use the default face background."
 #+end_src
 ** scripted el in emacs/garid
 #+begin_src emacs-lisp
-(add-to-list 'load-path (expand-file-name "~/.config/emacs/Emacs-Mongolian-Input-Methods/"))
+;;(add-to-list 'load-path (expand-file-name "~/.config/emacs/Emacs-Mongolian-Input-Methods/"))
 (add-to-list 'load-path (expand-file-name "~/.config/emacs/Emacs-TeQ"))
 
-(register-input-method
- "cyrillic-mongolian" "Mongolian" 'quail-use-package
- "MN-" "(Монгол) - Mongolian Keyboard Layout"
- "cyrillic-mongolian.el")
+;; (register-input-method
+;;  "cyrillic-mongolian" "Mongolian" 'quail-use-package
+;;  "MN-" "(Монгол) - Mongolian Keyboard Layout"
+;;  "cyrillic-mongolian.el")
 
 
 (register-input-method
@@ -995,7 +992,7 @@ When nil, use the default face background."
   "cr"  '(consult-ripgrep                       :which-key "(c-r)ipgrep"           )
   ;; "cf"  '(consult-git-grep                      :which-key "(c-f)gitgrep"       )
   "cf"  '(consult-flymake                       :which-key "(c-f)lymake"           )
-  "cg"  '(consult-goto-line                     :which-key "(c-g)oto-line"         )
+  ;;"cg"  '(consult-goto-line                     :which-key "(c-g)oto-line"       ) :23\r should go to line
   "cp"  '(consult-project-buffer                :which-key "(c-p)roject"           )
   "cd"  '(consult-dir                           :which-key "(c-d)ir"               )
 
@@ -1329,7 +1326,7 @@ When nil, use the default face background."
 (use-package dired-single)
 (use-package dired-sidebar)
 #+end_src
-** consult-dir
+** COMMENT consult-dir
 #+begin_src emacs-lisp
 (use-package consult-dir)
 #+end_src
