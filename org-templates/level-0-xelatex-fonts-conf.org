@@ -1,4 +1,5 @@
 #+LATEX_COMPILER: xelatex
+#+LATEX_HEADER: \usepackage[dvipsnames]{xcolor}
 #+LATEX_HEADER: \usepackage{fontspec}
 #+LATEX_HEADER: \usepackage[CJK]{ucharclasses} 
 #+LATEX_HEADER: \usepackage[margin=1in]{geometry}

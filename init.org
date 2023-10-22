@@ -226,9 +226,11 @@
   ;; ("k" . org-agenda-previous-item) )
   :hook (org-mode . dw/org-mode-setup)
   :config
-  (setq org-ellipsis "▼ " org-hide-emphasis-markers t)
+  ;; (setq org-ellipsis "▼ " org-hide-emphasis-markers t)
+  (setq org-ellipsis " ▼" org-hide-emphasis-markers t)
+  ;; (setq org-ellipsis " … " org-hide-emphasis-markers t)
   (setq org-latex-active-timestamp-format    "\\textcolor{orange}{%s}")
-  (setq org-latex-inactive-timestamp-format  "\\textcolor{blue}{%s}")
+  (setq org-latex-inactive-timestamp-format  "\\textcolor{Brown}{%s}") ;; blue requires latex xcolor
   (setq org-highlight-latex-and-related '(native latex script entities))
 
   (setq org-log-done t)
@@ -275,18 +277,14 @@
           ("PROCESSED"  . "dim gray"	)
           ("CANCELLED"  . (:foreground "gray30" :weight bold))))
 
-
-  ;; following is the setup for org-agenda only taking 14+14 window
-  ;; org roam daily entris for the agenda-files list
-  ;;(load "~/.config/emacs/garid/the-org-agenda-14day-window.el")
-  ;;(setq org-agenda-files (my/filter-org-roam-dailies "~/roamnotes/daily/" 14 14))
-
-  ;;(add-to-list 'org-agenda-files  "~/roamnotes/20230329145157-gtd_projects_multi_steps.org")
   (plist-put org-format-latex-options :scale 1.7)
   (setq org-src-preserve-indentation nil
         org-edit-src-content-indentation 0)
   )
 #+end_src
+
+#+RESULTS:
+: org-previous-visible-heading
 
 ** after-org
 #+begin_src emacs-lisp
@@ -577,6 +575,13 @@ Defining custom function to toggle visibily of bold, italics, and links etc.
    (and tags
         (format "\\hfill{}\\textsc{%s}"
                 (mapconcat #'org-latex--protect-text tags ":")))))
+#+end_src
+*** Xelatex equation preview fix
+#+begin_src emacs-lisp
+(with-eval-after-load 'org
+  (setq org-preview-latex-default-process 'imagemagick)
+  (setf (plist-get (cdr (assq 'imagemagick org-preview-latex-process-alist)) :latex-compiler)
+        '("xelatex -interaction nonstopmode -output-directory %o %f")))
 #+end_src
 ** COMMENT latex
 #+begin_src emacs-lisp
