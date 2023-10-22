@@ -558,8 +558,7 @@ Defining custom function to toggle visibily of bold, italics, and links etc.
 
 
 * Org Exports
-** Org latex export related
-*** Heading latex export style
+** Heading latex export style
 #+begin_src emacs-lisp
 (defun my-org-latex-format-headline-function
     (todo todo-type priority text tags _info)
@@ -574,7 +573,7 @@ Defining custom function to toggle visibily of bold, italics, and links etc.
         (format "\\hfill{}\\textsc{%s}"
                 (mapconcat #'org-latex--protect-text tags ":")))))
 #+end_src
-*** Xelatex equation preview fix
+** Xelatex equation preview fix
 #+begin_src emacs-lisp
 (with-eval-after-load 'org
   (setq org-preview-latex-default-process 'imagemagick)
@@ -586,13 +585,49 @@ Defining custom function to toggle visibily of bold, italics, and links etc.
 (use-package auctex)
 #+end_src
 
-** website exports
-*** ox-hugo
+** ox-hugo
+
 #+begin_src emacs-lisp
 (use-package ox-hugo
   :ensure t 
   :after ox)
 #+end_src
+
+** website from org-roam directory
+[[id:e7ee081e-a02b-4ab9-bccc-327a92bf2b09][create website from org-roam]]
+
+#+begin_src emacs-lisp
+(setq org-html-validation-link nil            ;; Don't show validation link
+      org-html-head-include-scripts nil       ;; Use our own scripts
+      org-html-head-include-default-style nil ;; Use our own styles
+      org-html-head "<link rel=\"stylesheet\" href=\"https://cdn.simplecss.org/simple.min.css\" />"
+      )
+#+end_src
+
+#+begin_src emacs-lisp :exports code :results verbatim
+(setq org-publish-project-alist
+      '(("Pensieve org -> html"
+         :base-directory "~/Pensieve"
+         :publishing-function org-html-publish-to-html
+         :publishing-directory "/tmp/garids_pensieve"
+         :section-numbers nil
+         :with-toc nil)
+        ;;:html_head "<link rel=\"stylesheet\" href=\"/home/garid/org.css\">"
+        ;; not sure why above line doesn't change css of thml output
+        ;; that's why I copied from
+        ;;https://systemcrafters.net/publishing-websites-with-org-mode/building-the-site/
+        ;; above
+
+        ("Pensieve export imgs"
+         :base-directory "~/Pensieve/od-imgs/"
+         :base-extension "jpg\\|gif\\|png\\|svg"
+         :recursive t
+         ;;:publishing-directory "/ssh:user@host:~/html/images/"
+         :publishing-directory "/tmp/garids_pensieve/od-imgs"
+         :publishing-function org-publish-attachment)))
+#+end_src
+
+
 * Org Misc:
 ** org download
 #+begin_src emacs-lisp
