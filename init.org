@@ -305,8 +305,6 @@
   (add-to-list 'org-structure-template-alist '("mk"   . "src makefile :tangle yes"))
   (add-to-list 'org-structure-template-alist '("cl"   . "src C"))
 
-  (setq org-agenda-start-with-log-mode t)
-  (setq org-default-notes-file  "~/Pensieve/20231003185907-capture.org")
   )
 #+end_src
 
@@ -528,7 +526,8 @@ Defining custom function to toggle visibily of bold, italics, and links etc.
 (use-package citar
   :no-require
   :custom
-  (org-cite-global-bibliography '("~/Documents/bib/references.bib"))
+  (org-cite-global-bibliography '("~/Documents/Personal/20220101T010101--references__study.bib"))
+  ;;(org-cite-global-bibliography '("~/Documents/bib/references.bib"))
   (org-cite-insert-processor    'citar)
   (org-cite-follow-processor    'citar)
   (org-cite-activate-processor  'citar)
@@ -555,8 +554,39 @@ Defining custom function to toggle visibily of bold, italics, and links etc.
 
 #+RESULTS:
 : biblatex
+* Org Time managements
+** org agenda config
+#+begin_src emacs-lisp :results none
+(setq org-agenda-files (directory-files-recursively denote-directory "\\.org$"))
+#+end_src
+** organize my life
+#+begin_src emacs-lisp
+(setq org-agenda-start-with-log-mode t)
+(setq org-default-notes-file
+      (concat
+       (file-name-as-directory denote-directory)
+       "20230926T010607--todo__todo.org"))
 
+(setq org-capture-templates
+      '(("t" "Todo" entry (file+headline org-default-notes-file "Tasks")
+         "* TODO %?\n  %i\n  %a")
 
+        ("s" "Scheduled Todo" entry (file+headline org-default-notes-file "Scheduled")
+         "* TODO %?\n SCHEDULED: %t\n %i\n  %a")
+
+        ("r" "random" entry (file+headline org-default-notes-file "Random")
+         "* TODO %?\n  %i\n  %a")
+
+        ("T" "Todo (xclip)" entry (file+headline org-default-notes-file "Tasks")
+         "* TODO %x\n  %i\n  %a")
+
+        ;;("j" "Journal" entry (file+datetree "~/org/journal.org")
+        ;; "* %?\nEntered on %U\n  %i\n  %a")
+
+        ("R" "Random (xclip)" entry (file+headline org-default-notes-file "Random")
+         "* Later %x\n  %i\n  %a")))
+
+#+end_src
 * Org Exports
 ** Heading latex export style
 #+begin_src emacs-lisp
@@ -1069,10 +1099,15 @@ Defining custom function to toggle visibily of bold, italics, and links etc.
   ;; :which-key "(o)-(t)ask-(o)pen")
   "oe"  '((lambda () (interactive) (find-file "~/.config/emacs/init.org"))
           :which-key "(o)pen-(e)macs-init.org")
-  "ob"  '((lambda () (interactive) (find-file "~/Documents/bib/references.bib"))
+  ;;"ob"  '((lambda () (interactive) (find-file "~/Documents/bib/references.bib"))
+  ;;        :which-key "(o)pen-(b)ookmark")
+  "ob"  '((lambda () (interactive) (find-file (nth 0 org-cite-global-bibliography)))
           :which-key "(o)pen-(b)ookmark")
   "oE"  '((lambda () (interactive) (find-file "~/.config/emacs/init.el"))
           :which-key "(o)pen-(E)macs-init.el")
+
+  "oC"  '((lambda () (interactive) (find-file org-default-notes-file))
+          :which-key "(o)pen-(C)apture")
   ;;"oC"  '((lambda () (interactive) (find-file "~/roamnotes/20230417200051-org_contacs.org"))
   ;;        :which-key "(o)pen-(E)macs-init.el")
 
@@ -1081,6 +1116,7 @@ Defining custom function to toggle visibily of bold, italics, and links etc.
   "<"   '(recompile           :which-key "recompile")
 
   "otT"  '(org-todo                                         :which-key "(o-t)odo-(T)"             )
+  "otb"  '(org-timeblock                                    :which-key "(o-t)ime-(b)lock"         )
   "ott"  '((lambda () (interactive) (org-todo "TODO"))      :which-key "(o-t)odo-(t)odo"          )
   "ots"  '((lambda () (interactive) (org-todo "STARTED"))   :which-key "(o-t)odo-(s)chedule"      )
   "otw"  '((lambda () (interactive) (org-todo "WAITING"))   :which-key "(o-t)odo-(w)ait"          )
@@ -1166,7 +1202,7 @@ Defining custom function to toggle visibily of bold, italics, and links etc.
 
   "ruim"   '(org-roam-ui-mode :which-key "(r-ui)-(m)ode")
 
-  "Dn" '(denote :which-key "(D)e-(N)ote")
+  "Dn" '(denote-open-or-create :which-key "(D)e-(N)ote")
   "DD"  '((lambda () (interactive)
             (dired denote-directory))
           :which-key "(D)enote-(D)ired")
