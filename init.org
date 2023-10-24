@@ -9,6 +9,11 @@
 #+PROPERTY: header-args :tangle init.el
 #+auto_tangle: t
 
+* From shell you can run make run:
+#+begin_src shell :noeval
+make run # produces the init.el
+#+end_src
+
 * Package Manager:
 ** Package Repositories 
 #+begin_src emacs-lisp
