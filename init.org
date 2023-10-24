@@ -560,7 +560,7 @@ Defining custom function to toggle visibily of bold, italics, and links etc.
 (setq org-agenda-files (directory-files-recursively denote-directory "\\.org$"))
 #+end_src
 ** organize my life
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :results none
 (setq org-agenda-start-with-log-mode t)
 (setq org-default-notes-file
       (concat
@@ -575,7 +575,7 @@ Defining custom function to toggle visibily of bold, italics, and links etc.
          "* TODO %?\n SCHEDULED: %t\n %i\n  %a")
 
         ("r" "random" entry (file+headline org-default-notes-file "Random")
-         "* TODO %?\n  %i\n  %a")
+         "* Later %?\n  %i\n  %a")
 
         ("T" "Todo (xclip)" entry (file+headline org-default-notes-file "Tasks")
          "* TODO %x\n  %i\n  %a")
@@ -587,6 +587,8 @@ Defining custom function to toggle visibily of bold, italics, and links etc.
          "* Later %x\n  %i\n  %a")))
 
 #+end_src
+
+
 * Org Exports
 ** Heading latex export style
 #+begin_src emacs-lisp
