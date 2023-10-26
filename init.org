@@ -10,7 +10,7 @@
 #+auto_tangle: t
 
 * From shell you can run make run:
-#+begin_src shell :noeval
+#+begin_src shell :noeval :tangle no
 make run # produces the init.el
 #+end_src
 
@@ -26,12 +26,15 @@ make run # produces the init.el
 ** Package Manager
 #+begin_src emacs-lisp
 ;; BOOTSTRAP USE-PACKAGE <= not sure what it does
-(package-initialize) (setq use-package-always-ensure t)
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
-(eval-when-compile (require 'use-package))
-(use-package auto-package-update) ; Helps with update
+(package-initialize)
+(setq use-package-always-ensure t)
+
+;; probably only used first time
+;; (unless (package-installed-p 'use-package)
+;;   (package-refresh-contents)
+;;   (package-install 'use-package))
+;;(eval-when-compile (require 'use-package))
+;; (use-package auto-package-update) ; Helps with update automoacial
 #+end_src
 * Vi Movement Related
 ** vim-undo
@@ -234,7 +237,7 @@ make run # produces the init.el
   ;; (setq org-ellipsis " … " org-hide-emphasis-markers t)
   (setq org-latex-active-timestamp-format    "\\textcolor{orange}{%s}")
   (setq org-latex-inactive-timestamp-format  "\\textcolor{Brown}{%s}") ;; blue requires latex xcolor
-  (setq org-highlight-latex-and-related '(native latex script entities))
+  (setq org-highlight-latex-and-related '(latex script entities)) ;; native messes up with links
 
   (setq org-log-done t)
   (setq org-image-actual-width '(800)) ; sets images size
@@ -829,6 +832,7 @@ Defining custom function to toggle visibily of bold, italics, and links etc.
 ** magit
 #+begin_src emacs-lisp
 (use-package magit)
+(use-package git-gutter)
 #+end_src
 ** COMMENT eglot
 #+begin_src emacs-lisp
@@ -1212,6 +1216,10 @@ Defining custom function to toggle visibily of bold, italics, and links etc.
   "Dn" '(denote-open-or-create :which-key "(D)e-(N)ote")
   "DD"  '((lambda () (interactive)
             (dired denote-directory))
+          :which-key "(D)enote-(D)ired")
+
+  "Dr"  '(;;(lambda () (interactive) (dired denote-directory))
+          denote-rename-file
           :which-key "(D)enote-(D)ired")
 
   ;; org code movement
