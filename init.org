@@ -1,9 +1,6 @@
 #+title:  My Emacs Configuration
 #+author: Garid Zorigoo
-
-#+LATEX_CLASS: article
-#+LATEX_CLASS_OPTIONS: [a4paper]
-#+LATEX_HEADER: \usepackage[mongolian,english]{babel}
+#+SETUPFILE: ~/.config/emacs/org-templates/level-0-xelatex-fonts-conf.org
 
 #+startup: show2levels
 #+PROPERTY: header-args :tangle init.el
