@@ -2,7 +2,7 @@
 #+LATEX_HEADER: \usepackage[dvipsnames]{xcolor}
 #+LATEX_HEADER: \usepackage{fontspec}
 #+LATEX_HEADER: \usepackage[CJK]{ucharclasses} 
-#+LATEX_HEADER: \usepackage[margin=1in]{geometry}
+#+LATEX_HEADER: \usepackage[margin=0.85in]{geometry}
 #+LATEX_HEADER: \usepackage{bookmark}
         
 #+LATEX_HEADER: \setmainfont{CMU Serif}                %\setmainfont{Iosevka Etoile Light}
@@ -25,3 +25,17 @@
 #+LATEX_HEADER:   showstringspaces=false,       %showtabs=true,                  
 #+LATEX_HEADER:   stepnumber=2,                    
 #+LATEX_HEADER: }
+
+
+ #+LATEX_HEADER: \hypersetup{   %using answer https://tex.stackexchange.com/a/847/292504
+ #+LATEX_HEADER:     colorlinks,
+ #+LATEX_HEADER:     linkcolor={red!50!black},
+ #+LATEX_HEADER:     citecolor={blue!50!black},
+ #+LATEX_HEADER:     urlcolor={blue!80!black}
+ #+LATEX_HEADER: }
+
+
+
+
+
+
