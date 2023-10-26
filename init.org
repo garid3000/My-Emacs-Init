@@ -10,8 +10,10 @@
 #+auto_tangle: t
 
 * From shell you can run make run:
-#+begin_src shell :noeval :tangle no
-make run # produces the init.el
+#+begin_src shell :noeval :tangle Makefile
+# make run # produces the init.el
+run:
+	emacs --batch --eval "(require 'org)" --eval '(org-babel-tangle-file "init.org")'
 #+end_src
 
 * Package Manager:
@@ -54,20 +56,20 @@ make run # produces the init.el
          ("M-u"      . evil-scroll-page-up      ))
   :init
   ;; (setq evil-search-module 'evil-search)
-  (setq evil-want-keybinding	nil)
-  (setq evil-want-C-i-jump	nil)
+  (setq evil-want-keybinding	nil)  
+  (setq evil-want-C-i-jump	nil) ;; read more ?
   ;; no vim insert bindings
   (setq evil-undo-system 'undo-fu)
-  :config (evil-mode 1))
+  :config (evil-mode 1))             ;; shouldn't this be after?
 #+end_src
 ** evil-collection
 #+begin_src emacs-lisp
-  ;;; Vim Bindings Everywhere else
-  (use-package evil-collection
-    :after evil
-    :config
-    (setq evil-want-integration t)
-    (evil-collection-init))
+;;; Vim Bindings Everywhere else
+(use-package evil-collection
+  :after evil
+  :config
+  (setq evil-want-integration t)
+  (evil-collection-init))
 #+end_src
 ** evil-surround
 #+begin_src emacs-lisp
@@ -118,8 +120,9 @@ make run # produces the init.el
   :config (load-theme 'gruvbox-dark-hard t))
 
 (use-package evil-terminal-cursor-changer
-  :config
-  (evil-terminal-cursor-changer-activate)
+  ;; :if (memq window-system '(mac ns))
+  ;; :if window-system
+  :config (evil-terminal-cursor-changer-activate)
   )
 ;; (unless (display-graphic-p)
 ;; (require 'evil-terminal-cursor-changer)
@@ -144,24 +147,24 @@ make run # produces the init.el
 #+end_src
 ** Emacs Interface config
 #+begin_src emacs-lisp
-  (scroll-bar-mode -1)        ; Disable visible scrollbar
-  (tool-bar-mode   -1)        ; Disable the toolbar
-  (tooltip-mode    -1)        ; Disable tooltips
-  (set-fringe-mode 15)        ; Give some breathing room
-  (menu-bar-mode   -1)        ; Disable the menu bar
+(scroll-bar-mode -1)        ; Disable visible scrollbar
+(tool-bar-mode   -1)        ; Disable the toolbar
+(tooltip-mode    -1)        ; Disable tooltips
+(set-fringe-mode 15)        ; Give some breathing room
+(menu-bar-mode   -1)        ; Disable the menu bar
 #+end_src
 ** Display Number & cursor-line highlightnig
 #+begin_src emacs-lisp
-  ;; setting line
-  (use-package display-line-numbers)
-  (setq display-line-numbers-type 'relative)
-  (global-display-line-numbers-mode 1)
+;; setting line
+(use-package display-line-numbers)
+(setq display-line-numbers-type 'relative)
+(global-display-line-numbers-mode 1)
 
-  ;; cursor light
-  ;; (use-package beacon)
-  ;; (setq beacon 0.1)
-  ;; (beacon-mode 1)
-  (global-hl-line-mode 1)
+;; cursor light
+;; (use-package beacon)
+;; (setq beacon 0.1)
+;; (beacon-mode 1)
+(global-hl-line-mode 1)
 #+end_src
 
 * M-x related 
@@ -173,13 +176,13 @@ make run # produces the init.el
               ("C-j"   . vertico-next        ) ("M-j"   . vertico-next        )
               ("C-k"   . vertico-previous    ) ("M-k"   . vertico-previous    )
               ("C-f"   . vertico-exit        ) ("M-f"   . vertico-exit        )
-              ;; ("C-g"   . vertico-grid-mode   ) ;; ("M-g"   . vertico-grid-mode   )
-              ;; ("C-h"   . vertico-grid-left   ) ("M-h"   . vertico-grid-left   )
-              ;; ("C-l"   . vertico-grid-right  ) ("M-l"   . vertico-grid-right  )
               ("C-u"   . vertico-scroll-up   ) ("M-u"   . vertico-scroll-up   )
               ("C-d"   . vertico-scroll-down ) ("M-d"   . vertico-scroll-down )
-              ;; ("C-S-g" . vertico-last        ) ("M-S-g" . vertico-last        )
               ("M-n"   . vertico-next        ) ("M-p"   . vertico-previous    ))
+              ;; ("C-g" . vertico-grid-mode  ) ("M-g"   . vertico-grid-mode   )
+              ;; ("C-h" . vertico-grid-left  ) ("M-h"   . vertico-grid-left   )
+              ;; ("C-l" . vertico-grid-right ) ("M-l"   . vertico-grid-right  )
+              ;; ("C-S-g" . vertico-last     ) ("M-S-g" . vertico-last        )
   :custom (vertico-cycle t)
   :init (vertico-mode))
 #+end_src
@@ -196,8 +199,8 @@ make run # produces the init.el
 #+end_src
 ** consult
 #+begin_src emacs-lisp
-  (use-package consult
-    :bind (("M-f"  . consult-line)))
+(use-package consult
+  :bind (("M-f"  . consult-line)))
 #+end_src
 ** orderless
 #+begin_src emacs-lisp
@@ -224,40 +227,62 @@ make run # produces the init.el
               ("C-S-k" . org-previous-visible-heading   )
               ("C-S-k" . org-previous-visible-heading   ))
 
-  ;; ("C-'" . org-edit-special)
-  ;; :map org-src-mode-map
-  ;; ("C-'" . org-edit-src-exit)
-  ;; :bind (:map org-agenda-mode-map
-  ;; ("j" . org-agenda-next-item)
-  ;; ("k" . org-agenda-previous-item) )
   :hook (org-mode . dw/org-mode-setup)
   :config
-  ;; (setq org-ellipsis "▼ " org-hide-emphasis-markers t)
-  (setq org-ellipsis " ▼" org-hide-emphasis-markers t)
-  ;; (setq org-ellipsis " … " org-hide-emphasis-markers t)
-  (setq org-latex-active-timestamp-format    "\\textcolor{orange}{%s}")
-  (setq org-latex-inactive-timestamp-format  "\\textcolor{Brown}{%s}") ;; blue requires latex xcolor
-  (setq org-highlight-latex-and-related '(latex script entities)) ;; native messes up with links
+  (setq
+   org-ellipsis                         " ▼"  ;; folded subtree symbol
+   org-hide-emphasis-markers            t
+   org-log-done                         t
+   org-image-actual-width               '(800) ; sets images size TODO for different size
+   org-src-tab-acts-natively            t
+   org-src-preserve-indentation         nil    ;; scr-blk
+   org-edit-src-content-indentation     0      ;; scr-blk
+   )
 
-  (setq org-log-done t)
-  (setq org-image-actual-width '(800)) ; sets images size
+  ;; org tempo related?
+  (setq electric-pair-inhibit-predicate ;;; ??forgot what it does?
+        (lambda (c) ;disables <> from electric-pair-mode's
+          (if (char-equal c ?\<) t (electric-pair-default-inhibit c))))
+
+  ;; if in desktop environment (not from tty terminal)
   (setq org-file-apps
-        '((auto-mode . emacs) ;("\\.x?html?\\'" . "firefox %s")
-          ("\\.gif\\'"   . "mpv \"%s\""	)
-          ("\\.mp4\\'"   . "mpv \"%s\""	)
-          ("\\.png\\'"   . "sxiv \"%s\""	)
-          ("\\.svg\\'"   . "sxiv \"%s\""	)
-          ("\\.jpeg\\'"  . "sxiv \"%s\""	)
-          ("\\.jpg\\'"   . "sxiv \"%s\""	)
-          ("\\.html\\'"  . "brave \"%s\""	)
-          ("\\.pdf\\'"   . "sioyek \"%s\""	)
-          ("\\.mkv\\'"   . "mpv \"%s\""	)
-          ("\\.xopp\\'"  . "xournalpp \"%s\""	)))
+        '((auto-mode     . emacs              )
+          ;;("\\.x?html?\\'" . "firefox %s"   )
+          ("\\.gif\\'"   . "mpv    \"%s\""    )
+          ("\\.mp4\\'"   . "mpv    \"%s\""    )
+          ("\\.png\\'"   . "sxiv   \"%s\""    )
+          ("\\.svg\\'"   . "sxiv   \"%s\""    )
+          ("\\.jpeg\\'"  . "sxiv   \"%s\""    )
+          ("\\.jpg\\'"   . "sxiv   \"%s\""    )
+          ("\\.html\\'"  . "brave  \"%s\""    )
+          ("\\.pdf\\'"   . "sioyek \"%s\""    )
+          ("\\.mkv\\'"   . "mpv    \"%s\""    )
+          ("\\.xopp\\'"  . "xournalpp \"%s\"" )))
 
-  ;; latex listing (for source code coloring)
-  (setq org-latex-listings t)
+  (setq
+   org-todo-keywords '((sequence
+                        "TODO(t)"  "STARTED(s)"  "WAITING(w)"
+                        "|"
+                        "PROCESSED(p)" "DONE(d)" "CANCELLED(c)"))
+
+   org-todo-keyword-faces '(("TODO"       . org-warning )
+                            ("STARTED"    . "orange"    )
+                            ("WAITING"    . "yellow"    )
+                            ("PROCESSED"  . "dim gray"  )
+                            ("CANCELLED"  . (:foreground "gray30" :weight bold))))
+
+
+  ;; Latex related ===================================================================
+  (setq
+   org-latex-format-headline-function 'my-org-latex-format-headline-function
+   org-latex-active-timestamp-format   "\\textcolor{orange}{%s}"
+   org-latex-inactive-timestamp-format "\\textcolor{Brown}{%s}"
+   org-highlight-latex-and-related     '(latex script entities)
+   org-latex-listings                  t
+   )
+  (plist-put org-format-latex-options :scale 1.7)
   (add-to-list 'org-latex-packages-alist '("" "listings"))
-  (add-to-list 'org-latex-packages-alist '("" "color"))
+  (add-to-list 'org-latex-packages-alist '("" "color"   ))
 
   ;;latex export (for sourc ecode coloring)
   ;;(setq org-latex-listings 'minted
@@ -265,27 +290,8 @@ make run # produces the init.el
   ;;      org-latex-pdf-process
   ;;      '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
   ;;        "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
-  (setq org-src-tab-acts-natively t)
-  (setq org-latex-format-headline-function 'my-org-latex-format-headline-function)
-  (setq electric-pair-inhibit-predicate
-        (lambda (c) ;disables <> from electric-pair-mode's
-          (if (char-equal c ?\<) t (electric-pair-default-inhibit c))))
+  ;; (setq org-src-tab-acts-natively t)
 
-  (setq org-todo-keywords
-        '((sequence
-           "TODO(t)"  "STARTED(s)"  "WAITING(w)"
-           "|"
-           "PROCESSED(p)" "DONE(d)" "CANCELLED(c)")))
-  (setq org-todo-keyword-faces
-        '(("TODO"       . org-warning   )
-          ("STARTED"    . "orange"      )
-          ("WAITING"    . "yellow"      )
-          ("PROCESSED"  . "dim gray"	)
-          ("CANCELLED"  . (:foreground "gray30" :weight bold))))
-
-  (plist-put org-format-latex-options :scale 1.7)
-  (setq org-src-preserve-indentation nil
-        org-edit-src-content-indentation 0)
   )
 #+end_src
 
@@ -308,37 +314,37 @@ make run # produces the init.el
   (add-to-list 'org-structure-template-alist '("py"   .  "src python"))
   (add-to-list 'org-structure-template-alist '("pyS"  .  "src python :session mysess :results output :exports both :cache no"))
   (add-to-list 'org-structure-template-alist '("sq"   .  "sqlite"))
-  (add-to-list 'org-structure-template-alist '("js"   .  "src js"))
+  ;; (add-to-list 'org-structure-template-alist '("js".  "src js"))
 
-  (add-to-list 'org-structure-template-alist '("mk"   . "src makefile :tangle yes"))
-  (add-to-list 'org-structure-template-alist '("cl"   . "src C"))
+  (add-to-list 'org-structure-template-alist '("mk"   . "src makefile :tangle no"))
+  ;; (add-to-list 'org-structure-template-alist '("cl"   . "src C"))
 
   )
 #+end_src
 
-#+RESULTS:
-: ~/Pensieve/20231003185907-capture.org
-
-** org-babel
-#+begin_src emacs-lisp
-(org-babel-do-load-languages
- 'org-babel-load-languages
- '((python   . t)  (emacs-lisp . t)
-   (latex    . t) ;; (lisp     . t)
-   (shell    . t) ;; (C        . t)
-   (dot      . t)  (makefile   . t)
-   (sqlite   . t) ;; (js       . t)
-   (gnuplot  . t) ;; (scad     . t)
-   ;; (jupyter . t) ;; (rust   . t)
-   (nim      . t)))
-#+end_src
-** COMMENT ob babel langs
+** ob babel langs
 #+begin_src emacs-lisp
 (use-package ob-nim)
 #+end_src
 
-#+RESULTS:
+** org-babel
+#+begin_src emacs-lisp
+;; may need to load ob-... package before this
+;; e.g. may need to load ob-nim before this
 
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((python     . t)    ;; (scad    . t)
+   (emacs-lisp . t)    ;; (jupyter . t)
+   (latex      . t)    ;; (rust    . t)
+   (shell      . t)    ;; (lisp    . t) 
+   (dot        . t)    ;; (C       . t)
+   (makefile   . t)    ;; (js      . t)
+   (sqlite     . t)
+   (gnuplot    . t)
+   (nim        . t)
+   ))
+#+end_src
 * Org prettiness
 ** org-indent
 #+begin_src emacs-lisp
@@ -351,14 +357,8 @@ make run # produces the init.el
   :hook (org-mode . org-bullets-mode)
   :custom
   (org-bullets-bullet-list
-   '("◉" "○" "●" "○" "●" "○" "●")))
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; ;; Replace list hyphen with dot				    ;;
-;; ;; (font-lock-add-keywords 'org-mode				    ;;
-;; ;; '(("^ *\\([-]\\) "					    ;;
-;; (0 (prog1 () (compose-region					    ;;
-;; 	      (match-beginning 1) (match-end 1) "•"))))))	    ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+   '("◉" "○" "●" "○"
+     "●" "○" "●")))
 #+end_src
 ** org-svg-background-transparent
 #+begin_src emacs-lisp
@@ -405,13 +405,14 @@ Defining custom function to toggle visibily of bold, italics, and links etc.
   (org-indent-mode) ;;;;;this for lag ;(variable-pitch-mode 1)
   (auto-fill-mode 0)
   (visual-line-mode 1)
-  ;; (setq evil-auto-indent nil)
-  ;;          turned off on fed 06, to see what happens
-  ;; (setq org-latex-active-timestamp-format
-  ;;          "\\textcolor{orange}{\\texttt{%s}}")
-  ;; (setq org-latex-inactive-timestamp-format
-  ;;          "\\textcolor{blue}{\\texttt{%s}}")
   )
+
+;; (setq evil-auto-indent nil)
+;;          turned off on fed 06, to see what happens
+;; (setq org-latex-active-timestamp-format
+;;          "\\textcolor{orange}{\\texttt{%s}}")
+;; (setq org-latex-inactive-timestamp-format
+;;          "\\textcolor{blue}{\\texttt{%s}}")
 #+end_src
 * Org Zettelkasten like (roam and denote)
 ** org roam
@@ -534,12 +535,12 @@ Defining custom function to toggle visibily of bold, italics, and links etc.
 (use-package citar
   :no-require
   :custom
-  (org-cite-global-bibliography '("~/Documents/Personal/20220101T010101--references__study.bib"))
   ;;(org-cite-global-bibliography '("~/Documents/bib/references.bib"))
+  (org-cite-global-bibliography '("~/Documents/Personal/20220101T010101--references__study.bib"))
   (org-cite-insert-processor    'citar)
   (org-cite-follow-processor    'citar)
   (org-cite-activate-processor  'citar)
-  (citar-bibliography org-cite-global-bibliography)
+  (citar-bibliography            org-cite-global-bibliography)
   ;; (setq citar-library-paths '("~/Documents/papers"))
   ;; optional: org-cite-insert is also bound to C-c C-x C-@
   ;;:bind
@@ -552,16 +553,19 @@ Defining custom function to toggle visibily of bold, italics, and links etc.
   :no-require
   :config
   (citar-org-roam-mode)
-  (setq citar-org-roam-note-title-template
-        "=${=key=}= - ${title}\n#+subtitle: Garid's notes on this article\n#+author: paper authors: ${author}\n#+filetags: :literature:\n\n* Ideas\n\n* Notes\n\n")
+  (setq
+   citar-org-roam-note-title-template
+   "=${=key=}= - ${title}\n#+subtitle: Garid's notes on this article\n#+author: paper authors: ${author}\n#+filetags: :literature:\n\n* Ideas\n\n* Notes\n\n")
   (setq citar-org-roam-subdir "citar-notes")
   )
+
 ;;https://lucidmanager.org/productivity/emacs-bibtex-mode/
 (setq bibtex-dialect 'biblatex)
 #+end_src
 
 #+RESULTS:
 : biblatex
+
 * Org Time managements
 ** org agenda config
 #+begin_src emacs-lisp :results none
@@ -637,34 +641,37 @@ Defining custom function to toggle visibily of bold, italics, and links etc.
 [[id:e7ee081e-a02b-4ab9-bccc-327a92bf2b09][create website from org-roam]]
 
 #+begin_src emacs-lisp
-(setq org-html-validation-link nil            ;; Don't show validation link
-      org-html-head-include-scripts nil       ;; Use our own scripts
-      org-html-head-include-default-style nil ;; Use our own styles
-      org-html-head "<link rel=\"stylesheet\" href=\"https://cdn.simplecss.org/simple.min.css\" />"
-      )
+(setq
+ org-html-validation-link            nil ;; Don't show validation link
+ org-html-head-include-scripts       nil ;; Use our own scripts
+ org-html-head-include-default-style nil ;; Use our own styles
+ org-html-head "<link rel=\"stylesheet\" href=\"https://cdn.simplecss.org/simple.min.css\" />"
+ )
 #+end_src
 
 #+begin_src emacs-lisp :exports code :results verbatim
-(setq org-publish-project-alist
-      '(("Pensieve org -> html"
-         :base-directory "~/Pensieve"
-         :publishing-function org-html-publish-to-html
-         :publishing-directory "/tmp/garids_pensieve"
-         :section-numbers nil
-         :with-toc nil)
-        ;;:html_head "<link rel=\"stylesheet\" href=\"/home/garid/org.css\">"
-        ;; not sure why above line doesn't change css of thml output
-        ;; that's why I copied from
-        ;;https://systemcrafters.net/publishing-websites-with-org-mode/building-the-site/
-        ;; above
+(setq
+ org-publish-project-alist
+ '(("Pensieve org -> html"
+    :base-directory "~/Pensieve"
+    :publishing-function org-html-publish-to-html
+    :publishing-directory "/tmp/garids_pensieve"
+    :section-numbers nil
+    :with-toc nil)
+   ;;:html_head "<link rel=\"stylesheet\" href=\"/home/garid/org.css\">"
+   ;; not sure why above line doesn't change css of thml output
+   ;; that's why I copied from
+   ;;https://systemcrafters.net/publishing-websites-with-org-mode/building-the-site/
+   ;; above
 
-        ("Pensieve export imgs"
-         :base-directory "~/Pensieve/od-imgs/"
-         :base-extension "jpg\\|gif\\|png\\|svg"
-         :recursive t
-         ;;:publishing-directory "/ssh:user@host:~/html/images/"
-         :publishing-directory "/tmp/garids_pensieve/od-imgs"
-         :publishing-function org-publish-attachment)))
+   ("Pensieve export imgs"
+    :base-directory "~/Pensieve/od-imgs/"
+    :base-extension "jpg\\|gif\\|png\\|svg"
+    :recursive t
+    ;;:publishing-directory "/ssh:user@host:~/html/images/"
+    :publishing-directory "/tmp/garids_pensieve/od-imgs"
+    :publishing-function org-publish-attachment)
+   ))
 #+end_src
 
 
@@ -674,20 +681,44 @@ Defining custom function to toggle visibily of bold, italics, and links etc.
 (use-package org-download
   :ensure t
   :config
-  (setq org-download-display-inline-images nil)
-  (org-download-enable)
-  (setq org-download-edit-cmd "/home/garid/.garid/edit_img.sh %s"))
+  (setq
+   org-download-display-inline-images nil
+   org-download-edit-cmd "/home/garid/.garid/edit_img.sh %s"
+   )
+  (org-download-enable))
 #+end_src
 
 #+RESULTS:
 : t
+
+#+begin_src shell :tangle no
+#!/bin/sh
+
+file=$(readlink -f "$1")
+ext="${file##*.}"
+
+if [ ! -f "$file" ]; then
+    convert -size 480x320 xc:white "$file";
+    echo "created new $file"
+fi
+
+case "$ext" in
+	jpeg) gimp "$file" ;;
+	jpg)  gimp "$file" ;;
+	png)  gimp "$file" ;;
+	svg)  inkscape "$file" ;;
+	xopp) xournalpp "$file" ;;
+esac
+#+end_src
 
 ** org auto tangle
 #+begin_src emacs-lisp
 (use-package org-auto-tangle
   :defer t
   :hook   (org-mode . org-auto-tangle-mode)
-  :config (setq org-auto-tangle-default t))
+  :config
+  (setq org-auto-tangle-default t) ;; maybe nil might be good
+  )
 #+end_src
 ** COMMENT org contacts
 #+begin_src emacs-lisp
@@ -723,6 +754,7 @@ Defining custom function to toggle visibily of bold, italics, and links etc.
 #+begin_src emacs-lisp
 (use-package org-tree-slide)
 #+end_src
+
 * Development Environment / Programming
 ** Corfu
 #+begin_src emacs-lisp
@@ -730,14 +762,14 @@ Defining custom function to toggle visibily of bold, italics, and links etc.
 (use-package corfu
   ;; Optional customizations
   :custom
-  (corfu-cycle t)                 ; Allows cycling through candidates
-  (corfu-auto t)                  ; Enable auto completion
-  (corfu-auto-prefix 2)
-  (corfu-auto-delay 0.0)
+  (corfu-cycle            t)      ; Allows cycling through candidates
+  (corfu-auto             t)      ; Enable auto completion
+  (corfu-auto-prefix      2)
+  (corfu-auto-delay       0.0)
   (corfu-popupinfo-delay '(0.5 . 0.2))
   (corfu-preview-current 'insert) ; Do not preview current candidate
-  (corfu-preselect-first nil)
-  (corfu-on-exact-match nil)      ; Don't auto expand tempel snippets
+  (corfu-preselect-first  nil)
+  (corfu-on-exact-match   nil)    ; Don't auto expand tempel snippets
 
   ;; Optionally use TAB for cycling, default is `corfu-complete'.
   :bind (:map corfu-map
@@ -939,16 +971,19 @@ Defining custom function to toggle visibily of bold, italics, and links etc.
 ;;(add-to-list 'load-path (expand-file-name "~/.config/emacs/Emacs-Mongolian-Input-Methods/"))
 (add-to-list 'load-path (expand-file-name "~/.config/emacs/Emacs-TeQ"))
 
-;; (register-input-method
-;;  "cyrillic-mongolian" "Mongolian" 'quail-use-package
-;;  "MN-" "(Монгол) - Mongolian Keyboard Layout"
-;;  "cyrillic-mongolian.el")
-
-
 (register-input-method
  "TeQ-Math" "Emacs-Teq-Latex" 'quail-use-package
  "TeQ-" "TeQ-Math input"
  "Emacs-TeQ.el")
+
+(fset 'gry-calc-horizontal-concat
+      (kmacro-lambda-form [?v ?t tab ?v ?t ?| ?v ?t] 0 "%d"))
+
+
+;; (register-input-method
+;;  "cyrillic-mongolian" "Mongolian" 'quail-use-package
+;;  "MN-" "(Монгол) - Mongolian Keyboard Layout"
+;;  "cyrillic-mongolian.el")
 
 ;;(load "~/.config/emacs/garid/garids-abbrev-typos.el")	;; garid typos
 ;;(load "~/.config/emacs/garid/garid-gtd.el")		;; garid typos
@@ -958,9 +993,6 @@ Defining custom function to toggle visibily of bold, italics, and links etc.
 ;; "Create tags file."
 ;; (interactive "DDirectory: ")
 ;; (shell-command (format "%s -f TAGS -e -R %s" path-to-ctags (directory-file-name dir-name))))
-
-(fset 'gry-calc-horizontal-concat
-      (kmacro-lambda-form [?v ?t tab ?v ?t ?| ?v ?t] 0 "%d"))
 #+end_src
 
 #+RESULTS:
@@ -1009,7 +1041,6 @@ Defining custom function to toggle visibily of bold, italics, and links etc.
 (global-set-key (kbd "M-J") 'other-window)
 (global-set-key (kbd "M-K") #'(lambda() (interactive) (other-window -1)))
 (global-set-key (kbd "M-F") 'avy-goto-char)
-(setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
 (global-set-key (kbd "M-W") 'evil-window-vnew)
 (global-set-key (kbd "M-E") 'evil-window-vsplit)
 (global-set-key (kbd "M-]") 'comint-dynamic-complete-filename)
@@ -1017,6 +1048,7 @@ Defining custom function to toggle visibily of bold, italics, and links etc.
 (global-set-key (kbd "M-s") 'avy-goto-char)
 (global-set-key (kbd "C-/") 'comment-line)
 (global-set-key (kbd "C-|") 'toggle_input_method_mn_teq)
+(setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
 #+end_src
 ** general main
 #+begin_src emacs-lisp
@@ -1026,14 +1058,14 @@ Defining custom function to toggle visibily of bold, italics, and links etc.
 
     ;; Main leader key ;;
     (general-create-definer rune/leader-keys
-      :keymaps '(normal insert visual emacs)
-      :prefix "SPC"
+      :keymaps       '(normal insert visual emacs)
+      :prefix        "SPC"
       :global-prefix "C-SPC")
 
     ;; Secondary leader key ;;
     (general-create-definer rune/leader-keys-other
-      :keymaps '(normal insert visual emacs)
-      :prefix "M-SPC"
+      :keymaps       '(normal insert visual emacs)
+      :prefix        "M-SPC"
       :global-prefix "C-M-SPC"))
 #+end_src
 ** general main1
@@ -1309,7 +1341,7 @@ Defining custom function to toggle visibily of bold, italics, and links etc.
 ;; recentf
 (recentf-mode 1)
 ;;(setq recentf-exclude '("/home/garid/roamnotes/.*org")) ;; to exclude roam nodes
-(setq recentf-max-menu-items 30)
+(setq recentf-max-menu-items  30)
 (setq recentf-max-saved-items 30)
 #+end_src
 ** COMMENT Sys term open
@@ -1318,6 +1350,38 @@ Defining custom function to toggle visibily of bold, italics, and links etc.
   (interactive)
   (shell-command (concat "term-at " buffer-file-name)))
 #+end_src
+
+term-at shell script
+#+begin_src shell :tangle no
+#!/bin/bash
+
+# Open System termianl $TERMINAL at $1:
+# nohup for exitting terminal that executed this script
+# other wise terminal that executed this script just hangs there
+
+# if $1 is directory; -> cd to this dir
+if [[ -d $1 ]]; then             
+	notify-send "term-at" "Openning Terminal\n at: $1"
+	cd "$1" || return 1
+	nohup "$TERMINAL" > /dev/null &
+	return 0
+
+# if $1 is file; -> cd to parent dir
+elif [[ -f $1 ]]; then
+	notify-send "term-at" "Openning Terminal\n near: $1"
+	cd "$(dirname "$1")" || return 1
+	nohup "$TERMINAL" > /dev/null &
+	return 0
+
+# if $1 is neither directory nor file -> fail
+else
+	notify-send "term-at" "$1\nwas not found\nOpening at Home"
+	st || return 1
+	return 0
+fi
+#+end_src
+
+
 * COMMENT Mail & contacts:
 ** COMMENT mu4e
 #+begin_src emacs-lisp
@@ -1380,6 +1444,8 @@ Defining custom function to toggle visibily of bold, italics, and links etc.
 #+begin_src emacs-lisp
 (when (eq system-type 'berkeley-unix)
   (setq insert-directory-program "gls"))
+
+;; cna be include ~:if .....~ in usepackage below
 #+end_src
 ** Core dired
 #+begin_src emacs-lisp
@@ -1406,16 +1472,17 @@ Defining custom function to toggle visibily of bold, italics, and links etc.
    'all-the-icons-extension-icon-alist
    '("m"  all-the-icons-fileicon "matlab"  :face all-the-icons-orange)))
 
-
 (use-package all-the-icons-dired)
 (add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
 #+end_src
 ** Dired additionals
+I don't use these not much  
 #+begin_src emacs-lisp
 (use-package dired-single)
 (use-package dired-sidebar)
 #+end_src
 ** COMMENT consult-dir
+I maybe will replace with something like zoxide
 #+begin_src emacs-lisp
 (use-package consult-dir)
 #+end_src
@@ -1489,13 +1556,12 @@ Defining custom function to toggle visibily of bold, italics, and links etc.
          ("M-`"   . popper-cycle)
          ("C-M-`" . popper-toggle-type))
   :init
-  (setq popper-reference-buffers
-        '("\\*Messages\\*"
-          "Output\\*$"
-          "\\*Async Shell Command\\*"
-          help-mode
-          compilation-mode))
-  (popper-mode +1)
+  (setq popper-reference-buffers '("\\*Messages\\*"
+                                   "Output\\*$"
+                                   "\\*Async Shell Command\\*"
+                                   help-mode
+                                   compilation-mode))
+  (popper-mode      +1)
   (popper-echo-mode +1))                ; For echo area hints
 #+end_src
 ** emacs-everywhere
