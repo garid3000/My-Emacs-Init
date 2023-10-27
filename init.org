@@ -276,6 +276,15 @@ run:
    org-latex-inactive-timestamp-format "\\textcolor{Brown}{%s}"
    org-highlight-latex-and-related     '(latex script entities)
    org-latex-listings                  t
+   org-latex-pdf-process '("xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+                           ;; https://emacs.stackexchange.com/a/47426/38482 this 
+                           ;;"pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+                           ;;"bibtex %b"
+                           ;;"pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+                           ;;"pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+                           )
+
+
    )
   (plist-put org-format-latex-options :scale 1.7)
   (add-to-list 'org-latex-packages-alist '("" "listings"))
@@ -607,13 +616,25 @@ Defining custom function to toggle visibily of bold, italics, and links etc.
   See `org-latex-format-headline-function' for details."
   (concat
    (and todo
-        (format "{\\framebox{\\bfseries\\rfamily\\color{%s} %s}} "
-                (pcase todo-type ('todo "olive") ('done "teal")) todo))
+        ;(format "{\\framebox{\\bfseries\\rfamily\\color{%s} %s}} "
+        ;(format "{\\bfseries\\rfamily\\color{%s} %s} "
+        ;(format "{\\rfamily\\color{%s} %s} "
+        ;(format "{\\color{%s} %s} "
+        (format "{\\framebox{\\bfseries\\color{%s} %s}} "
+                (pcase todo-type
+                  ('todo "olive") ('done "teal")
+                  ;;('todo "Black") ('done "Brown")
+                  )
+                todo))
    (and priority (format "\\framebox{\\#%c} " priority)) text
    (and tags
         (format "\\hfill{}\\textsc{%s}"
                 (mapconcat #'org-latex--protect-text tags ":")))))
 #+end_src
+
+#+RESULTS:
+: my-org-latex-format-headline-function
+
 ** Xelatex equation preview fix
 #+begin_src emacs-lisp
 (with-eval-after-load 'org
@@ -753,6 +774,10 @@ esac
 #+end_src
 
 * Development Environment / Programming
+** Save place mode
+#+begin_src emacs-lisp
+(save-place-mode 1) ;; lets test it for few days
+#+end_src
 ** Corfu
 #+begin_src emacs-lisp
 ;; from https://github.com/Gavinok/emacs.d/blob/3ccc6e35feb2903442c9f7625fba081d93a2fa36/init.el#L614
@@ -1164,6 +1189,8 @@ esac
   "otc"  '((lambda () (interactive) (org-todo "CANCELLED")) :which-key "(o-t)odo-(c)ancel"        )
   "otp"  '((lambda () (interactive) (org-todo "PROCESSED")) :which-key "(o-t)odo-(p)rocessed"     )
   "otn"  '((lambda () (interactive) (org-todo ""))          :which-key "(o-t)odo-(n)one"          )
+  "ota"  '((lambda () (interactive) (org-archive-subtree-default-with-confirmation))
+           :which-key "(o-t)odo-(a)rchive")
 
   "os"  '(org-schedule                                      :which-key "(o-s)chedule"             )
   "oa"  '(org-agenda                                        :which-key "(o-a)genda"               )
