@@ -236,7 +236,8 @@ run:
    org-edit-src-content-indentation     0      ;; scr-blk
    )
 
-  ;; org tempo related?
+  ;; org tempo related? TODO need to move to electric pair mode section
+  ;; this is about disabling < parenthesis >
   (setq electric-pair-inhibit-predicate ;;; ??forgot what it does?
         (lambda (c) ;disables <> from electric-pair-mode's
           (if (char-equal c ?\<) t (electric-pair-default-inhibit c))))
@@ -305,13 +306,14 @@ run:
 : org-previous-visible-heading
 
 ** after-org
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :results none
 ;; org mode src <-s-tab
 (with-eval-after-load 'org
   ;; This is needed as of Org 9.2
   (require 'org-tempo)
   (add-to-list 'org-structure-template-alist '("el"   .  "src emacs-lisp"))
-  (add-to-list 'org-structure-template-alist '("she"  .  "src shell"))
+  ;(add-to-list 'org-structure-template-alist '("she"  .  "src shell"))
+  (add-to-list 'org-structure-template-alist '("she"  .  "src sh"))
   (add-to-list 'org-structure-template-alist '("te"   .  "src text" ))
   (add-to-list 'org-structure-template-alist '("tm"   .  "src tmux" ))
   (add-to-list 'org-structure-template-alist '("dot"  .  "src dot" ))
@@ -605,7 +607,10 @@ Defining custom function to toggle visibily of bold, italics, and links etc.
          "* Later %x\n  %i\n  %a")))
 
 #+end_src
-
+** Extra visual
+#+begin_src emacs-lisp
+(use-package org-timeblock)
+#+end_src
 
 * Org Exports
 ** Heading latex export style
@@ -1118,14 +1123,13 @@ esac
   "bn"  '(rename-buffer                         :which-key "(b-n)ame"              )
 
   "ca"  '(calc                                  :which-key "(ca)lc"                )
-  "cc"  '(lsp-bridge-diagnostic-jump-next       :which-key "lsp-bridge-"           )
+  ;; "cc"  '(lsp-bridge-diagnostic-jump-next       :which-key "lsp-bridge-"           )
   "co"  '(consult-org-heading                   :which-key "(c-o)rg"               )
   "cm"  '(consult-imenu                         :which-key "(c-i(m)enu"            )
   "cM"  '(consult-man                           :which-key "(c-M)an"               )
   "cr"  '(consult-ripgrep                       :which-key "(c-r)ipgrep"           )
-  ;; "cf"  '(consult-git-grep                      :which-key "(c-f)gitgrep"       )
+  ;; "cf"  '(consult-git-grep                   :which-key "(c-f)gitgrep"          )
   "cf"  '(consult-flymake                       :which-key "(c-f)lymake"           )
-  ;;"cg"  '(consult-goto-line                     :which-key "(c-g)oto-line"       ) :23\r should go to line
   "cp"  '(consult-project-buffer                :which-key "(c-p)roject"           )
   "cd"  '(consult-dir                           :which-key "(c-d)ir"               )
 

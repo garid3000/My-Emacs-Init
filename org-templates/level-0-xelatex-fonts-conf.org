@@ -1,4 +1,5 @@
 #+LATEX_COMPILER: xelatex
+#+LATEX_HEADER: \usepackage{color}
 #+LATEX_HEADER: \usepackage[dvipsnames]{xcolor}
 #+LATEX_HEADER: \usepackage{fontspec}
 #+LATEX_HEADER: \usepackage[CJK]{ucharclasses} 
@@ -6,6 +7,16 @@
 #+LATEX_HEADER: \usepackage{bookmark}
 #+LATEX_HEADER: \usepackage{svg}
 #+LATEX_HEADER: \usepackage{pgf}
+
+#+LATEX_HEADER: \usepackage{caption}
+#+LATEX_HEADER: \DeclareCaptionFont{white}{\color{white}}
+#+LATEX_HEADER: \DeclareCaptionFormat{listing}{\colorbox{gray}{\parbox{\textwidth}{#1#2#3}}}
+#+LATEX_HEADER: \captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white}
+
+#+LATEX_HEADER: \usepackage{fancyvrb} %https://emacs.stackexchange.com/a/53645/38482
+#+LATEX_HEADER: \DefineVerbatimEnvironment{verbatim}{Verbatim}{frame=single,fontsize=\small,formatcom = {\color[rgb]{0.5,0,0}}}
+
+
         
 #+LATEX_HEADER: \setmainfont{CMU Serif}                %\setmainfont{Iosevka Etoile Light}
 #+LATEX_HEADER: \setmonofont{Iosevka Term Slab Light}  %\setmonofont{DejaVu Sans Condensed}
@@ -25,7 +36,7 @@
 #+LATEX_HEADER:   numberstyle=\tiny\color{red},    
 #+LATEX_HEADER:   showspaces=false,                
 #+LATEX_HEADER:   showstringspaces=false,       %showtabs=true,                  
-#+LATEX_HEADER:   stepnumber=2,                    
+#+LATEX_HEADER:   stepnumber=1,                    
 #+LATEX_HEADER: }
 
 
