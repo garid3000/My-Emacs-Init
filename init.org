@@ -216,7 +216,7 @@ run:
   :init (savehist-mode))
 #+end_src
 * Org
-** org
+** COMMENT org
 #+begin_src emacs-lisp
 (use-package org
   :bind (:map org-mode-map
@@ -277,13 +277,16 @@ run:
    org-latex-inactive-timestamp-format "\\textcolor{Brown}{%s}"
    org-highlight-latex-and-related     '(latex script entities)
    org-latex-listings                  t
-   org-latex-pdf-process '("xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-                           ;; https://emacs.stackexchange.com/a/47426/38482 this 
-                           ;;"pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-                           ;;"bibtex %b"
-                           ;;"pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-                           ;;"pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-                           )
+   ;; not sure why,  -shell-escape  does mess up with my internal linking
+   ;;org-latex-pdf-process '(
+   ;;                        ;;"xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+   ;;                        "xelatex -shell-escape %f"
+   ;;                        ;; https://emacs.stackexchange.com/a/47426/38482 this 
+   ;;                        ;;"pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+   ;;                        ;;"bibtex %b"
+   ;;                        ;;"pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+   ;;                        ;;"pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+   ;;                        )
 
 
    )
