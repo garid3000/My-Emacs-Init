@@ -216,7 +216,7 @@ run:
   :init (savehist-mode))
 #+end_src
 * Org
-** COMMENT org
+** org
 #+begin_src emacs-lisp
 (use-package org
   :bind (:map org-mode-map
