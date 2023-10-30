@@ -34,10 +34,10 @@
 
         
 #+LATEX_HEADER: %\setmainfont{CMU Serif}                %\setmainfont{Iosevka Etoile Light}
-#+LATEX_HEADER: %\setmainfont{Linux Libertine}                %\setmainfont{Iosevka Etoile Light}
+#+LATEX_HEADER: \setmainfont{Linux Libertine}                %\setmainfont{Iosevka Etoile Light}
 #+LATEX_HEADER: %\setmainfont{Iosevka Etoile Light}
-#+LATEX_HEADER: \setmainfont{Iosevka Aile Light}
-#+LATEX_HEADER: \setmonofont{Iosevka Term Slab Light}  %\setmonofont{DejaVu Sans Condensed}
+#+LATEX_HEADER: %\setmainfont{Iosevka Aile Light}
+#+LATEX_HEADER: %\setmonofont{Iosevka Term Slab Light}  %\setmonofont{DejaVu Sans Condensed}
 #+LATEX_HEADER: %\setmonofont{L}  %\setmonofont{DejaVu Sans Condensed}
 #+LATEX_HEADER: \newfontfamily\myregularfont{CMU Serif}
 #+LATEX_HEADER: \newfontfamily\myCJKfont{IPAMincho}
@@ -49,7 +49,8 @@
 #+LATEX_HEADER:   stringstyle=\color{RedViolet}, %custommauve
 #+LATEX_HEADER:   keywordstyle=\color{RoyalPurple},
 #+LATEX_HEADER:   commentstyle=\color{OliveGreen},
-#+LATEX_HEADER:   basicstyle=\ttfamily\footnotesize,
+#+LATEX_HEADER:   %basicstyle=\ttfamily\footnotesize,
+#+LATEX_HEADER:   basicstyle=\ttfamily\scriptsize,
 #+LATEX_HEADER:   breaklines=true,             %firstnumber=1000,
 #+LATEX_HEADER:   frame=single,	                   
 #+LATEX_HEADER:   keepspaces=true,                 
