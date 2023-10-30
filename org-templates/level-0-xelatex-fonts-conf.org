@@ -16,24 +16,46 @@
 #+LATEX_HEADER: \usepackage{fancyvrb} %https://emacs.stackexchange.com/a/53645/38482
 #+LATEX_HEADER: \DefineVerbatimEnvironment{verbatim}{Verbatim}{frame=single,fontsize=\small,formatcom = {\color[rgb]{0.5,0,0}}}
 
+#+LATEX_HEADER: \definecolor{customgreen}{rgb}{0,0.6,0}
+#+LATEX_HEADER: \definecolor{customgray}{rgb}{0.5,0.5,0.5}
+#+LATEX_HEADER: \definecolor{custommauve}{rgb}{0.6,0,0.8}
+
+
+#+LATEX_HEADER: \lstdefinelanguage{nim}{         % new nim language
+#+LATEX_HEADER:     % alsodigit = {-},           % I don't need this
+#+LATEX_HEADER:     keywords = {echo, import}
+#+LATEX_HEADER: }                                % it from from https://tex.stackexchange.com/a/317276/292504 
+
+
+#+LATEX_HEADER: \lstdefinelanguage{org}{         % new org language
+#+LATEX_HEADER:     keywords = {file, transclude}
+#+LATEX_HEADER: }                                % modified from from https://tex.stackexchange.com/a/317276/292504 
+
 
         
-#+LATEX_HEADER: \setmainfont{CMU Serif}                %\setmainfont{Iosevka Etoile Light}
+#+LATEX_HEADER: %\setmainfont{CMU Serif}                %\setmainfont{Iosevka Etoile Light}
+#+LATEX_HEADER: %\setmainfont{Linux Libertine}                %\setmainfont{Iosevka Etoile Light}
+#+LATEX_HEADER: %\setmainfont{Iosevka Etoile Light}
+#+LATEX_HEADER: \setmainfont{Iosevka Aile Light}
 #+LATEX_HEADER: \setmonofont{Iosevka Term Slab Light}  %\setmonofont{DejaVu Sans Condensed}
+#+LATEX_HEADER: %\setmonofont{L}  %\setmonofont{DejaVu Sans Condensed}
 #+LATEX_HEADER: \newfontfamily\myregularfont{CMU Serif}
 #+LATEX_HEADER: \newfontfamily\myCJKfont{IPAMincho}
 #+LATEX_HEADER: \setTransitionsForCJK{\myCJKfont}{\myregularfont} 
 #+LATEX_HEADER: \lstset{
-#+LATEX_HEADER:   keywordstyle=\color{blue},
-#+LATEX_HEADER:   commentstyle=\color{red},
-#+LATEX_HEADER:   stringstyle=\color{cyan},
+#+LATEX_HEADER:   %keywordstyle=\color{blue},
+#+LATEX_HEADER:   %commentstyle=\color{red},
+#+LATEX_HEADER:   %stringstyle=\color{cyan},
+#+LATEX_HEADER:   stringstyle=\color{RedViolet}, %custommauve
+#+LATEX_HEADER:   keywordstyle=\color{RoyalPurple},
+#+LATEX_HEADER:   commentstyle=\color{OliveGreen},
 #+LATEX_HEADER:   basicstyle=\ttfamily\footnotesize,
 #+LATEX_HEADER:   breaklines=true,             %firstnumber=1000,
 #+LATEX_HEADER:   frame=single,	                   
 #+LATEX_HEADER:   keepspaces=true,                 
 #+LATEX_HEADER:   numbers=left,                    
 #+LATEX_HEADER:   numbersep=5pt,                   
-#+LATEX_HEADER:   numberstyle=\tiny\color{red},    
+#+LATEX_HEADER:   numberstyle=\tiny\color{customgray},    
 #+LATEX_HEADER:   showspaces=false,                
 #+LATEX_HEADER:   showstringspaces=false,       %showtabs=true,                  
 #+LATEX_HEADER:   stepnumber=1,                    
@@ -46,9 +68,3 @@
  #+LATEX_HEADER:     citecolor={blue!50!black},
  #+LATEX_HEADER:     urlcolor={blue!80!black}
  #+LATEX_HEADER: }
-
-
-
-
-
-

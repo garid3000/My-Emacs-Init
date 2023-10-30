@@ -234,6 +234,7 @@ run:
    org-src-tab-acts-natively            t
    org-src-preserve-indentation         nil    ;; scr-blk
    org-edit-src-content-indentation     0      ;; scr-blk
+   org-startup-folded                   "fold" ;; folds property drawers, good for roam nodes
    )
 
   ;; org tempo related? TODO need to move to electric pair mode section
@@ -656,7 +657,6 @@ Defining custom function to toggle visibily of bold, italics, and links etc.
 #+end_src
 
 ** ox-hugo
-
 #+begin_src emacs-lisp
 (use-package ox-hugo
   :ensure t 
@@ -699,7 +699,6 @@ Defining custom function to toggle visibily of bold, italics, and links etc.
     :publishing-function org-publish-attachment)
    ))
 #+end_src
-
 
 * Org Misc:
 ** org download
@@ -746,6 +745,15 @@ esac
   (setq org-auto-tangle-default t) ;; maybe nil might be good
   )
 #+end_src
+
+** org transclusion
+#+begin_src emacs-lisp
+(use-package org-transclusion
+  :bind (:map org-mode-map
+              ("<f12>" . org-transclusion-add        )
+              ("M-<f12>" . org-transclusion-add-all  )
+              ("<f11>" . org-transclusion-mode       )))
+#+end_src
 ** COMMENT org contacts
 #+begin_src emacs-lisp
 ;; (global-display-fill-column-indicator-mode)
@@ -780,6 +788,7 @@ esac
 #+begin_src emacs-lisp
 (use-package org-tree-slide)
 #+end_src
+
 
 * Development Environment / Programming
 ** Save place mode
@@ -1099,6 +1108,9 @@ esac
       :global-prefix "C-M-SPC"))
 #+end_src
 ** general main1
+| SPC | execute-extended-command |   |
+| mg  | magit                    |   |
+
 #+begin_src emacs-lisp
 ;; Main Keychords
 (rune/leader-keys
