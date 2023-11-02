@@ -903,8 +903,11 @@ esac
 ** magit
 #+begin_src emacs-lisp
 (use-package magit)
-(use-package git-gutter)
+(use-package git-gutter
+  :config (global-git-gutter-mode)
+  )
 #+end_src
+
 ** treesit
 from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][mastering emacs article]].
 #+begin_src emacs-lisp
@@ -912,7 +915,7 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
       '((bash-mode . bash-ts-mode)
         (python-mode . python-ts-mode)))
 #+end_src
-** eldoc
+** COMMENT eldoc
 from [[https://www.masteringemacs.org/article/seamlessly-merge-multiple-documentation-sources-eldoc][mastering emacs article]].
 #+begin_src emacs-lisp
 (defun mp-flycheck-eldoc (callback &rest _ignored)
@@ -941,7 +944,7 @@ from [[https://www.masteringemacs.org/article/seamlessly-merge-multiple-document
                    'eldoc-documentation-compose-eagerly))
   :hook ((eglot-managed-mode . mp-eglot-eldoc)))
 #+end_src
-** COMMENT eglot
+** eglot
 #+begin_src emacs-lisp
 (use-package eglot)
 #+end_src
@@ -1201,15 +1204,18 @@ from [[https://www.masteringemacs.org/article/seamlessly-merge-multiple-document
   ;; "wi"  '(evil-insert                        :which-key "(w)eb-(i)nsert"        )
 
   "pf"  '(project-find-file                     :which-key "(p-f)ile"              )
-  "pd"  '(project-find-dir                      :which-key "(p-d)ir"               )
-  "pc"  '(project-compile                       :which-key "(p-c)ompile"           )
-  "pe"  '(project-eshell                        :which-key "(p-e)shell"            )
+  ;;"pd"  '(project-find-dir                    :which-key "(p-d)ir"               )
+  "pd"  '(consult-flymake                       :which-key "(p-d)iagnostic"        )
+  "pr"  '(xref-find-references                  :which-key "(p-r)eferences"        )
+  "pz"  '(project-switch-project                :which-key "(p-z)"                 )
+  ;;"pc"  '(project-compile                     :which-key "(p-c)ompile"           )
+  ;;"pe"  '(project-eshell                      :which-key "(p-e)shell"            )
   "ps"  '(project-find-regexp                   :which-key "(p-s)find-regexp"      )
-  "pr"  '(project-query-replace-regexp          :which-key "(p-r)eplace"           )
+  "vr"  '(project-query-replace-regexp          :which-key "(p-r)eplace"           )
   "pk"  '(project-kill-buffers                  :which-key "(p-k)ill-buffers"      )
   "pl"  '(consult-project-buffer                :which-key "(p-l)ist-buffers"      )
   "pL"  '(project-list-buffers                  :which-key "(p-L)ist-buffers"      )
-  "pp"  '(gry/project-send                      :which-key "(p-p)send"             )
+  ;;"pp"  '(gry/project-send                      :which-key "(p-p)send"             )
 
   "e"   '(eshell                                :which-key "(e)shell"              )
   "E"   '(elfeed                                :which-key "(E)lfeed"              )
@@ -1347,10 +1353,10 @@ from [[https://www.masteringemacs.org/article/seamlessly-merge-multiple-document
   "srf" '((lambda () (interactive) (recentf-open-files))                :which-key "(s-r)ecent-(f)iles")
   "st"  '(gry/open-term-at              :which-key "(s-t)erminal")
   "sT"  '(toggle-transparency           :which-key "(s-T)oggle-transparency")
-  "sd"  '(gry/distraction-free-on       :which-key "(s-d)istraction-free-on")
-  "sD"  '(gry/distraction-free-off      :which-key "(s-D)istraction-free-off")
+  ;;"sd"  '(gry/distraction-free-on       :which-key "(s-d)istraction-free-on")
+  ;;"sD"  '(gry/distraction-free-off      :which-key "(s-D)istraction-free-off")
   "sns" '(crux-create-scratch-buffer    :which-key "(s-n)ew-(s)cratch-buf")
-  "ss"  '((lambda () (interactive) (shell-command "flameshot gui --path ~/Pictures/ss/"))     :which-key "(s-s)creenshot")
+  ;;"ss"  '((lambda () (interactive) (shell-command "flameshot gui --path ~/Pictures/ss/"))     :which-key "(s-s)creenshot")
   "slm" '(scroll-lock-mode                                              :which-key "(s)croll-(l)ock-(m)ode")
   "scl"  '((lambda () (interactive)
              (command-log-mode)
@@ -1633,9 +1639,14 @@ I maybe will replace with something like zoxide
   :ensure t ; or :straight t
   :bind (("C-`"   . popper-toggle-latest)
          ("M-`"   . popper-cycle)
-         ("C-M-`" . popper-toggle-type))
+         ("C-M-`" . popper-toggle-type)
+         ;;:map popper-mode-map
+         ;;("ESC" . quit-window)
+         )
   :init
   (setq popper-reference-buffers '("\\*Messages\\*"
+                                   "\\*eldoc\\*"
+                                   "\\*xref\\*"
                                    "Output\\*$"
                                    "\\*Async Shell Command\\*"
                                    help-mode
@@ -1643,6 +1654,8 @@ I maybe will replace with something like zoxide
   (popper-mode      +1)
   (popper-echo-mode +1))                ; For echo area hints
 #+end_src
+
+
 ** emacs-everywhere
 #+begin_src emacs-lisp
 (use-package emacs-everywhere)
