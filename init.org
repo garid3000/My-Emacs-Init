@@ -1,9 +1,9 @@
-#+title       :  My Emacs Configuration
-#+author      : Garid Zorigoo
-#+SETUPFILE   : ~/.config/emacs/org-templates/level-0-xelatex-fonts-conf.org
-#+startup     : show2levels
-#+PROPERTY    : header-args :tangle init.el
-#+auto_tangle : t
+#+title:        My Emacs Configuration
+#+author:       Garid Zorigoo
+#+SETUPFILE:    ~/.config/emacs/org-templates/level-0-xelatex-fonts-conf.org
+#+startup:      show2levels
+#+PROPERTY:     header-args :tangle init.el
+#+auto_tangle:  t
 
 * From shell you can run make run:
 #+begin_src shell :noeval :tangle Makefile
