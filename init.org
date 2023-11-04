@@ -1,10 +1,9 @@
-#+title:  My Emacs Configuration
-#+author: Garid Zorigoo
-#+SETUPFILE: ~/.config/emacs/org-templates/level-0-xelatex-fonts-conf.org
-
-#+startup: show2levels
-#+PROPERTY: header-args :tangle init.el
-#+auto_tangle: t
+#+title       :  My Emacs Configuration
+#+author      : Garid Zorigoo
+#+SETUPFILE   : ~/.config/emacs/org-templates/level-0-xelatex-fonts-conf.org
+#+startup     : show2levels
+#+PROPERTY    : header-args :tangle init.el
+#+auto_tangle : t
 
 * From shell you can run make run:
 #+begin_src shell :noeval :tangle Makefile
@@ -221,8 +220,8 @@ run:
 (use-package org
   :bind (:map org-mode-map
               ("C-S-j" . org-next-visible-heading       )
-              ("C-S-k" . org-previous-visible-heading   )
               ("C-S-k" . org-previous-visible-heading   ))
+              ;;("C-S-k" . org-previous-visible-heading   )
 
   :hook (org-mode . dw/org-mode-setup)
   :config
@@ -278,6 +277,7 @@ run:
    org-latex-inactive-timestamp-format "\\textcolor{Brown}{%s}"
    org-highlight-latex-and-related     '(latex script entities)
    org-latex-listings                  t
+   org-latex-pdf-process '("latexmk -shell-escape -f -pdf -%latex -interaction=nonstopmode -output-directory=%o %f")
    ;; not sure why,  -shell-escape  does mess up with my internal linking
    ;;org-latex-pdf-process '(
    ;;                        ;;"xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"
@@ -663,7 +663,7 @@ Defining custom function to toggle visibily of bold, italics, and links etc.
   :after ox)
 #+end_src
 
-** website from org-roam directory
+** COMMENT website from org-roam directory
 [[id:e7ee081e-a02b-4ab9-bccc-327a92bf2b09][create website from org-roam]]
 
 #+begin_src emacs-lisp
@@ -675,10 +675,13 @@ Defining custom function to toggle visibily of bold, italics, and links etc.
  )
 #+end_src
 
+#+RESULTS:
+: <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
+
 #+begin_src emacs-lisp :exports code :results verbatim
 (setq
  org-publish-project-alist
- '(("Pensieve org -> html"
+ '(("Pensieve org -> html00"
     :base-directory "~/Pensieve"
     :publishing-function org-html-publish-to-html
     :publishing-directory "/tmp/garids_pensieve"
@@ -699,6 +702,10 @@ Defining custom function to toggle visibily of bold, italics, and links etc.
     :publishing-function org-publish-attachment)
    ))
 #+end_src
+
+#+RESULTS:
+: (("Pensieve org -> html00" :base-directory "~/Pensieve" :publishing-function org-html-publish-to-html :publishing-directory "/tmp/garids_pensieve" :section-numbers nil :with-toc nil) ("Pensieve export imgs" :base-directory "~/Pensieve/od-imgs/" :base-extension "jpg\\|gif\\|png\\|svg" :recursive t :publishing-directory "/tmp/garids_pensieve/od-imgs" :publishing-function org-publish-attachment))
+
 
 * Org Misc:
 ** org download
@@ -740,7 +747,7 @@ esac
 #+begin_src emacs-lisp
 (use-package org-auto-tangle
   :defer t
-  :hook   (org-mode . org-auto-tangle-mode)
+  :hook   (org-mode . org-auto-tangle-mode)  <--- I disabled because just to see whether that makes faster or not
   :config
   (setq org-auto-tangle-default t) ;; maybe nil might be good
   )
