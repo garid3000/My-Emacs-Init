@@ -275,7 +275,7 @@ run:
    org-latex-format-headline-function 'my-org-latex-format-headline-function
    org-latex-active-timestamp-format   "\\textcolor{orange}{%s}"
    org-latex-inactive-timestamp-format "\\textcolor{Brown}{%s}"
-   org-highlight-latex-and-related     '(latex script entities)
+   ;; org-highlight-latex-and-related     '(latex script entities) <---- lets try this for performance
    org-latex-listings                  t
    org-latex-pdf-process '("latexmk -shell-escape -f -pdf -%latex -interaction=nonstopmode -output-directory=%o %f")
    ;; not sure why,  -shell-escape  does mess up with my internal linking

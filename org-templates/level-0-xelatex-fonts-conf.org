@@ -27,6 +27,19 @@
 #+LATEX_HEADER: }                                % it from from https://tex.stackexchange.com/a/317276/292504 
 
 
+#+LATEX_HEADER: \lstdefinelanguage{shell}{       % new makefile -> shell language
+#+LATEX_HEADER:     keywords = {run, emacs}
+#+LATEX_HEADER: }                                % it from from https://tex.stackexchange.com/a/317276/292504 
+
+#+LATEX_HEADER: \lstdefinelanguage{text}{       % new makefile -> shell language
+#+LATEX_HEADER: }                                % it from from https://tex.stackexchange.com/a/317276/292504 
+
+#+LATEX_HEADER: \lstdefinelanguage{Lisp}{        % new Lip language
+#+LATEX_HEADER:     % alsodigit = {-},           % I don't need this
+#+LATEX_HEADER:     keywords = {setq, use-package}
+#+LATEX_HEADER: }                                % it from from https://tex.stackexchange.com/a/317276/292504 
+
+
 #+LATEX_HEADER: \lstdefinelanguage{org}{         % new org language
 #+LATEX_HEADER:     keywords = {file, transclude}
 #+LATEX_HEADER: }                                % modified from from https://tex.stackexchange.com/a/317276/292504 
