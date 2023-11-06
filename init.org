@@ -651,16 +651,16 @@ Defining custom function to toggle visibily of bold, italics, and links etc.
   (setf (plist-get (cdr (assq 'imagemagick org-preview-latex-process-alist)) :latex-compiler)
         '("xelatex -interaction nonstopmode -output-directory %o %f")))
 #+end_src
-** COMMENT latex
-#+begin_src emacs-lisp
-(use-package auctex)
-#+end_src
-
 ** ox-hugo
 #+begin_src emacs-lisp
 (use-package ox-hugo
   :ensure t 
   :after ox)
+#+end_src
+
+** COMMENT latex
+#+begin_src emacs-lisp
+(use-package auctex)
 #+end_src
 
 ** COMMENT website from org-roam directory
@@ -705,7 +705,6 @@ Defining custom function to toggle visibily of bold, italics, and links etc.
 
 #+RESULTS:
 : (("Pensieve org -> html00" :base-directory "~/Pensieve" :publishing-function org-html-publish-to-html :publishing-directory "/tmp/garids_pensieve" :section-numbers nil :with-toc nil) ("Pensieve export imgs" :base-directory "~/Pensieve/od-imgs/" :base-extension "jpg\\|gif\\|png\\|svg" :recursive t :publishing-directory "/tmp/garids_pensieve/od-imgs" :publishing-function org-publish-attachment))
-
 
 * Org Misc:
 ** org download
@@ -795,7 +794,6 @@ esac
 #+begin_src emacs-lisp
 (use-package org-tree-slide)
 #+end_src
-
 
 * Development Environment / Programming
 ** Save place mode
@@ -890,19 +888,6 @@ esac
 ;;(setq acm-backend-codeium-candidate-min-length 2)
 ;;(setq acm-backend-search-file-words-candidate-min-length 2)
 #+end_src
-** COMMENT scad
-#+begin_src emacs-lisp
-(use-package scad-mode)
-#+end_src
-** COMMENT c
-#+begin_src emacs-lisp
-(setq-default c-basic-offset 4)
-#+end_src
-** COMMENT rg
-#+begin_src emacs-lisp
-;; (use-package ripgrep)
-(use-package rg)
-#+end_src
 ** parenthesis: (electric-pair-mode)
 #+begin_src emacs-lisp
 (electric-pair-mode 1)
@@ -921,6 +906,23 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
 (setq major-mode-remap-alist
       '((bash-mode . bash-ts-mode)
         (python-mode . python-ts-mode)))
+#+end_src
+** eglot
+#+begin_src emacs-lisp
+(use-package eglot)
+#+end_src
+** rg
+#+begin_src emacs-lisp
+;; (use-package ripgrep)
+(use-package rg)
+#+end_src
+** COMMENT scad
+#+begin_src emacs-lisp
+(use-package scad-mode)
+#+end_src
+** COMMENT c
+#+begin_src emacs-lisp
+(setq-default c-basic-offset 4)
 #+end_src
 ** COMMENT eldoc
 from [[https://www.masteringemacs.org/article/seamlessly-merge-multiple-documentation-sources-eldoc][mastering emacs article]].
@@ -950,10 +952,6 @@ from [[https://www.masteringemacs.org/article/seamlessly-merge-multiple-document
              (setq eldoc-documentation-strategy
                    'eldoc-documentation-compose-eagerly))
   :hook ((eglot-managed-mode . mp-eglot-eldoc)))
-#+end_src
-** eglot
-#+begin_src emacs-lisp
-(use-package eglot)
 #+end_src
 ** COMMENT toggling
 #+begin_src emacs-lisp
@@ -1014,32 +1012,6 @@ from [[https://www.masteringemacs.org/article/seamlessly-merge-multiple-document
   )
 #+end_src
 * Garid
-** COMMENT sending current project to IP
-#+begin_src emacs-lisp
-(defun gry/project-send ()
-  (interactive)
-  (shell-command
-   (concat "rsync -rtvzP "
-	   (nth 2 (project-current)) ;; This will get the project dir
-           " pi@192.168.11.12:~/Spectrum-Catcher-V3")))
-#+end_src
-** COMMENT Distraction 
-#+begin_src emacs-lisp
-(defun gry/distraction-free-on ()
-  (interactive)
-  (writeroom-mode 1)
-  (turn-off-evil-mode)
-  (display-line-numbers-mode -1)
-  (set-face-attribute 'default nil :font "Iosevka Etoile" :height 140))
-;; (set-face-attribute 'default nil :font "Terminus" :height 140)
-
-(defun gry/distraction-free-off ()
-  (interactive)
-  (writeroom-mode -1)
-  (turn-on-evil-mode)
-  (display-line-numbers-mode 1)
-  (set-face-attribute 'default nil :font "Iosevka Gry" :height 120))
-#+end_src
 ** opening pdf for export  (org)
 #+begin_src emacs-lisp
 (defun replace-in-string (what with in)
@@ -1116,6 +1088,32 @@ from [[https://www.masteringemacs.org/article/seamlessly-merge-multiple-document
 	(set-input-method "cyrillic-mongolian")
       (if (string= default-input-method "cyrillic-mongolian")
 	  (set-input-method "TeQ-Math")))))
+#+end_src
+** COMMENT Distraction 
+#+begin_src emacs-lisp
+(defun gry/distraction-free-on ()
+  (interactive)
+  (writeroom-mode 1)
+  (turn-off-evil-mode)
+  (display-line-numbers-mode -1)
+  (set-face-attribute 'default nil :font "Iosevka Etoile" :height 140))
+;; (set-face-attribute 'default nil :font "Terminus" :height 140)
+
+(defun gry/distraction-free-off ()
+  (interactive)
+  (writeroom-mode -1)
+  (turn-on-evil-mode)
+  (display-line-numbers-mode 1)
+  (set-face-attribute 'default nil :font "Iosevka Gry" :height 120))
+#+end_src
+** COMMENT sending current project to IP
+#+begin_src emacs-lisp
+(defun gry/project-send ()
+  (interactive)
+  (shell-command
+   (concat "rsync -rtvzP "
+	   (nth 2 (project-current)) ;; This will get the project dir
+           " pi@192.168.11.12:~/Spectrum-Catcher-V3")))
 #+end_src
 * Keybinding
 ** Global keybinding:
@@ -1430,11 +1428,11 @@ from [[https://www.masteringemacs.org/article/seamlessly-merge-multiple-document
 * System:
 ** Recent files
 #+begin_src emacs-lisp
-;; recentf
+;; recent files configuration
 (recentf-mode 1)
-;;(setq recentf-exclude '("/home/garid/roamnotes/.*org")) ;; to exclude roam nodes
-(setq recentf-max-menu-items  30)
-(setq recentf-max-saved-items 30)
+(setq
+ recentf-max-menu-items  30
+ recentf-max-saved-items 30)
 #+end_src
 ** COMMENT Sys term open
 #+begin_src emacs-lisp
@@ -1473,64 +1471,6 @@ else
 fi
 #+end_src
 
-
-* COMMENT Mail & contacts:
-** COMMENT mu4e
-#+begin_src emacs-lisp
-;; (delete 'mu4e evil-collection-mode-list)
-;; (delete 'mu4e-conversation evil-collection-mode-list)
-
-(require 'mu4e)
-
-;; default
-(setq mu4e-maildir
-      "/home/garid/.local/share/mail/garidzorigoo@gmail.com")
-
-(setq mu4e-get-mail-command "mailsync")
-(setq mu4e-drafts-folder "/[Gmail]/Drafts")
-(setq mu4e-sent-folder   "/[Gmail]/Sent Mail")
-(setq mu4e-trash-folder  "/[Gmail]/Trash")
-
-;; dont save message to Sent msg, GMail/IMAP will take care of this
-(setq mu4e-sent-messages-behavior 'delete)
-
-;; setup some handy shortcuts
-(setq mu4e-maildir-shortcuts
-      '(("/INBOX"             . ?i)
-        ("/[Gmail]/Sent Mail" . ?s)
-        ("/[Gmail]/Trash"     . ?t)))
-
-;; allow for updating mail using 'U' in the main view:
-(setq mu4e-get-mail-command "offlineimap")
-
-;; something about ourselves
-;; I don't use a signature...
-(setq
- user-mail-address "garidzorigoo@gmail.com"
- user-full-name    "Garid Z."
- message-signature "Garid Z."
- )
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(setq smtpmail-smtp-server "smtp.gmail.com"
-      smtpmail-smtp-service 465
-      smtpmail-stream-type  'ssl)
-(setq message-send-mail-function 'smtpmail-send-it)
-#+end_src
-** COMMENT notmuch
-#+begin_src emacs-lisp
-(use-package notmuch)
-#+end_src
-** COMMENT org-contacts
-#+begin_src emacs-lisp
-(setq mu4e-org-contacts-file
-      "/home/garid/roamnotes/20230417200051-org_contacs.org")
-
-(add-to-list 'mu4e-headers-actions
-             '("org-contact-add" . mu4e-action-add-org-contact) t)
-(add-to-list 'mu4e-view-actions
-             '("org-contact-add" . mu4e-action-add-org-contact) t)
-#+end_src
 * Dired
 ** Change ls in bsd:
 #+begin_src emacs-lisp
@@ -1572,13 +1512,135 @@ I don't use these not much
 #+begin_src emacs-lisp
 (use-package dired-single)
 (use-package dired-sidebar)
-#+end_src
-** COMMENT consult-dir
-I maybe will replace with something like zoxide
-#+begin_src emacs-lisp
-(use-package consult-dir)
+(use-package dired-preview)
 #+end_src
 * Misc Packages
+** crux
+#+begin_src emacs-lisp
+(use-package crux)
+#+end_src
+** command-log-mode
+#+begin_src emacs-lisp
+(use-package command-log-mode)
+#+end_src
+** format-all
+#+begin_src emacs-lisp
+(use-package format-all)
+#+end_src
+** popper
+#+begin_src emacs-lisp
+(use-package popper
+  :ensure t ; or :straight t
+  :bind (("C-`"   . popper-toggle-latest)
+         ("M-`"   . popper-cycle)
+         ("C-M-`" . popper-toggle-type)
+         ;;:map popper-mode-map
+         ;;("ESC" . quit-window)
+         )
+  :init
+  (setq popper-reference-buffers '("\\*Messages\\*"
+                                   "\\*eldoc\\*"
+                                   "\\*xref\\*"
+                                   "Output\\*$"
+                                   "\\*Async Shell Command\\*"
+                                   help-mode
+                                   compilation-mode))
+  (popper-mode      +1)
+  (popper-echo-mode +1))                ; For echo area hints
+#+end_src
+
+** emacs-everywhere
+#+begin_src emacs-lisp
+(use-package emacs-everywhere)
+#+end_src
+** graphviz
+#+begin_src emacs-lisp
+(use-package graphviz-dot-mode)
+#+end_src
+* COMMENT Unused
+** COMMENT Mail & contacts:
+*** COMMENT mu4e
+#+begin_src emacs-lisp
+;; (delete 'mu4e evil-collection-mode-list)
+;; (delete 'mu4e-conversation evil-collection-mode-list)
+
+(require 'mu4e)
+
+;; default
+(setq mu4e-maildir
+      "/home/garid/.local/share/mail/garidzorigoo@gmail.com")
+
+(setq mu4e-get-mail-command "mailsync")
+(setq mu4e-drafts-folder "/[Gmail]/Drafts")
+(setq mu4e-sent-folder   "/[Gmail]/Sent Mail")
+(setq mu4e-trash-folder  "/[Gmail]/Trash")
+
+;; dont save message to Sent msg, GMail/IMAP will take care of this
+(setq mu4e-sent-messages-behavior 'delete)
+
+;; setup some handy shortcuts
+(setq mu4e-maildir-shortcuts
+      '(("/INBOX"             . ?i)
+        ("/[Gmail]/Sent Mail" . ?s)
+        ("/[Gmail]/Trash"     . ?t)))
+
+;; allow for updating mail using 'U' in the main view:
+(setq mu4e-get-mail-command "offlineimap")
+
+;; something about ourselves
+;; I don't use a signature...
+(setq
+ user-mail-address "garidzorigoo@gmail.com"
+ user-full-name    "Garid Z."
+ message-signature "Garid Z."
+ )
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(setq smtpmail-smtp-server "smtp.gmail.com"
+      smtpmail-smtp-service 465
+      smtpmail-stream-type  'ssl)
+(setq message-send-mail-function 'smtpmail-send-it)
+#+end_src
+*** COMMENT notmuch
+#+begin_src emacs-lisp
+(use-package notmuch)
+#+end_src
+*** COMMENT org-contacts
+#+begin_src emacs-lisp
+(setq mu4e-org-contacts-file "/home/garid/roamnotes/20230417200051-org_contacs.org")
+(add-to-list 'mu4e-headers-actions '("org-contact-add" . mu4e-action-add-org-contact) t)
+(add-to-list 'mu4e-view-actions    '("org-contact-add" . mu4e-action-add-org-contact) t)
+#+end_src
+** COMMENT browser
+#+begin_src emacs-lisp
+;; (setq browse-url-browser-function 'browse-url-chromium)
+;; (defun gry/open-html-in-browser ()
+;;   (interactive) (shell-command (concat "brave " buffer-file-name)))
+#+end_src
+** COMMENT eww web browser
+#+begin_src emacs-lisp
+(setq
+  browse-url-browser-function 'eww-browse-url ; Use eww as the default browser
+  shr-use-fonts  nil                          ; No special fonts
+  shr-use-colors nil                          ; No colours
+  shr-indentation 2                           ; Left-side margin
+  shr-width 85                                ; Fold text to 85 columns
+  eww-search-prefix "https://lite.duckduckgo.com/lite/?q=")    ; Use another engine for searching
+#+end_src
+** COMMENT mastadon
+#+begin_src emacs-lisp
+(use-package mastodon
+  :ensure t
+  :config
+  (mastodon-discover))
+(setq mastodon-instance-url "https://emacs.ch"
+      mastodon-active-user "garid3000")
+#+end_src
+** COMMENT simple-httpd
+#+begin_src emacs-lisp
+(use-package simple-httpd
+  :ensure t)
+#+end_src
 ** COMMENT translate
 #+begin_src emacs-lisp
 (use-package go-translate)
@@ -1620,18 +1682,6 @@ I maybe will replace with something like zoxide
 #+begin_src emacs-lisp
 (use-package ace-window)
 #+end_src
-** crux
-#+begin_src emacs-lisp
-(use-package crux)
-#+end_src
-** command-log-mode
-#+begin_src emacs-lisp
-(use-package command-log-mode)
-#+end_src
-** format-all
-#+begin_src emacs-lisp
-(use-package format-all)
-#+end_src
 ** COMMENT academic
 #+begin_src emacs-lisp
 (use-package academic-phrases)
@@ -1640,71 +1690,14 @@ I maybe will replace with something like zoxide
 #+begin_src emacs-lisp
 (use-package hydra)
 #+end_src
-** test popper
-#+begin_src emacs-lisp
-(use-package popper
-  :ensure t ; or :straight t
-  :bind (("C-`"   . popper-toggle-latest)
-         ("M-`"   . popper-cycle)
-         ("C-M-`" . popper-toggle-type)
-         ;;:map popper-mode-map
-         ;;("ESC" . quit-window)
-         )
-  :init
-  (setq popper-reference-buffers '("\\*Messages\\*"
-                                   "\\*eldoc\\*"
-                                   "\\*xref\\*"
-                                   "Output\\*$"
-                                   "\\*Async Shell Command\\*"
-                                   help-mode
-                                   compilation-mode))
-  (popper-mode      +1)
-  (popper-echo-mode +1))                ; For echo area hints
-#+end_src
-
-
-** emacs-everywhere
-#+begin_src emacs-lisp
-(use-package emacs-everywhere)
-#+end_src
 ** COMMENT emacs restart
 #+begin_src emacs-lisp
 (use-package restart-emacs)
 #+end_src
-** COMMENT graphviz
+** COMMENT consult-dir
+I maybe will replace with something like zoxide
 #+begin_src emacs-lisp
-(use-package graphviz-dot-mode)
-#+end_src
-* Web related
-** COMMENT browser
-#+begin_src emacs-lisp
-;; (setq browse-url-browser-function 'browse-url-chromium)
-;; (defun gry/open-html-in-browser ()
-;;   (interactive) (shell-command (concat "brave " buffer-file-name)))
-#+end_src
-** COMMENT eww web browser
-#+begin_src emacs-lisp
-(setq
-  browse-url-browser-function 'eww-browse-url ; Use eww as the default browser
-  shr-use-fonts  nil                          ; No special fonts
-  shr-use-colors nil                          ; No colours
-  shr-indentation 2                           ; Left-side margin
-  shr-width 85                                ; Fold text to 85 columns
-  eww-search-prefix "https://lite.duckduckgo.com/lite/?q=")    ; Use another engine for searching
-#+end_src
-** COMMENT mastadon
-#+begin_src emacs-lisp
-(use-package mastodon
-  :ensure t
-  :config
-  (mastodon-discover))
-(setq mastodon-instance-url "https://emacs.ch"
-      mastodon-active-user "garid3000")
-#+end_src
-** COMMENT simple-httpd
-#+begin_src emacs-lisp
-(use-package simple-httpd
-  :ensure t)
+(use-package consult-dir)
 #+end_src
 * Finish Notifier
 #+begin_src emacs-lisp
