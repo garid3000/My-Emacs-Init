@@ -1,4 +1,7 @@
 #+LATEX_COMPILER: xelatex
+
+#+LATEX_HEADER: %% \special{dvipdfmx:config z 0}   %% from # https://tex.stackexchange.com/a/483040/292504, but wasn't significant improvement
+
 #+LATEX_HEADER: \usepackage{color}
 #+LATEX_HEADER: \usepackage[dvipsnames]{xcolor}
 #+LATEX_HEADER: \usepackage{fontspec}
@@ -38,6 +41,12 @@
 #+LATEX_HEADER:     % alsodigit = {-},           % I don't need this
 #+LATEX_HEADER:     keywords = {setq, use-package}
 #+LATEX_HEADER: }                                % it from from https://tex.stackexchange.com/a/317276/292504 
+
+
+#+LATEX_HEADER: \lstdefinelanguage{plantuml}{        % new Lip language
+#+LATEX_HEADER:     keywords = {as}
+#+LATEX_HEADER: }                                % it from from https://tex.stackexchange.com/a/317276/292504 
+
 
 
 #+LATEX_HEADER: \lstdefinelanguage{org}{         % new org language
