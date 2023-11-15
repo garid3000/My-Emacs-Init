@@ -12,6 +12,10 @@
 #+LATEX_HEADER: \usepackage{pgf}
 
 #+LATEX_HEADER: \usepackage{caption}
+
+#+LATEX_HEADER: \usepackage{multicol}                   % multicols
+#+LATEX_HEADER: \setlength{\columnsep}{1cm}
+
 #+LATEX_HEADER: \DeclareCaptionFont{white}{\color{white}}
 #+LATEX_HEADER: \DeclareCaptionFormat{listing}{\colorbox{gray}{\parbox{\textwidth}{#1#2#3}}}
 #+LATEX_HEADER: \captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white}
