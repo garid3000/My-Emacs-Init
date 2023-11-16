@@ -57,11 +57,15 @@ It emulates vi motion inside Emacs.
          ("M-j"      . evil-scroll-line-down    )
          ("M-k"      . evil-scroll-line-up      )
          ("M-d"      . evil-scroll-page-down    )
-         ("M-u"      . evil-scroll-page-up      ))
+         ("M-u"      . evil-scroll-page-up      )
+         )
   :init (setq evil-want-keybinding      nil
+              ;; evil-want-C-i-jump     nil       ;; test I may need jumpy back and forth
+              ;; for org-cycle (tab) working for terminal
               evil-undo-system         'undo-fu )
-              ;;  evil-want-C-i-jump    nil       ;; test I may need jumpy back and forth
-  :config (evil-mode 1))                          ;; shouldn't this be after?
+  :config
+  (evil-define-key 'normal org-mode-map (kbd "TAB") #'org-cycle) ;; cuz https://emacs.stackexchange.com/a/73457/38482
+  (evil-mode 1))
 #+end_src
 ** evil-collection
 [[https://github.com/emacs-evil/evil-collection][Evil-collection]] is sets of evil keybindings for various modes in Emacs.
@@ -229,7 +233,9 @@ I rarely uses. but it can put quotation mark at the 2 ends of visual region.
 (use-package org
   :bind (:map org-mode-map
               ("C-S-j" . org-next-visible-heading       )
-              ("C-S-k" . org-previous-visible-heading   ))
+              ("C-S-k" . org-previous-visible-heading   )
+              
+              )
 
   :hook (org-mode . dw/org-mode-setup)
   :config
@@ -567,6 +573,7 @@ Defining custom function to toggle visibily of bold, italics, and links etc.
 #+end_src
 ** organize my life
 #+begin_src emacs-lisp :results none
+(require 'org-protocol)
 (setq org-agenda-start-with-log-mode t
       org-default-notes-file (concat (file-name-as-directory denote-directory)
                                      "20230926T010607--todo__todo.org")
@@ -581,6 +588,11 @@ Defining custom function to toggle visibily of bold, italics, and links etc.
 
                               ("T" "Todo (xclip)" entry (file+headline org-default-notes-file "Tasks")
                                "* TODO [[%x]]\n  %i\n  %a")
+
+                              ("p" "Protocol" entry (file+headline org-default-notes-file      "Inbox")
+                               "* %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?")
+                              ("L" "Protocol Link" entry (file+headline org-default-notes-file "Inbox")
+                               "* %? [[%:link][%:description]] \nCaptured On: %U")
 
                               ;;("j" "Journal" entry (file+datetree "~/org/journal.org")
                               ;; "* %?\nEntered on %U\n  %i\n  %a")
@@ -801,31 +813,32 @@ esac
 (use-package corfu
   ;; Optional customizations
   :custom
-  (corfu-cycle            t)      ; Allows cycling through candidates
-  (corfu-auto             t)      ; Enable auto completion
-  (corfu-auto-prefix      2)
-  (corfu-auto-delay       0.0)
+  (corfu-cycle            t          ) ;; Allows cycling through candidates
+  (corfu-auto             t          ) ;; Enable auto completion
+  (corfu-auto-prefix      2          )
+  (corfu-auto-delay       0.0        )
   (corfu-popupinfo-delay '(0.5 . 0.2))
-  (corfu-preview-current 'insert) ; Do not preview current candidate
-  (corfu-preselect-first  nil)
-  (corfu-on-exact-match   nil)    ; Don't auto expand tempel snippets
+  (corfu-preview-current 'insert     ) ;; Do not preview current candidate
+  (corfu-preselect-first  nil        )
+  (corfu-on-exact-match   nil        ) ;; Don't auto expand tempel snippets
 
   ;; Optionally use TAB for cycling, default is `corfu-complete'.
   :bind (:map corfu-map
-              ("M-SPC"      . corfu-insert-separator)
-              ("TAB"        . nil); corfu-next)
-              ([tab]        . nil); corfu-next)
-              ;;("S-TAB"     . corfu-previous)
-              ("M-k"        . corfu-previous)
-              ("M-j"        . corfu-next)
-              ("S-<return>" . corfu-insert)
-              ("M-h"        . corfu-insert)
-              ("RET"        . nil))
+              ("M-SPC"      . corfu-insert-separator )
+              ("TAB"        . nil                    ); corfu-next)
+              ([tab]        . nil                    ); corfu-next)
+              ;;("S-TAB"     . corfu-previous        )
+              ("M-k"        . corfu-previous         )
+              ("M-j"        . corfu-next             )
+              ("S-<return>" . corfu-insert           )
+              ("M-h"        . corfu-insert           )
+              ("RET"        . nil                    )
+              )
 
   :init
-  (global-corfu-mode)
-  (corfu-history-mode)
-  (corfu-popupinfo-mode) ; Popup completion info
+  (global-corfu-mode    )
+  (corfu-history-mode   )
+  (corfu-popupinfo-mode ) ; Popup completion info
   :config
   (add-hook 'eshell-mode-hook
             (lambda () (setq-local corfu-quit-at-boundary t
@@ -1168,10 +1181,118 @@ from [[https://www.masteringemacs.org/article/seamlessly-merge-multiple-document
       :global-prefix "C-M-SPC"))
 #+end_src
 ** general main1
+*** My Emacs configuration cheatsheet
+**** My custom key-binding cheatsheet
 #+ATTR_HTML: :border 2 :rules all :frame border
-| SPC | execute-extended-command | 
-| mg  | magit                    | 
+|-------------------------+-------------+-------------------------------------------+-------------------------------------------------------------|
+| where                   | key binding | mnemonic                                  | description                                                 |
+|-------------------------+-------------+-------------------------------------------+-------------------------------------------------------------|
+| basic emacs movment     |             |                                           |                                                             |
+| any                     | SPC d       | (*_d_*)irectory explorer                  |                                                             |
+| any                     | SPC f       | (*_f_*)ind file                           |                                                             |
+| any                     | SPC l       | (*_l_*)ist buffer                         | choose buffer and open it                                   |
+| any                     | SPC n       |                                           | Open file explorer on left side                             |
+| any                     | SPC N       |                                           | Hide file explorer on left side                             |
+|-------------------------+-------------+-------------------------------------------+-------------------------------------------------------------|
+| bookmark related        |             |                                           |                                                             |
+| any                     | SPC b m     | (*_b_*)ook (*_m_*)ark                     | choose bookmark and open it                                 |
+| any                     | SPC b s     | (*_b_*)ook (*_s_*)et                      | set bookmark                                                |
+| any                     | SPC b d     | (*_b_*)ook (*_d_*)delete                  | delete bookmark                                             |
+| any                     | SPC b r     | (*_b_*)ook (*_r_*)ename                   | rename bookmark                                             |
+|-------------------------+-------------+-------------------------------------------+-------------------------------------------------------------|
+| Opening certain files   |             |                                           |                                                             |
+| any                     | SPC o e     | (*_o_*)pen (*_e_*)macs conf               | ~/.config/emacs/init.org                                    |
+| any                     | SPC o E     | (*_o_*)pen (*_E_*)macs conf               | ~/.config/emacs/init.el                                     |
+| any                     | SPC o b     | (*_o_*)pen (*_b_*)ibliography file        | ~/Documents/Personal/20220101T010101--references__study.bib |
+| any                     | SPC o C     | (*_o_*)pen (*_C_*)apture file             | ~/Documents/Personal/20230926T010607--todo__todo.org        |
+|-------------------------+-------------+-------------------------------------------+-------------------------------------------------------------|
+| TODO  related           |             |                                           |                                                             |
+| org                     | SPC o c     | (*_o_*)rg (*_c_*)apture                   | capture your thought, todo                                  |
+| org                     | SPC o t t   | (*_o_*)rg (*_t_*)odo set (*_t_*)odo       | set subtree -> TODO                                         |
+| org                     | SPC o t w   | (*_o_*)rg (*_t_*)odo set (*_w_*)aiting    | set subtree -> WAITING                                      |
+| org                     | SPC o t d   | (*_o_*)rg (*_t_*)odo set (*_d_*)one       | set subtree -> DONE                                         |
+|-------------------------+-------------+-------------------------------------------+-------------------------------------------------------------|
+| Calendar related        |             |                                           |                                                             |
+| org                     | SPC o s     | (*_o_*)rg (*_s_*)chedule                  | add schedule to subtree                                     |
+| org                     | SPC o d     | (*_o_*)rg (*_d_*)eadline                  | add schedule to deadline                                    |
+| org                     | SPC o a     | (*_o_*)rg (*_a_*)genda                    | open org agenda                                             |
+|-------------------------+-------------+-------------------------------------------+-------------------------------------------------------------|
+| Export related          |             |                                           |                                                             |
+| org                     | SPC o x p   | (*_o_*)rg e(*_x_*)port (*_p_*)df          | compile org file to PDF (latex)                             |
+| org                     | SPC o x P   | (*_o_*)rg e(*_x_*)port (*_P_*)df          | compile org subtree (section) to PDF (latex)                |
+| org                     | SPC o x o   | (*_o_*)rg e(*_x_*)ported (*_o_*)pen       | open the latex compiled pdf file                            |
+|-------------------------+-------------+-------------------------------------------+-------------------------------------------------------------|
+| Visual related          |             |                                           |                                                             |
+| org                     | SPC o n m   | (*_o_*)rg (*_n_*)um (*_m_*)ode            | show number on header                                       |
+| org                     | SPC o l d   | (*_o_*)rg (*_l_*)ink (*_d_*)escription    | toggle show/hiding hyperlink                                |
+| org                     | SPC o l i   | (*_o_*)rg (*_l_*)ink (*_i_*)nsert         | org insert link/hyperlink                                   |
+|-------------------------+-------------+-------------------------------------------+-------------------------------------------------------------|
+| Visual image related    |             |                                           |                                                             |
+| org                     | SPC o i p   | (*_o_*)rg (*_i_*)mg (*_p_*)aste           | paste copied image (from clipboard)                         |
+| org                     | SPC o i P   | (*_o_*)rg (*_i_*)mg (*_P_*)aste from url  | paste URL(or file path) image                               |
+| org (on img link)       | SPC o i d   | (*_o_*)rg (*_i_*)mg (*_d_*)elete          | delete image-at-point                                       |
+| org (on img link)       | SPC o i e   | (*_o_*)rg (*_i_*)mg (*_e_*)dit            | edit image-at-point (via gimp/inkscape)                     |
+| org                     | SPC o i t   | (*_o_*)rg (*_i_*)mg (*_t_*)oggle visible  | toggle show/hide image in buffer                            |
+|-------------------------+-------------+-------------------------------------------+-------------------------------------------------------------|
+| Insert citation related |             |                                           |                                                             |
+| org                     | SPC o i b   | (*_o_*)rg (*_i_*)nsert (*_b_*)ibliography | insert citation                                             |
+| org                     | SPC o i f   | (*_o_*)rg (*_i_*)nsert (*_f_*)ootnote     | insert footnote                                             |
+| org                     | SPC o i F   | (*_o_*)rg (*_i_*)nsert (*_F_*)ootnote     | insert footnote (action???)                                 |
+|-------------------------+-------------+-------------------------------------------+-------------------------------------------------------------|
+| Others                  |             |                                           |                                                             |
+| org (on link)           | SPC o o     | (*_o_*)rg (*_o_*)pen                      | org open hyperlink                                          |
+| org                     | SPC o y     | (*_o_*)rg (*_y_*)ank subtree              | copy current subtree                                        |
+|-------------------------+-------------+-------------------------------------------+-------------------------------------------------------------|
+**** common org keybindins (might be from evil)
+These are basically uncustomized keybindings I use quite often.
+~C-c .~  (means ~Ctrl+c~ and then ~.~)
 
+#+ATTR_HTML: :border 2 :rules all :frame border
+|---------------------+----------------+--------------------+-----------------------------------------------|
+| where               | key binding    | mnemonic           | description                                   |
+|---------------------+----------------+--------------------+-----------------------------------------------|
+| Structural movement |                |                    |                                               |
+| org                 | C-j            | j (down)           | (same level) jump to next heading             |
+| org                 | C-k            | k (up)             | (same level) jump to previous heading         |
+| org                 | C-S-j          | j (down)           | (any level) jump to next visible heading      |
+| org                 | C-S-k          | k (up)             | (any level) jump to previous visible heading  |
+|---------------------+----------------+--------------------+-----------------------------------------------|
+| Structural edit     |                |                    |                                               |
+| org (on heading)    | ~M-h~ or ~M-l~ | h, l (left, right) | move increase/decrease depth level of heading |
+| org (on heading)    | ~M-h~ or ~M-l~ | k, j (left, right) | move (switch) up/down heading                 |
+|---------------------+----------------+--------------------+-----------------------------------------------|
+| Inserting           |                |                    |                                               |
+| org                 | M-RET          |                    | insert new heading                            |
+| org                 | C-c C-l        |                    | insert link (same as ~SPC o l i~)             |
+| org                 | C-c \vert      |                    | insert table                                  |
+| org                 | C-c .          |                    | insert timestamp (active)                     |
+| org                 | C-c !          |                    | insert timestamp (inactive)                   |
+| org                 | C-c !          |                    | insert timestamp (inactive)                   |
+|---------------------+----------------+--------------------+-----------------------------------------------|
+
+**** Snippets in org mode
+These are snippets that I've defined (not all). To use it, you write the ~key~ (e.g. ~<cn~ and press ~TAB~ key).
+Also these will only work inside ORG file.
+|--------------+--------------------------+----------------------------------------------------------|
+| key          | mnemonic                 | description                                              |
+|--------------+--------------------------+----------------------------------------------------------|
+|              | shoulbe at top           |                                                          |
+| ~<ti~        | (ti)tle                  | insert title (shoulbe at top)                            |
+| ~<hdr-start~ | (h)ea(d)e(r)-(start)     | opening state (fold org file to the 2, or 3th sub-level) |
+| ~<da~        | (da)te                   | insert date (shoulbe at top)                             |
+|--------------+--------------------------+----------------------------------------------------------|
+|              | anywhere                 |                                                          |
+| ~<ba~        | (b)egin (a)bstract       | insert abstract block                                    |
+| ~<cn~        | (c)aption (n)ame         | insert image caption and name (is for later reference)   |
+| ~<n~         | (n)ame                   | name (is for later reference)                            |
+| ~<img-w~     | (img)-(w)idth            | set image width in latex export                          |
+| ~<oxt~       | (o)rg-(x)port-(t)emplate | insert latex template                                    |
+| ~<pb~        | (p)rint-(b)ibliography   | shoulbe at end                                           |
+| ~<s~         | (s)ource                 | insert source block                                      |
+| ~<ta~        | (ta)ble                  | insert example table                                     |
+|--------------+--------------------------+----------------------------------------------------------|
+
+*** Actual implementation
 #+begin_src emacs-lisp
 ;; Main Keychords
 (rune/leader-keys
