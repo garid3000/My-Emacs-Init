@@ -1067,22 +1067,68 @@ from [[https://www.masteringemacs.org/article/seamlessly-merge-multiple-document
   (set-face-attribute 'default nil :font "Iosevka Gry" :height 120))
 #+end_src
 * Keybinding
-** Global keybinding:
+** Global keybinding configuation:
+*** Global keybinding table
+#+name: tbl-global-keybindings
+| key     | function                                      | description                          |
+|---------+-----------------------------------------------+--------------------------------------|
+| M-q     | delete-window                                 | delete window                        |
+| M-Q     | kill-current-buffer                           | delete buffer                        |
+| M-J     | other-window                                  | jump to other window                 |
+| M-W     | evil-window-vnew                              | divide window veritically (on right) |
+| M-E     | evil-window-vsplit                            | divide window veritically (on left)  |
+| M-]     | comint-dynamic-complete-filename              | complete file path                   |
+| M-s     | avy-goto-char                                 | jump to character                    |
+| M-S     | avy-goto-char-2                               | jump to character (with 2 char)      |
+| C-/     | comment-line                                  | set selected lines comment           |
+| C-\vert | garid-custom/toggle-eng-mon-teq-input-methods | change toggle input (Eng-Mon-Teq)    |
+
+*** Parse/convert global keybinding table into elisp
+#+name: convert-global-keybindings
+#+begin_src elisp :var tab=tbl-global-keybindings :wrap src emacs-lisp :tangle no
+(concat
+ (mapconcat
+  (lambda (row)
+    (format
+     "(global-set-key (kbd \"%s\") '%s)"
+     ;; needed to use regexp cuz | (as \vert) used in the table
+     (replace-regexp-in-string (regexp-quote "\\vert") "|" (nth 0 row) nil 'literal)
+     (nth 1 row)
+     ))
+  tab "\n"))
+#+end_src
+
+#+RESULTS: convert-global-keybindings
 #+begin_src emacs-lisp
 (global-set-key (kbd "M-q") 'delete-window)
 (global-set-key (kbd "M-Q") 'kill-current-buffer)
-(global-set-key (kbd "M-w") 'ace-window)           ;; do I need this?
 (global-set-key (kbd "M-J") 'other-window)
-(global-set-key (kbd "M-K") #'(lambda() (interactive) (other-window -1)))
 (global-set-key (kbd "M-W") 'evil-window-vnew)
 (global-set-key (kbd "M-E") 'evil-window-vsplit)
 (global-set-key (kbd "M-]") 'comint-dynamic-complete-filename)
-(global-set-key (kbd "M-S") 'avy-goto-char-2)
 (global-set-key (kbd "M-s") 'avy-goto-char)
-(global-set-key (kbd "M-F") 'avy-goto-char)            
+(global-set-key (kbd "M-S") 'avy-goto-char-2)
 (global-set-key (kbd "C-/") 'comment-line)
 (global-set-key (kbd "C-|") 'garid-custom/toggle-eng-mon-teq-input-methods)
-(setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
+#+end_src
+
+*** COMMENT older config
+#+begin_src emacs-lisp
+(global-set-key (kbd "M-q") 'delete-window                                 )
+(global-set-key (kbd "M-Q") 'kill-current-buffer                           )
+(global-set-key (kbd "M-J") 'other-window                                  )
+(global-set-key (kbd "M-W") 'evil-window-vnew                              )
+(global-set-key (kbd "M-E") 'evil-window-vsplit                            )
+(global-set-key (kbd "M-]") 'comint-dynamic-complete-filename              )
+(global-set-key (kbd "M-S") 'avy-goto-char-2                               )
+(global-set-key (kbd "M-s") 'avy-goto-char                                 )
+(global-set-key (kbd "M-F") 'avy-goto-char)            
+(global-set-key (kbd "C-/") 'comment-line                                  )
+;;(global-set-key (kbd "C-|") 'garid-custom/toggle-eng-mon-teq-input-methods )
+
+;; (global-set-key (kbd "M-K") #'(lambda() (interactive) (other-window -1)))
+;;(global-set-key (kbd "M-w") 'ace-window)           ;; do I need this?
+;;(setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))       ;; do I need this?
 #+end_src
 ** new general config
 *** general
