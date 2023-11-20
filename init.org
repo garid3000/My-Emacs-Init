@@ -10,6 +10,7 @@
 # make run to extract init.el from init.org from shell
 run:
 	emacs --batch --eval "(require 'org)" --eval '(org-babel-tangle-file "init.org")'
+	chmod +x 'garid/edit_img.sh'
 #+end_src
 
 * Package Manager:
@@ -647,6 +648,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 
 * Org Misc:
 ** Org-download for handling images 
+*** Org-download package itself
 #+begin_src emacs-lisp
 (use-package org-download
   :ensure t
@@ -670,7 +672,8 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   )
 #+end_src
 
-#+begin_src shell :results file :file garid/edit_img.sh :file-mode (identity #o755) :tangle no
+*** Editing image software                                     :customFunc:
+#+begin_src shell :tangle garid/edit_img.sh
 #!/bin/sh
 
 file=$(readlink -f "$1")
@@ -691,9 +694,6 @@ case "$ext" in
 	xopp) xournalpp "$file" ;;
 esac
 #+end_src
-
-#+RESULTS:
-[[file:garid/edit_img.sh]]
 
 ** Org-auto-tangle for handling tangled source blocks
 #+begin_src emacs-lisp
@@ -727,9 +727,9 @@ esac
   :ensure t
   :custom
   (org-babel-default-header-args:tmux
-   '((:results . "silent")	;
-     (:session . "default")	; default tmux session to send code to
-     (:socket  . nil)))	; default tmux socket to communicate with
+   '((:results  .  "silent"  )
+     (:session  .  "default" )
+     (:socket   .  nil       )))
   ;; The tmux sessions are prefixed with the following string.
   ;; You can customize this if you like.
   (org-babel-tmux-session-prefix "ob-")
@@ -794,9 +794,10 @@ esac
 ** Yassnippets
 #+begin_src emacs-lisp
 (use-package yasnippet
-  :config
-  (setq yas/triggers-in-field t); Enable nested triggering of snippets
+  :custom
+  (yas/triggers-in-field t) ;; Do I need this?
   ;; (setq yas-key-syntaxes (append yas-key-syntaxes '(yas-try-key-from-dot)))
+  :config
   (yas-global-mode 1)
 
   (defcustom yas-new-snippet-default "\
