@@ -1083,7 +1083,10 @@ from [[https://www.masteringemacs.org/article/seamlessly-merge-multiple-document
 | C-/     | comment-line                                  | set selected lines comment           |
 | C-\vert | garid-custom/toggle-eng-mon-teq-input-methods | change toggle input (Eng-Mon-Teq)    |
 
+Note to myself: after changing Table-[[tbl-global-keybindings]], I need to update [[convert-global-keybindings]]
+
 *** Parse/convert global keybinding table into elisp
+#+caption: adsf
 #+name: convert-global-keybindings
 #+begin_src elisp :var tab=tbl-global-keybindings :wrap src emacs-lisp :tangle no
 (concat
@@ -1124,7 +1127,7 @@ from [[https://www.masteringemacs.org/article/seamlessly-merge-multiple-document
 (global-set-key (kbd "M-s") 'avy-goto-char                                 )
 (global-set-key (kbd "M-F") 'avy-goto-char)            
 (global-set-key (kbd "C-/") 'comment-line                                  )
-;;(global-set-key (kbd "C-|") 'garid-custom/toggle-eng-mon-teq-input-methods )
+(global-set-key (kbd "C-|") 'garid-custom/toggle-eng-mon-teq-input-methods )
 
 ;; (global-set-key (kbd "M-K") #'(lambda() (interactive) (other-window -1)))
 ;;(global-set-key (kbd "M-w") 'ace-window)           ;; do I need this?
@@ -1151,14 +1154,190 @@ from [[https://www.masteringemacs.org/article/seamlessly-merge-multiple-document
   )
 #+end_src
 *** keybinds for all modes
-#+name: table_keybindings
-| key(s) | function                 | short description |
-|--------+--------------------------+-------------------|
-| ~SPC~  | execute-extended-command | M-x               |
-| ~d~    | dired-jump               | (d)ired           |
-| ~f~    | find-file                | (f)ind-file       |
+#+name: tbl-global-general-keybindings
+| key(s) | lambda | function                                                | short description       |
+|--------+--------+---------------------------------------------------------+-------------------------|
+| SPC    |        | execute-extended-command                                | M-x                     |
+| d      |        | dired-jump                                              | (d)ired                 |
+| f      |        | find-file                                               | (f)ind-file             |
+| n      |        | dired-sidebar-jump-to-sidebar                           | (n)-side-tree           |
+| N      |        | dired-sidebar-hide-sidebar                              | (N)-side-tree-close     |
+| ZQ     |        | kill-emacs                                              | quit                    |
+| l      |        | consult-buffer                                          | (l)ist-buffers          |
+| Lr     |        | revert-buffer-quick                                     | (L-r)evert              |
+| Le     |        | eval-buffer                                             | (L-e)val                |
+| Lb     |        | ibuffer                                                 | (L-(b)uffer             |
+| Li     |        | ibuffer                                                 | (L-i)buffer             |
+| Ln     |        | rename-buffer                                           | (L-n)ame                |
+| Lp     |        | switch-to-prev-buffer                                   | (L-p)rev                |
+| LP     |        | switch-to-next-buffer                                   | (L-P)next               |
+| Ld     |        | crux-delete-file-and-buffer                             | (L-d)delete             |
+| ca     |        | calc                                                    | (ca)lc                  |
+| mg     |        | magit-status                                            | (m)a(g)it               |
+| co     |        | consult-org-heading                                     | (c-o)rg                 |
+| cm     |        | consult-imenu                                           | (c-i(m)enu              |
+| cM     |        | consult-man                                             | (c-M)an                 |
+| cr     |        | consult-ripgrep                                         | (c-r)ipgrep             |
+| cf     |        | consult-flymake                                         | (c-f)lymake             |
+| cp     |        | consult-project-buffer                                  | (c-p)roject             |
+| cd     |        | consult-dir                                             | (c-d)ir                 |
+| bm     |        | consult-bookmark                                        | (b)ook(m)ark-consult    |
+| bs     |        | bookmark-set                                            | (b)m-(s)et              |
+| bd     |        | bookmark-delete                                         | (b)m-(d)elete           |
+| br     |        | bookmark-rename                                         | (b)m-(r)ename           |
+| pf     |        | project-find-file                                       | (p-f)ile                |
+| pd     |        | consult-flymake                                         | (p-d)iagnostic          |
+| pr     |        | xref-find-references                                    | (p-r)eferences          |
+| pz     |        | project-switch-project                                  | (p-z)                   |
+| ps     |        | project-find-regexp                                     | (p-s)find-regexp        |
+| vq     |        | format-all-buffer                                       | (q)-format-buffer       |
+| vr     |        | project-query-replace-regexp                            | (p-r)eplace             |
+| pk     |        | project-kill-buffers                                    | (p-k)ill-buffers        |
+| pl     |        | consult-project-buffer                                  | (p-l)ist-buffers        |
+| pL     |        | project-list-buffers                                    | (p-L)ist-buffers        |
+| e      |        | eshell                                                  | (e)shell                |
+| vt     |        | vterm                                                   | (v)ir-(t)erm            |
+| oe     | y      | (find-file "~/.config/emacs/init.org")                  | open emacs conf org     |
+| ob     | y      | (find-file (nth 0 org-cite-global-bibliography))        | open bibliography       |
+| oE     | y      | (find-file "~/.config/emacs/init.el")                   | open emacs conf el      |
+| oC     | y      | (find-file org-default-notes-file)                      | open Capture file       |
+| <      |        | recompile                                               | recompile               |
+| ruim   |        | org-roam-ui-mode                                        | (r-ui)-(m)ode           |
+| Dr     |        | denote-rename-file                                      | (D)enote-(D)ired        |
+| Dn     |        | denote-open-or-create                                   | (D)e-(N)ote             |
+| DD     | y      | (dired denote-directory)                                | (D)enote-(D)ired        |
+| h      |        | describe-symbol                                         | Describe-Sym            |
+| H      |        | describe-key                                            | Describe-Key            |
+| sl4    | y      | (setq display-line-numbers-width 4)                     | (s)ys-number(l)ine-(4)  |
+| sl3    | y      | (setq display-line-numbers-width 3)                     | (s)ys-number(l)ine-(3)  |
+| srf    | y      | (recentf-open-files)                                    | (s-r)ecent-(f)iles      |
+| st     |        | gry/open-term-at                                        | (s-t)erminal            |
+| sT     |        | toggle-transparency                                     | (s-T)oggle-transparency |
+| sns    |        | crux-create-scratch-buffer                              | (s-n)ew-(s)cratch-buf   |
+| slm    |        | scroll-lock-mode                                        | (s)croll-(l)ock-(m)ode  |
+| scl    | y      | (global-command-log-mode) (clm/open-command-log-buffer) | (s-c)md-(l)og           |
+| svl    |        | global-display-fill-column-indicator-mode               | (s-v)ertical-(l)ine     |
+| sw     |        | whitespace-mode                                         | (s-w)hitespace          |
+| sco    |        | corfu-mode                                              | (s-c)orfu-(m)ode        |
+| se     |        | eglot                                                   | (s-e)glot               |
+| sib    |        | clone-indirect-buffer                                   | (s-i)ndirect-(b)uffer   |
+| rg     |        | rg                                                      | (r)ip-(g)rep            |
+| yn     |        | yas-new-snippet                                         | (y)as-(n)ew             |
+| yv     |        | yas-visit-snippet-file                                  | (y)as-(v)isit           |
+| yd     |        | yas-describe-tables                                     | (y)as-(d)esc-table      |
+| yc     |        | consult-yasnippet                                       | (y)as-(c)onsult         |
+| ce     |        | calc-embedded                                           | (c)alc-(e)mbedded       |
+| cF     |        | full-calc                                               | (c)alc-(F)ull           |
+| za     |        | garid-custom/align-regexp-and-untabify                  | (z)-reg-(a)lign         |
+| zr     |        | replace-regexp                                          | (z)-reg-(r)eplace       |
+| zh     |        | highlight-symbol-at-point                               | (z)-(h)ighlight         |
+| zH     |        | unhighlight-regexp                                      | (z)-(H)ighlight-off     |
+| oTm    |        | orgtbl-mode                                             | (o-T)able-(m)ode        |
+| oTc    |        | orgtbl-create-or-convert-from-region                    | (o-T)able-(c)reate      |
 
+*** convert keybinds for all modes
+#+caption: adsf
+#+name: convert-global-general-keybindings
+#+begin_src elisp :var tab=tbl-global-general-keybindings :wrap src emacs-lisp :tangle no
+(concat
+ "(garids-keybind/for-all-modes\n"
+ (mapconcat
+  (lambda (row) (format "  \"%s\" '(%s :which-key \"%s\")"
+                        (nth 0 row)
+                        (if (string= (nth 1 row) "y")
+                            (format "(lambda () (interactive) %s )" (nth 2 row)) ;; for anon functions
+                          (nth 2 row))                                            ;; for normal functions
+                        (nth 3 row)))
+  tab "\n"
+  )
+ "\n)"
+ )
+#+end_src
 
+#+RESULTS: convert-global-general-keybindings
+#+begin_src emacs-lisp
+(garids-keybind/for-all-modes
+  "SPC" '(execute-extended-command :which-key "M-x")
+  "d" '(dired-jump :which-key "(d)ired")
+  "f" '(find-file :which-key "(f)ind-file")
+  "n" '(dired-sidebar-jump-to-sidebar :which-key "(n)-side-tree")
+  "N" '(dired-sidebar-hide-sidebar :which-key "(N)-side-tree-close")
+  "ZQ" '(kill-emacs :which-key "quit")
+  "l" '(consult-buffer :which-key "(l)ist-buffers")
+  "Lr" '(revert-buffer-quick :which-key "(L-r)evert")
+  "Le" '(eval-buffer :which-key "(L-e)val")
+  "Lb" '(ibuffer :which-key "(L-(b)uffer")
+  "Li" '(ibuffer :which-key "(L-i)buffer")
+  "Ln" '(rename-buffer :which-key "(L-n)ame")
+  "Lp" '(switch-to-prev-buffer :which-key "(L-p)rev")
+  "LP" '(switch-to-next-buffer :which-key "(L-P)next")
+  "Ld" '(crux-delete-file-and-buffer :which-key "(L-d)delete")
+  "ca" '(calc :which-key "(ca)lc")
+  "mg" '(magit-status :which-key "(m)a(g)it")
+  "co" '(consult-org-heading :which-key "(c-o)rg")
+  "cm" '(consult-imenu :which-key "(c-i(m)enu")
+  "cM" '(consult-man :which-key "(c-M)an")
+  "cr" '(consult-ripgrep :which-key "(c-r)ipgrep")
+  "cf" '(consult-flymake :which-key "(c-f)lymake")
+  "cp" '(consult-project-buffer :which-key "(c-p)roject")
+  "cd" '(consult-dir :which-key "(c-d)ir")
+  "bm" '(consult-bookmark :which-key "(b)ook(m)ark-consult")
+  "bs" '(bookmark-set :which-key "(b)m-(s)et")
+  "bd" '(bookmark-delete :which-key "(b)m-(d)elete")
+  "br" '(bookmark-rename :which-key "(b)m-(r)ename")
+  "pf" '(project-find-file :which-key "(p-f)ile")
+  "pd" '(consult-flymake :which-key "(p-d)iagnostic")
+  "pr" '(xref-find-references :which-key "(p-r)eferences")
+  "pz" '(project-switch-project :which-key "(p-z)")
+  "ps" '(project-find-regexp :which-key "(p-s)find-regexp")
+  "vq" '(format-all-buffer :which-key "(q)-format-buffer")
+  "vr" '(project-query-replace-regexp :which-key "(p-r)eplace")
+  "pk" '(project-kill-buffers :which-key "(p-k)ill-buffers")
+  "pl" '(consult-project-buffer :which-key "(p-l)ist-buffers")
+  "pL" '(project-list-buffers :which-key "(p-L)ist-buffers")
+  "e" '(eshell :which-key "(e)shell")
+  "vt" '(vterm :which-key "(v)ir-(t)erm")
+  "oe" '((lambda () (interactive) (find-file "~/.config/emacs/init.org") ) :which-key "open emacs conf org")
+  "ob" '((lambda () (interactive) (find-file (nth 0 org-cite-global-bibliography)) ) :which-key "open bibliography")
+  "oE" '((lambda () (interactive) (find-file "~/.config/emacs/init.el") ) :which-key "open emacs conf el")
+  "oC" '((lambda () (interactive) (find-file org-default-notes-file) ) :which-key "open Capture file")
+  "<" '(recompile :which-key "recompile")
+  "ruim" '(org-roam-ui-mode :which-key "(r-ui)-(m)ode")
+  "Dr" '(denote-rename-file :which-key "(D)enote-(D)ired")
+  "Dn" '(denote-open-or-create :which-key "(D)e-(N)ote")
+  "DD" '((lambda () (interactive) (dired denote-directory) ) :which-key "(D)enote-(D)ired")
+  "h" '(describe-symbol :which-key "Describe-Sym")
+  "H" '(describe-key :which-key "Describe-Key")
+  "sl4" '((lambda () (interactive) (setq display-line-numbers-width 4) ) :which-key "(s)ys-number(l)ine-(4)")
+  "sl3" '((lambda () (interactive) (setq display-line-numbers-width 3) ) :which-key "(s)ys-number(l)ine-(3)")
+  "srf" '((lambda () (interactive) (recentf-open-files) ) :which-key "(s-r)ecent-(f)iles")
+  "st" '(gry/open-term-at :which-key "(s-t)erminal")
+  "sT" '(toggle-transparency :which-key "(s-T)oggle-transparency")
+  "sns" '(crux-create-scratch-buffer :which-key "(s-n)ew-(s)cratch-buf")
+  "slm" '(scroll-lock-mode :which-key "(s)croll-(l)ock-(m)ode")
+  "scl" '((lambda () (interactive) (global-command-log-mode) (clm/open-command-log-buffer) ) :which-key "(s-c)md-(l)og")
+  "svl" '(global-display-fill-column-indicator-mode :which-key "(s-v)ertical-(l)ine")
+  "sw" '(whitespace-mode :which-key "(s-w)hitespace")
+  "sco" '(corfu-mode :which-key "(s-c)orfu-(m)ode")
+  "se" '(eglot :which-key "(s-e)glot")
+  "sib" '(clone-indirect-buffer :which-key "(s-i)ndirect-(b)uffer")
+  "rg" '(rg :which-key "(r)ip-(g)rep")
+  "yn" '(yas-new-snippet :which-key "(y)as-(n)ew")
+  "yv" '(yas-visit-snippet-file :which-key "(y)as-(v)isit")
+  "yd" '(yas-describe-tables :which-key "(y)as-(d)esc-table")
+  "yc" '(consult-yasnippet :which-key "(y)as-(c)onsult")
+  "ce" '(calc-embedded :which-key "(c)alc-(e)mbedded")
+  "cF" '(full-calc :which-key "(c)alc-(F)ull")
+  "za" '(garid-custom/align-regexp-and-untabify :which-key "(z)-reg-(a)lign")
+  "zr" '(replace-regexp :which-key "(z)-reg-(r)eplace")
+  "zh" '(highlight-symbol-at-point :which-key "(z)-(h)ighlight")
+  "zH" '(unhighlight-regexp :which-key "(z)-(H)ighlight-off")
+  "oTm" '(orgtbl-mode :which-key "(o-T)able-(m)ode")
+  "oTc" '(orgtbl-create-or-convert-from-region :which-key "(o-T)able-(c)reate")
+)
+#+end_src
+
+*** COMMENT old
 #+begin_src emacs-lisp
 (garids-keybind/for-all-modes
   "SPC" '(execute-extended-command              :which-key "M-x"                   )
@@ -1184,7 +1363,6 @@ from [[https://www.masteringemacs.org/article/seamlessly-merge-multiple-document
   "cm"  '(consult-imenu                         :which-key "(c-i(m)enu"            )
   "cM"  '(consult-man                           :which-key "(c-M)an"               )
   "cr"  '(consult-ripgrep                       :which-key "(c-r)ipgrep"           )
-  ;; "cf"  '(consult-git-grep                   :which-key "(c-f)gitgrep"          )
   "cf"  '(consult-flymake                       :which-key "(c-f)lymake"           )
   "cp"  '(consult-project-buffer                :which-key "(c-p)roject"           )
   "cd"  '(consult-dir                           :which-key "(c-d)ir"               )
@@ -1194,6 +1372,7 @@ from [[https://www.masteringemacs.org/article/seamlessly-merge-multiple-document
   "bd"  '(bookmark-delete                       :which-key "(b)m-(d)elete"         )
   "br"  '(bookmark-rename                       :which-key "(b)m-(r)ename"         )
 
+  ;; "cf"  '(consult-git-grep                   :which-key "(c-f)gitgrep"          )
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; "mg"   '(magit-status                         :which-key "(m)a(g)it"             ) ;;
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
