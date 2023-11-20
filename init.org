@@ -59,10 +59,12 @@ It emulates vi motion inside Emacs.
          ("M-d"      . evil-scroll-page-down    )
          ("M-u"      . evil-scroll-page-up      )
          )
-  :init (setq evil-want-keybinding      nil
-              ;; evil-want-C-i-jump     nil       ;; test I may need jumpy back and forth
-              ;; for org-cycle (tab) working for terminal
-              evil-undo-system         'undo-fu )
+  :init
+  (setq evil-want-keybinding      nil
+        evil-undo-system         'undo-fu )
+
+  ;; evil-want-C-i-jump     nil       ;; test I may need jumpy back and forth
+  ;; for org-cycle (tab) working for terminal
   :config
   (evil-define-key 'normal org-mode-map (kbd "TAB") #'org-cycle) ;; cuz https://emacs.stackexchange.com/a/73457/38482
   (evil-mode 1))
@@ -233,9 +235,7 @@ I rarely uses. but it can put quotation mark at the 2 ends of visual region.
 (use-package org
   :bind (:map org-mode-map
               ("C-S-j" . org-next-visible-heading       )
-              ("C-S-k" . org-previous-visible-heading   )
-              
-              )
+              ("C-S-k" . org-previous-visible-heading   ))
 
   :hook (org-mode . dw/org-mode-setup)
   :config
@@ -340,6 +340,7 @@ I rarely uses. but it can put quotation mark at the 2 ends of visual region.
    (nim        . t)
    (plantuml   . t)
    (maxima     . t)
+   (calc     . t)
    ))
 
 #+end_src
@@ -870,36 +871,6 @@ esac
 #+RESULTS:
 : t
 
-** COMMENT LSP-bridges
-#+begin_src emacs-lisp
-(use-package markdown-mode)
-;;(use-package posframe)
-(add-to-list 'load-path "/home/garid/otherGit/lsp-bridge/")
-(require 'lsp-bridge)
-(setq lsp-bridge-enable-profile t)
-(setq lsp-bridge-python-lsp-server "pyright")
-;; (setq lsp-bridge-python-lsp-server "pyright")
-(global-lsp-bridge-mode)
-
-(define-key acm-mode-map (kbd "M-j") 'acm-select-next)
-(define-key acm-mode-map (kbd "M-k") 'acm-select-prev)
-(define-key acm-mode-map (kbd "M-d") 'acm-doc-toggle)
-(define-key acm-mode-map (kbd "M-f") 'acm-filter)
-(define-key acm-mode-map (kbd "M-H") 'acm-hide)
-(define-key acm-mode-map (kbd "M-g M-g") 'acm-select-first)
-(define-key acm-mode-map (kbd "M-G")     'acm-select-last)
-(define-key acm-mode-map (kbd "<tab>") nil)
-(define-key acm-mode-map (kbd "TAB")   nil)
-(setq acm-backend-lsp-candidate-min-length               2               
-      acm-backend-yas-candidate-min-length               2               
-      acm-backend-elisp-candidate-min-length             2             
-      acm-backend-codeium-candidate-min-length           2           
-      acm-backend-search-file-words-candidate-min-length 2)
-#+end_src
-
-#+RESULTS:
-: 2
-
 ** parenthesis: (electric-pair-mode)
 #+begin_src emacs-lisp
 (electric-pair-mode 1)
@@ -934,6 +905,36 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
 ;; (use-package ripgrep)
 (use-package rg)
 #+end_src
+** COMMENT LSP-bridges
+#+begin_src emacs-lisp
+(use-package markdown-mode)
+;;(use-package posframe)
+(add-to-list 'load-path "/home/garid/otherGit/lsp-bridge/")
+(require 'lsp-bridge)
+(setq lsp-bridge-enable-profile t)
+(setq lsp-bridge-python-lsp-server "pyright")
+;; (setq lsp-bridge-python-lsp-server "pyright")
+(global-lsp-bridge-mode)
+
+(define-key acm-mode-map (kbd "M-j") 'acm-select-next)
+(define-key acm-mode-map (kbd "M-k") 'acm-select-prev)
+(define-key acm-mode-map (kbd "M-d") 'acm-doc-toggle)
+(define-key acm-mode-map (kbd "M-f") 'acm-filter)
+(define-key acm-mode-map (kbd "M-H") 'acm-hide)
+(define-key acm-mode-map (kbd "M-g M-g") 'acm-select-first)
+(define-key acm-mode-map (kbd "M-G")     'acm-select-last)
+(define-key acm-mode-map (kbd "<tab>") nil)
+(define-key acm-mode-map (kbd "TAB")   nil)
+(setq acm-backend-lsp-candidate-min-length               2               
+      acm-backend-yas-candidate-min-length               2               
+      acm-backend-elisp-candidate-min-length             2             
+      acm-backend-codeium-candidate-min-length           2           
+      acm-backend-search-file-words-candidate-min-length 2)
+#+end_src
+
+#+RESULTS:
+: 2
+
 ** COMMENT scad
 #+begin_src emacs-lisp
 (use-package scad-mode)
@@ -1149,20 +1150,276 @@ from [[https://www.masteringemacs.org/article/seamlessly-merge-multiple-document
 #+begin_src emacs-lisp
 (global-set-key (kbd "M-q") 'delete-window)
 (global-set-key (kbd "M-Q") 'kill-current-buffer)
-(global-set-key (kbd "M-w") 'ace-window)
+(global-set-key (kbd "M-w") 'ace-window)           ;; do I need this?
 (global-set-key (kbd "M-J") 'other-window)
 (global-set-key (kbd "M-K") #'(lambda() (interactive) (other-window -1)))
-(global-set-key (kbd "M-F") 'avy-goto-char)
 (global-set-key (kbd "M-W") 'evil-window-vnew)
 (global-set-key (kbd "M-E") 'evil-window-vsplit)
 (global-set-key (kbd "M-]") 'comint-dynamic-complete-filename)
 (global-set-key (kbd "M-S") 'avy-goto-char-2)
 (global-set-key (kbd "M-s") 'avy-goto-char)
+(global-set-key (kbd "M-F") 'avy-goto-char)            
 (global-set-key (kbd "C-/") 'comment-line)
 (global-set-key (kbd "C-|") 'toggle_input_method_mn_teq)
 (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
 #+end_src
-** general main
+** new general config
+*** general
+#+begin_src emacs-lisp
+(use-package general
+  :config (general-evil-setup t)
+
+  ;; Keybindings for everywhere
+  (general-create-definer garids-keybind/for-all-modes
+    :keymaps  '(normal visual emacs)
+    :prefix         "SPC"
+    :global-prefix  "C-SPC")
+
+  ;; Keybindings inside Org-mode-map
+  (general-create-definer garids-keybind/in-org-mode
+    :states '(normal visual)
+    :keymaps '(org-mode-map)
+    :prefix        "SPC"
+    :global-prefix "C-SPC")
+  )
+#+end_src
+*** keybinds for all modes
+#+name: table_keybindings
+| key(s) | function                 | short description |
+|--------+--------------------------+-------------------|
+| ~SPC~  | execute-extended-command | M-x               |
+| ~d~    | dired-jump               | (d)ired           |
+| ~f~    | find-file                | (f)ind-file       |
+
+
+#+begin_src emacs-lisp
+(garids-keybind/for-all-modes
+  "SPC" '(execute-extended-command              :which-key "M-x"                   )
+  "d"   '(dired-jump                            :which-key "(d)ired"               )
+  "f"   '(find-file                             :which-key "(f)ind-file"           )
+  "n"   '(dired-sidebar-jump-to-sidebar         :which-key "(n)-side-tree"         )
+  "N"   '(dired-sidebar-hide-sidebar            :which-key "(N)-side-tree-close"   )
+  "ZQ"  '(kill-emacs                            :which-key "quit"                  )
+  "l"   '(consult-buffer                        :which-key "(l)ist-buffers"        )
+  "Lr"  '(revert-buffer-quick                   :which-key "(L-r)evert"            )
+  "Le"  '(eval-buffer                           :which-key "(L-e)val"              )
+  "Lb"  '(ibuffer                               :which-key "(L-(b)uffer"           )
+  "Li"  '(ibuffer                               :which-key "(L-i)buffer"           )
+  "Ln"  '(rename-buffer                         :which-key "(L-n)ame"              )
+  "Lp"  '(switch-to-prev-buffer                 :which-key "(L-p)rev"              )
+  "LP"  '(switch-to-next-buffer                 :which-key "(L-P)next"             )
+  "Ld"  '(crux-delete-file-and-buffer           :which-key "(L-d)delete"           )
+  "ca"  '(calc                                  :which-key "(ca)lc"                )
+
+  "mg"   '(magit-status                         :which-key "(m)a(g)it"             )
+
+  "co"  '(consult-org-heading                   :which-key "(c-o)rg"               )
+  "cm"  '(consult-imenu                         :which-key "(c-i(m)enu"            )
+  "cM"  '(consult-man                           :which-key "(c-M)an"               )
+  "cr"  '(consult-ripgrep                       :which-key "(c-r)ipgrep"           )
+  ;; "cf"  '(consult-git-grep                   :which-key "(c-f)gitgrep"          )
+  "cf"  '(consult-flymake                       :which-key "(c-f)lymake"           )
+  "cp"  '(consult-project-buffer                :which-key "(c-p)roject"           )
+  "cd"  '(consult-dir                           :which-key "(c-d)ir"               )
+
+  "bm"  '(consult-bookmark                      :which-key "(b)ook(m)ark-consult"  )
+  "bs"  '(bookmark-set                          :which-key "(b)m-(s)et"            )
+  "bd"  '(bookmark-delete                       :which-key "(b)m-(d)elete"         )
+  "br"  '(bookmark-rename                       :which-key "(b)m-(r)ename"         )
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; "mg"   '(magit-status                         :which-key "(m)a(g)it"             ) ;;
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;"mm"   '(mu4e                               :which-key "(m)-mu4e"              )
+  ;;"mM"   '(notmuch                            :which-key "(m)-notmuch"           )
+  ;;"mn"   '(mu4e-compose-new                   :which-key "(m)4e-(n)ew"           )
+
+  ;;"wo"  '(eww-open-in-new-buffer              :which-key "(w)eb-(o)pen"          )
+  ;;"ws"  '(eww-search-words                    :which-key "(w)eb-(s)earch"        )
+  ;; "wi"  '(evil-insert                        :which-key "(w)eb-(i)nsert"        )
+
+  "pf"  '(project-find-file                     :which-key "(p-f)ile"              )
+  "pd"  '(consult-flymake                       :which-key "(p-d)iagnostic"        )
+  "pr"  '(xref-find-references                  :which-key "(p-r)eferences"        )
+  "pz"  '(project-switch-project                :which-key "(p-z)"                 )
+  ;;"pd"  '(project-find-dir                    :which-key "(p-d)ir"               )
+  ;;"pc"  '(project-compile                     :which-key "(p-c)ompile"           )
+  ;;"pe"  '(project-eshell                      :which-key "(p-e)shell"            )
+  "ps"  '(project-find-regexp                   :which-key "(p-s)find-regexp"      )
+  "vq"  '(format-all-buffer                     :which-key "(q)-format-buffer"     )
+  "vr"  '(project-query-replace-regexp          :which-key "(p-r)eplace"           )
+  "pk"  '(project-kill-buffers                  :which-key "(p-k)ill-buffers"      )
+  "pl"  '(consult-project-buffer                :which-key "(p-l)ist-buffers"      )
+  "pL"  '(project-list-buffers                  :which-key "(p-L)ist-buffers"      )
+  ;;"pp"  '(gry/project-send                      :which-key "(p-p)send"           )
+
+  "e"   '(eshell                                :which-key "(e)shell"              )
+  ;;"E"   '(elfeed                                :which-key "(E)lfeed"            )
+  "vt"  '(vterm                                 :which-key "(v)ir-(t)erm"          )
+
+  "oe"  '((lambda () (interactive) (find-file "~/.config/emacs/init.org"))           :which-key "open emacs conf org")
+  "ob"  '((lambda () (interactive) (find-file (nth 0 org-cite-global-bibliography))) :which-key "open bibliography")
+  "oE"  '((lambda () (interactive) (find-file "~/.config/emacs/init.el"))            :which-key "open emacs conf el")
+  "oC"  '((lambda () (interactive) (find-file org-default-notes-file))               :which-key "open Capture file")
+
+  "<"     '(recompile           :which-key "recompile")
+  "ruim"  '(org-roam-ui-mode :which-key "(r-ui)-(m)ode")
+
+  "Dr"  '(denote-rename-file :which-key "(D)enote-(D)ired")
+  "Dn"  '(denote-open-or-create :which-key "(D)e-(N)ote")
+  "DD"  '((lambda () (interactive) (dired denote-directory)) :which-key "(D)enote-(D)ired")
+
+
+  "h"   '(describe-symbol :which-key "Describe-Sym")
+  "H"   '(describe-key    :which-key "Describe-Key")
+
+  "sl4" '((lambda () (interactive) (setq display-line-numbers-width 4)) :which-key "(s)ys-number(l)ine-(4)")
+  "sl3" '((lambda () (interactive) (setq display-line-numbers-width 3)) :which-key "(s)ys-number(l)ine-(3)")
+  "srf" '((lambda () (interactive) (recentf-open-files))                :which-key "(s-r)ecent-(f)iles")
+  "st"  '(gry/open-term-at              :which-key "(s-t)erminal")
+  "sT"  '(toggle-transparency           :which-key "(s-T)oggle-transparency")
+  ;;"sd"  '(gry/distraction-free-on       :which-key "(s-d)istraction-free-on")
+  ;;"sD"  '(gry/distraction-free-off      :which-key "(s-D)istraction-free-off")
+  "sns" '(crux-create-scratch-buffer    :which-key "(s-n)ew-(s)cratch-buf")
+  ;;"ss"  '((lambda () (interactive) (shell-command "flameshot gui --path ~/Pictures/ss/"))     :which-key "(s-s)creenshot")
+  "slm" '(scroll-lock-mode                                              :which-key "(s)croll-(l)ock-(m)ode")
+  "scl"  '((lambda () (interactive)
+             (command-log-mode)
+             (global-command-log-mode)
+             (clm/open-command-log-buffer))
+           :which-key "(s-c)md-(l)og")
+
+  "svl" '(global-display-fill-column-indicator-mode     :which-key "(s-v)ertical-(l)ine" )
+  "sw" '(whitespace-mode                                :which-key "(s-w)hitespace"      )
+
+  "sco" '(corfu-mode                                    :which-key "(s-c)orfu-(m)ode"    )
+  "se"  '(eglot                                         :which-key "(s-e)glot"           )
+  ;;"sim" '(set-input-mode                              :which-key "(s-i)nput-mode"      )
+  "sib" '(clone-indirect-buffer                         :which-key "(s-i)ndirect-(b)uffer")
+
+  "rg"  '(rg                                            :which-key "(r)ip-(g)rep"        )
+
+  "yn"  '(yas-new-snippet                               :which-key "(y)as-(n)ew"         )
+  "yv"  '(yas-visit-snippet-file                        :which-key "(y)as-(v)isit"       )
+  "yd"  '(yas-describe-tables                           :which-key "(y)as-(d)esc-table"  )
+  "yc"  '(consult-yasnippet                             :which-key "(y)as-(c)onsult"     )
+
+  "ce"  '(calc-embedded                                 :which-key "(c)alc-(e)mbedded"   )
+  "cF"  '(full-calc                                     :which-key "(c)alc-(F)ull"       )
+
+  "za"  '(align-regexp-untabify                         :which-key "(z)-reg-(a)lign"     )
+  "zr"  '(replace-regexp                                :which-key "(z)-reg-(r)eplace"   )
+  "zh" '(highlight-symbol-at-point                      :which-key "(z)-(h)ighlight"     )
+  "zH" '(unhighlight-regexp                             :which-key "(z)-(H)ighlight-off" )
+
+  "oTm" '(orgtbl-mode                           :which-key "(o-T)able-(m)ode")
+  "oTc" '(orgtbl-create-or-convert-from-region  :which-key "(o-T)able-(c)reate")
+
+
+  )
+
+;; "cc"  '(lsp-bridge-diagnostic-jump-next     :which-key "lsp-bridge-"           )
+;; "Lw"  '(consult-buffer-other-window         :which-key "(L-w)indow"            )
+;; "Lf"  '(consult-buffer-other-frame          :which-key "(L-f)rame"             )
+;; "Fw"  '(find-file-other-window              :which-key "(F)ile-other-(w)indow" )
+;; "Ff"  '(find-file-other-frame               :which-key "(F)ile-other-(f)rame"  )
+
+;;"gp"  '(hydra-garid_gtd_step1_is_actionable/body      :which-key "(g)pt-(p)rocessing"  )
+#+end_src
+*** keybinds inside org-mode
+#+begin_src emacs-lisp
+(garids-keybind/in-org-mode
+
+ "om"  '(org-refile          :which-key "(o-m)ove-subtree")
+ ","   '(org-ctrl-c-ctrl-c   :which-key "C-c C-c")
+
+ "otT"  '(org-todo                                         :which-key "(o-t)odo-(T)"             )
+ "otb"  '(org-timeblock                                    :which-key "(o-t)ime-(b)lock"         )
+ "ott"  '((lambda () (interactive) (org-todo "TODO"))      :which-key "(o-t)odo-(t)odo"          )
+ "ots"  '((lambda () (interactive) (org-todo "STARTED"))   :which-key "(o-t)odo-(s)chedule"      )
+ "otw"  '((lambda () (interactive) (org-todo "WAITING"))   :which-key "(o-t)odo-(w)ait"          )
+ "otd"  '((lambda () (interactive) (org-todo "DONE"))      :which-key "(o-t)odo-(d)one"          )
+ "otc"  '((lambda () (interactive) (org-todo "CANCELLED")) :which-key "(o-t)odo-(c)ancel"        )
+ "otp"  '((lambda () (interactive) (org-todo "PROCESSED")) :which-key "(o-t)odo-(p)rocessed"     )
+ "otn"  '((lambda () (interactive) (org-todo ""))          :which-key "(o-t)odo-(n)one"          )
+ "ota"  '((lambda () (interactive) (org-archive-subtree-default-with-confirmation))
+          :which-key "(o-t)odo-(a)rchive")
+
+ "os"  '(org-schedule                                      :which-key "(o-s)chedule"             )
+ "oa"  '(org-agenda                                        :which-key "(o-a)genda"               )
+ "od" '((lambda () (interactive) (org-deadline ""))        :which-key "(o-d)eadline"             )
+
+ "onm"  '(org-num-mode                                     :which-key "(o-n)um-(m)ode"           )
+
+ "oft" '((lambda () (interactive) (consult-line "name tab"))    :which-key "(o-f)ind-(t)able"    )
+ "ofe" '((lambda () (interactive) (consult-line "name eq"))     :which-key "(o-f)ind-(e)q"       )
+ "off" '((lambda () (interactive) (consult-line "name fig"))    :which-key "(o-f)ind-(f)ig"      )
+ "ofd" '((lambda () (interactive) (consult-line "downloaded"))  :which-key "(o-f)ind-(d)ownload" )
+ "ofn" '((lambda () (interactive) (consult-line "name"))        :which-key "(o-f)ind-(n)ame"     )
+ "ofs" '((lambda () (interactive) (consult-line "begin_src"))   :which-key "(o-f)ind-(s)ource"   )
+
+
+ "op"   '(org-latex-preview                    :which-key "(o-p)review")
+ "oy"   '(org-copy-subtree                     :which-key "(o-y)ank-subtree")
+
+
+ "oxb"  '(org-beamer-export-to-pdf             :which-key "(o-x)-(b)eamer")
+ "oxB"   '((lambda () (interactive) (org-beamer-export-to-pdf nil t))
+           :which-key "(o-x)port-subtree-(P)df")
+ "oxp"  '(org-latex-export-to-pdf              :which-key "(o-x)port-(p)df")
+ "oxP"   '((lambda () (interactive) (org-latex-export-to-pdf nil t))
+           :which-key "(o-x)port-subtree-(P)df")
+
+
+ "oxo"  '(gry/org-open-pdf                             :which-key "(o-x)-(P)df-open"            )
+ "old"  '(org-toggle-link-n-emphasis                   :which-key "(o-l)ink-(d)isplay"          )
+ "oli"  '((lambda () (interactive) (org-insert-link))  :which-key "(o-l)ink-(i)nsert"           )
+ "oip"  '(org-download-clipboard                       :which-key "(o-i)mage-(p)aste-clipboard" )
+ "oiP"  '(org-download-image                           :which-key "(o-i)mage-(P)aste-url"       )
+ "oid"  '(org-download-delete                          :which-key "(o-i)mage-(d)elete"          )
+ "oie"  '(org-download-edit                            :which-key "(o-i)mage-(e)dit"            )
+ "oir"  '(org-download-rename-at-point                 :which-key "(o-i)mage-download-(r)ename" )
+ "oit"  '(org-toggle-inline-images                     :which-key "(o-i)mage-(t)oggle"          )
+ "oib"  '(org-cite-insert                              :which-key "(o-i)nsert-(c)ite"           )
+ "oif"  '(org-footnote-new                             :which-key "(o-i)nsert-(f)ootnote"       )
+ "oiF"  '(org-footnote-action                          :which-key "(o-i)nsert-(F)ootnote-action")
+
+ "oisn"  '((lambda () (interactive) (setq org-image-actual-width '(800)))      :which-key "(o-i-s)ize-(n)ormal")
+ "oisb"  '((lambda () (interactive) (setq org-image-actual-width '(1500)))     :which-key "(o-i-s)ize-(b)ig")
+ "oiss"  '((lambda () (interactive) (setq org-image-actual-width '(400)))      :which-key "(o-i-s)ize-(s)mall")
+
+ "oc"  '(org-capture                           :which-key "(o-c)apture"           )
+ "oo"  '(org-open-at-point                     :which-key "(o-o)pen"              )
+
+ ;;orgroams
+ "rl"  '(org-roam-buffer-toggle                :which-key "(r-l)toggle"           )
+ "rL"  '(org-roam-buffer-display-dedicated     :which-key "(r-L)dedicated"        )
+ "rf"  '(org-roam-node-find                    :which-key "(r-f)ind"              )
+ "ri"  '(org-roam-node-insert                  :which-key "(r-i)nsert"            )
+ "rI"  '(org-roam-node-insert-immediate        :which-key "(r-I)nsert-immediate"  )
+
+ ;;org-roam-dailies
+ "rn" '(org-roam-dailies-capture-today         :which-key "(r-daily-n)ew-capture" )
+ "rr" '(org-roam-dailies-goto-today            :which-key "(r-daily-t)oday"       )
+ "rt" '(org-roam-dailies-goto-tomorrow         :which-key "(r-daily-T)omorrow"    )
+ "ry" '(org-roam-dailies-goto-yesterday        :which-key "(r-daily-y)esterday"   )
+ "rD" '(org-roam-dailies-capture-date          :which-key "(r-daily-d)ate"        )
+ "rd" '(org-roam-dailies-goto-date             :which-key "(r-daily-goto-(D)ate"  )
+ "r>" '(org-roam-dailies-goto-next-note        :which-key "(r-daily->)next"       )
+ "r<" '(org-roam-dailies-goto-previous-note    :which-key "(r-daily-<)prev")
+
+
+  ;; org code movement
+  "j"   '(org-next-block     :which-key "")
+  "k"   '(org-previous-block :which-key "")
+  "J"   '(org-next-link      :which-key "")
+  "K"   '(org-previous-link  :which-key "")
+
+
+ )
+#+end_src
+
+** COMMENT general main
 #+begin_src emacs-lisp
 (use-package general
     :config
@@ -1292,177 +1549,193 @@ Also these will only work inside ORG file.
 | ~<ta~        | (ta)ble                  | insert example table                                     |
 |--------------+--------------------------+----------------------------------------------------------|
 
-*** Actual implementation
+*** COMMENT Actual implementation
 #+begin_src emacs-lisp
 ;; Main Keychords
 (rune/leader-keys
-  "SPC" '(execute-extended-command              :which-key "M-x"                   )
-  "d"   '(dired-jump                            :which-key "(d)ired"               )
-  "f"   '(find-file                             :which-key "(f)ind-file"           )
-  ;;"Fw"  '(find-file-other-window              :which-key "(F)ile-other-(w)indow" )
-  ;;"Ff"  '(find-file-other-frame               :which-key "(F)ile-other-(f)rame"  )
-
-  "n"   '(dired-sidebar-jump-to-sidebar         :which-key "(n)-side-tree"         )
-  "N"   '(dired-sidebar-hide-sidebar            :which-key "(N)-side-tree-close"   )
-
-  "ZQ"  '(kill-emacs                            :which-key "quit"                  )
-  "l"   '(consult-buffer                        :which-key "(l)ist-buffers"        )
-  "Lr"  '(revert-buffer-quick                   :which-key "(L-r)evert"            )
-  ;;"Lw"  '(consult-buffer-other-window         :which-key "(L-w)indow"            )
-  ;;"Lf"  '(consult-buffer-other-frame          :which-key "(L-f)rame"             )
-  "Le"  '(eval-buffer                           :which-key "(L-e)val"              )
-  "Lb"  '(ibuffer                               :which-key "(L-(b)uffer"           )
-  "Li"  '(ibuffer                               :which-key "(L-i)buffer"           )
-  "Ln"  '(rename-buffer                         :which-key "(L-n)ame"              )
-  "Lp"  '(switch-to-prev-buffer                 :which-key "(L-p)rev"              )
-  "LP"  '(switch-to-next-buffer                 :which-key "(L-P)next"             )
-  "Ld"  '(crux-delete-file-and-buffer           :which-key "(L-d)delete"           )
-  "bn"  '(rename-buffer                         :which-key "(b-n)ame"              )
-
-  "ca"  '(calc                                  :which-key "(ca)lc"                )
-  ;; "cc"  '(lsp-bridge-diagnostic-jump-next       :which-key "lsp-bridge-"           )
-  "co"  '(consult-org-heading                   :which-key "(c-o)rg"               )
-  "cm"  '(consult-imenu                         :which-key "(c-i(m)enu"            )
-  "cM"  '(consult-man                           :which-key "(c-M)an"               )
-  "cr"  '(consult-ripgrep                       :which-key "(c-r)ipgrep"           )
-  ;; "cf"  '(consult-git-grep                   :which-key "(c-f)gitgrep"          )
-  "cf"  '(consult-flymake                       :which-key "(c-f)lymake"           )
-  "cp"  '(consult-project-buffer                :which-key "(c-p)roject"           )
-  "cd"  '(consult-dir                           :which-key "(c-d)ir"               )
-
-  "bm"  '(consult-bookmark                      :which-key "(b)ook(m)ark-consult"  )
-  "bs"  '(bookmark-set                          :which-key "(b)m-(s)et"            )
-  "bd"  '(bookmark-delete                       :which-key "(b)m-(d)elete"         )
-  "br"  '(bookmark-rename                       :which-key "(b)m-(r)ename"         )
-
-  "mg"   '(magit-status                         :which-key "(m)a(g)it"             )
-  ;;"mm"   '(mu4e                               :which-key "(m)-mu4e"              )
-  ;;"mM"   '(notmuch                            :which-key "(m)-notmuch"           )
-  ;;"mn"   '(mu4e-compose-new                   :which-key "(m)4e-(n)ew"           )
-
-  ;;"wo"  '(eww-open-in-new-buffer              :which-key "(w)eb-(o)pen"          )
-  ;;"ws"  '(eww-search-words                    :which-key "(w)eb-(s)earch"        )
-  ;; "wi"  '(evil-insert                        :which-key "(w)eb-(i)nsert"        )
-
-  "pf"  '(project-find-file                     :which-key "(p-f)ile"              )
-  "pd"  '(consult-flymake                       :which-key "(p-d)iagnostic"        )
-  "pr"  '(xref-find-references                  :which-key "(p-r)eferences"        )
-  "pz"  '(project-switch-project                :which-key "(p-z)"                 )
-  ;;"pd"  '(project-find-dir                    :which-key "(p-d)ir"               )
-  ;;"pc"  '(project-compile                     :which-key "(p-c)ompile"           )
-  ;;"pe"  '(project-eshell                      :which-key "(p-e)shell"            )
-  "ps"  '(project-find-regexp                   :which-key "(p-s)find-regexp"      )
-  "vq"  '(format-all-buffer                     :which-key "(q)-format-buffer"     )
-  "vr"  '(project-query-replace-regexp          :which-key "(p-r)eplace"           )
-  "pk"  '(project-kill-buffers                  :which-key "(p-k)ill-buffers"      )
-  "pl"  '(consult-project-buffer                :which-key "(p-l)ist-buffers"      )
-  "pL"  '(project-list-buffers                  :which-key "(p-L)ist-buffers"      )
-  ;;"pp"  '(gry/project-send                      :which-key "(p-p)send"             )
-
-  "e"   '(eshell                                :which-key "(e)shell"              )
-  "E"   '(elfeed                                :which-key "(E)lfeed"              )
-  "vt"  '(vterm                                 :which-key "(v)ir-(t)erm"          )
-
-  ;; "oto" '((lambda () (interactive) (find-file "~/orgfiles/Task.org"))
-  ;; :which-key "(o)-(t)ask-(o)pen")
-  "oe"  '((lambda () (interactive) (find-file "~/.config/emacs/init.org"))
-          :which-key "(o)pen-(e)macs-init.org")
-  ;;"ob"  '((lambda () (interactive) (find-file "~/Documents/bib/references.bib"))
-  ;;        :which-key "(o)pen-(b)ookmark")
-  "ob"  '((lambda () (interactive) (find-file (nth 0 org-cite-global-bibliography)))
-          :which-key "(o)pen-(b)ookmark")
-  "oE"  '((lambda () (interactive) (find-file "~/.config/emacs/init.el"))
-          :which-key "(o)pen-(E)macs-init.el")
-
-  "oC"  '((lambda () (interactive) (find-file org-default-notes-file))
-          :which-key "(o)pen-(C)apture")
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; "SPC" '(execute-extended-command              :which-key "M-x"                   )    ;;
+  ;; "d"   '(dired-jump                            :which-key "(d)ired"               )    ;;
+  ;; "f"   '(find-file                             :which-key "(f)ind-file"           )    ;;
+  ;; ;;"Fw"  '(find-file-other-window              :which-key "(F)ile-other-(w)indow" )    ;;
+  ;; ;;"Ff"  '(find-file-other-frame               :which-key "(F)ile-other-(f)rame"  )    ;;
+  ;;                                                                                       ;;
+  ;; "n"   '(dired-sidebar-jump-to-sidebar         :which-key "(n)-side-tree"         )    ;;
+  ;; "N"   '(dired-sidebar-hide-sidebar            :which-key "(N)-side-tree-close"   )    ;;
+  ;;                                                                                       ;;
+  ;; "ZQ"  '(kill-emacs                            :which-key "quit"                  )    ;;
+  ;; "l"   '(consult-buffer                        :which-key "(l)ist-buffers"        )    ;;
+  ;; "Lr"  '(revert-buffer-quick                   :which-key "(L-r)evert"            )    ;;
+  ;; ;;"Lw"  '(consult-buffer-other-window         :which-key "(L-w)indow"            )    ;;
+  ;; ;;"Lf"  '(consult-buffer-other-frame          :which-key "(L-f)rame"             )    ;;
+  ;; "Le"  '(eval-buffer                           :which-key "(L-e)val"              )    ;;
+  ;; "Lb"  '(ibuffer                               :which-key "(L-(b)uffer"           )    ;;
+  ;; "Li"  '(ibuffer                               :which-key "(L-i)buffer"           )    ;;
+  ;; "Ln"  '(rename-buffer                         :which-key "(L-n)ame"              )    ;;
+  ;; "Lp"  '(switch-to-prev-buffer                 :which-key "(L-p)rev"              )    ;;
+  ;; "LP"  '(switch-to-next-buffer                 :which-key "(L-P)next"             )    ;;
+  ;; "Ld"  '(crux-delete-file-and-buffer           :which-key "(L-d)delete"           )    ;;
+  ;;                                                                                       ;;
+  ;;                                                                                       ;;
+  ;; ;; "cc"  '(lsp-bridge-diagnostic-jump-next       :which-key "lsp-bridge-"           ) ;;
+  ;; "ca"  '(calc                                  :which-key "(ca)lc"                )    ;;
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; "co"  '(consult-org-heading                   :which-key "(c-o)rg"               )       ;;
+  ;; "cm"  '(consult-imenu                         :which-key "(c-i(m)enu"            )       ;;
+  ;; "cM"  '(consult-man                           :which-key "(c-M)an"               )       ;;
+  ;; "cr"  '(consult-ripgrep                       :which-key "(c-r)ipgrep"           )       ;;
+  ;; ;; "cf"  '(consult-git-grep                   :which-key "(c-f)gitgrep"          )       ;;
+  ;; "cf"  '(consult-flymake                       :which-key "(c-f)lymake"           )       ;;
+  ;; "cp"  '(consult-project-buffer                :which-key "(c-p)roject"           )       ;;
+  ;; "cd"  '(consult-dir                           :which-key "(c-d)ir"               )       ;;
+  ;;                                                                                          ;;
+  ;; "bm"  '(consult-bookmark                      :which-key "(b)ook(m)ark-consult"  )       ;;
+  ;; "bs"  '(bookmark-set                          :which-key "(b)m-(s)et"            )       ;;
+  ;; "bd"  '(bookmark-delete                       :which-key "(b)m-(d)elete"         )       ;;
+  ;; "br"  '(bookmark-rename                       :which-key "(b)m-(r)ename"         )       ;;
+  ;;                                                                                          ;;
+  ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ;;
+  ;; ;; "mg"   '(magit-status                         :which-key "(m)a(g)it"             ) ;; ;;
+  ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ;;
+  ;; ;;"mm"   '(mu4e                               :which-key "(m)-mu4e"              )       ;;
+  ;; ;;"mM"   '(notmuch                            :which-key "(m)-notmuch"           )       ;;
+  ;; ;;"mn"   '(mu4e-compose-new                   :which-key "(m)4e-(n)ew"           )       ;;
+  ;;                                                                                          ;;
+  ;; ;;"wo"  '(eww-open-in-new-buffer              :which-key "(w)eb-(o)pen"          )       ;;
+  ;; ;;"ws"  '(eww-search-words                    :which-key "(w)eb-(s)earch"        )       ;;
+  ;; ;; "wi"  '(evil-insert                        :which-key "(w)eb-(i)nsert"        )       ;;
+  ;;                                                                                          ;;
+  ;; "pf"  '(project-find-file                     :which-key "(p-f)ile"              )       ;;
+  ;; "pd"  '(consult-flymake                       :which-key "(p-d)iagnostic"        )       ;;
+  ;; "pr"  '(xref-find-references                  :which-key "(p-r)eferences"        )       ;;
+  ;; "pz"  '(project-switch-project                :which-key "(p-z)"                 )       ;;
+  ;; ;;"pd"  '(project-find-dir                    :which-key "(p-d)ir"               )       ;;
+  ;; ;;"pc"  '(project-compile                     :which-key "(p-c)ompile"           )       ;;
+  ;; ;;"pe"  '(project-eshell                      :which-key "(p-e)shell"            )       ;;
+  ;; "ps"  '(project-find-regexp                   :which-key "(p-s)find-regexp"      )       ;;
+  ;; "vq"  '(format-all-buffer                     :which-key "(q)-format-buffer"     )       ;;
+  ;; "vr"  '(project-query-replace-regexp          :which-key "(p-r)eplace"           )       ;;
+  ;; "pk"  '(project-kill-buffers                  :which-key "(p-k)ill-buffers"      )       ;;
+  ;; "pl"  '(consult-project-buffer                :which-key "(p-l)ist-buffers"      )       ;;
+  ;; "pL"  '(project-list-buffers                  :which-key "(p-L)ist-buffers"      )       ;;
+  ;; ;;"pp"  '(gry/project-send                      :which-key "(p-p)send"             )     ;;
+  ;;                                                                                          ;;
+  ;; "e"   '(eshell                                :which-key "(e)shell"              )       ;;
+  ;; "E"   '(elfeed                                :which-key "(E)lfeed"              )       ;;
+  ;; "vt"  '(vterm                                 :which-key "(v)ir-(t)erm"          )       ;;
+  ;;                                                                                          ;;
+  ;; ;; "oto" '((lambda () (interactive) (find-file "~/orgfiles/Task.org"))                   ;;
+  ;; ;; :which-key "(o)-(t)ask-(o)pen")                                                       ;;
+  ;; "oe"  '((lambda () (interactive) (find-file "~/.config/emacs/init.org"))                 ;;
+  ;;         :which-key "(o)pen-(e)macs-init.org")                                            ;;
+  ;; ;;"ob"  '((lambda () (interactive) (find-file "~/Documents/bib/references.bib"))         ;;
+  ;; ;;        :which-key "(o)pen-(b)ookmark")                                                ;;
+  ;; "ob"  '((lambda () (interactive) (find-file (nth 0 org-cite-global-bibliography)))       ;;
+  ;;         :which-key "(o)pen-(b)ookmark")                                                  ;;
+  ;; "oE"  '((lambda () (interactive) (find-file "~/.config/emacs/init.el"))                  ;;
+  ;;         :which-key "(o)pen-(E)macs-init.el")                                             ;;
+  ;;                                                                                          ;;
+  ;; "oC"  '((lambda () (interactive) (find-file org-default-notes-file))                     ;;
+  ;;         :which-key "(o)pen-(C)apture")                                                   ;;
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;"oC"  '((lambda () (interactive) (find-file "~/roamnotes/20230417200051-org_contacs.org"))
   ;;        :which-key "(o)pen-(E)macs-init.el")
 
-  "om"  '(org-refile          :which-key "(o-m)ove-subtree")
-  ","   '(org-ctrl-c-ctrl-c   :which-key "C-c C-c")
-  "<"   '(recompile           :which-key "recompile")
 
-  "otT"  '(org-todo                                         :which-key "(o-t)odo-(T)"             )
-  "otb"  '(org-timeblock                                    :which-key "(o-t)ime-(b)lock"         )
-  "ott"  '((lambda () (interactive) (org-todo "TODO"))      :which-key "(o-t)odo-(t)odo"          )
-  "ots"  '((lambda () (interactive) (org-todo "STARTED"))   :which-key "(o-t)odo-(s)chedule"      )
-  "otw"  '((lambda () (interactive) (org-todo "WAITING"))   :which-key "(o-t)odo-(w)ait"          )
-  "otd"  '((lambda () (interactive) (org-todo "DONE"))      :which-key "(o-t)odo-(d)one"          )
-  "otc"  '((lambda () (interactive) (org-todo "CANCELLED")) :which-key "(o-t)odo-(c)ancel"        )
-  "otp"  '((lambda () (interactive) (org-todo "PROCESSED")) :which-key "(o-t)odo-(p)rocessed"     )
-  "otn"  '((lambda () (interactive) (org-todo ""))          :which-key "(o-t)odo-(n)one"          )
-  "ota"  '((lambda () (interactive) (org-archive-subtree-default-with-confirmation))
-           :which-key "(o-t)odo-(a)rchive")
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; "<"   '(recompile           :which-key "recompile") ;;
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-  "os"  '(org-schedule                                      :which-key "(o-s)chedule"             )
-  "oa"  '(org-agenda                                        :which-key "(o-a)genda"               )
-  "od" '((lambda () (interactive) (org-deadline ""))        :which-key "(o-d)eadline"             )
-
-  "onm"  '(org-num-mode                                     :which-key "(o-n)um-(m)ode"           )
-
-  "oft" '((lambda () (interactive) (consult-line "name tab"))    :which-key "(o-f)ind-(t)able"    )
-  "ofe" '((lambda () (interactive) (consult-line "name eq"))     :which-key "(o-f)ind-(e)q"       )
-  "off" '((lambda () (interactive) (consult-line "name fig"))    :which-key "(o-f)ind-(f)ig"      )
-  "ofd" '((lambda () (interactive) (consult-line "downloaded"))  :which-key "(o-f)ind-(d)ownload" )
-  "ofn" '((lambda () (interactive) (consult-line "name"))        :which-key "(o-f)ind-(n)ame"     )
-  "ofs" '((lambda () (interactive) (consult-line "begin_src"))   :which-key "(o-f)ind-(s)ource"   )
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; "om"  '(org-refile          :which-key "(o-m)ove-subtree")                                        ;;
+  ;; ","   '(org-ctrl-c-ctrl-c   :which-key "C-c C-c")                                                 ;;
+  ;;                                                                                                   ;;
+  ;; "otT"  '(org-todo                                         :which-key "(o-t)odo-(T)"             ) ;;
+  ;; "otb"  '(org-timeblock                                    :which-key "(o-t)ime-(b)lock"         ) ;;
+  ;; "ott"  '((lambda () (interactive) (org-todo "TODO"))      :which-key "(o-t)odo-(t)odo"          ) ;;
+  ;; "ots"  '((lambda () (interactive) (org-todo "STARTED"))   :which-key "(o-t)odo-(s)chedule"      ) ;;
+  ;; "otw"  '((lambda () (interactive) (org-todo "WAITING"))   :which-key "(o-t)odo-(w)ait"          ) ;;
+  ;; "otd"  '((lambda () (interactive) (org-todo "DONE"))      :which-key "(o-t)odo-(d)one"          ) ;;
+  ;; "otc"  '((lambda () (interactive) (org-todo "CANCELLED")) :which-key "(o-t)odo-(c)ancel"        ) ;;
+  ;; "otp"  '((lambda () (interactive) (org-todo "PROCESSED")) :which-key "(o-t)odo-(p)rocessed"     ) ;;
+  ;; "otn"  '((lambda () (interactive) (org-todo ""))          :which-key "(o-t)odo-(n)one"          ) ;;
+  ;; "ota"  '((lambda () (interactive) (org-archive-subtree-default-with-confirmation))                ;;
+  ;;          :which-key "(o-t)odo-(a)rchive")                                                         ;;
+  ;;                                                                                                   ;;
+  ;; "os"  '(org-schedule                                      :which-key "(o-s)chedule"             ) ;;
+  ;; "oa"  '(org-agenda                                        :which-key "(o-a)genda"               ) ;;
+  ;; "od" '((lambda () (interactive) (org-deadline ""))        :which-key "(o-d)eadline"             ) ;;
+  ;;                                                                                                   ;;
+  ;; "onm"  '(org-num-mode                                     :which-key "(o-n)um-(m)ode"           ) ;;
+  ;;                                                                                                   ;;
+  ;; "oft" '((lambda () (interactive) (consult-line "name tab"))    :which-key "(o-f)ind-(t)able"    ) ;;
+  ;; "ofe" '((lambda () (interactive) (consult-line "name eq"))     :which-key "(o-f)ind-(e)q"       ) ;;
+  ;; "off" '((lambda () (interactive) (consult-line "name fig"))    :which-key "(o-f)ind-(f)ig"      ) ;;
+  ;; "ofd" '((lambda () (interactive) (consult-line "downloaded"))  :which-key "(o-f)ind-(d)ownload" ) ;;
+  ;; "ofn" '((lambda () (interactive) (consult-line "name"))        :which-key "(o-f)ind-(n)ame"     ) ;;
+  ;; "ofs" '((lambda () (interactive) (consult-line "begin_src"))   :which-key "(o-f)ind-(s)ource"   ) ;;
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
   ;; "ost"  '((lambda () (interactive)
   ;;                     (org-set-tags-command) ; sets images size
   ;;                     )                                                                                      :which-key "afs")
 
-  "oTm" '(orgtbl-mode                           :which-key "(o-T)able-(m)ode")
-  "oTc" '(orgtbl-create-or-convert-from-region  :which-key "(o-T)able-(c)reate")
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; "oTm" '(orgtbl-mode                           :which-key "(o-T)able-(m)ode")   ;;
+  ;; "oTc" '(orgtbl-create-or-convert-from-region  :which-key "(o-T)able-(c)reate") ;;
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-  "op"   '(org-latex-preview                    :which-key "(o-p)review")
-  "oy"   '(org-copy-subtree                     :which-key "(o-y)ank-subtree")
-
-
-  "oxb"  '(org-beamer-export-to-pdf             :which-key "(o-x)-(b)eamer")
-  "oxB"   '((lambda () (interactive) (org-beamer-export-to-pdf nil t))
-            :which-key "(o-x)port-subtree-(P)df")
-  "oxp"  '(org-latex-export-to-pdf              :which-key "(o-x)port-(p)df")
-  "oxP"   '((lambda () (interactive) (org-latex-export-to-pdf nil t))
-            :which-key "(o-x)port-subtree-(P)df")
-
-
-  "oxo"  '(gry/org-open-pdf                             :which-key "(o-x)-(P)df-open"            )
-  "old"  '(org-toggle-link-n-emphasis                   :which-key "(o-l)ink-(d)isplay"          )
-  "oli"  '((lambda () (interactive) (org-insert-link))  :which-key "(o-l)ink-(i)nsert"           )
-  "oip"  '(org-download-clipboard                       :which-key "(o-i)mage-(p)aste-clipboard" )
-  "oiP"  '(org-download-image                           :which-key "(o-i)mage-(P)aste-url"       )
-  "oid"  '(org-download-delete                          :which-key "(o-i)mage-(d)elete"          )
-  "oie"  '(org-download-edit                            :which-key "(o-i)mage-(e)dit"            )
-  "oir"  '(org-download-rename-at-point                 :which-key "(o-i)mage-download-(r)ename" )
-  "oit"  '(org-toggle-inline-images                     :which-key "(o-i)mage-(t)oggle"          )
-  "oib"  '(org-cite-insert                              :which-key "(o-i)nsert-(c)ite"           )
-  "oif"  '(org-footnote-new                             :which-key "(o-i)nsert-(f)ootnote"       )
-  "oiF"  '(org-footnote-action                          :which-key "(o-i)nsert-(F)ootnote-action")
-
-  "oisn"  '((lambda () (interactive) (setq org-image-actual-width '(800)))      :which-key "(o-i-s)ize-(n)ormal")
-  "oisb"  '((lambda () (interactive) (setq org-image-actual-width '(1500)))     :which-key "(o-i-s)ize-(b)ig")
-  "oiss"  '((lambda () (interactive) (setq org-image-actual-width '(400)))      :which-key "(o-i-s)ize-(s)mall")
-
-  "oc"  '(org-capture                           :which-key "(o-c)apture"           )
-  "oo"  '(org-open-at-point                     :which-key "(o-o)pen"              )
-
-  ;;orgroams
-  "rl"  '(org-roam-buffer-toggle                :which-key "(r-l)toggle"           )
-  "rL"  '(org-roam-buffer-display-dedicated     :which-key "(r-L)dedicated"        )
-  "rf"  '(org-roam-node-find                    :which-key "(r-f)ind"              )
-  "ri"  '(org-roam-node-insert                  :which-key "(r-i)nsert"            )
-  "rI"  '(org-roam-node-insert-immediate        :which-key "(r-I)nsert-immediate"  )
-
-  ;;org-roam-dailies
-  "rn" '(org-roam-dailies-capture-today         :which-key "(r-daily-n)ew-capture" )
-  "rr" '(org-roam-dailies-goto-today            :which-key "(r-daily-t)oday"       )
-  "rt" '(org-roam-dailies-goto-tomorrow         :which-key "(r-daily-T)omorrow"    )
-  "ry" '(org-roam-dailies-goto-yesterday        :which-key "(r-daily-y)esterday"   )
-  "rD" '(org-roam-dailies-capture-date          :which-key "(r-daily-d)ate"        )
-  "rd" '(org-roam-dailies-goto-date             :which-key "(r-daily-goto-(D)ate"  )
-  "r>" '(org-roam-dailies-goto-next-note        :which-key "(r-daily->)next"       )
-  "r<" '(org-roam-dailies-goto-previous-note    :which-key "(r-daily-<)prev")
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; "op"   '(org-latex-preview                    :which-key "(o-p)review")                                         ;;
+  ;; "oy"   '(org-copy-subtree                     :which-key "(o-y)ank-subtree")                                    ;;
+  ;;                                                                                                                 ;;
+  ;;                                                                                                                 ;;
+  ;; "oxb"  '(org-beamer-export-to-pdf             :which-key "(o-x)-(b)eamer")                                      ;;
+  ;; "oxB"   '((lambda () (interactive) (org-beamer-export-to-pdf nil t))                                            ;;
+  ;;           :which-key "(o-x)port-subtree-(P)df")                                                                 ;;
+  ;; "oxp"  '(org-latex-export-to-pdf              :which-key "(o-x)port-(p)df")                                     ;;
+  ;; "oxP"   '((lambda () (interactive) (org-latex-export-to-pdf nil t))                                             ;;
+  ;;           :which-key "(o-x)port-subtree-(P)df")                                                                 ;;
+  ;;                                                                                                                 ;;
+  ;;                                                                                                                 ;;
+  ;; "oxo"  '(gry/org-open-pdf                             :which-key "(o-x)-(P)df-open"            )                ;;
+  ;; "old"  '(org-toggle-link-n-emphasis                   :which-key "(o-l)ink-(d)isplay"          )                ;;
+  ;; "oli"  '((lambda () (interactive) (org-insert-link))  :which-key "(o-l)ink-(i)nsert"           )                ;;
+  ;; "oip"  '(org-download-clipboard                       :which-key "(o-i)mage-(p)aste-clipboard" )                ;;
+  ;; "oiP"  '(org-download-image                           :which-key "(o-i)mage-(P)aste-url"       )                ;;
+  ;; "oid"  '(org-download-delete                          :which-key "(o-i)mage-(d)elete"          )                ;;
+  ;; "oie"  '(org-download-edit                            :which-key "(o-i)mage-(e)dit"            )                ;;
+  ;; "oir"  '(org-download-rename-at-point                 :which-key "(o-i)mage-download-(r)ename" )                ;;
+  ;; "oit"  '(org-toggle-inline-images                     :which-key "(o-i)mage-(t)oggle"          )                ;;
+  ;; "oib"  '(org-cite-insert                              :which-key "(o-i)nsert-(c)ite"           )                ;;
+  ;; "oif"  '(org-footnote-new                             :which-key "(o-i)nsert-(f)ootnote"       )                ;;
+  ;; "oiF"  '(org-footnote-action                          :which-key "(o-i)nsert-(F)ootnote-action")                ;;
+  ;;                                                                                                                 ;;
+  ;; "oisn"  '((lambda () (interactive) (setq org-image-actual-width '(800)))      :which-key "(o-i-s)ize-(n)ormal") ;;
+  ;; "oisb"  '((lambda () (interactive) (setq org-image-actual-width '(1500)))     :which-key "(o-i-s)ize-(b)ig")    ;;
+  ;; "oiss"  '((lambda () (interactive) (setq org-image-actual-width '(400)))      :which-key "(o-i-s)ize-(s)mall")  ;;
+  ;;                                                                                                                 ;;
+  ;; "oc"  '(org-capture                           :which-key "(o-c)apture"           )                              ;;
+  ;; "oo"  '(org-open-at-point                     :which-key "(o-o)pen"              )                              ;;
+  ;;                                                                                                                 ;;
+  ;; ;;orgroams                                                                                                      ;;
+  ;; "rl"  '(org-roam-buffer-toggle                :which-key "(r-l)toggle"           )                              ;;
+  ;; "rL"  '(org-roam-buffer-display-dedicated     :which-key "(r-L)dedicated"        )                              ;;
+  ;; "rf"  '(org-roam-node-find                    :which-key "(r-f)ind"              )                              ;;
+  ;; "ri"  '(org-roam-node-insert                  :which-key "(r-i)nsert"            )                              ;;
+  ;; "rI"  '(org-roam-node-insert-immediate        :which-key "(r-I)nsert-immediate"  )                              ;;
+  ;;                                                                                                                 ;;
+  ;; ;;org-roam-dailies                                                                                              ;;
+  ;; "rn" '(org-roam-dailies-capture-today         :which-key "(r-daily-n)ew-capture" )                              ;;
+  ;; "rr" '(org-roam-dailies-goto-today            :which-key "(r-daily-t)oday"       )                              ;;
+  ;; "rt" '(org-roam-dailies-goto-tomorrow         :which-key "(r-daily-T)omorrow"    )                              ;;
+  ;; "ry" '(org-roam-dailies-goto-yesterday        :which-key "(r-daily-y)esterday"   )                              ;;
+  ;; "rD" '(org-roam-dailies-capture-date          :which-key "(r-daily-d)ate"        )                              ;;
+  ;; "rd" '(org-roam-dailies-goto-date             :which-key "(r-daily-goto-(D)ate"  )                              ;;
+  ;; "r>" '(org-roam-dailies-goto-next-note        :which-key "(r-daily->)next"       )                              ;;
+  ;; "r<" '(org-roam-dailies-goto-previous-note    :which-key "(r-daily-<)prev")                                     ;;
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
   ;;"rp"  '((lambda () (interactive)
   ;;          (find-file "~/roamnotes/20230329145157-gtd_projects_multi_steps.org"))
@@ -1472,73 +1745,87 @@ Also these will only work inside ORG file.
   ;;          (find-file "~/roamnotes/20220908065223-phd.org"))
   ;;        :which-key "(r-w)writing")
 
-  "ruim"   '(org-roam-ui-mode :which-key "(r-ui)-(m)ode")
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; "ruim"   '(org-roam-ui-mode :which-key "(r-ui)-(m)ode")      ;;
+  ;;                                                              ;;
+  ;; "Dn" '(denote-open-or-create :which-key "(D)e-(N)ote")       ;;
+  ;; "DD"  '((lambda () (interactive)                             ;;
+  ;;           (dired denote-directory))                          ;;
+  ;;         :which-key "(D)enote-(D)ired")                       ;;
+  ;;                                                              ;;
+  ;; "Dr"  '(;;(lambda () (interactive) (dired denote-directory)) ;;
+  ;;         denote-rename-file                                   ;;
+  ;;         :which-key "(D)enote-(D)ired")                       ;;
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-  "Dn" '(denote-open-or-create :which-key "(D)e-(N)ote")
-  "DD"  '((lambda () (interactive)
-            (dired denote-directory))
-          :which-key "(D)enote-(D)ired")
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; ;; org code movement                      ;;
+  ;; "j"   '(org-next-block     :which-key "") ;;
+  ;; "k"   '(org-previous-block :which-key "") ;;
+  ;; "J"   '(org-next-link      :which-key "") ;;
+  ;; "K"   '(org-previous-link  :which-key "") ;;
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-  "Dr"  '(;;(lambda () (interactive) (dired denote-directory))
-          denote-rename-file
-          :which-key "(D)enote-(D)ired")
-
-  ;; org code movement
-  "j"   '(org-next-block     :which-key "")
-  "k"   '(org-previous-block :which-key "")
-  "J"   '(org-next-link      :which-key "")
-  "K"   '(org-previous-link  :which-key "")
-
-  "h"   '(describe-symbol :which-key "Describe-Sym")
-  "H"   '(describe-key    :which-key "Describe-Key")
-
-  "sl4" '((lambda () (interactive) (setq display-line-numbers-width 4)) :which-key "(s)ys-number(l)ine-(4)")
-  "sl3" '((lambda () (interactive) (setq display-line-numbers-width 3)) :which-key "(s)ys-number(l)ine-(3)")
-  "srf" '((lambda () (interactive) (recentf-open-files))                :which-key "(s-r)ecent-(f)iles")
-  "st"  '(gry/open-term-at              :which-key "(s-t)erminal")
-  "sT"  '(toggle-transparency           :which-key "(s-T)oggle-transparency")
-  ;;"sd"  '(gry/distraction-free-on       :which-key "(s-d)istraction-free-on")
-  ;;"sD"  '(gry/distraction-free-off      :which-key "(s-D)istraction-free-off")
-  "sns" '(crux-create-scratch-buffer    :which-key "(s-n)ew-(s)cratch-buf")
-  ;;"ss"  '((lambda () (interactive) (shell-command "flameshot gui --path ~/Pictures/ss/"))     :which-key "(s-s)creenshot")
-  "slm" '(scroll-lock-mode                                              :which-key "(s)croll-(l)ock-(m)ode")
-  "scl"  '((lambda () (interactive)
-             (command-log-mode)
-             (global-command-log-mode)
-             (clm/open-command-log-buffer))
-           :which-key "(s-c)md-(l)og")
-
-  "svl" '(global-display-fill-column-indicator-mode     :which-key "(s-v)ertical-(l)ine" )
-  "sw" '(whitespace-mode                                :which-key "(s-w)hitespace"      )
-
-  "sco" '(corfu-mode                                    :which-key "(s-c)orfu-(m)ode"    )
-  "se"  '(eglot                                         :which-key "(s-e)glot"           )
-  ;;"sim" '(set-input-mode                              :which-key "(s-i)nput-mode"      )
-  "sib" '(clone-indirect-buffer                         :which-key "(s-i)ndirect-(b)uffer")
-
-  "rg"  '(rg                                            :which-key "(r)ip-(g)rep"        )
-
-  "yn"  '(yas-new-snippet                               :which-key "(y)as-(n)ew"         )
-  "yv"  '(yas-visit-snippet-file                        :which-key "(y)as-(v)isit"       )
-  "yd"  '(yas-describe-tables                           :which-key "(y)as-(d)esc-table"  )
-  "yc"  '(consult-yasnippet                             :which-key "(y)as-(c)onsult"     )
-
-  "ce"  '(calc-embedded                                 :which-key "(c)alc-(e)mbedded"   )
-  "cF"  '(full-calc                                     :which-key "(c)alc-(F)ull"       )
-
-  "za"  '(align-regexp-untabify                         :which-key "(z)-reg-(a)lign"     )
-  "zr"  '(replace-regexp                                :which-key "(z)-reg-(r)eplace"   )
-  "zh" '(highlight-symbol-at-point                      :which-key "(z)-(h)ighlight"     )
-  "zH" '(unhighlight-regexp                             :which-key "(z)-(H)ighlight-off" )
-
-  ;;"gp"  '(hydra-garid_gtd_step1_is_actionable/body      :which-key "(g)pt-(p)rocessing"  )
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; "h"   '(describe-symbol :which-key "Describe-Sym")                                                                         ;;
+  ;; "H"   '(describe-key    :which-key "Describe-Key")                                                                         ;;
+  ;;                                                                                                                            ;;
+  ;; "sl4" '((lambda () (interactive) (setq display-line-numbers-width 4)) :which-key "(s)ys-number(l)ine-(4)")                 ;;
+  ;; "sl3" '((lambda () (interactive) (setq display-line-numbers-width 3)) :which-key "(s)ys-number(l)ine-(3)")                 ;;
+  ;; "srf" '((lambda () (interactive) (recentf-open-files))                :which-key "(s-r)ecent-(f)iles")                     ;;
+  ;; "st"  '(gry/open-term-at              :which-key "(s-t)erminal")                                                           ;;
+  ;; "sT"  '(toggle-transparency           :which-key "(s-T)oggle-transparency")                                                ;;
+  ;; ;;"sd"  '(gry/distraction-free-on       :which-key "(s-d)istraction-free-on")                                              ;;
+  ;; ;;"sD"  '(gry/distraction-free-off      :which-key "(s-D)istraction-free-off")                                             ;;
+  ;; "sns" '(crux-create-scratch-buffer    :which-key "(s-n)ew-(s)cratch-buf")                                                  ;;
+  ;; ;;"ss"  '((lambda () (interactive) (shell-command "flameshot gui --path ~/Pictures/ss/"))     :which-key "(s-s)creenshot") ;;
+  ;; "slm" '(scroll-lock-mode                                              :which-key "(s)croll-(l)ock-(m)ode")                 ;;
+  ;; "scl"  '((lambda () (interactive)                                                                                          ;;
+  ;;            (command-log-mode)                                                                                              ;;
+  ;;            (global-command-log-mode)                                                                                       ;;
+  ;;            (clm/open-command-log-buffer))                                                                                  ;;
+  ;;          :which-key "(s-c)md-(l)og")                                                                                       ;;
+  ;;                                                                                                                            ;;
+  ;; "svl" '(global-display-fill-column-indicator-mode     :which-key "(s-v)ertical-(l)ine" )                                   ;;
+  ;; "sw" '(whitespace-mode                                :which-key "(s-w)hitespace"      )                                   ;;
+  ;;                                                                                                                            ;;
+  ;; "sco" '(corfu-mode                                    :which-key "(s-c)orfu-(m)ode"    )                                   ;;
+  ;; "se"  '(eglot                                         :which-key "(s-e)glot"           )                                   ;;
+  ;; ;;"sim" '(set-input-mode                              :which-key "(s-i)nput-mode"      )                                   ;;
+  ;; "sib" '(clone-indirect-buffer                         :which-key "(s-i)ndirect-(b)uffer")                                  ;;
+  ;;                                                                                                                            ;;
+  ;; "rg"  '(rg                                            :which-key "(r)ip-(g)rep"        )                                   ;;
+  ;;                                                                                                                            ;;
+  ;; "yn"  '(yas-new-snippet                               :which-key "(y)as-(n)ew"         )                                   ;;
+  ;; "yv"  '(yas-visit-snippet-file                        :which-key "(y)as-(v)isit"       )                                   ;;
+  ;; "yd"  '(yas-describe-tables                           :which-key "(y)as-(d)esc-table"  )                                   ;;
+  ;; "yc"  '(consult-yasnippet                             :which-key "(y)as-(c)onsult"     )                                   ;;
+  ;;                                                                                                                            ;;
+  ;; "ce"  '(calc-embedded                                 :which-key "(c)alc-(e)mbedded"   )                                   ;;
+  ;; "cF"  '(full-calc                                     :which-key "(c)alc-(F)ull"       )                                   ;;
+  ;;                                                                                                                            ;;
+  ;; "za"  '(align-regexp-untabify                         :which-key "(z)-reg-(a)lign"     )                                   ;;
+  ;; "zr"  '(replace-regexp                                :which-key "(z)-reg-(r)eplace"   )                                   ;;
+  ;; "zh" '(highlight-symbol-at-point                      :which-key "(z)-(h)ighlight"     )                                   ;;
+  ;; "zH" '(unhighlight-regexp                             :which-key "(z)-(H)ighlight-off" )                                   ;;
+  ;;                                                                                                                            ;;
+  ;; ;;"gp"  '(hydra-garid_gtd_step1_is_actionable/body      :which-key "(g)pt-(p)rocessing"  )                                 ;;
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   )
 #+end_src
 
 #+RESULTS:
 
-** the other keybinding
+** COMMENT the other keybinding
 #+begin_src emacs-lisp
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; ;; Secondary leader key ;;                     ;;
+;; (general-create-definer rune/leader-keys-other ;;
+;;   :keymaps       '(normal insert visual emacs) ;;
+;;   :prefix        "M-SPC"                       ;;
+;;   :global-prefix "C-M-SPC")                    ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (rune/leader-keys-other
   "f"  '(find-file-other-frame             :which-key "(f)ile-other-frame"    )
   ;;"lr"  '(revert-buffer-quick            :which-key "(l-r)evert"            )
