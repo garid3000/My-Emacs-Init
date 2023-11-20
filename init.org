@@ -1071,11 +1071,13 @@ from [[https://www.masteringemacs.org/article/seamlessly-merge-multiple-document
 #+begin_src emacs-lisp
 (use-package which-key
   :custom
+  ;;(which-key-popup-type 'frame)
   (which-key-popup-type 'side-window)
-  ;;(which-key-popup-type 'minibuffer)
+  (which-key-side-window-location 'left)
+
   (which-key-idle-delay 2)
   (which-key-idle-secondary-delay 0.01)
-  (which-key-side-window-location 'left)
+
   ;; (which-key-show-major-mode )
   ;; (which-key-side-window-max-height 0.5)
   :config (which-key-mode)
@@ -1151,122 +1153,214 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 #+end_src
 *** keybinds for all modes
 #+name: tbl-global-general-keybindings
-| key(s) | lambda | function                                                | short description      |
-|--------+--------+---------------------------------------------------------+------------------------|
-| SPC    |        | execute-extended-command                                | M-x                    |
-| d      |        | dired-jump                                              | directory              |
-| f      |        | find-file                                               | find-file              |
-| n      |        | dired-sidebar-jump-to-sidebar                           | side-tree show         |
-| N      |        | dired-sidebar-hide-sidebar                              | side-tree hide         |
-| ZQ     |        | kill-emacs                                              | kill emacs             |
-| l      |        | consult-buffer                                          | (l)ist-buffer          |
-| L      |        | :ignore t                                               | buffer+...             |
-| Lr     |        | revert-buffer-quick                                     | (r)eread               |
-| Le     |        | eval-buffer                                             | (e)val                 |
-| Li     |        | ibuffer                                                 | (i)buffer              |
-| Ln     |        | rename-buffer                                           | (r)ename               |
-| Lp     |        | switch-to-prev-buffer                                   | jump-(p)rev            |
-| LP     |        | switch-to-next-buffer                                   | jump-(P)next           |
-| Ld     |        | crux-delete-file-and-buffer                             | (d)elete               |
-| Lc     |        | clone-indirect-buffer                                   | (c)lone                |
-| Ls     |        | crux-create-scratch-buffer                              | new-(s)cratch-buffer   |
-| C      |        | :ignore t                                               | calc related           |
-| Ca     |        | calc                                                    | calc                   |
-| Ce     |        | calc-embedded                                           | embedded               |
-| Cf     |        | full-calc                                               | full                   |
-| c      |        | :ignore t                                               | consult+...            |
-| mg     |        | magit-status                                            | (m)a(g)it              |
-| co     |        | consult-org-heading                                     | (o)rg                  |
-| ci     |        | consult-imenu                                           | (i)menu                |
-| cm     |        | consult-man                                             | (m)an                  |
-| cr     |        | consult-ripgrep                                         | (r)ipgrep              |
-| cf     |        | consult-flymake                                         | (f)lymake              |
-| cp     |        | consult-project-buffer                                  | (p)roject              |
-| cd     |        | consult-dir                                             | (d)ir                  |
-| b      |        | :ignore t                                               | bookmark+...           |
-| bm     |        | consult-bookmark                                        | book(m)ark-consult     |
-| bs     |        | bookmark-set                                            | (s)et                  |
-| bd     |        | bookmark-delete                                         | (d)elete               |
-| br     |        | bookmark-rename                                         | (r)ename               |
-| p      |        | :ignore t                                               | project+...            |
-| pf     |        | project-find-file                                       | (f)ind-file            |
-| pd     |        | consult-flymake                                         | (d)iagnostic           |
-| pr     |        | xref-find-references                                    | (r)eferences           |
-| pz     |        | project-switch-project                                  | (z)ump-to-other-proj   |
-| ps     |        | project-find-regexp                                     | (s)earch-in-proj       |
-| pk     |        | project-kill-buffers                                    | (k)ill-buf-proj        |
-| pl     |        | consult-project-buffer                                  | (l)ist-buf-proj        |
-| v      |        | :ignore t                                               | project+...            |
-| vq     |        | format-all-buffer                                       | (q)-format-buffer      |
-| vr     |        | project-query-replace-regexp                            | (r)eplace              |
-| e      |        | eshell                                                  | (e)shell               |
-| vt     |        | vterm                                                   | (v)ir-(t)erm           |
-| <      |        | recompile                                               | recompile              |
-| ruim   |        | org-roam-ui-mode                                        | (r-ui)-(m)ode          |
-| D      |        | :ignore t                                               | Denote+...             |
-| Dr     |        | denote-rename-file                                      | D-rename               |
-| Df     |        | denote-open-or-create                                   | D-find                 |
-| DD     | y      | (dired denote-directory)                                | D-Dired                |
-| h      |        | :ignore t                                               | Help+...               |
-| hh     |        | describe-symbol                                         | Help-Symbol (elisp)    |
-| hH     |        | describe-key                                            | Help-Keybinding        |
-| s      |        | :ignore t                                               | system+...             |
-| so     |        | :ignore t                                               | system+open+...        |
-| soe    | y      | (find-file "~/.config/emacs/init.org")                  | open emacs confg org   |
-| soE    | y      | (find-file "~/.config/emacs/init.el")                   | open emacs confg el    |
-| sob    | y      | (find-file (nth 0 org-cite-global-bibliography))        | open bibliography      |
-| soc    | y      | (find-file org-default-notes-file)                      | open org capture       |
-| srf    | y      | (recentf-open-files)                                    | s-(r)ecent-(f)iles     |
-| sl     |        | :ignore t                                               | (l)ine related         |
-| sl5    | y      | (setq display-line-numbers-width 5)                     | line-num 5 digit       |
-| sl4    | y      | (setq display-line-numbers-width 4)                     | line-num 4 digit       |
-| sl3    | y      | (setq display-line-numbers-width 3)                     | line-num 3 digit       |
-| slm    |        | scroll-lock-mode                                        | (s)croll-(l)ock-(m)ode |
-| slv    |        | global-display-fill-column-indicator-mode               | vertical-line          |
-| st     |        | gry/open-term-at                                        | (t)erminal             |
-| sT     |        | toggle-transparency                                     | (T)oggle-transparency  |
-| sns    |        | crux-create-scratch-buffer                              | (n)ew-(s)cratch-buf    |
-| scl    | y      | (global-command-log-mode) (clm/open-command-log-buffer) | (c)md-(l)og            |
-| sw     |        | whitespace-mode                                         | (w)hitespace           |
-| sco    |        | corfu-mode                                              | (c)orfu-(m)ode         |
-| se     |        | eglot                                                   | (e)glot                |
-| rg     |        | rg                                                      | (r)ip-(g)rep           |
-| y      |        | :ignore t                                               | yassnippet+...         |
-| yn     |        | yas-new-snippet                                         | y-(n)ew                |
-| yv     |        | yas-visit-snippet-file                                  | y-(v)isit              |
-| yd     |        | yas-describe-tables                                     | y-(d)esc-table         |
-| yc     |        | consult-yasnippet                                       | y-(c)onsult            |
-| z      |        | :ignore t                                               | conveniences+...       |
-| za     |        | garid-custom/align-regexp-and-untabify                  | align                  |
-| zr     |        | replace-regexp                                          | replace in buf         |
-| zh     |        | highlight-symbol-at-point                               | highlight word         |
-| zH     |        | unhighlight-regexp                                      | highlight word off     |
-| oT     |        | :ignore t                                               | orgtbl+...             |
-| oTm    |        | orgtbl-mode                                             | (m)ode                 |
-| oTc    |        | orgtbl-create-or-convert-from-region                    | (c)reate               |
-| oTT    |        | org-table-toggle-column-width                           | (T)oggle-hide-column   |
-| oTC    |        | org-table-toggle-coordinate-overlays                    | (C)oordinate           |
+| key(s) | lambda | function                                                | short description          |
+|--------+--------+---------------------------------------------------------+----------------------------|
+| SPC    |        | execute-extended-command                                | M-x                        |
+| d      |        | dired-jump                                              | directory                  |
+| f      |        | find-file                                               | find-file                  |
+| n      |        | dired-sidebar-jump-to-sidebar                           | side-tree show             |
+| N      |        | dired-sidebar-hide-sidebar                              | side-tree hide             |
+| ZQ     |        | kill-emacs                                              | kill emacs                 |
+| mg     |        | magit-status                                            | (m)a(g)it                  |
+| e      |        | eshell                                                  | (e)shell                   |
+| vt     |        | vterm                                                   | (v)ir-(t)erm               |
+| <      |        | recompile                                               | recompile                  |
+| l      |        | consult-buffer                                          | (l)ist-buffer              |
+| L      |        | :ignore t                                               | buffer+...                 |
+| Lr     |        | revert-buffer-quick                                     | l-(r)eread                 |
+| Le     |        | eval-buffer                                             | l-(e)val                   |
+| Li     |        | ibuffer                                                 | l-(i)buffer                |
+| Ln     |        | rename-buffer                                           | l-(r)ename                 |
+| L<     |        | switch-to-prev-buffer                                   | l-(<)prev                  |
+| L>     |        | switch-to-next-buffer                                   | l-(>)next                  |
+| Ld     |        | crux-delete-file-and-buffer                             | l-(d)elete                 |
+| Lc     |        | clone-indirect-buffer                                   | l-(c)lone                  |
+| Ls     |        | crux-create-scratch-buffer                              | l-(s)cratch-buffer         |
+| C      |        | :ignore t                                               | C calc related             |
+| Ca     |        | calc                                                    | C-(a) calc                 |
+| Ce     |        | calc-embedded                                           | C-(e) embedded             |
+| Cf     |        | full-calc                                               | C-(f) full                 |
+| c      |        | :ignore t                                               | consult+...                |
+| co     |        | consult-org-heading                                     | c-(o)rg                    |
+| ci     |        | consult-imenu                                           | c-(i)menu                  |
+| cm     |        | consult-man                                             | c-(m)an                    |
+| cr     |        | consult-ripgrep                                         | c-(r)ipgrep                |
+| cf     |        | consult-flymake                                         | c-(f)lymake                |
+| cp     |        | consult-project-buffer                                  | c-(p)roject                |
+| cd     |        | consult-dir                                             | c-(d)ir                    |
+| b      |        | :ignore t                                               | bookmark+...               |
+| bm     |        | consult-bookmark                                        | b-(m)ark-consult           |
+| bs     |        | bookmark-set                                            | b-(s)et                    |
+| bd     |        | bookmark-delete                                         | b-(d)elete                 |
+| br     |        | bookmark-rename                                         | b-(r)ename                 |
+| p      |        | :ignore t                                               | project+...                |
+| pf     |        | project-find-file                                       | p-(f)ind-file              |
+| pd     |        | consult-flymake                                         | p-(d)iagnostic             |
+| pr     |        | xref-find-references                                    | p-(r)eferences             |
+| pz     |        | project-switch-project                                  | p-(z)ump-to-other-proj     |
+| ps     |        | project-find-regexp                                     | p-(s)earch-in-proj         |
+| pk     |        | project-kill-buffers                                    | p-(k)ill-buf-proj          |
+| pl     |        | consult-project-buffer                                  | p-(l)ist-buf-proj          |
+| v      |        | :ignore t                                               | project+...                |
+| vq     |        | format-all-buffer                                       | v-(q)-format-buffer        |
+| vr     |        | project-query-replace-regexp                            | v-(r)eplace                |
+| D      |        | :ignore t                                               | Denote+...                 |
+| Dr     |        | denote-rename-file                                      | D-rename                   |
+| Df     |        | denote-open-or-create                                   | D-find                     |
+| DD     | y      | (dired denote-directory)                                | D-Dired                    |
+| h      |        | :ignore t                                               | Help+...                   |
+| hh     |        | describe-symbol                                         | Help-Symbol (elisp)        |
+| hH     |        | describe-key                                            | Help-Keybinding            |
+| s      |        | :ignore t                                               | system+...                 |
+| so     |        | :ignore t                                               | system+open+...            |
+| soe    | y      | (find-file "~/.config/emacs/init.org")                  | so-(e)macs confg org       |
+| soE    | y      | (find-file "~/.config/emacs/init.el")                   | so-(E)macs confg el        |
+| sob    | y      | (find-file (nth 0 org-cite-global-bibliography))        | so-(b)ibliography          |
+| soc    | y      | (find-file org-default-notes-file)                      | so-(o)rg capture           |
+| srf    | y      | (recentf-open-files)                                    | s-(r)ecent-(f)iles         |
+| sl     |        | :ignore t                                               | s-(l)ine related           |
+| sl5    | y      | (setq display-line-numbers-width 5)                     | sl-5 digit line number     |
+| sl4    | y      | (setq display-line-numbers-width 4)                     | sl-4 digit line number     |
+| sl3    | y      | (setq display-line-numbers-width 3)                     | sl-3 digit line number     |
+| slm    |        | scroll-lock-mode                                        | sl-(m)ode scroll-lock-mode |
+| slv    |        | global-display-fill-column-indicator-mode               | vertical-line              |
+| st     |        | gry/open-term-at                                        | (t)erminal                 |
+| sT     |        | toggle-transparency                                     | (T)oggle-transparency      |
+| sns    |        | crux-create-scratch-buffer                              | (n)ew-(s)cratch-buf        |
+| scl    | y      | (global-command-log-mode) (clm/open-command-log-buffer) | (c)md-(l)og                |
+| sw     |        | whitespace-mode                                         | (w)hitespace               |
+| sco    |        | corfu-mode                                              | (c)orfu-(m)ode             |
+| se     |        | eglot                                                   | (e)glot                    |
+| rg     |        | rg                                                      | (r)ip-(g)rep               |
+| y      |        | :ignore t                                               | (y)assnippet+...           |
+| yn     |        | yas-new-snippet                                         | y-(n)ew                    |
+| yv     |        | yas-visit-snippet-file                                  | y-(v)isit                  |
+| yd     |        | yas-describe-tables                                     | y-(d)esc-table             |
+| yc     |        | consult-yasnippet                                       | y-(c)onsult                |
+| z      |        | :ignore t                                               | conveniences+...           |
+| za     |        | garid-custom/align-regexp-and-untabify                  | align                      |
+| zr     |        | replace-regexp                                          | replace in buf             |
+| zh     |        | highlight-symbol-at-point                               | highlight word             |
+| zH     |        | unhighlight-regexp                                      | highlight word off         |
+| zs     |        | :ignore t                                               | (s)pellcheker+...          |
+| zsw    |        | ispell-word                                             | zs-(w)ord                  |
+| zsr    |        | ispell-region                                           | zs-(r)egion                |
+| zsC    |        | ispell-comments-and-strings                             | zs-(C)omment-full          |
+| zsc    |        | ispell-comment-or-string-at-point                       | zs-(c)omment-here          |
+| zsb    |        | ispell-buffer                                           | zs-(b)uffer                |
+| zsm    |        | ispell-message                                          | zs-(m)essage               |
+| zsq    |        | ispell-kill-ispell                                      | zs-(q)uit                  |
+| o      |        | :ignore t                                               | (o)rg                      |
+| oa     |        | org-agenda                                              | o-(a)genda                 |
+| otb    |        | org-timeblock                                           | o-(t)ime-(b)lock           |
+| oc     |        | org-capture                                             | o-(c)apture                |
+| oT     |        | :ignore t                                               | (T)able+...                |
+| oTm    |        | orgtbl-mode                                             | oT-(m)ode                  |
+| oTc    |        | orgtbl-create-or-convert-from-region                    | oT-(c)reate                |
+| oTT    |        | org-table-toggle-column-width                           | oT-(T)oggle-hide-column    |
+| oTC    |        | org-table-toggle-coordinate-overlays                    | oT-(C)oordinate            |
+| r      |        | :ignore t                                               | (r)oam+...                 |
+| ruim   |        | org-roam-ui-mode                                        | rui-(m)ode ui-in-browser   |
+| rf     |        | org-roam-node-find                                      | r-(f)ind                   |
+| rl     |        | org-roam-buffer-toggle                                  | r-(l)toggle                |
+| rL     |        | org-roam-buffer-display-dedicated                       | r-(L)dedicated             |
+| ri     |        | org-roam-node-insert                                    | r-(i)nsert                 |
+| rI     |        | garid-custom/org-roam-node-insert-immediate             | r-(I)nsert-immediate       |
+| rd     |        | :ignore t                                               | roam (d)aily+...           |
+| rdc    |        | org-roam-dailies-capture-today                          | rd-(c)apture               |
+| rdr    |        | org-roam-dailies-goto-today                             | rd-(t)oday                 |
+| rdt    |        | org-roam-dailies-goto-tomorrow                          | rd-(T)omorrow              |
+| rdy    |        | org-roam-dailies-goto-yesterday                         | rd-(y)esterday             |
+| rdd    |        | org-roam-dailies-goto-date                              | rd-(d)ate  goto date       |
+| rd>    |        | org-roam-dailies-goto-next-note                         | rd-(>)next                 |
+| rd<    |        | org-roam-dailies-goto-previous-note                     | rd-(<)prev                 |
 
-*** convert keybinds for all modes
-#+caption: adsf
-#+name: convert-global-general-keybindings
-#+begin_src elisp :var tab=tbl-global-general-keybindings :wrap src emacs-lisp :tangle no
+*** keybinds for in-orgmode
+#+name: tbl-orgmode-general-keybindings
+| key(s) | lambda | function                                        | short description           |
+|--------+--------+-------------------------------------------------+-----------------------------|
+| om     |        | org-refile                                      | o-(m)ove-subtree            |
+| onm    |        | org-num-mode                                    | o-(n)um-(m)ode              |
+| oo     |        | org-open-at-point                               | o-(o)pen                    |
+| op     |        | org-latex-preview                               | o-(p)review                 |
+| oy     |        | org-copy-subtree                                | o-(y)ank-subtree            |
+| ,      |        | org-ctrl-c-ctrl-c                               | C-c C-c                     |
+| ot     |        | :ignore t                                       | (t)odo+...                  |
+| otT    |        | org-todo                                        | ot-(T)odo                   |
+| ott    | y      | (org-todo "TODO"      )                         | ot-(t)odo                   |
+| ots    | y      | (org-todo "STARTED"   )                         | ot-(s)chedule               |
+| otw    | y      | (org-todo "WAITING"   )                         | ot-(w)ait                   |
+| otd    | y      | (org-todo "DONE"      )                         | ot-(d)one                   |
+| otc    | y      | (org-todo "CANCELLED" )                         | ot-(c)ancel                 |
+| otp    | y      | (org-todo "PROCESSED" )                         | ot-(p)rocessed              |
+| otn    | y      | (org-todo ""          )                         | ot-(n)one                   |
+| ota    | y      | (org-archive-subtree-default-with-confirmation) | ot-(a)rchive TOOD           |
+| os     |        | org-schedule                                    | o-(s)chedule                |
+| od     | y      | (org-deadline ""           )                    | o-(d)eadline                |
+| of     |        | :ignore t                                       | (f)ind+...                  |
+| ofh    | y      | (consult-org-heading)                           | of-(h)eading                |
+| ofn    | y      | (consult-line "#+name"       )                  | of-(n)amed table/eq/src     |
+| ofs    | y      | (consult-line "#+begin_"  )                     | of-(s)ource src-block       |
+| ox     |        | :ignore t                                       | e(x)port+...                |
+| oxb    |        | org-beamer-export-to-pdf                        | ox-(b)eamer                 |
+| oxB    | y      | (org-beamer-export-to-pdf nil t)                | ox-(B)eamer subtree         |
+| oxp    |        | org-latex-export-to-pdf                         | ox-(p)df latex              |
+| oxP    | y      | (org-latex-export-to-pdf nil t)                 | ox-(P)df latex subtree      |
+| oxo    |        | gry/org-open-pdf                                | ox-(o)pen exported pdf      |
+| ol     |        | :ignore t                                       | (l)ink+...                  |
+| old    |        | garid-custom/org-toggle-link-n-emphasis         | ol-(d)escription show/hide  |
+| oli    | y      | (org-insert-link)                               | ol-(i)nsert                 |
+| ol>    |        | org-next-link                                   | ol-(>)next link             |
+| ol<    |        | org-previous-link                               | ol-(<)prev link             |
+| olo    |        | org-open-at-point                               | ol-(o)pen (same as SPC o o) |
+| op     |        | org-latex-preview                               | o-(p)review                 |
+| oi     |        | :ignore t                                       | (i)mg+...                   |
+| oip    |        | org-download-clipboard                          | oi-(p)aste-clipboard        |
+| oiP    |        | org-download-image                              | oi-(P)aste from path        |
+| oid    |        | org-download-delete                             | oi-(d)elete file            |
+| oie    |        | org-download-edit                               | oi-(e)dit externally        |
+| oir    |        | org-download-rename-at-point                    | oi-(r)ename file            |
+| oit    |        | org-toggle-inline-images                        | oi-(t)oggle shot/hide image |
+| ois    |        | :ignore t                                       | (s)ize in when toggled      |
+| oisn   | y      | (setq org-image-actual-width '(800))            | ois-(n)ormal                |
+| oisb   | y      | (setq org-image-actual-width '(1500))           | ois-(b)ig                   |
+| oiss   | y      | (setq org-image-actual-width '(400))            | ois-(s)mall                 |
+| oI     |        | :ignore t                                       | o-(I)nsert+....             |
+| oIb    |        | org-cite-insert                                 | oI-(c)ite                   |
+| oIf    |        | org-footnote-new                                | oI-(f)ootnote               |
+| oIF    |        | org-footnote-action                             | oI-(F)ootnote-action        |
+| j      |        | org-next-block                                  | (j) jump to next src-block  |
+| k      |        | org-previous-block                              | (k) jump to prev src-block  |
+
+*** convert tables actual keybinding
+#+header: :var tbl_all_kbind=tbl-global-general-keybindings 
+#+header: :var tbl_org_kbind=tbl-orgmode-general-keybindings
+#+begin_src elisp :wrap src emacs-lisp :tangle no
 (concat
  "(garids-keybind/for-all-modes\n"
- (mapconcat
-  (lambda (row) (format "  \"%s\" '(%s :which-key \"%s\")"
-                        (nth 0 row)
-                        (if (string= (nth 1 row) "y")
-                            (format "(lambda () (interactive) %s )" (nth 2 row)) ;; for anon functions
-                          (nth 2 row))                                           ;; for normal functions
-                        (nth 3 row)))
-  tab "\n"
-  )
- "\n)"
+ (mapconcat (lambda (row) (format "  \"%s\" '(%s :which-key \"%s\")"
+                                  (nth 0 row)
+                                  (if (string= (nth 1 row) "y")
+                                      (format "(lambda () (interactive) %s )" (nth 2 row)) ;; for anon functions
+                                    (nth 2 row))                                           ;; for normal functions
+                                  (nth 3 row)))
+            tbl_all_kbind "\n"
+            )
+ "\n)\n\n"
+ "(garids-keybind/in-org-mode\n"
+ (mapconcat (lambda (row) (format "  \"%s\" '(%s :which-key \"%s\")"
+                                  (nth 0 row)
+                                  (if (string= (nth 1 row) "y")
+                                      (format "(lambda () (interactive) %s )" (nth 2 row)) ;; for anon functions
+                                    (nth 2 row))                                           ;; for normal functions
+                                  (nth 3 row)))
+            tbl_org_kbind "\n"
+            )
+ "\n)\n"
  )
 #+end_src
 
-#+RESULTS: convert-global-general-keybindings
+#+RESULTS:
 #+begin_src emacs-lisp
 (garids-keybind/for-all-modes
   "SPC" '(execute-extended-command :which-key "M-x")
@@ -1275,50 +1369,49 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "n" '(dired-sidebar-jump-to-sidebar :which-key "side-tree show")
   "N" '(dired-sidebar-hide-sidebar :which-key "side-tree hide")
   "ZQ" '(kill-emacs :which-key "kill emacs")
-  "l" '(consult-buffer :which-key "(l)ist-buffer")
-  "L" '(:ignore t :which-key "buffer+...")
-  "Lr" '(revert-buffer-quick :which-key "(r)eread")
-  "Le" '(eval-buffer :which-key "(e)val")
-  "Li" '(ibuffer :which-key "(i)buffer")
-  "Ln" '(rename-buffer :which-key "(r)ename")
-  "Lp" '(switch-to-prev-buffer :which-key "jump-(p)rev")
-  "LP" '(switch-to-next-buffer :which-key "jump-(P)next")
-  "Ld" '(crux-delete-file-and-buffer :which-key "(d)elete")
-  "Lc" '(clone-indirect-buffer :which-key "(c)lone")
-  "Ls" '(crux-create-scratch-buffer :which-key "new-(s)cratch-buffer")
-  "C" '(:ignore t :which-key "calc related")
-  "Ca" '(calc :which-key "calc")
-  "Ce" '(calc-embedded :which-key "embedded")
-  "Cf" '(full-calc :which-key "full")
-  "c" '(:ignore t :which-key "consult+...")
   "mg" '(magit-status :which-key "(m)a(g)it")
-  "co" '(consult-org-heading :which-key "(o)rg")
-  "ci" '(consult-imenu :which-key "(i)menu")
-  "cm" '(consult-man :which-key "(m)an")
-  "cr" '(consult-ripgrep :which-key "(r)ipgrep")
-  "cf" '(consult-flymake :which-key "(f)lymake")
-  "cp" '(consult-project-buffer :which-key "(p)roject")
-  "cd" '(consult-dir :which-key "(d)ir")
-  "b" '(:ignore t :which-key "bookmark+...")
-  "bm" '(consult-bookmark :which-key "book(m)ark-consult")
-  "bs" '(bookmark-set :which-key "(s)et")
-  "bd" '(bookmark-delete :which-key "(d)elete")
-  "br" '(bookmark-rename :which-key "(r)ename")
-  "p" '(:ignore t :which-key "project+...")
-  "pf" '(project-find-file :which-key "(f)ind-file")
-  "pd" '(consult-flymake :which-key "(d)iagnostic")
-  "pr" '(xref-find-references :which-key "(r)eferences")
-  "pz" '(project-switch-project :which-key "(z)ump-to-other-proj")
-  "ps" '(project-find-regexp :which-key "(s)earch-in-proj")
-  "pk" '(project-kill-buffers :which-key "(k)ill-buf-proj")
-  "pl" '(consult-project-buffer :which-key "(l)ist-buf-proj")
-  "v" '(:ignore t :which-key "project+...")
-  "vq" '(format-all-buffer :which-key "(q)-format-buffer")
-  "vr" '(project-query-replace-regexp :which-key "(r)eplace")
   "e" '(eshell :which-key "(e)shell")
   "vt" '(vterm :which-key "(v)ir-(t)erm")
   "<" '(recompile :which-key "recompile")
-  "ruim" '(org-roam-ui-mode :which-key "(r-ui)-(m)ode")
+  "l" '(consult-buffer :which-key "(l)ist-buffer")
+  "L" '(:ignore t :which-key "buffer+...")
+  "Lr" '(revert-buffer-quick :which-key "l-(r)eread")
+  "Le" '(eval-buffer :which-key "l-(e)val")
+  "Li" '(ibuffer :which-key "l-(i)buffer")
+  "Ln" '(rename-buffer :which-key "l-(r)ename")
+  "L<" '(switch-to-prev-buffer :which-key "l-(<)prev")
+  "L>" '(switch-to-next-buffer :which-key "l-(>)next")
+  "Ld" '(crux-delete-file-and-buffer :which-key "l-(d)elete")
+  "Lc" '(clone-indirect-buffer :which-key "l-(c)lone")
+  "Ls" '(crux-create-scratch-buffer :which-key "l-(s)cratch-buffer")
+  "C" '(:ignore t :which-key "C calc related")
+  "Ca" '(calc :which-key "C-(a) calc")
+  "Ce" '(calc-embedded :which-key "C-(e) embedded")
+  "Cf" '(full-calc :which-key "C-(f) full")
+  "c" '(:ignore t :which-key "consult+...")
+  "co" '(consult-org-heading :which-key "c-(o)rg")
+  "ci" '(consult-imenu :which-key "c-(i)menu")
+  "cm" '(consult-man :which-key "c-(m)an")
+  "cr" '(consult-ripgrep :which-key "c-(r)ipgrep")
+  "cf" '(consult-flymake :which-key "c-(f)lymake")
+  "cp" '(consult-project-buffer :which-key "c-(p)roject")
+  "cd" '(consult-dir :which-key "c-(d)ir")
+  "b" '(:ignore t :which-key "bookmark+...")
+  "bm" '(consult-bookmark :which-key "b-(m)ark-consult")
+  "bs" '(bookmark-set :which-key "b-(s)et")
+  "bd" '(bookmark-delete :which-key "b-(d)elete")
+  "br" '(bookmark-rename :which-key "b-(r)ename")
+  "p" '(:ignore t :which-key "project+...")
+  "pf" '(project-find-file :which-key "p-(f)ind-file")
+  "pd" '(consult-flymake :which-key "p-(d)iagnostic")
+  "pr" '(xref-find-references :which-key "p-(r)eferences")
+  "pz" '(project-switch-project :which-key "p-(z)ump-to-other-proj")
+  "ps" '(project-find-regexp :which-key "p-(s)earch-in-proj")
+  "pk" '(project-kill-buffers :which-key "p-(k)ill-buf-proj")
+  "pl" '(consult-project-buffer :which-key "p-(l)ist-buf-proj")
+  "v" '(:ignore t :which-key "project+...")
+  "vq" '(format-all-buffer :which-key "v-(q)-format-buffer")
+  "vr" '(project-query-replace-regexp :which-key "v-(r)eplace")
   "D" '(:ignore t :which-key "Denote+...")
   "Dr" '(denote-rename-file :which-key "D-rename")
   "Df" '(denote-open-or-create :which-key "D-find")
@@ -1328,16 +1421,16 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "hH" '(describe-key :which-key "Help-Keybinding")
   "s" '(:ignore t :which-key "system+...")
   "so" '(:ignore t :which-key "system+open+...")
-  "soe" '((lambda () (interactive) (find-file "~/.config/emacs/init.org") ) :which-key "open emacs confg org")
-  "soE" '((lambda () (interactive) (find-file "~/.config/emacs/init.el") ) :which-key "open emacs confg el")
-  "sob" '((lambda () (interactive) (find-file (nth 0 org-cite-global-bibliography)) ) :which-key "open bibliography")
-  "soc" '((lambda () (interactive) (find-file org-default-notes-file) ) :which-key "open org capture")
+  "soe" '((lambda () (interactive) (find-file "~/.config/emacs/init.org") ) :which-key "so-(e)macs confg org")
+  "soE" '((lambda () (interactive) (find-file "~/.config/emacs/init.el") ) :which-key "so-(E)macs confg el")
+  "sob" '((lambda () (interactive) (find-file (nth 0 org-cite-global-bibliography)) ) :which-key "so-(b)ibliography")
+  "soc" '((lambda () (interactive) (find-file org-default-notes-file) ) :which-key "so-(o)rg capture")
   "srf" '((lambda () (interactive) (recentf-open-files) ) :which-key "s-(r)ecent-(f)iles")
-  "sl" '(:ignore t :which-key "(l)ine related")
-  "sl5" '((lambda () (interactive) (setq display-line-numbers-width 5) ) :which-key "line-num 5 digit")
-  "sl4" '((lambda () (interactive) (setq display-line-numbers-width 4) ) :which-key "line-num 4 digit")
-  "sl3" '((lambda () (interactive) (setq display-line-numbers-width 3) ) :which-key "line-num 3 digit")
-  "slm" '(scroll-lock-mode :which-key "(s)croll-(l)ock-(m)ode")
+  "sl" '(:ignore t :which-key "s-(l)ine related")
+  "sl5" '((lambda () (interactive) (setq display-line-numbers-width 5) ) :which-key "sl-5 digit line number")
+  "sl4" '((lambda () (interactive) (setq display-line-numbers-width 4) ) :which-key "sl-4 digit line number")
+  "sl3" '((lambda () (interactive) (setq display-line-numbers-width 3) ) :which-key "sl-3 digit line number")
+  "slm" '(scroll-lock-mode :which-key "sl-(m)ode scroll-lock-mode")
   "slv" '(global-display-fill-column-indicator-mode :which-key "vertical-line")
   "st" '(gry/open-term-at :which-key "(t)erminal")
   "sT" '(toggle-transparency :which-key "(T)oggle-transparency")
@@ -1347,7 +1440,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "sco" '(corfu-mode :which-key "(c)orfu-(m)ode")
   "se" '(eglot :which-key "(e)glot")
   "rg" '(rg :which-key "(r)ip-(g)rep")
-  "y" '(:ignore t :which-key "yassnippet+...")
+  "y" '(:ignore t :which-key "(y)assnippet+...")
   "yn" '(yas-new-snippet :which-key "y-(n)ew")
   "yv" '(yas-visit-snippet-file :which-key "y-(v)isit")
   "yd" '(yas-describe-tables :which-key "y-(d)esc-table")
@@ -1357,11 +1450,93 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "zr" '(replace-regexp :which-key "replace in buf")
   "zh" '(highlight-symbol-at-point :which-key "highlight word")
   "zH" '(unhighlight-regexp :which-key "highlight word off")
-  "oT" '(:ignore t :which-key "orgtbl+...")
-  "oTm" '(orgtbl-mode :which-key "(m)ode")
-  "oTc" '(orgtbl-create-or-convert-from-region :which-key "(c)reate")
-  "oTT" '(org-table-toggle-column-width :which-key "(T)oggle-hide-column")
-  "oTC" '(org-table-toggle-coordinate-overlays :which-key "(C)oordinate")
+  "zs" '(:ignore t :which-key "(s)pellcheker+...")
+  "zsw" '(ispell-word :which-key "zs-(w)ord")
+  "zsr" '(ispell-region :which-key "zs-(r)egion")
+  "zsC" '(ispell-comments-and-strings :which-key "zs-(C)omment-full")
+  "zsc" '(ispell-comment-or-string-at-point :which-key "zs-(c)omment-here")
+  "zsb" '(ispell-buffer :which-key "zs-(b)uffer")
+  "zsm" '(ispell-message :which-key "zs-(m)essage")
+  "zsq" '(ispell-kill-ispell :which-key "zs-(q)uit")
+  "o" '(:ignore t :which-key "(o)rg")
+  "oa" '(org-agenda :which-key "o-(a)genda")
+  "otb" '(org-timeblock :which-key "o-(t)ime-(b)lock")
+  "oc" '(org-capture :which-key "o-(c)apture")
+  "oT" '(:ignore t :which-key "(T)able+...")
+  "oTm" '(orgtbl-mode :which-key "oT-(m)ode")
+  "oTc" '(orgtbl-create-or-convert-from-region :which-key "oT-(c)reate")
+  "oTT" '(org-table-toggle-column-width :which-key "oT-(T)oggle-hide-column")
+  "oTC" '(org-table-toggle-coordinate-overlays :which-key "oT-(C)oordinate")
+  "r" '(:ignore t :which-key "(r)oam+...")
+  "ruim" '(org-roam-ui-mode :which-key "rui-(m)ode ui-in-browser")
+  "rf" '(org-roam-node-find :which-key "r-(f)ind")
+  "rl" '(org-roam-buffer-toggle :which-key "r-(l)toggle")
+  "rL" '(org-roam-buffer-display-dedicated :which-key "r-(L)dedicated")
+  "ri" '(org-roam-node-insert :which-key "r-(i)nsert")
+  "rI" '(garid-custom/org-roam-node-insert-immediate :which-key "r-(I)nsert-immediate")
+  "rd" '(:ignore t :which-key "roam (d)aily+...")
+  "rdc" '(org-roam-dailies-capture-today :which-key "rd-(c)apture")
+  "rdr" '(org-roam-dailies-goto-today :which-key "rd-(t)oday")
+  "rdt" '(org-roam-dailies-goto-tomorrow :which-key "rd-(T)omorrow")
+  "rdy" '(org-roam-dailies-goto-yesterday :which-key "rd-(y)esterday")
+  "rdd" '(org-roam-dailies-goto-date :which-key "rd-(d)ate  goto date")
+  "rd>" '(org-roam-dailies-goto-next-note :which-key "rd-(>)next")
+  "rd<" '(org-roam-dailies-goto-previous-note :which-key "rd-(<)prev")
+)
+
+(garids-keybind/in-org-mode
+  "om" '(org-refile :which-key "o-(m)ove-subtree")
+  "onm" '(org-num-mode :which-key "o-(n)um-(m)ode")
+  "oo" '(org-open-at-point :which-key "o-(o)pen")
+  "op" '(org-latex-preview :which-key "o-(p)review")
+  "oy" '(org-copy-subtree :which-key "o-(y)ank-subtree")
+  "," '(org-ctrl-c-ctrl-c :which-key "C-c C-c")
+  "ot" '(:ignore t :which-key "(t)odo+...")
+  "otT" '(org-todo :which-key "ot-(T)odo")
+  "ott" '((lambda () (interactive) (org-todo "TODO"      ) ) :which-key "ot-(t)odo")
+  "ots" '((lambda () (interactive) (org-todo "STARTED"   ) ) :which-key "ot-(s)chedule")
+  "otw" '((lambda () (interactive) (org-todo "WAITING"   ) ) :which-key "ot-(w)ait")
+  "otd" '((lambda () (interactive) (org-todo "DONE"      ) ) :which-key "ot-(d)one")
+  "otc" '((lambda () (interactive) (org-todo "CANCELLED" ) ) :which-key "ot-(c)ancel")
+  "otp" '((lambda () (interactive) (org-todo "PROCESSED" ) ) :which-key "ot-(p)rocessed")
+  "otn" '((lambda () (interactive) (org-todo ""          ) ) :which-key "ot-(n)one")
+  "ota" '((lambda () (interactive) (org-archive-subtree-default-with-confirmation) ) :which-key "ot-(a)rchive TOOD")
+  "os" '(org-schedule :which-key "o-(s)chedule")
+  "od" '((lambda () (interactive) (org-deadline ""           ) ) :which-key "o-(d)eadline")
+  "of" '(:ignore t :which-key "(f)ind+...")
+  "ofh" '((lambda () (interactive) (consult-org-heading) ) :which-key "of-(h)eading")
+  "ofn" '((lambda () (interactive) (consult-line "#+name"       ) ) :which-key "of-(n)amed table/eq/src")
+  "ofs" '((lambda () (interactive) (consult-line "#+begin_"  ) ) :which-key "of-(s)ource src-block")
+  "ox" '(:ignore t :which-key "e(x)port+...")
+  "oxb" '(org-beamer-export-to-pdf :which-key "ox-(b)eamer")
+  "oxB" '((lambda () (interactive) (org-beamer-export-to-pdf nil t) ) :which-key "ox-(B)eamer subtree")
+  "oxp" '(org-latex-export-to-pdf :which-key "ox-(p)df latex")
+  "oxP" '((lambda () (interactive) (org-latex-export-to-pdf nil t) ) :which-key "ox-(P)df latex subtree")
+  "oxo" '(gry/org-open-pdf :which-key "ox-(o)pen exported pdf")
+  "ol" '(:ignore t :which-key "(l)ink+...")
+  "old" '(garid-custom/org-toggle-link-n-emphasis :which-key "ol-(d)escription show/hide")
+  "oli" '((lambda () (interactive) (org-insert-link) ) :which-key "ol-(i)nsert")
+  "ol>" '(org-next-link :which-key "ol-(>)next link")
+  "ol<" '(org-previous-link :which-key "ol-(<)prev link")
+  "olo" '(org-open-at-point :which-key "ol-(o)pen (same as SPC o o)")
+  "op" '(org-latex-preview :which-key "o-(p)review")
+  "oi" '(:ignore t :which-key "(i)mg+...")
+  "oip" '(org-download-clipboard :which-key "oi-(p)aste-clipboard")
+  "oiP" '(org-download-image :which-key "oi-(P)aste from path")
+  "oid" '(org-download-delete :which-key "oi-(d)elete file")
+  "oie" '(org-download-edit :which-key "oi-(e)dit externally")
+  "oir" '(org-download-rename-at-point :which-key "oi-(r)ename file")
+  "oit" '(org-toggle-inline-images :which-key "oi-(t)oggle shot/hide image")
+  "ois" '(:ignore t :which-key "(s)ize in when toggled")
+  "oisn" '((lambda () (interactive) (setq org-image-actual-width '(800)) ) :which-key "ois-(n)ormal")
+  "oisb" '((lambda () (interactive) (setq org-image-actual-width '(1500)) ) :which-key "ois-(b)ig")
+  "oiss" '((lambda () (interactive) (setq org-image-actual-width '(400)) ) :which-key "ois-(s)mall")
+  "oI" '(:ignore t :which-key "o-(I)nsert+....")
+  "oIb" '(org-cite-insert :which-key "oI-(c)ite")
+  "oIf" '(org-footnote-new :which-key "oI-(f)ootnote")
+  "oIF" '(org-footnote-action :which-key "oI-(F)ootnote-action")
+  "j" '(org-next-block :which-key "(j) jump to next src-block")
+  "k" '(org-previous-block :which-key "(k) jump to prev src-block")
 )
 #+end_src
 
@@ -1500,7 +1675,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 
 ;;"gp"  '(hydra-garid_gtd_step1_is_actionable/body      :which-key "(g)pt-(p)rocessing"  )
 #+end_src
-*** keybinds inside org-mode
+*** COMMENT keybinds inside org-mode
 #+begin_src emacs-lisp
 (garids-keybind/in-org-mode
 
@@ -1611,7 +1786,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
       :prefix        "M-SPC"
       :global-prefix "C-M-SPC"))
 #+end_src
-** general main1
+** COMMENT general main1
 *** My Emacs configuration cheatsheet
 **** My custom key-binding cheatsheet
 #+ATTR_HTML: :border 2 :rules all :frame border
@@ -2001,26 +2176,6 @@ Also these will only work inside ORG file.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (rune/leader-keys-other
-  "f"  '(find-file-other-frame             :which-key "(f)ile-other-frame"    )
-  ;;"lr"  '(revert-buffer-quick            :which-key "(l-r)evert"            )
-  ;;"lw"  '(consult-buffer-other-window    :which-key "(l-w)indow"            )
-  "ll"  '(consult-buffer-other-frame       :which-key "(l-f)rame"             )
-  "le"  '(eval-buffer                      :which-key "(l-e)val"              )
-  ;;"lb"  '(ibuffe                         :which-key "(l-b)uffer"            )
-  ;;"li"  '(ibuffer                        :which-key "(l-i)buffer"           )
-  "ln"  '(rename-buffer                    :which-key "(l-n)ame"              )
-  "lp"  '(switch-to-prev-buffer            :which-key "(l-p)rev"              )
-  "lP"  '(switch-to-next-buffer            :which-key "(l-P)next"             )
-  "ld"  '(crux-delete-file-and-buffer      :which-key "(l-d)elete"            )
-
-  ;; ispell related
-  "sw" '(ispell-word                       :which-key "(s)pell-(w)ord"        )
-  "sr" '(ispell-region                     :which-key "(s)pell-(r)egion"      )
-  "sC" '(ispell-comments-and-strings       :which-key "(s)pell-(C)omment-full")
-  "sc" '(ispell-comment-or-string-at-point :which-key "(s)pell-(c)omment-here")
-  "sb" '(ispell-buffer                     :which-key "(s)pell-(b)uffer"      )
-  "sm" '(ispell-message                    :which-key "(s)pell-(m)essage"     )
-  "sq" '(ispell-kill-ispell                :which-key "(s)pell-(q)uit"        ))
 
 ;; "M-SPC"  '(comint-dynamic-complete-filename  :which-key "com"			)
 #+end_src
