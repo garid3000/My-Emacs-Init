@@ -1185,17 +1185,17 @@ Global = can be called from everywhere (doesn't matter what file-type you're cur
 #+attr_latex: :placement [H]
 #+caption: Org related (from everywhere i.e. doesn't care in-or-out of org-file)
 #+name: tbl-global-general-keybindings-org-mode-related
-| key(s) | lambda | function                                                | short description          |
-|--------+--------+---------------------------------------------------------+----------------------------|
-| o      |        | :ignore t                                               | (o)rg                      |
-| oa     |        | org-agenda                                              | o-(a)genda                 |
-| otb    |        | org-timeblock                                           | o-(t)ime-(b)lock           |
-| oc     |        | org-capture                                             | o-(c)apture                |
-| oT     |        | :ignore t                                               | (T)able+...                |
-| oTm    |        | orgtbl-mode                                             | oT-(m)ode                  |
-| oTc    |        | orgtbl-create-or-convert-from-region                    | oT-(c)reate                |
-| oTT    |        | org-table-toggle-column-width                           | oT-(T)oggle-hide-column    |
-| oTC    |        | org-table-toggle-coordinate-overlays                    | oT-(C)oordinate            |
+| key(s) | lambda | function                             | short description       |
+|--------+--------+--------------------------------------+-------------------------|
+| o      |        | :ignore t                            | (o)rg                   |
+| oA     |        | org-agenda                           | o-(A)genda              |
+| oab    |        | org-timeblock                        | o-a-(b)lock             |
+| oc     |        | org-capture                          | o-(c)apture             |
+| oT     |        | :ignore t                            | (T)able+...             |
+| oTm    |        | orgtbl-mode                          | oT-(m)ode               |
+| oTc    |        | orgtbl-create-or-convert-from-region | oT-(c)reate             |
+| oTT    |        | org-table-toggle-column-width        | oT-(T)oggle-hide-column |
+| oTC    |        | org-table-toggle-coordinate-overlays | oT-(C)oordinate         |
 
 **** (from anywhere) org-roam related
 #+attr_latex: :placement [H]
@@ -1254,18 +1254,18 @@ Global = can be called from everywhere (doesn't matter what file-type you're cur
 | slm    |        | scroll-lock-mode                                        | sl-(m)ode scroll-lock-mode |
 | slv    |        | global-display-fill-column-indicator-mode               | sl-(v)ertical-line         |
 | sln    |        | display-line-numbers-width                              | sl-(n)umber toggle         |
-| st     |        | garid-custom/open-external-term-here                    | s-(t)erminal externally    |
-| sT     |        | toggle-transparency                                     | s-(T)oggle-transparency    |
+| st     |        | toggle-transparency                                     | s-(t)oggle-transparency    |
 | scl    | y      | (global-command-log-mode) (clm/open-command-log-buffer) | s-(c)md-(l)og              |
 | sw     |        | whitespace-mode                                         | s-(w)hitespace             |
-| sco    |        | corfu-mode                                              | s-(c)orfu-(m)ode           |
-| se     |        | eglot                                                   | s-(e)glot                  |
-| rg     |        | rg                                                      | (r)ip-(g)rep               |
 | O      |        | :ignore t                                               | (O)pen-config+...          |
 | Oe     | y      | (find-file "~/.config/emacs/init.org")                  | O-(e)macs confg org        |
 | OE     | y      | (find-file "~/.config/emacs/init.el")                   | O-(E)macs confg el         |
 | Ob     | y      | (find-file (nth 0 org-cite-global-bibliography))        | O-(b)ibliography           |
 | OO     | y      | (find-file org-default-notes-file)                      | O-(O)rg capture            |
+| t      |        | :ignore t                                               | (t)erminal+...             |
+| te     |        | eshell                                                  | t-(e)shell emacs-shell     |
+| tv     |        | vterm                                                   | t-(v)term  vterm           |
+| tE     |        | garid-custom/open-external-term-here                    | t-(E)xternal terminal      |
 
 **** (from anywhere) help related
 #+attr_latex: :placement [H]
@@ -1296,9 +1296,10 @@ Global = can be called from everywhere (doesn't matter what file-type you're cur
 | key(s) | lambda | function     | short description |
 |--------+--------+--------------+-------------------|
 | mg     |        | magit-status | (m)a(g)it         |
-| e      |        | eshell       | (e)shell          |
-| vt     |        | vterm        | (v)ir-(t)erm      |
 | <      |        | recompile    | recompile         |
+| sco    |        | corfu-mode   | s-(c)orfu-(m)ode  |
+| se     |        | eglot        | s-(e)glot         |
+| rg     |        | rg           | (r)ip-(g)rep      |
 
 **** (from anywhere) consult related
 #+attr_latex: :placement [H]
@@ -1339,7 +1340,7 @@ Global = can be called from everywhere (doesn't matter what file-type you're cur
 #+name: tbl-global-general-keybindings-denote
 | key(s) | lambda | function                 | short description |
 |--------+--------+--------------------------+-------------------|
-| R      |        | :ignore t                | (R)-denote+...    |
+| R      |        | :ignore t                | (R)denote+...     |
 | Rr     |        | denote-rename-file       | R-(r)ename        |
 | Rf     |        | denote-open-or-create    | R-(f)ind          |
 | RD     | y      | (dired denote-directory) | R-(D)ired         |
@@ -1352,9 +1353,8 @@ Global = can be called from everywhere (doesn't matter what file-type you're cur
 |--------+--------+------------------------+-------------------|
 | y      |        | :ignore t              | (y)assnippet+...  |
 | yn     |        | yas-new-snippet        | y-(n)ew           |
-| yv     |        | yas-visit-snippet-file | y-(v)isit         |
 | yd     |        | yas-describe-tables    | y-(d)esc-table    |
-| yc     |        | consult-yasnippet      | y-(c)onsult       |
+| yv     |        | yas-visit-snippet-file | y-(v)isit         |
 
 **** (from anywhere) calc related
 #+caption: gnu-calc related
@@ -1366,22 +1366,25 @@ Global = can be called from everywhere (doesn't matter what file-type you're cur
 | Ce     |        | calc-embedded | C-(e) embedded    |
 | Cf     |        | full-calc     | C-(f) full        |
 *** Sequential inside-org-file keybindings
-inside-org-file = can be called (only) in org-file (won't be called from different file-type).
+Inside-org-file = called only in org-file (won't be called from different file-type).
 
 **** (in org-file) frequent
 #+attr_latex: :placement [H]
 #+caption: in org-file, frequent commands
 #+name: tbl-orgmode-general-keybindings-freq
-| key(s) | lambda | function           | short description          |
-|--------+--------+--------------------+----------------------------|
-| om     |        | org-refile         | o-(m)ove-subtree           |
-| onm    |        | org-num-mode       | o-(n)um-(m)ode             |
-| oo     |        | org-open-at-point  | o-(o)pen                   |
-| op     |        | org-latex-preview  | o-(p)review                |
-| oy     |        | org-copy-subtree   | o-(y)ank-subtree           |
-| ,      |        | org-ctrl-c-ctrl-c  | C-c C-c                    |
-| j      |        | org-next-block     | (j) jump to next src-block |
-| k      |        | org-previous-block | (k) jump to prev src-block |
+| key(s) | lambda | function                     | short description          |
+|--------+--------+------------------------------+----------------------------|
+| om     |        | org-refile                   | o-(m)ove-subtree           |
+| op     |        | org-latex-preview            | o-(p)review                |
+| ,      |        | org-ctrl-c-ctrl-c            | C-c C-c                    |
+| j      |        | org-next-block               | (j) jump to next src-block |
+| k      |        | org-previous-block           | (k) jump to prev src-block |
+| os     |        | :ignore t                    | o-(s)ubtree+...            |
+| osy    |        | org-copy-subtree             | os-(y)ank (aka copy)       |
+| osv    |        | org-mark-subtree             | os-(v)isually select       |
+| osd    |        | org-cut-subtree              | os-(d)elete (aka cut)      |
+| ost    |        | org-toggle-narrow-to-subtree | os-(t)oggle narrow         |
+| osn    |        | org-num-mode                 | os-(n)um-(m)ode            |
 
 **** (in org-file) todo related
 #+attr_latex: :placement [H]
@@ -1399,8 +1402,10 @@ inside-org-file = can be called (only) in org-file (won't be called from differe
 | otp    | y      | (org-todo "PROCESSED" )                         | ot-(p)rocessed    |
 | otn    | y      | (org-todo ""          )                         | ot-(n)one         |
 | ota    | y      | (org-archive-subtree-default-with-confirmation) | ot-(a)rchive TOOD |
-| os     |        | org-schedule                                    | o-(s)chedule      |
-| od     | y      | (org-deadline ""           )                    | o-(d)eadline      |
+| oA     |        | org-agenda                                      | o-(A)genda        |
+| oa     |        | :ignore t                                       | o-(a)genda+...    |
+| oas    |        | org-schedule                                    | oa-(s)chedule     |
+| oad    |        | org-deadline                                    | oa-(d)eadline     |
 
 **** (in org-file) find
 #+attr_latex: :placement [H]
@@ -1433,6 +1438,7 @@ inside-org-file = can be called (only) in org-file (won't be called from differe
 #+name: tbl-orgmode-general-keybindings-link
 | key(s) | lambda | function                                | short description           |
 |--------+--------+-----------------------------------------+-----------------------------|
+| oo     |        | org-open-at-point                       | o-(o)pen                    |
 | ol     |        | :ignore t                               | o-(l)ink+...                |
 | old    |        | garid-custom/org-toggle-link-n-emphasis | ol-(d)escription show/hide  |
 | oli    | y      | (org-insert-link)                       | ol-(i)nsert                 |
@@ -1469,7 +1475,7 @@ inside-org-file = can be called (only) in org-file (won't be called from differe
 | oIf    |        | org-footnote-new    | oI-(f)ootnote        |
 | oIF    |        | org-footnote-action | oI-(F)ootnote-action |
 
-*** convert tables actual keybinding
+*** Convert tables actual keybinding
 #+header: :var tbl_all_kbind_00=tbl-global-general-keybindings-freq
 #+header: :var tbl_all_kbind_01=tbl-global-general-keybindings-org-mode-related
 #+header: :var tbl_all_kbind_02=tbl-global-general-keybindings-org-roam-related
@@ -1540,8 +1546,8 @@ inside-org-file = can be called (only) in org-file (won't be called from differe
   "Dp" '(dired-preview-mode :which-key "D-(p) side-tree hide")
   "ZQ" '(kill-emacs :which-key "kill emacs")
   "o" '(:ignore t :which-key "(o)rg")
-  "oa" '(org-agenda :which-key "o-(a)genda")
-  "otb" '(org-timeblock :which-key "o-(t)ime-(b)lock")
+  "oA" '(org-agenda :which-key "o-(A)genda")
+  "oab" '(org-timeblock :which-key "o-a-(b)lock")
   "oc" '(org-capture :which-key "o-(c)apture")
   "oT" '(:ignore t :which-key "(T)able+...")
   "oTm" '(orgtbl-mode :which-key "oT-(m)ode")
@@ -1578,9 +1584,8 @@ inside-org-file = can be called (only) in org-file (won't be called from differe
   "zsq" '(ispell-kill-ispell :which-key "zs-(q)uit")
   "y" '(:ignore t :which-key "(y)assnippet+...")
   "yn" '(yas-new-snippet :which-key "y-(n)ew")
-  "yv" '(yas-visit-snippet-file :which-key "y-(v)isit")
   "yd" '(yas-describe-tables :which-key "y-(d)esc-table")
-  "yc" '(consult-yasnippet :which-key "y-(c)onsult")
+  "yv" '(yas-visit-snippet-file :which-key "y-(v)isit")
   "s" '(:ignore t :which-key "(s)ystem+...")
   "srf" '((lambda () (interactive) (recentf-open-files) ) :which-key "s-(r)ecent-(f)iles")
   "sl" '(:ignore t :which-key "s-(l)ine+...")
@@ -1590,19 +1595,19 @@ inside-org-file = can be called (only) in org-file (won't be called from differe
   "slm" '(scroll-lock-mode :which-key "sl-(m)ode scroll-lock-mode")
   "slv" '(global-display-fill-column-indicator-mode :which-key "sl-(v)ertical-line")
   "sln" '(display-line-numbers-width :which-key "sl-(n)umber toggle")
-  "st" '(garid-custom/open-external-term-here :which-key "s-(t)erminal externally")
-  "sT" '(toggle-transparency :which-key "s-(T)oggle-transparency")
+  "st" '(toggle-transparency :which-key "s-(t)oggle-transparency")
   "scl" '((lambda () (interactive) (global-command-log-mode) (clm/open-command-log-buffer) ) :which-key "s-(c)md-(l)og")
   "sw" '(whitespace-mode :which-key "s-(w)hitespace")
-  "sco" '(corfu-mode :which-key "s-(c)orfu-(m)ode")
-  "se" '(eglot :which-key "s-(e)glot")
-  "rg" '(rg :which-key "(r)ip-(g)rep")
   "O" '(:ignore t :which-key "(O)pen-config+...")
   "Oe" '((lambda () (interactive) (find-file "~/.config/emacs/init.org") ) :which-key "O-(e)macs confg org")
   "OE" '((lambda () (interactive) (find-file "~/.config/emacs/init.el") ) :which-key "O-(E)macs confg el")
   "Ob" '((lambda () (interactive) (find-file (nth 0 org-cite-global-bibliography)) ) :which-key "O-(b)ibliography")
   "OO" '((lambda () (interactive) (find-file org-default-notes-file) ) :which-key "O-(O)rg capture")
-  "R" '(:ignore t :which-key "(R)-denote+...")
+  "t" '(:ignore t :which-key "(t)erminal+...")
+  "te" '(eshell :which-key "t-(e)shell emacs-shell")
+  "tv" '(vterm :which-key "t-(v)term  vterm")
+  "tE" '(garid-custom/open-external-term-here :which-key "t-(E)xternal terminal")
+  "R" '(:ignore t :which-key "(R)denote+...")
   "Rr" '(denote-rename-file :which-key "R-(r)ename")
   "Rf" '(denote-open-or-create :which-key "R-(f)ind")
   "RD" '((lambda () (interactive) (dired denote-directory) ) :which-key "R-(D)ired")
@@ -1649,21 +1654,25 @@ inside-org-file = can be called (only) in org-file (won't be called from differe
   "Lc" '(clone-indirect-buffer :which-key "L-(c)lone")
   "Ls" '(crux-create-scratch-buffer :which-key "L-(s)cratch-buffer")
   "mg" '(magit-status :which-key "(m)a(g)it")
-  "e" '(eshell :which-key "(e)shell")
-  "vt" '(vterm :which-key "(v)ir-(t)erm")
   "<" '(recompile :which-key "recompile")
+  "sco" '(corfu-mode :which-key "s-(c)orfu-(m)ode")
+  "se" '(eglot :which-key "s-(e)glot")
+  "rg" '(rg :which-key "(r)ip-(g)rep")
 )
 
 (garids-keybind/in-org-mode
   "om" '(org-refile :which-key "o-(m)ove-subtree")
-  "onm" '(org-num-mode :which-key "o-(n)um-(m)ode")
-  "oo" '(org-open-at-point :which-key "o-(o)pen")
   "op" '(org-latex-preview :which-key "o-(p)review")
-  "oy" '(org-copy-subtree :which-key "o-(y)ank-subtree")
   "," '(org-ctrl-c-ctrl-c :which-key "C-c C-c")
   "j" '(org-next-block :which-key "(j) jump to next src-block")
   "k" '(org-previous-block :which-key "(k) jump to prev src-block")
-  "ot" '(:ignore t :which-key "(t)odo+...")
+  "os" '(:ignore t :which-key "o-(s)ubtree+...")
+  "osy" '(org-copy-subtree :which-key "os-(y)ank (aka copy)")
+  "osv" '(org-mark-subtree :which-key "os-(v)isually select")
+  "osd" '(org-cut-subtree :which-key "os-(d)elete (aka cut)")
+  "ost" '(org-toggle-narrow-to-subtree :which-key "os-(t)oggle narrow")
+  "osn" '(org-num-mode :which-key "os-(n)um-(m)ode")
+  "ot" '(:ignore t :which-key "o-(t)odo+...")
   "otT" '(org-todo :which-key "ot-(T)odo")
   "ott" '((lambda () (interactive) (org-todo "TODO"      ) ) :which-key "ot-(t)odo")
   "ots" '((lambda () (interactive) (org-todo "STARTED"   ) ) :which-key "ot-(s)chedule")
@@ -1673,26 +1682,29 @@ inside-org-file = can be called (only) in org-file (won't be called from differe
   "otp" '((lambda () (interactive) (org-todo "PROCESSED" ) ) :which-key "ot-(p)rocessed")
   "otn" '((lambda () (interactive) (org-todo ""          ) ) :which-key "ot-(n)one")
   "ota" '((lambda () (interactive) (org-archive-subtree-default-with-confirmation) ) :which-key "ot-(a)rchive TOOD")
-  "os" '(org-schedule :which-key "o-(s)chedule")
-  "od" '((lambda () (interactive) (org-deadline ""           ) ) :which-key "o-(d)eadline")
-  "of" '(:ignore t :which-key "(f)ind+...")
+  "oA" '(org-agenda :which-key "o-(A)genda")
+  "oa" '(:ignore t :which-key "o-(a)genda+...")
+  "oas" '(org-schedule :which-key "oa-(s)chedule")
+  "oad" '(org-deadline :which-key "oa-(d)eadline")
+  "of" '(:ignore t :which-key "o-(f)ind+...")
   "ofh" '((lambda () (interactive) (consult-org-heading) ) :which-key "of-(h)eading")
   "ofn" '((lambda () (interactive) (consult-line "#+name"   ) ) :which-key "of-(n)amed table/eq/src")
   "ofs" '((lambda () (interactive) (consult-line "#+begin_" ) ) :which-key "of-(s)ource src-block")
-  "ox" '(:ignore t :which-key "e(x)port+...")
+  "ox" '(:ignore t :which-key "o-(x)port+...")
   "oxb" '(org-beamer-export-to-pdf :which-key "ox-(b)eamer")
   "oxB" '((lambda () (interactive) (org-beamer-export-to-pdf nil t) ) :which-key "ox-(B)eamer subtree")
   "oxp" '(org-latex-export-to-pdf :which-key "ox-(p)df latex")
   "oxP" '((lambda () (interactive) (org-latex-export-to-pdf nil t) ) :which-key "ox-(P)df latex subtree")
   "oxo" '(gry/org-open-pdf :which-key "ox-(o)pen exported pdf")
   "op" '(org-latex-preview :which-key "o-(p)review")
-  "ol" '(:ignore t :which-key "(l)ink+...")
+  "oo" '(org-open-at-point :which-key "o-(o)pen")
+  "ol" '(:ignore t :which-key "o-(l)ink+...")
   "old" '(garid-custom/org-toggle-link-n-emphasis :which-key "ol-(d)escription show/hide")
   "oli" '((lambda () (interactive) (org-insert-link) ) :which-key "ol-(i)nsert")
   "ol>" '(org-next-link :which-key "ol-(>)next link")
   "ol<" '(org-previous-link :which-key "ol-(<)prev link")
   "olo" '(org-open-at-point :which-key "ol-(o)pen (same as SPC o o)")
-  "oi" '(:ignore t :which-key "(i)mg+...")
+  "oi" '(:ignore t :which-key "o-(i)mg+...")
   "oip" '(org-download-clipboard :which-key "oi-(p)aste-clipboard")
   "oiP" '(org-download-image :which-key "oi-(P)aste from path")
   "oid" '(org-download-delete :which-key "oi-(d)elete file")
