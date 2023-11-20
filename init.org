@@ -6,8 +6,8 @@
 #+auto_tangle:  t
 
 * From shell you can run make run:
-#+begin_src shell :noeval :tangle Makefile
-# make run # produces the init.el
+#+begin_src makefile :noeval :tangle Makefile
+# make run to extract init.el from init.org from shell
 run:
 	emacs --batch --eval "(require 'org)" --eval '(org-babel-tangle-file "init.org")'
 #+end_src
@@ -27,18 +27,10 @@ I'm pulling packages from following 3 places (not sure that I need all three):
         ("elpa"         . "https://elpa.gnu.org/packages/"  )
         ("nongnu"       . "https://elpa.nongnu.org/nongnu/" )))
 #+end_src
-** Package Manager
+** Initialize ~use-package~ manager
 #+begin_src emacs-lisp
-;; BOOTSTRAP USE-PACKAGE <= not sure what it does
 (package-initialize)
 (setq use-package-always-ensure t)
-
-;; probably only used first time
-;; (unless (package-installed-p 'use-package)
-;;   (package-refresh-contents)
-;;   (package-install 'use-package))
-;;(eval-when-compile (require 'use-package))
-;; (use-package auto-package-update) ; Helps with update automoacial
 #+end_src
 * Vi Movement Related
 ** vim-undo
@@ -46,27 +38,27 @@ I'm pulling packages from following 3 places (not sure that I need all three):
 (use-package undo-fu)
 #+end_src
 ** evil
-[[https://github.com/emacs-evil/evil][Evil]] stands for extendable vi layer for Emacs.
+[[https://github.com/emacs-evil/evil][Evil]] stands for Extendable Vi Layer for Emacs.
 It emulates vi motion inside Emacs. 
 
 #+begin_src emacs-lisp
 ;; Vim Bindings
 (use-package evil
   :demand t
-  :bind (("<escape>" . keyboard-escape-quit     )
-         ("M-j"      . evil-scroll-line-down    )
-         ("M-k"      . evil-scroll-line-up      )
-         ("M-d"      . evil-scroll-page-down    )
-         ("M-u"      . evil-scroll-page-up      )
+  :bind (("<escape>" . keyboard-escape-quit  )
+         ;; ("M-j"   . evil-scroll-line-down )  C-e
+         ;; ("M-k"   . evil-scroll-line-up   )  C-y
+         ;; ("M-d"   . evil-scroll-page-down )  G
+         ;; ("M-u"   . evil-scroll-page-up   )  g g
          )
-  :init
-  (setq evil-want-keybinding      nil
-        evil-undo-system         'undo-fu )
+  :init (setq evil-want-keybinding      nil
+              evil-undo-system         'undo-fu )
 
   ;; evil-want-C-i-jump     nil       ;; test I may need jumpy back and forth
   ;; for org-cycle (tab) working for terminal
   :config
-  (evil-define-key 'normal org-mode-map (kbd "TAB") #'org-cycle) ;; cuz https://emacs.stackexchange.com/a/73457/38482
+  (evil-define-key 'normal org-mode-map (kbd "TAB") #'org-cycle)
+  ;; cuz https://emacs.stackexchange.com/a/73457/38482
   (evil-mode 1))
 #+end_src
 ** evil-collection
@@ -84,7 +76,7 @@ Most notably I like to use magit, sometimes email.
   (evil-collection-init))
 #+end_src
 ** evil-surround
-I rarely uses. but it can put quotation mark at the 2 ends of visual region.
+I sometimes use. It can wrap (visually) selected region with quotation mark or parenthesis.
 
 #+begin_src emacs-lisp
 (use-package evil-surround
@@ -118,24 +110,15 @@ I rarely uses. but it can put quotation mark at the 2 ends of visual region.
 ** Theme
 #+begin_src emacs-lisp :results none
 (custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
  '(line-number        ((t (:background "gray15"   :foreground "#7c6f64"))))
  '(mode-line          ((t (:background "dim gray" :foreground "white"))))
  '(mode-line-inactive ((t (:background nil)))))
 
-;; (load-theme 'modus-vivendi)
 (use-package gruvbox-theme
   :config (load-theme 'gruvbox-dark-hard t))
 
 (use-package evil-terminal-cursor-changer
   :config (evil-terminal-cursor-changer-activate))
-
-;; (unless (display-graphic-p)
-;; (require 'evil-terminal-cursor-changer)
-;; (evil-terminal-cursor-changer-activate) ; or (etcc-on) )
 #+end_src
 
 ** Transparency
@@ -171,10 +154,6 @@ I rarely uses. but it can put quotation mark at the 2 ends of visual region.
   (global-display-line-numbers-mode 1)
   )
 
-;; cursor light
-;; (use-package beacon)
-;; (setq beacon 0.1)
-;; (beacon-mode 1)
 (global-hl-line-mode 1)
 #+end_src
 
@@ -190,10 +169,6 @@ I rarely uses. but it can put quotation mark at the 2 ends of visual region.
               ("C-u"   . vertico-scroll-up   ) ("M-u"   . vertico-scroll-up   )
               ("C-d"   . vertico-scroll-down ) ("M-d"   . vertico-scroll-down )
               ("M-n"   . vertico-next        ) ("M-p"   . vertico-previous    ))
-              ;; ("C-g" . vertico-grid-mode  ) ("M-g"   . vertico-grid-mode   )
-              ;; ("C-h" . vertico-grid-left  ) ("M-h"   . vertico-grid-left   )
-              ;; ("C-l" . vertico-grid-right ) ("M-l"   . vertico-grid-right  )
-              ;; ("C-S-g" . vertico-last     ) ("M-S-g" . vertico-last        )
   :custom (vertico-cycle t)
   :init (vertico-mode))
 #+end_src
@@ -217,7 +192,6 @@ I rarely uses. but it can put quotation mark at the 2 ends of visual region.
 #+begin_src emacs-lisp
 (use-package orderless
   :ensure t
-  ;; :commands (orderless)
   :custom
   (completion-styles '(orderless basic))
   ;; (completion-styles '(orderless flex))
@@ -238,57 +212,50 @@ I rarely uses. but it can put quotation mark at the 2 ends of visual region.
               ("C-S-k" . org-previous-visible-heading   ))
 
   :hook (org-mode . dw/org-mode-setup)
-  :config
-  (setq org-ellipsis                         " ▼" ;; folded subtree symbol
-        org-hide-emphasis-markers            t
-        org-log-done                         t
-        org-image-actual-width               '(800)          ;; sets images size TODO for different size
-        org-src-tab-acts-natively            t
-        org-src-preserve-indentation         nil             ;; scr-blk
-        org-edit-src-content-indentation     0               ;; scr-blk
-        org-startup-folded                   "fold"          ;; folds property drawers, good for roam nodes
-        org-plantuml-jar-path                "/usr/share/java/plantuml/plantuml.jar" ;; this may differ on different machines
-        )
-  ;; if in desktop environment (not from tty terminal)
-  (setq org-file-apps '((auto-mode     . emacs              )
-                        ;;("\\.x?html?\\'" . "firefox %s"   )
-                        ("\\.gif\\'"   . "mpv    \"%s\""    )
-                        ("\\.mp4\\'"   . "mpv    \"%s\""    )
-                        ("\\.png\\'"   . "sxiv   \"%s\""    )
-                        ("\\.svg\\'"   . "sxiv   \"%s\""    )
-                        ("\\.jpeg\\'"  . "sxiv   \"%s\""    )
-                        ("\\.jpg\\'"   . "sxiv   \"%s\""    )
-                        ("\\.html\\'"  . "brave  \"%s\""    )
-                        ("\\.pdf\\'"   . "sioyek \"%s\""    )
-                        ("\\.mkv\\'"   . "mpv    \"%s\""    )
-                        ("\\.xopp\\'"  . "xournalpp \"%s\"" )))
-
-  ;; org agenda/ todo related
-  (setq org-todo-keywords      '((sequence "TODO(t)" "STARTED(s)" "WAITING(w)" "|"
-                                           "PROCESSED(p)" "DONE(d)"
-                                           "CANCELLED(c)"    ))
-
-        org-todo-keyword-faces '(("TODO"       . org-warning )
-                                 ("STARTED"    . "orange"    )
-                                 ("WAITING"    . "yellow"    )
-                                 ("PROCESSED"  . "dim gray"  )
-                                 ("CANCELLED"  . (:foreground "gray30" :weight bold))))
+  :custom
+  (org-ellipsis                      " ▼" );; folded subtree symbol
+  (org-hide-emphasis-markers         t               )
+  (org-log-done                      t               )
+  (org-image-actual-width            '(800)          );; sets images size TODO for different size
+  (org-src-tab-acts-natively         t               )
+  (org-src-preserve-indentation      nil             );; scr-blk
+  (org-edit-src-content-indentation  0               );; scr-blk
+  (org-startup-folded                "fold"          );; folds property drawers, good for roam nodes
+  (org-plantuml-jar-path             "/usr/share/java/plantuml/plantuml.jar" );; this may differ on different machines
+  (org-file-apps '((auto-mode     . emacs              )
+                   ("\\.gif\\'"   . "mpv    \"%s\""    )
+                   ("\\.mp4\\'"   . "mpv    \"%s\""    )
+                   ("\\.png\\'"   . "sxiv   \"%s\""    )
+                   ("\\.svg\\'"   . "sxiv   \"%s\""    )
+                   ("\\.jpeg\\'"  . "sxiv   \"%s\""    )
+                   ("\\.jpg\\'"   . "sxiv   \"%s\""    )
+                   ("\\.html\\'"  . "brave  \"%s\""    )
+                   ("\\.pdf\\'"   . "sioyek \"%s\""    )
+                   ("\\.mkv\\'"   . "mpv    \"%s\""    )
+                   ("\\.xopp\\'"  . "xournalpp \"%s\"" )))
 
 
-  ;; Latex related ===================================================================
-  (setq
-   org-latex-format-headline-function   'my-org-latex-format-headline-function
-   org-latex-active-timestamp-format     "\\textcolor{orange}{%s}"
-   org-latex-inactive-timestamp-format   "\\textcolor{Brown}{%s}"
-   org-latex-listings                     t
-   ;; org-highlight-latex-and-related     '(latex script entities) <---- lets try this for performance
-   org-latex-pdf-process '("latexmk -shell-escape -f -pdf -%latex -interaction=nonstopmode -output-directory=%o %f")
-   )
+  (org-todo-keywords      '((sequence "TODO(t)" "STARTED(s)" "WAITING(w)" "|"
+                                      "PROCESSED(p)" "DONE(d)" "CANCELLED(c)"    )))
 
+  (org-todo-keyword-faces '(("TODO"       . org-warning )
+                            ("STARTED"    . "orange"    )
+                            ("WAITING"    . "yellow"    )
+                            ("PROCESSED"  . "dim gray"  )
+                            ("CANCELLED"  . (:foreground "gray30" :weight bold))))
+
+  (org-latex-listings                     t                                                                          )
+  (org-latex-format-headline-function   'my-org-latex-format-headline-function                                       )
+  (org-latex-active-timestamp-format     "\\textcolor{orange}{%s}"                                                   )
+  (org-latex-inactive-timestamp-format   "\\textcolor{Brown}{%s}"                                                    )
+  (org-latex-pdf-process                '("latexmk -shell-escape -f -pdf -%latex -interaction=nonstopmode -output-directory=%o %f"))
+
+  ;; org-highlight-latex-and-related     '(latex script entities) <---- lets try this for performance
+
+  :init
   (plist-put    org-format-latex-options   :scale 1.7      )    ;; latex equation previewing
   (add-to-list 'org-latex-packages-alist   '("" "listings" ))
   (add-to-list 'org-latex-packages-alist   '("" "color"    ))
-
   )
 #+end_src
 
