@@ -12,6 +12,7 @@
 #+LATEX_HEADER: \usepackage{pgf}
 #+LATEX_HEADER: \usepackage{keystroke}       %% keyboard
 #+LATEX_HEADER: \usepackage{float} 
+#+LATEX_HEADER: \usepackage{listings} 
 #+LATEX_HEADER: %%\usepackage[subsection]{placeins} %% let float stay in sections
 #+LATEX_HEADER: %%\usepackage{flafter} 
 

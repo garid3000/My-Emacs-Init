@@ -47,11 +47,11 @@ It emulates vi motion inside Emacs.
 ;; Vim Bindings
 (use-package evil
   :demand t
-  :bind (("<escape>" . keyboard-escape-quit  )
-         ;; ("M-j"   . evil-scroll-line-down )  C-e
-         ;; ("M-k"   . evil-scroll-line-up   )  C-y
-         ;; ("M-d"   . evil-scroll-page-down )  G
-         ;; ("M-u"   . evil-scroll-page-up   )  g g
+  :bind (;; ("<escape>" . keyboard-escape-quit  )  commented on nov21 
+         ;; ("M-j"      . evil-scroll-line-down )  C-e
+         ;; ("M-k"      . evil-scroll-line-up   )  C-y
+         ;; ("M-d"      . evil-scroll-page-down )  G
+         ;; ("M-u"      . evil-scroll-page-up   )  g g
          )
   :init (setq evil-want-keybinding      nil
               evil-undo-system         'undo-fu )
@@ -207,6 +207,8 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 #+end_src
 * Org
 ** Org mode configuration
+#+caption: org config
+#+name: lst_org
 #+begin_src emacs-lisp :noeval
 (use-package org
   ;; :requires (org-tempo org-indent)
@@ -249,7 +251,8 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
                             ("PROCESSED"  . "dim gray"  )
                             ("CANCELLED"  . (:foreground "gray30" :weight bold))))
 
-  (org-latex-listings                   t                                      )
+  ;; (org-latex-listings               t)  apparently this was obsolete thus swaped with below
+  (org-latex-src-block-backend          t                                      )
   (org-latex-format-headline-function   'garid-custom/latex-formattig-headings )
   (org-latex-active-timestamp-format     "\\textcolor{orange}{%s}"             )
   (org-latex-inactive-timestamp-format   "\\textcolor{Brown}{%s}"              )
@@ -673,7 +676,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   )
 #+end_src
 
-*** Editing image software                                     :shell_script:
+*** Editing image software                                   :shell_script:
 #+begin_src shell :tangle garid/edit_img.sh
 #!/bin/sh
 
@@ -1191,7 +1194,7 @@ Global = can be called from everywhere (doesn't matter what file-type you're cur
 | oA     |        | org-agenda                           | o-(A)genda              |
 | oab    |        | org-timeblock                        | o-a-(b)lock             |
 | oc     |        | org-capture                          | o-(c)apture             |
-| oT     |        | :ignore t                            | (T)able+...             |
+| oT     |        | :ignore t                            | o-(T)able+...           |
 | oTm    |        | orgtbl-mode                          | oT-(m)ode               |
 | oTc    |        | orgtbl-create-or-convert-from-region | oT-(c)reate             |
 | oTT    |        | org-table-toggle-column-width        | oT-(T)oggle-hide-column |
@@ -1201,23 +1204,23 @@ Global = can be called from everywhere (doesn't matter what file-type you're cur
 #+attr_latex: :placement [H]
 #+caption: Org-Roam related (from everywhere i.e. doesn't care in-or-out of org-file)
 #+name: tbl-global-general-keybindings-org-roam-related
-| key(s) | lambda | function                                                | short description          |
-|--------+--------+---------------------------------------------------------+----------------------------|
-| r      |        | :ignore t                                               | (r)oam+...                 |
-| ruim   |        | org-roam-ui-mode                                        | rui-(m)ode ui-in-browser   |
-| rf     |        | org-roam-node-find                                      | r-(f)ind                   |
-| rl     |        | org-roam-buffer-toggle                                  | r-(l)toggle                |
-| rL     |        | org-roam-buffer-display-dedicated                       | r-(L)dedicated             |
-| ri     |        | org-roam-node-insert                                    | r-(i)nsert                 |
-| rI     |        | garid-custom/org-roam-node-insert-immediate             | r-(I)nsert-immediate       |
-| rd     |        | :ignore t                                               | roam (d)aily+...           |
-| rdc    |        | org-roam-dailies-capture-today                          | rd-(c)apture               |
-| rdr    |        | org-roam-dailies-goto-today                             | rd-(t)oday                 |
-| rdt    |        | org-roam-dailies-goto-tomorrow                          | rd-(T)omorrow              |
-| rdy    |        | org-roam-dailies-goto-yesterday                         | rd-(y)esterday             |
-| rdd    |        | org-roam-dailies-goto-date                              | rd-(d)ate  goto date       |
-| rd>    |        | org-roam-dailies-goto-next-note                         | rd-(>)next                 |
-| rd<    |        | org-roam-dailies-goto-previous-note                     | rd-(<)prev                 |
+| key(s) | lambda | function                                    | short description        |
+|--------+--------+---------------------------------------------+--------------------------|
+| r      |        | :ignore t                                   | (r)oam................   |
+| ruim   |        | org-roam-ui-mode                            | rui-(m)ode ui-in-browser |
+| rf     |        | org-roam-node-find                          | r-(f)ind                 |
+| rl     |        | org-roam-buffer-toggle                      | r-(l)toggle              |
+| rL     |        | org-roam-buffer-display-dedicated           | r-(L)dedicated           |
+| ri     |        | org-roam-node-insert                        | r-(i)nsert               |
+| rI     |        | garid-custom/org-roam-node-insert-immediate | r-(I)nsert-immediate     |
+| rd     |        | :ignore t                                   | r-(d)aily.............   |
+| rdc    |        | org-roam-dailies-capture-today              | rd-(c)apture             |
+| rdr    |        | org-roam-dailies-goto-today                 | rd-(t)oday               |
+| rdt    |        | org-roam-dailies-goto-tomorrow              | rd-(T)omorrow            |
+| rdy    |        | org-roam-dailies-goto-yesterday             | rd-(y)esterday           |
+| rdd    |        | org-roam-dailies-goto-date                  | rd-(d)ate  goto date     |
+| rd>    |        | org-roam-dailies-goto-next-note             | rd-(>)next               |
+| rd<    |        | org-roam-dailies-goto-previous-note         | rd-(<)prev               |
 
 **** (from anywhere) convenient stuffs
 #+attr_latex: :placement [H]
@@ -1227,10 +1230,10 @@ Global = can be called from everywhere (doesn't matter what file-type you're cur
 |--------+--------+----------------------------------------+---------------------|
 | z      |        | :ignore t                              | (z)conveniences+... |
 | za     |        | garid-custom/align-regexp-and-untabify | align               |
-| zr     |        | replace-regexp                         | replace in buf      |
+| zr     |        | replace-regexp                         | replace word in buf |
 | zh     |        | highlight-symbol-at-point              | highlight word      |
 | zH     |        | unhighlight-regexp                     | highlight word off  |
-| zs     |        | :ignore t                              | (s)pellcheker+...   |
+| zs     |        | :ignore t                              | z-(s)pell.......... |
 | zsw    |        | ispell-word                            | zs-(w)ord           |
 | zsr    |        | ispell-region                          | zs-(r)egion         |
 | zsC    |        | ispell-comments-and-strings            | zs-(C)omment-full   |
@@ -1245,27 +1248,28 @@ Global = can be called from everywhere (doesn't matter what file-type you're cur
 #+name: tbl-global-general-keybindings-system
 | key(s) | lambda | function                                                | short description          |
 |--------+--------+---------------------------------------------------------+----------------------------|
-| s      |        | :ignore t                                               | (s)ystem+...               |
+| s      |        | :ignore t                                               | (s)ys...................   |
 | srf    | y      | (recentf-open-files)                                    | s-(r)ecent-(f)iles         |
-| sl     |        | :ignore t                                               | s-(l)ine+...               |
-| sl5    | y      | (setq display-line-numbers-width 5)                     | sl-(5) digit line number   |
-| sl4    | y      | (setq display-line-numbers-width 4)                     | sl-(4) digit line number   |
-| sl3    | y      | (setq display-line-numbers-width 3)                     | sl-(3) digit line number   |
+| sl     |        | :ignore t                                               | s-(l)ine................   |
+| sl5    | y      | (setq display-line-numbers-width 5)                     | sl-(5) digit number        |
+| sl4    | y      | (setq display-line-numbers-width 4)                     | sl-(4) digit number        |
+| sl3    | y      | (setq display-line-numbers-width 3)                     | sl-(3) digit number        |
 | slm    |        | scroll-lock-mode                                        | sl-(m)ode scroll-lock-mode |
 | slv    |        | global-display-fill-column-indicator-mode               | sl-(v)ertical-line         |
-| sln    |        | display-line-numbers-width                              | sl-(n)umber toggle         |
+| sln    |        | display-line-numbers-mode                               | sl-(n)umber toggle         |
 | st     |        | toggle-transparency                                     | s-(t)oggle-transparency    |
 | scl    | y      | (global-command-log-mode) (clm/open-command-log-buffer) | s-(c)md-(l)og              |
 | sw     |        | whitespace-mode                                         | s-(w)hitespace             |
-| O      |        | :ignore t                                               | (O)pen-config+...          |
+| O      |        | :ignore t                                               | (O)pen+.................   |
 | Oe     | y      | (find-file "~/.config/emacs/init.org")                  | O-(e)macs confg org        |
 | OE     | y      | (find-file "~/.config/emacs/init.el")                   | O-(E)macs confg el         |
 | Ob     | y      | (find-file (nth 0 org-cite-global-bibliography))        | O-(b)ibliography           |
 | OO     | y      | (find-file org-default-notes-file)                      | O-(O)rg capture            |
-| t      |        | :ignore t                                               | (t)erminal+...             |
+| t      |        | :ignore t                                               | (t)erminal..............   |
 | te     |        | eshell                                                  | t-(e)shell emacs-shell     |
 | tv     |        | vterm                                                   | t-(v)term  vterm           |
-| tE     |        | garid-custom/open-external-term-here                    | t-(E)xternal terminal      |
+| tx     |        | garid-custom/open-external-term-here                    | t-(x)ternal terminal       |
+| tt     |        | eat                                                     | t-ea(t) terminal           |
 
 **** (from anywhere) help related
 #+attr_latex: :placement [H]
@@ -1381,10 +1385,14 @@ Inside-org-file = called only in org-file (won't be called from different file-t
 | k      |        | org-previous-block           | (k) jump to prev src-block |
 | os     |        | :ignore t                    | o-(s)ubtree+...            |
 | osy    |        | org-copy-subtree             | os-(y)ank (aka copy)       |
+| osY    |        | org-id-copy                  | os-(Y)ank (ID)             |
 | osv    |        | org-mark-subtree             | os-(v)isually select       |
 | osd    |        | org-cut-subtree              | os-(d)elete (aka cut)      |
 | ost    |        | org-toggle-narrow-to-subtree | os-(t)oggle narrow         |
-| osn    |        | org-num-mode                 | os-(n)um-(m)ode            |
+| osn    |        | org-num-mode                 | os-(n)um mode              |
+| osi    |        | org-indent-mode              | os-(i)ndent mode           |
+| oss    |        | org-sort                     | os-(s)ort                  |
+| osp    |        | org-set-property             | os-(p)roperty              |
 
 **** (in org-file) todo related
 #+attr_latex: :placement [H]
@@ -1465,6 +1473,7 @@ Inside-org-file = called only in org-file (won't be called from different file-t
 | oiss   | y      | (setq org-image-actual-width '(400))  | ois-(s)mall                 |
 
 **** (in org-file) org insert citation and footnotes
+
 #+attr_latex: :placement [H]
 #+caption: Insertings citations/footnote in org-file
 #+name: tbl-orgmode-general-keybindings-img
@@ -1475,27 +1484,32 @@ Inside-org-file = called only in org-file (won't be called from different file-t
 | oIf    |        | org-footnote-new    | oI-(f)ootnote        |
 | oIF    |        | org-footnote-action | oI-(F)ootnote-action |
 
-*** Convert tables actual keybinding
-#+header: :var tbl_all_kbind_00=tbl-global-general-keybindings-freq
-#+header: :var tbl_all_kbind_01=tbl-global-general-keybindings-org-mode-related
-#+header: :var tbl_all_kbind_02=tbl-global-general-keybindings-org-roam-related
-#+header: :var tbl_all_kbind_03=tbl-global-general-keybindings-convenient
-#+header: :var tbl_all_kbind_04=tbl-global-general-keybindings-yassnippet
-#+header: :var tbl_all_kbind_05=tbl-global-general-keybindings-system
-#+header: :var tbl_all_kbind_06=tbl-global-general-keybindings-denote
-#+header: :var tbl_all_kbind_07=tbl-global-general-keybindings-help
-#+header: :var tbl_all_kbind_08=tbl-global-general-keybindings-project
-#+header: :var tbl_all_kbind_09=tbl-global-general-keybindings-bookmark
-#+header: :var tbl_all_kbind_10=tbl-global-general-keybindings-consult
-#+header: :var tbl_all_kbind_11=tbl-global-general-keybindings-calc
-#+header: :var tbl_all_kbind_12=tbl-global-general-keybindings-buffer
-#+header: :var tbl_all_kbind_13=tbl-global-general-keybindings-misc
-#+header: :var tbl_org_kbind_00=tbl-orgmode-general-keybindings-freq
-#+header: :var tbl_org_kbind_01=tbl-orgmode-general-keybindings-todo
-#+header: :var tbl_org_kbind_02=tbl-orgmode-general-keybindings-find
-#+header: :var tbl_org_kbind_03=tbl-orgmode-general-keybindings-export
-#+header: :var tbl_org_kbind_04=tbl-orgmode-general-keybindings-link
-#+header: :var tbl_org_kbind_05=tbl-orgmode-general-keybindings-img
+*** Converting tables actual keybinding
+**** Script that converts previous org-tables into actual emacs configuration
+:PROPERTIES:
+:header-args:  :var tbl_all_kbind_00=tbl-global-general-keybindings-freq
+:header-args+: :var tbl_all_kbind_01=tbl-global-general-keybindings-org-mode-related
+:header-args+: :var tbl_all_kbind_02=tbl-global-general-keybindings-org-roam-related
+:header-args+: :var tbl_all_kbind_03=tbl-global-general-keybindings-convenient
+:header-args+: :var tbl_all_kbind_04=tbl-global-general-keybindings-yassnippet
+:header-args+: :var tbl_all_kbind_05=tbl-global-general-keybindings-system
+:header-args+: :var tbl_all_kbind_06=tbl-global-general-keybindings-denote
+:header-args+: :var tbl_all_kbind_07=tbl-global-general-keybindings-help
+:header-args+: :var tbl_all_kbind_08=tbl-global-general-keybindings-project
+:header-args+: :var tbl_all_kbind_09=tbl-global-general-keybindings-bookmark
+:header-args+: :var tbl_all_kbind_10=tbl-global-general-keybindings-consult
+:header-args+: :var tbl_all_kbind_11=tbl-global-general-keybindings-calc
+:header-args+: :var tbl_all_kbind_12=tbl-global-general-keybindings-buffer
+:header-args+: :var tbl_all_kbind_13=tbl-global-general-keybindings-misc
+:header-args+: :var tbl_org_kbind_00=tbl-orgmode-general-keybindings-freq
+:header-args+: :var tbl_org_kbind_01=tbl-orgmode-general-keybindings-todo
+:header-args+: :var tbl_org_kbind_02=tbl-orgmode-general-keybindings-find
+:header-args+: :var tbl_org_kbind_03=tbl-orgmode-general-keybindings-export
+:header-args+: :var tbl_org_kbind_04=tbl-orgmode-general-keybindings-link
+:header-args+: :var tbl_org_kbind_05=tbl-orgmode-general-keybindings-img
+:END:
+#+caption: converting
+#+name: src_that_converts_key_tables
 #+begin_src elisp :wrap src emacs-lisp :tangle no
 (setq tbl_all_kbind (append tbl_all_kbind_00 tbl_all_kbind_01 tbl_all_kbind_02
                             tbl_all_kbind_03 tbl_all_kbind_04 tbl_all_kbind_05
@@ -1506,6 +1520,7 @@ Inside-org-file = called only in org-file (won't be called from different file-t
 
 (setq tbl_org_kbind (append tbl_org_kbind_00 tbl_org_kbind_01 tbl_org_kbind_02
                             tbl_org_kbind_03 tbl_org_kbind_04 tbl_org_kbind_05))
+
 
 
 (concat
@@ -1534,7 +1549,8 @@ Inside-org-file = called only in org-file (won't be called from different file-t
  )
 #+end_src
 
-#+RESULTS:
+**** Converted config from tables
+#+RESULTS: src_that_converts_key_tables
 #+begin_src emacs-lisp
 (garids-keybind/for-all-modes
   "SPC" '(execute-extended-command :which-key "M-x")
@@ -1549,19 +1565,19 @@ Inside-org-file = called only in org-file (won't be called from different file-t
   "oA" '(org-agenda :which-key "o-(A)genda")
   "oab" '(org-timeblock :which-key "o-a-(b)lock")
   "oc" '(org-capture :which-key "o-(c)apture")
-  "oT" '(:ignore t :which-key "(T)able+...")
+  "oT" '(:ignore t :which-key "o-(T)able+...")
   "oTm" '(orgtbl-mode :which-key "oT-(m)ode")
   "oTc" '(orgtbl-create-or-convert-from-region :which-key "oT-(c)reate")
   "oTT" '(org-table-toggle-column-width :which-key "oT-(T)oggle-hide-column")
   "oTC" '(org-table-toggle-coordinate-overlays :which-key "oT-(C)oordinate")
-  "r" '(:ignore t :which-key "(r)oam+...")
+  "r" '(:ignore t :which-key "(r)oam................")
   "ruim" '(org-roam-ui-mode :which-key "rui-(m)ode ui-in-browser")
   "rf" '(org-roam-node-find :which-key "r-(f)ind")
   "rl" '(org-roam-buffer-toggle :which-key "r-(l)toggle")
   "rL" '(org-roam-buffer-display-dedicated :which-key "r-(L)dedicated")
   "ri" '(org-roam-node-insert :which-key "r-(i)nsert")
   "rI" '(garid-custom/org-roam-node-insert-immediate :which-key "r-(I)nsert-immediate")
-  "rd" '(:ignore t :which-key "roam (d)aily+...")
+  "rd" '(:ignore t :which-key "r-(d)aily.............")
   "rdc" '(org-roam-dailies-capture-today :which-key "rd-(c)apture")
   "rdr" '(org-roam-dailies-goto-today :which-key "rd-(t)oday")
   "rdt" '(org-roam-dailies-goto-tomorrow :which-key "rd-(T)omorrow")
@@ -1571,10 +1587,10 @@ Inside-org-file = called only in org-file (won't be called from different file-t
   "rd<" '(org-roam-dailies-goto-previous-note :which-key "rd-(<)prev")
   "z" '(:ignore t :which-key "(z)conveniences+...")
   "za" '(garid-custom/align-regexp-and-untabify :which-key "align")
-  "zr" '(replace-regexp :which-key "replace in buf")
+  "zr" '(replace-regexp :which-key "replace word in buf")
   "zh" '(highlight-symbol-at-point :which-key "highlight word")
   "zH" '(unhighlight-regexp :which-key "highlight word off")
-  "zs" '(:ignore t :which-key "(s)pellcheker+...")
+  "zs" '(:ignore t :which-key "z-(s)pell..........")
   "zsw" '(ispell-word :which-key "zs-(w)ord")
   "zsr" '(ispell-region :which-key "zs-(r)egion")
   "zsC" '(ispell-comments-and-strings :which-key "zs-(C)omment-full")
@@ -1586,27 +1602,28 @@ Inside-org-file = called only in org-file (won't be called from different file-t
   "yn" '(yas-new-snippet :which-key "y-(n)ew")
   "yd" '(yas-describe-tables :which-key "y-(d)esc-table")
   "yv" '(yas-visit-snippet-file :which-key "y-(v)isit")
-  "s" '(:ignore t :which-key "(s)ystem+...")
+  "s" '(:ignore t :which-key "(s)ys...................")
   "srf" '((lambda () (interactive) (recentf-open-files) ) :which-key "s-(r)ecent-(f)iles")
-  "sl" '(:ignore t :which-key "s-(l)ine+...")
-  "sl5" '((lambda () (interactive) (setq display-line-numbers-width 5) ) :which-key "sl-(5) digit line number")
-  "sl4" '((lambda () (interactive) (setq display-line-numbers-width 4) ) :which-key "sl-(4) digit line number")
-  "sl3" '((lambda () (interactive) (setq display-line-numbers-width 3) ) :which-key "sl-(3) digit line number")
+  "sl" '(:ignore t :which-key "s-(l)ine................")
+  "sl5" '((lambda () (interactive) (setq display-line-numbers-width 5) ) :which-key "sl-(5) digit number")
+  "sl4" '((lambda () (interactive) (setq display-line-numbers-width 4) ) :which-key "sl-(4) digit number")
+  "sl3" '((lambda () (interactive) (setq display-line-numbers-width 3) ) :which-key "sl-(3) digit number")
   "slm" '(scroll-lock-mode :which-key "sl-(m)ode scroll-lock-mode")
   "slv" '(global-display-fill-column-indicator-mode :which-key "sl-(v)ertical-line")
-  "sln" '(display-line-numbers-width :which-key "sl-(n)umber toggle")
+  "sln" '(display-line-numbers-mode :which-key "sl-(n)umber toggle")
   "st" '(toggle-transparency :which-key "s-(t)oggle-transparency")
   "scl" '((lambda () (interactive) (global-command-log-mode) (clm/open-command-log-buffer) ) :which-key "s-(c)md-(l)og")
   "sw" '(whitespace-mode :which-key "s-(w)hitespace")
-  "O" '(:ignore t :which-key "(O)pen-config+...")
+  "O" '(:ignore t :which-key "(O)pen+.................")
   "Oe" '((lambda () (interactive) (find-file "~/.config/emacs/init.org") ) :which-key "O-(e)macs confg org")
   "OE" '((lambda () (interactive) (find-file "~/.config/emacs/init.el") ) :which-key "O-(E)macs confg el")
   "Ob" '((lambda () (interactive) (find-file (nth 0 org-cite-global-bibliography)) ) :which-key "O-(b)ibliography")
   "OO" '((lambda () (interactive) (find-file org-default-notes-file) ) :which-key "O-(O)rg capture")
-  "t" '(:ignore t :which-key "(t)erminal+...")
+  "t" '(:ignore t :which-key "(t)erminal..............")
   "te" '(eshell :which-key "t-(e)shell emacs-shell")
   "tv" '(vterm :which-key "t-(v)term  vterm")
-  "tE" '(garid-custom/open-external-term-here :which-key "t-(E)xternal terminal")
+  "tx" '(garid-custom/open-external-term-here :which-key "t-(x)ternal terminal")
+  "tt" '(eat :which-key "t-ea(t) terminal")
   "R" '(:ignore t :which-key "(R)denote+...")
   "Rr" '(denote-rename-file :which-key "R-(r)ename")
   "Rf" '(denote-open-or-create :which-key "R-(f)ind")
@@ -1668,10 +1685,14 @@ Inside-org-file = called only in org-file (won't be called from different file-t
   "k" '(org-previous-block :which-key "(k) jump to prev src-block")
   "os" '(:ignore t :which-key "o-(s)ubtree+...")
   "osy" '(org-copy-subtree :which-key "os-(y)ank (aka copy)")
+  "osY" '(org-id-copy :which-key "os-(Y)ank (ID)")
   "osv" '(org-mark-subtree :which-key "os-(v)isually select")
   "osd" '(org-cut-subtree :which-key "os-(d)elete (aka cut)")
   "ost" '(org-toggle-narrow-to-subtree :which-key "os-(t)oggle narrow")
-  "osn" '(org-num-mode :which-key "os-(n)um-(m)ode")
+  "osn" '(org-num-mode :which-key "os-(n)um mode")
+  "osi" '(org-indent-mode :which-key "os-(i)ndent mode")
+  "oss" '(org-sort :which-key "os-(s)ort")
+  "osp" '(org-set-property :which-key "os-(p)roperty")
   "ot" '(:ignore t :which-key "o-(t)odo+...")
   "otT" '(org-todo :which-key "ot-(T)odo")
   "ott" '((lambda () (interactive) (org-todo "TODO"      ) ) :which-key "ot-(t)odo")
@@ -1717,6 +1738,7 @@ Inside-org-file = called only in org-file (won't be called from different file-t
   "oiss" '((lambda () (interactive) (setq org-image-actual-width '(400)) ) :which-key "ois-(s)mall")
 )
 #+end_src
+
 
 * System:
 ** Recent files
