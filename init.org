@@ -1181,6 +1181,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | zsb    | ispell-buffer                          | zs-(b)uffer                   | -    |        |
 | zsm    | ispell-message                         | zs-(m)essage                  | -    |        |
 | zsq    | ispell-kill-ispell                     | zs-(q)uit                     | -    |        |
+| zsl    | ispell-change-dictionary               | zs-(l)anguage en-mn           | -    |        |
 | ZQ     | kill-emacs                             | kill emacs                    | -    |        |
 
 **** System
@@ -1606,6 +1607,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "zsb" '(ispell-buffer :which-key "zs-(b)uffer")
   "zsm" '(ispell-message :which-key "zs-(m)essage")
   "zsq" '(ispell-kill-ispell :which-key "zs-(q)uit")
+  "zsl" '(ispell-change-dictionary :which-key "zs-(l)anguage en-mn")
   "ZQ" '(kill-emacs :which-key "kill emacs")
   "y" '(:ignore t :which-key "(y)assnippet.................")
   "yn" '(yas-new-snippet :which-key "y-(n)ew")
