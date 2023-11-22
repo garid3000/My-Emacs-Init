@@ -3,3 +3,4 @@ run:
 	emacs --batch --eval "(require 'org)" --eval '(org-babel-tangle-file "init.org")'
 	chmod +x 'garid/edit_img.sh'
 	chmod +x 'garid/open_external_term.sh'
+	git submodule foreach git pull origin master

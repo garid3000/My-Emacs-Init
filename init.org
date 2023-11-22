@@ -12,6 +12,7 @@ run:
 	emacs --batch --eval "(require 'org)" --eval '(org-babel-tangle-file "init.org")'
 	chmod +x 'garid/edit_img.sh'
 	chmod +x 'garid/open_external_term.sh'
+	git submodule foreach git pull origin master
 #+end_src
 
 * Package Manager:
@@ -85,6 +86,14 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   :after evil
   :config (global-evil-surround-mode))
 #+end_src
+** evil testing
+#+begin_src emacs-lisp
+(use-package evil-textobj-tree-sitter :ensure t)
+(define-key evil-outer-text-objects-map "f" (evil-textobj-tree-sitter-get-textobj "function.outer"))
+(define-key evil-inner-text-objects-map "f" (evil-textobj-tree-sitter-get-textobj "function.inner"))
+(define-key evil-outer-text-objects-map "a" (evil-textobj-tree-sitter-get-textobj ("conditional.outer" "loop.outer")))
+#+end_src
+
 * Theme & Colors
 ** Font
 #+begin_src emacs-lisp :results none
@@ -768,7 +777,8 @@ esac
   (corfu-auto-delay       0.0        )
   (corfu-popupinfo-delay '(0.5 . 0.2))
   (corfu-preview-current 'insert     ) ;; Do not preview current candidate
-  (corfu-preselect-first  nil        )
+  ;;(corfu-preselect-first  nil      )
+  ;;(corfu-preselect        'directory )
   (corfu-on-exact-match   nil        ) ;; Don't auto expand tempel snippets
 
   ;; Optionally use TAB for cycling, default is `corfu-complete'.
@@ -817,8 +827,14 @@ esac
   )
 #+end_src
 
-#+RESULTS:
-: t
+
+Following makes yassnippet available for corfu (or other completers)
+#+begin_src emacs-lisp
+(use-package cape)
+(use-package yasnippet-capf
+  :after cape
+  :config (add-to-list 'completion-at-point-functions #'yasnippet-capf))
+#+end_src
 
 ** Parenthesis: (electric-pair-mode)
 #+begin_src emacs-lisp
@@ -851,6 +867,30 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
 ** rg
 #+begin_src emacs-lisp
 (use-package rg)
+#+end_src
+** devdocs
+#+begin_src emacs-lisp
+(use-package devdocs
+  ;;:bind ("C-c d" . #'devdocs-lookup)
+  :config ;; taken initially from  https://alhassy.com/emacs.d/#devdocs
+  (when nil ;; need to toggle nil->t and the first time installign
+    (cl-loop
+     for lang in '("python~3.11" "numpy~1.21" "matplotlib~3.6" "pandas~1"
+                   c "r" "nim" "gnu_make" "bash" "fish~3.6" "qt~6.1")
+     do (devdocs-install (list (cons 'slug (format "%s" lang))))))
+  ;; (add-hook
+  ;;  'python-ts-mode-hook
+  ;;  (lambda () (setq-local devdocs-current-docs '("python~3.11" "numpy~1.21" "pandas~1" "matplotlib~3.6"))))
+
+  )
+#+end_src
+** dump jump
+#+begin_src emacs-lisp
+(use-package dumb-jump
+  :config
+  (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
+  (setq xref-show-definitions-function #'xref-show-definitions-completing-read)
+  )
 #+end_src
 ** COMMENT LSP-bridges
 #+begin_src emacs-lisp
@@ -1239,6 +1279,8 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | hH     | describe-key             | h-(H)elp keybinding           | -    |        |
 | ho     | org-info                 | h-(o)rg info                  | -    |        |
 | hw     | which-key-show-top-level | h-(w)hich key                 | -    |        |
+| hd     | devdocs-lookup           | h-(d)evdocs lookup            | -    |        |
+| hm     | consult-man              | h-(m)an                       | -    |        |
 
 **** Development commands
 #+attr_latex: :placement [H]
@@ -1661,6 +1703,8 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "hH" '(describe-key :which-key "h-(H)elp keybinding")
   "ho" '(org-info :which-key "h-(o)rg info")
   "hw" '(which-key-show-top-level :which-key "h-(w)hich key")
+  "hd" '(devdocs-lookup :which-key "h-(d)evdocs lookup")
+  "hm" '(consult-man :which-key "h-(m)an")
   "p" '(:ignore t :which-key "(p)rojectl...................")
   "pf" '(project-find-file :which-key "p-(f)ind-file")
   "pd" '(consult-flymake :which-key "p-(d)iagnostic")
@@ -1916,6 +1960,7 @@ I don't use these not much
                                    "\\*xref\\*"
                                    "Output\\*$"
                                    "\\*Async Shell Command\\*"
+                                   "\\*devdocs\\*"
                                    help-mode
                                    compilation-mode))
   (popper-mode      +1)
