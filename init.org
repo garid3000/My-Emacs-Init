@@ -1,6 +1,6 @@
 #+title:        My Emacs Configuration
 #+author:       Garid Zorigoo
-#+SETUPFILE:    ~/.config/emacs/org-templates/level-0-xelatex-fonts-conf.org
+#+setupfile:    ~/.config/emacs/org-templates/level-0-xelatex-fonts-conf.org
 #+startup:      show2levels
 #+PROPERTY:     header-args :tangle init.el
 #+auto_tangle:  t
@@ -159,7 +159,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 (global-hl-line-mode 1)
 #+end_src
 
-* M-x related 
+* M-x related (or selection method ?)
 ** vertico
 #+begin_src emacs-lisp
 (use-package vertico
@@ -187,8 +187,8 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 #+end_src
 ** consult
 #+begin_src emacs-lisp
-(use-package consult
-  :bind (("M-f"  . consult-line)))
+(use-package consult)
+;;  :bind (("M-f"  . consult-line))
 #+end_src
 ** orderless
 #+begin_src emacs-lisp
@@ -281,7 +281,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   (add-to-list 'org-structure-template-alist '("py2"  .  "src python :session pySess2 :results output :exports both :cache yes :eval never-export"))
   (add-to-list 'org-structure-template-alist '("sq"   .  "sqlite"))
   (add-to-list 'org-structure-template-alist '("mk"   .  "src makefile :tangle no"))
-
+  (add-to-list 'org-structure-template-alist '("ba"   .  "absract"))
   (require 'org-indent)
   )
 #+end_src
@@ -304,11 +304,11 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
    (plantuml   . t)
    (maxima     . t)
    (calc       . t)
+   (awk        . t)
    ))
 #+end_src
 
 #+RESULTS:
-: /usr/share/java/plantuml/plantuml.jar
 
 ** Org-bullet
 #+begin_src emacs-lisp
@@ -1094,6 +1094,7 @@ from [[https://www.masteringemacs.org/article/seamlessly-merge-multiple-document
 | M-]     | comint-dynamic-complete-filename              | complete file path                   |
 | M-s     | avy-goto-char                                 | jump to character                    |
 | M-S     | avy-goto-char-2                               | jump to character (with 2 char)      |
+| M-f     | consult-line                                  | search line in buffer                |
 | C-/     | comment-line                                  | set selected lines comment           |
 | C-\vert | garid-custom/toggle-eng-mon-teq-input-methods | change toggle input (Eng-Mon-Teq)    |
 
@@ -1125,6 +1126,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 (global-set-key (kbd "M-]") 'comint-dynamic-complete-filename)
 (global-set-key (kbd "M-s") 'avy-goto-char)
 (global-set-key (kbd "M-S") 'avy-goto-char-2)
+(global-set-key (kbd "M-f") 'consult-line)
 (global-set-key (kbd "C-/") 'comment-line)
 (global-set-key (kbd "C-|") 'garid-custom/toggle-eng-mon-teq-input-methods)
 #+end_src
@@ -1230,11 +1232,13 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 #+attr_latex: :placement [H]
 #+caption: Help for emacs/elisp related
 #+name: tbl-kbind-help
-| key(s) | function        | short description             | mode | lambda |
-|--------+-----------------+-------------------------------+------+--------|
-| h      | :ignore t       | (h)elp....................... | -    |        |
-| hh     | describe-symbol | h-(h)elp-Symbol (elisp)       | -    |        |
-| hH     | describe-key    | h-(H)elp-Keybinding           | -    |        |
+| key(s) | function                 | short description             | mode | lambda |
+|--------+--------------------------+-------------------------------+------+--------|
+| h      | :ignore t                | (h)elp....................... | -    |        |
+| hh     | describe-symbol          | h-(h)elp symbol (elisp)       | -    |        |
+| hH     | describe-key             | h-(H)elp keybinding           | -    |        |
+| ho     | org-info                 | h-(o)rg info                  | -    |        |
+| hw     | which-key-show-top-level | h-(w)hich key                 | -    |        |
 
 **** Development commands
 #+attr_latex: :placement [H]
@@ -1246,7 +1250,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | <      | recompile    | recompile         | -    |        |
 | sco    | corfu-mode   | s-(c)orfu-(m)ode  | -    |        |
 | se     | eglot        | s-(e)glot         | -    |        |
-| rg     | rg           | (r)ip-(g)rep      | -    |        |
+| rg     | rg           | (r)ip-(g)rep  ~cr | -    |        |
 
 **** Consult related (picking & choosing stuff)
 #+attr_latex: :placement [H]
@@ -1255,13 +1259,17 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | key(s) | function               | short description             | mode | lambda |
 |--------+------------------------+-------------------------------+------+--------|
 | c      | :ignore t              | (c)onsult.................... | -    |        |
-| co     | consult-org-heading    | c-(o)rg                       | -    |        |
+| co     | consult-org-heading    | c-(o)rg   == ofh              | -    |        |
 | ci     | consult-imenu          | c-(i)menu                     | -    |        |
 | cm     | consult-man            | c-(m)an                       | -    |        |
 | cr     | consult-ripgrep        | c-(r)ipgrep                   | -    |        |
+| cR     | consult-recent-file    | c-(R)ecent files              | -    |        |
 | cf     | consult-flymake        | c-(f)lymake                   | -    |        |
 | cp     | consult-project-buffer | c-(p)roject                   | -    |        |
 | cd     | consult-dir            | c-(d)ir                       | -    |        |
+| cF     | consult-fd             | c-(F)d   == $find             | -    |        |
+| ca     | consult-org-agenda     | c-(a)genda headings           | -    |        |
+| cg     | consult-git-grep       | c-(g)it grep  == ps           | -    |        |
 
 **** Project related
 #+attr_latex: :placement [H]
@@ -1274,7 +1282,8 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | pd     | consult-flymake              | p-(d)iagnostic                | -    |        |
 | pr     | xref-find-references         | p-(r)eferences                | -    |        |
 | pz     | project-switch-project       | p-(z)ump-to-other-proj        | -    |        |
-| ps     | project-find-regexp          | p-(s)earch-in-proj            | -    |        |
+| ps     | consult-git-grep             | p-(s)earch git files          | -    |        |
+| pS     | project-find-regexp          | p-(s)earch-in-proj            | -    |        |
 | pk     | project-kill-buffers         | p-(k)ill-buf-proj             | -    |        |
 | pl     | consult-project-buffer       | p-(l)ist-buf-proj             | -    |        |
 | v      | :ignore t                    | (v)-project.................. | -    |        |
@@ -1320,6 +1329,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | key(s) | function          | short description             | mode | lambda |
 |--------+-------------------+-------------------------------+------+--------|
 | o      | :ignore t         | (o)rg........................ | -    |        |
+| oo     | org-open-at-point | o-(o)pen                      | org  |        |
 | ,      | org-ctrl-c-ctrl-c | C-c C-c                       | org  |        |
 
 **** org table related
@@ -1368,19 +1378,26 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 #+attr_latex: :placement [H]
 #+caption: in org-file, frequent commands
 #+name: tbl-orgmode-general-keybindings-freq
-| key(s) | function                     | short description             | mode | lambda |
-|--------+------------------------------+-------------------------------+------+--------|
-| os     | :ignore t                    | o-(s)ubtree.................. | org  |        |
-| osy    | org-copy-subtree             | os-(y)ank (aka copy)          | org  |        |
-| osY    | org-id-copy                  | os-(Y)ank (ID)                | org  |        |
-| osv    | org-mark-subtree             | os-(v)isually select          | org  |        |
-| osm    | org-refile                   | os-(m)ove                     | org  |        |
-| osd    | org-cut-subtree              | os-(d)elete (aka cut)         | org  |        |
-| ost    | org-toggle-narrow-to-subtree | os-(t)oggle narrow            | org  |        |
-| osn    | org-num-mode                 | os-(n)um mode                 | org  |        |
-| osi    | org-indent-mode              | os-(i)ndent mode              | org  |        |
-| oss    | org-sort                     | os-(s)ort                     | org  |        |
-| osp    | org-set-property             | os-(p)roperty                 | org  |        |
+| key(s) | function                                | short description             | mode | lambda |
+|--------+-----------------------------------------+-------------------------------+------+--------|
+| os     | :ignore t                               | o-(s)ubtree.................. | org  |        |
+| osy    | org-copy-subtree                        | os-(y)ank (aka copy)          | org  |        |
+| osY    | org-id-copy                             | os-(Y)ank (ID)                | org  |        |
+| osv    | org-mark-subtree                        | os-(v)isually select          | org  |        |
+| osm    | org-refile                              | os-(m)ove                     | org  |        |
+| osd    | org-cut-subtree                         | os-(d)elete (aka cut)         | org  |        |
+| ost    | org-toggle-narrow-to-subtree            | os-(t)oggle narrow            | org  |        |
+| osn    | org-num-mode                            | os-(n)um mode                 | org  |        |
+| oss    | org-sort                                | os-(s)ort                     | org  |        |
+| osp    | org-set-property                        | os-(p)roperty                 | org  |        |
+| osI    | org-indent-mode                         | os-(I)ndent mode              | org  |        |
+| osi    | :ignore t                               | os-(i)nsert heading.......... | org  |        |
+| osia   | org-insert-heading-after-current        | osi-(a)fter           C-RET   | org  |        |
+| osiA   | org-insert-todo-heading-respect-content | osi-(A)fter    todo C-S-RET   | org  |        |
+| osih   | org-insert-heading                      | osi-(h)eading         M-RET   | org  |        |
+| osiH   | org-insert-todo-heading                 | osi-(H)eading  todo M-S-RET   | org  |        |
+| osis   | org-insert-subheading                   | osi-(s)ubheading              | org  |        |
+| osiS   | org-insert-todo-subheading              | osi-(S)ubheading todo         | org  |        |
 
 **** (in/out org) agenda/calendar/todo related
 #+attr_latex: :placement [H]
@@ -1414,6 +1431,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | of     | :ignore t                  | o-(f)ind..................... | org  |        |
 | ofh    | (consult-org-heading)      | of-(h)eading                  | org  | y      |
 | ofn    | (consult-line "#+name"   ) | of-(n)amed table/eq/src       | org  | y      |
+| ofr    | (consult-line "#+result" ) | of-(r)esult        /src       | org  | y      |
 | ofs    | (consult-line "#+begin_" ) | of-(s)ource src-block         | org  | y      |
 | j      | org-next-block             | (j) jump to next src-block    | org  |        |
 | k      | org-previous-block         | (k) jump to prev src-block    | org  |        |
@@ -1438,7 +1456,6 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 #+name: tbl-orgmode-general-keybindings-link
 | key(s) | function                                | short description             | mode | lambda |
 |--------+-----------------------------------------+-------------------------------+------+--------|
-| oo     | org-open-at-point                       | o-(o)pen                      | org  |        |
 | ol     | :ignore t                               | o-(l)ink..................... | org  |        |
 | old    | garid-custom/org-toggle-link-n-emphasis | ol-(d)escription show/hide    | org  |        |
 | oli    | (org-insert-link)                       | ol-(i)nsert                   | org  | y      |
@@ -1475,7 +1492,6 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | oIf    | org-footnote-new                                 | oI-(f)ootnote                 | org  |        |
 | oIF    | org-footnote-action                              | oI-(F)ootnote-action          | org  |        |
 | oIo    | (find-file (nth 0 org-cite-global-bibliography)) | oI-(o)pen bibliography        | -    | y      |
-
 *** Converting tables actual keybinding
 **** General.el config
 #+begin_src emacs-lisp
@@ -1641,14 +1657,17 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "Rf" '(denote-open-or-create :which-key "R-(f)ind")
   "RD" '((lambda () (interactive) (dired denote-directory) ) :which-key "R-(D)ired")
   "h" '(:ignore t :which-key "(h)elp.......................")
-  "hh" '(describe-symbol :which-key "h-(h)elp-Symbol (elisp)")
-  "hH" '(describe-key :which-key "h-(H)elp-Keybinding")
+  "hh" '(describe-symbol :which-key "h-(h)elp symbol (elisp)")
+  "hH" '(describe-key :which-key "h-(H)elp keybinding")
+  "ho" '(org-info :which-key "h-(o)rg info")
+  "hw" '(which-key-show-top-level :which-key "h-(w)hich key")
   "p" '(:ignore t :which-key "(p)rojectl...................")
   "pf" '(project-find-file :which-key "p-(f)ind-file")
   "pd" '(consult-flymake :which-key "p-(d)iagnostic")
   "pr" '(xref-find-references :which-key "p-(r)eferences")
   "pz" '(project-switch-project :which-key "p-(z)ump-to-other-proj")
-  "ps" '(project-find-regexp :which-key "p-(s)earch-in-proj")
+  "ps" '(consult-git-grep :which-key "p-(s)earch git files")
+  "pS" '(project-find-regexp :which-key "p-(s)earch-in-proj")
   "pk" '(project-kill-buffers :which-key "p-(k)ill-buf-proj")
   "pl" '(consult-project-buffer :which-key "p-(l)ist-buf-proj")
   "v" '(:ignore t :which-key "(v)-project..................")
@@ -1660,13 +1679,17 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "bd" '(bookmark-delete :which-key "b-(d)elete")
   "br" '(bookmark-rename :which-key "b-(r)ename")
   "c" '(:ignore t :which-key "(c)onsult....................")
-  "co" '(consult-org-heading :which-key "c-(o)rg")
+  "co" '(consult-org-heading :which-key "c-(o)rg   == ofh")
   "ci" '(consult-imenu :which-key "c-(i)menu")
   "cm" '(consult-man :which-key "c-(m)an")
   "cr" '(consult-ripgrep :which-key "c-(r)ipgrep")
+  "cR" '(consult-recent-file :which-key "c-(R)ecent files")
   "cf" '(consult-flymake :which-key "c-(f)lymake")
   "cp" '(consult-project-buffer :which-key "c-(p)roject")
   "cd" '(consult-dir :which-key "c-(d)ir")
+  "cF" '(consult-fd :which-key "c-(F)d   == $find")
+  "ca" '(consult-org-agenda :which-key "c-(a)genda headings")
+  "cg" '(consult-git-grep :which-key "c-(g)it grep  == ps")
   "C" '(:ignore t :which-key "(C)alc related...............")
   "Ca" '(calc :which-key "C-(a) calc")
   "Ce" '(calc-embedded :which-key "C-(e) embedded")
@@ -1686,7 +1709,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "<" '(recompile :which-key "recompile")
   "sco" '(corfu-mode :which-key "s-(c)orfu-(m)ode")
   "se" '(eglot :which-key "s-(e)glot")
-  "rg" '(rg :which-key "(r)ip-(g)rep")
+  "rg" '(rg :which-key "(r)ip-(g)rep  ~cr")
   "oT" '(:ignore t :which-key "o-(T)able....................")
   "oTm" '(orgtbl-mode :which-key "oT-(m)ode")
   "oTc" '(orgtbl-create-or-convert-from-region :which-key "oT-(c)reate")
@@ -1699,6 +1722,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 )
 
 (garids-keybind/in-org-mode
+  "oo" '(org-open-at-point :which-key "o-(o)pen")
   "," '(org-ctrl-c-ctrl-c :which-key "C-c C-c")
   "oTx" '(org-table-export :which-key "oT-(x)port as csv file")
   "oTs" '(org-table-sum :which-key "oT-(s)um")
@@ -1713,9 +1737,16 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "osd" '(org-cut-subtree :which-key "os-(d)elete (aka cut)")
   "ost" '(org-toggle-narrow-to-subtree :which-key "os-(t)oggle narrow")
   "osn" '(org-num-mode :which-key "os-(n)um mode")
-  "osi" '(org-indent-mode :which-key "os-(i)ndent mode")
   "oss" '(org-sort :which-key "os-(s)ort")
   "osp" '(org-set-property :which-key "os-(p)roperty")
+  "osI" '(org-indent-mode :which-key "os-(I)ndent mode")
+  "osi" '(:ignore t :which-key "os-(i)nsert heading..........")
+  "osia" '(org-insert-heading-after-current :which-key "osi-(a)fter           C-RET")
+  "osiA" '(org-insert-todo-heading-respect-content :which-key "osi-(A)fter    todo C-S-RET")
+  "osih" '(org-insert-heading :which-key "osi-(h)eading         M-RET")
+  "osiH" '(org-insert-todo-heading :which-key "osi-(H)eading  todo M-S-RET")
+  "osis" '(org-insert-subheading :which-key "osi-(s)ubheading")
+  "osiS" '(org-insert-todo-subheading :which-key "osi-(S)ubheading todo")
   "ot" '(:ignore t :which-key "o-(t)odo.....................")
   "otT" '(org-todo :which-key "ot-(T)odo")
   "ott" '((lambda () (interactive) (org-todo "TODO"      ) ) :which-key "ot-(t)odo")
@@ -1731,6 +1762,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "of" '(:ignore t :which-key "o-(f)ind.....................")
   "ofh" '((lambda () (interactive) (consult-org-heading) ) :which-key "of-(h)eading")
   "ofn" '((lambda () (interactive) (consult-line "#+name"   ) ) :which-key "of-(n)amed table/eq/src")
+  "ofr" '((lambda () (interactive) (consult-line "#+result" ) ) :which-key "of-(r)esult        /src")
   "ofs" '((lambda () (interactive) (consult-line "#+begin_" ) ) :which-key "of-(s)ource src-block")
   "j" '(org-next-block :which-key "(j) jump to next src-block")
   "k" '(org-previous-block :which-key "(k) jump to prev src-block")
@@ -1741,7 +1773,6 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "oxP" '((lambda () (interactive) (org-latex-export-to-pdf nil t) ) :which-key "ox-(P)df latex subtree")
   "oxo" '(gry/org-open-pdf :which-key "ox-(o)pen exported pdf")
   "op" '(org-latex-preview :which-key "o-(p)review")
-  "oo" '(org-open-at-point :which-key "o-(o)pen")
   "ol" '(:ignore t :which-key "o-(l)ink.....................")
   "old" '(garid-custom/org-toggle-link-n-emphasis :which-key "ol-(d)escription show/hide")
   "oli" '((lambda () (interactive) (org-insert-link) ) :which-key "ol-(i)nsert")
