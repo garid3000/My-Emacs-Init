@@ -1,0 +1,3 @@
+[submodule "snippet"]
+	path = snippet
+	url = https://github.com/garid3000/Garids-Emacs-Yas-Snippets
