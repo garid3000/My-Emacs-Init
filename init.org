@@ -811,7 +811,7 @@ esac
   :custom
   (yas/triggers-in-field t) ;; Do I need this?
   ;; (setq yas-key-syntaxes (append yas-key-syntaxes '(yas-try-key-from-dot)))
-  (yas-snippet-dirs (list (concat user-emacs-directory "snippet")))
+  ;;(yas-snippet-dirs (list (concat user-emacs-directory "snippet" "snippets")))
   :config
   (yas-global-mode 1)
 
