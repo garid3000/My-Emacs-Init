@@ -761,10 +761,6 @@ esac
 #+end_src
 
 * Development Environment / Programming
-** Save place mode
-#+begin_src emacs-lisp
-(save-place-mode 1) ;; lets test it for few days
-#+end_src
 ** Corfu
 #+begin_src emacs-lisp
 ;; from https://github.com/Gavinok/emacs.d/blob/3ccc6e35feb2903442c9f7625fba081d93a2fa36/init.el#L614
@@ -772,14 +768,15 @@ esac
   ;; Optional customizations
   :custom
   (corfu-cycle            t          ) ;; Allows cycling through candidates
-  (corfu-auto             t          ) ;; Enable auto completion
+  (corfu-auto             t          ) ;; Enable auto completion nov23 C-M-i?
   (corfu-auto-prefix      2          )
   (corfu-auto-delay       0.0        )
   (corfu-popupinfo-delay '(0.5 . 0.2))
-  (corfu-preview-current 'insert     ) ;; Do not preview current candidate
-  ;;(corfu-preselect-first  nil      )
-  ;; (corfu-preselect        'first)
-  (corfu-on-exact-match   nil        ) ;; Don't auto expand tempel snippets
+  (corfu-preview-current   nil       )
+  ;; (corfu-preview-current 'insert  ) ;; Do not preview current candidate
+  ;; (corfu-preselect-first  nil     )
+  ;; (corfu-preselect        'first  )
+  (corfu-on-exact-match     nil      ) ;; Don't auto expand tempel snippets
 
   ;; Optionally use TAB for cycling, default is `corfu-complete'.
   :bind (:map corfu-map
@@ -804,6 +801,50 @@ esac
 				   corfu-quit-no-match t
 				   corfu-auto nil)
               (corfu-mode))))
+#+end_src
+** Python
+#+begin_src emacs-lisp
+;; (add-hook 'python-mode-hook '(corfu-mode -1) t)
+;; (add-hook 'python-mode-hook '(hs-minor-mode 1) t)
+;; (add-hook 'python-mode-hook '(lsp-bridge-mode) t)
+
+
+(use-package python
+  :hook
+  (python-ts-mode
+   . (lambda ()
+       (add-to-list 'completion-at-point-functions #'yasnippet-capf)
+       (add-to-list 'completion-at-point-functions #'python-completion-at-point)
+       (add-to-list 'completion-at-point-functions #'tags-completion-at-point-function)
+       (display-fill-column-indicator-mode 1)
+       (setq fill-column 79)
+       (message "Python mode started" )
+       ))
+  (inferior-python-mode
+   . (lambda ()
+       (add-to-list 'completion-at-point-functions #'yasnippet-capf)
+       (add-to-list 'completion-at-point-functions #'python-completion-at-point)
+       (add-to-list 'completion-at-point-functions #'tags-completion-at-point-function)
+       (display-fill-column-indicator-mode 1)
+       (setq fill-column 79)
+       (message "Python mode started" )
+       ))
+  )
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;    ;;;;;;;;;;
+;; (use-package python-cell                                                               ;;
+;;   :hook (python-mode .
+;;         (lambda () (setq python-cell-cellbreak-regexp "^[[:space:]]*#[[:space:]]=="))) ;;
+;;                                                                                        ;;
+;;   ;;                                                                                   ;;
+;;   ;; (define-key python-cell-mode-map (kbd "M-J") nil)                                 ;;
+;;   ;; (define-key python-cell-mode-map (kbd "M-K") nil)                                 ;;
+;;   )                                                                                    ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+#+end_src
+
+** Save place mode
+#+begin_src emacs-lisp
+(save-place-mode 1) ;; lets test it for few days
 #+end_src
 ** Yassnippets
 #+begin_src emacs-lisp
@@ -885,7 +926,11 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
 
   )
 #+end_src
-** dump jump
+** COMMENT hydra
+#+begin_src emacs-lisp
+(use-package hydra)
+#+end_src
+** Dump jump
 #+begin_src emacs-lisp
 (use-package dumb-jump
   :config
@@ -969,40 +1014,6 @@ from [[https://www.masteringemacs.org/article/seamlessly-merge-multiple-document
 ** COMMENT vertical line fill-column
 #+begin_src emacs-lisp
 (setq fill-column 79)
-#+end_src
-** COMMENT python stuff
-#+begin_src emacs-lisp
-;; (add-hook 'python-mode-hook '(corfu-mode -1) t)
-;; (add-hook 'python-mode-hook '(hs-minor-mode 1) t)
-;; (add-hook 'python-mode-hook '(lsp-bridge-mode) t)
-
-
-(use-package python
-  :hook
-  (python-mode . (lambda ()
-                   ;; (setq indent-tabs-mode nil)
-                   ;; (setq tab-width 4)
-                   ;; (setq python-indent-offset 4)
-                   (corfu-mode -1)
-                   (hs-minor-mode 1)
-                   (lsp-bridge-mode 1)
-                   (display-fill-column-indicator-mode 1)
-                   (setq fill-column 79)
-                   ;; (skj 1)
-                   )))
-;; (corfu-mode -1)
-
-
-(use-package python-cell
-  :hook
-  (python-mode . (lambda ()
-                   (setq python-cell-cellbreak-regexp "^[[:space:]]*#[[:space:]]==")
-                   ))
-  )
-
-;;
-;; (define-key python-cell-mode-map (kbd "M-J") nil)
-;; (define-key python-cell-mode-map (kbd "M-K") nil)
 #+end_src
 ** COMMENT zig stuff
 #+begin_src emacs-lisp
@@ -2080,10 +2091,6 @@ I don't use these not much
 ** COMMENT academic
 #+begin_src emacs-lisp
 (use-package academic-phrases)
-#+end_src
-** COMMENT hydra
-#+begin_src emacs-lisp
-(use-package hydra)
 #+end_src
 ** COMMENT emacs restart
 #+begin_src emacs-lisp

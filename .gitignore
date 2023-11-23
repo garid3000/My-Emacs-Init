@@ -1,5 +1,4 @@
 /Emacs-TeQ/
-/snippets/
 /init.el
 /init.el~
 /org-roam.db
@@ -25,3 +24,5 @@
 /eln-cache/
 /#init.org#
 /*/*~
+/garid/*.sh
+/export_*/
