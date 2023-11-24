@@ -173,7 +173,33 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 
 (global-hl-line-mode 1)
 #+end_src
-
+** Delight
+#+begin_src emacs-lisp
+(use-package delight
+  :config
+  (delight '(
+             (sh-mode                           "🐚 "                  ) ;; major modes
+             (org-mode                          "🦄 "                  )
+             (python-mode                       "🐍 "                  )
+             (python-ts-mode                    "🐍 "                  )
+             (org-roam-mode                     "🎠 "  org-roam        ) ;; minor modes
+             (which-key-mode                    "🎹 "  which-key       )
+             (git-gutter-mode                   "👁️ "  git-gutter      )
+             (org-auto-tangle-mode              "🔽 "  org-auto-tangle )
+             (auto-revert-mode                  "🔃 "  autorevert      )
+             (org-indent-mode                   "👉 "  org             )
+             (org-src-mode                      "🐴 "  org             )
+             (yas-minor-mode                    "🔜 "  yasnippet       )
+             (evil-collection-unimpaired-mode   "😈 "  evil-collection )
+             (eldoc-mode                        "📚 "  eldoc           )
+             (magit-status-mode                 "🪄 "  magit           )
+             (lisp-interaction-mode             "💋 " elisp-mode      )
+             (emacs-lisp-mode                   "💋 " elisp-mode      )
+             (visual-line-mode                  nil    simple)
+             )
+           )
+  )
+#+end_src
 * M-x related (or selection method ?)
 ** vertico
 #+begin_src emacs-lisp
@@ -595,7 +621,7 @@ When nil, use the default face background."
                 (mapconcat #'org-latex--protect-text tags ":")))))
 #+end_src
 
-** XeLaTeX equation preview fix
+** XeLaTeX equation preview fix                                 :customFunc:
 #+begin_src emacs-lisp
 (with-eval-after-load 'org
   (setq org-preview-latex-default-process 'imagemagick)
@@ -608,7 +634,7 @@ When nil, use the default face background."
   :ensure nil 
   :after ox)
 #+end_src
-** Org export directory
+** Org export directory                                         :customFunc:
 ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stackexchange]]
 
 #+begin_src emacs-lisp
@@ -620,6 +646,10 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
       (setq pub-dir (concat org-export-output-directory-prefix (substring extension 1)))
       (when (not (file-directory-p pub-dir))
        (make-directory pub-dir))))
+#+end_src
+** Ox-reveal
+#+begin_src emacs-lisp
+(use-package ox-reveal)
 #+end_src
 ** COMMENT website from org-roam directory
 [[id:e7ee081e-a02b-4ab9-bccc-327a92bf2b09][create website from org-roam]]
@@ -1205,6 +1235,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | f      | find-file                     | (f)ind-file          | -    |        |
 | d      | dired-jump                    | (d)irectory          | -    |        |
 | D      | :ignore t                     | (D)ired              | -    |        |
+| Ds     | dired                         | D-(s)imple           | -    |        |
 | Dn     | dired-sidebar-jump-to-sidebar | D-(n) side-tree show | -    |        |
 | DN     | dired-sidebar-hide-sidebar    | D-(N) side-tree hide | -    |        |
 | Dp     | dired-preview-mode            | D-(p) side-tree hide | -    |        |
