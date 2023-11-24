@@ -921,13 +921,14 @@ This requires [[id:2bc28375-3cf3-4784-8a34-ecb1a2b0c24a][Straight.el]] to instal
   (evil-define-key 'insert 'acm-mode-map     (kbd "C-p") 'acm-select-prev)
   (evil-define-key 'insert 'acm-mode-map     (kbd "C-h") 'acm-complete)
   :custom ;; (lsp-bridge-enable-profile    t)
-  (lsp-bridge-python-lsp-server               "pyright")
-  ;;(acm-backend-yas-candidate-min-length             1)
-  ;;(acm-backend-lsp-candidate-min-length             2)
-  ;;(acm-backend-elisp-candidate-min-length           2)
+  ;;(lsp-bridge-python-lsp-server               "pyright")
+  (lsp-bridge-python-multi-lsp-server    "pyright_ruff")
   (acm-backend-codeium-candidate-min-length           2)
   (acm-backend-search-file-words-candidate-min-length 2)
   (acm-backend-yas-candidates-number                  5)
+  ;;(acm-backend-yas-candidate-min-length             1)
+  ;;(acm-backend-lsp-candidate-min-length             2)
+  ;;(acm-backend-elisp-candidate-min-length           2)
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; :bind ( :map acm-mode-map                                      ;;
