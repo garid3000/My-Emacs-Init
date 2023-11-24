@@ -1,9 +1,12 @@
-#+title:        My Emacs Configuration
-#+author:       Garid Zorigoo
-#+setupfile:    ~/.config/emacs/org-templates/level-0-xelatex-fonts-conf.org
 #+startup:      show2levels
-#+PROPERTY:     header-args :tangle init.el
+#+title:        Garids Emacs Configuration
+#+author:       Garid Z.
+#+creator:      Garid Z.
+#+email:        garidzorigoo@gmail.com
 #+auto_tangle:  t
+#+property:     header-args :tangle init.el
+#+setupfile:    ~/.config/emacs/org-templates/level-0-xelatex-fonts-conf.org
+#+options:      toc:t tags:nil  todo:t  tasks:t
 
 * From shell you can run make run:
 #+begin_src makefile :noeval :tangle Makefile
@@ -13,6 +16,9 @@ run:
 	chmod +x 'garid/edit_img.sh'
 	chmod +x 'garid/open_external_term.sh'
 	git submodule foreach git pull origin master
+
+refresh-packages:
+	emacs --batch --eval "(setq package-archives '((\"melpa\" . \"https://melpa.org/packages/\") (\"elpa\" . \"https://elpa.gnu.org/packages/\") (\"nongnu\" . \"https://elpa.nongnu.org/nongnu/\")))" --eval "(package-refresh-contents)"
 #+end_src
 
 * Package Manager:
@@ -229,7 +235,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 
   :hook (org-mode . garid-custom/org-mode-hooked-func)
   :custom
-  (org-ellipsis                      " ▼" );; folded subtree symbol
+  (org-ellipsis                      " ▼"            );; folded subtree symbol
   (org-hide-emphasis-markers         t               )
   (org-log-done                      t               )
   (org-image-actual-width            '(800)          );; sets images size TODO for different size
@@ -238,17 +244,18 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   (org-edit-src-content-indentation  0               );; scr-blk
   (org-startup-folded                "fold"          );; folds property drawers, good for roam nodes
   (org-plantuml-jar-path             "/usr/share/java/plantuml/plantuml.jar" );; this may differ on different machines
-  (org-file-apps '((auto-mode     . emacs              )
-                   ("\\.gif\\'"   . "mpv    \"%s\""    )
-                   ("\\.mp4\\'"   . "mpv    \"%s\""    )
-                   ("\\.png\\'"   . "sxiv   \"%s\""    )
-                   ("\\.svg\\'"   . "sxiv   \"%s\""    )
-                   ("\\.jpeg\\'"  . "sxiv   \"%s\""    )
-                   ("\\.jpg\\'"   . "sxiv   \"%s\""    )
-                   ("\\.html\\'"  . "brave  \"%s\""    )
-                   ("\\.pdf\\'"   . "sioyek \"%s\""    )
-                   ("\\.mkv\\'"   . "mpv    \"%s\""    )
-                   ("\\.xopp\\'"  . "xournalpp \"%s\"" )))
+  (org-file-apps '((auto-mode                  . emacs                     )
+                   ("\\.gif\\'"                . "mpv    \"%s\""           )
+                   ("\\.mp4\\'"                . "mpv    \"%s\""           )
+                   ("\\.png\\'"                . "sxiv   \"%s\""           )
+                   ("\\.svg\\'"                . "sxiv   \"%s\""           )
+                   ("\\.jpeg\\'"               . "sxiv   \"%s\""           )
+                   ("\\.jpg\\'"                . "sxiv   \"%s\""           )
+                   ("\\.html\\'"               . "brave  \"%s\""           )
+                   ("\\.pdf\\'"                . "sioyek \"%s\""           )
+                   ("\\.pdf::\\([0-9]+\\)?\\'" . "sioyek \"%s\" --page %1" )
+                   ("\\.mkv\\'"                . "mpv    \"%s\""           )
+                   ("\\.xopp\\'"               . "xournalpp \"%s\""        )))
 
 
   (org-todo-keywords      '((sequence "TODO(t)" "STARTED(s)" "WAITING(w)" "|"
@@ -372,6 +379,8 @@ When nil, use the default face background."
   (auto-fill-mode 0)
   (visual-line-mode 1)
   (display-line-numbers-mode -1)
+  (add-to-list 'completion-at-point-functions #'yasnippet-capf)
+  (add-to-list 'completion-at-point-functions #'tags-completion-at-point-function)
   )
 #+end_src
 
@@ -867,6 +876,8 @@ esac
   If nil, don't use any snippet."
     :type 'string)
   )
+
+(use-package consult-yasnippet)
 #+end_src
 
 
@@ -1076,7 +1087,7 @@ from [[https://www.masteringemacs.org/article/seamlessly-merge-multiple-document
                 (concat "\\(\\s-*\\)" (read-string "Align regexp: ")))
   (untabify beg end))
 #+end_src
-** noTabs:
+** noTabs:                                                      :customFunc:
 #+begin_src emacs-lisp
 (setq-default indent-tabs-mode nil)
 ;; Align with spaces only
@@ -1215,6 +1226,10 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | Ld     | crux-delete-file-and-buffer | L-(d)elete                    | -    |        |
 | Lc     | clone-indirect-buffer       | L-(c)lone                     | -    |        |
 | Ls     | crux-create-scratch-buffer  | L-(s)cratch-buffer            | -    |        |
+| Lh     | buf-move-left               | L-(h) move left               | -    |        |
+| Lj     | buf-move-down               | L-(j) move down               | -    |        |
+| Lk     | buf-move-up                 | L-(k) move up                 | -    |        |
+| Ll     | buf-move-right              | L-(l) move right              | -    |        |
 
 **** Convenient
 #+attr_latex: :placement [H]
@@ -1365,6 +1380,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | yn     | yas-new-snippet        | y-(n)ew                       | -    |        |
 | yd     | yas-describe-tables    | y-(d)esc-table                | -    |        |
 | yv     | yas-visit-snippet-file | y-(v)isit                     | -    |        |
+| yi     | consult-yasnippet      | y-(i)nsert                    | -    |        |
 
 **** Calc related
 #+caption: gnu-calc related
@@ -1683,6 +1699,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "yn" '(yas-new-snippet :which-key "y-(n)ew")
   "yd" '(yas-describe-tables :which-key "y-(d)esc-table")
   "yv" '(yas-visit-snippet-file :which-key "y-(v)isit")
+  "yi" '(consult-yasnippet :which-key "y-(i)nsert")
   "s" '(:ignore t :which-key "(s)ys........................")
   "srf" '((lambda () (interactive) (recentf-open-files) ) :which-key "s-(r)ecent-(f)iles")
   "sl" '(:ignore t :which-key "s-(l)ine.....................")
@@ -1761,6 +1778,10 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "Ld" '(crux-delete-file-and-buffer :which-key "L-(d)elete")
   "Lc" '(clone-indirect-buffer :which-key "L-(c)lone")
   "Ls" '(crux-create-scratch-buffer :which-key "L-(s)cratch-buffer")
+  "Lh" '(buf-move-left :which-key "L-(h) move left")
+  "Lj" '(buf-move-down :which-key "L-(j) move down")
+  "Lk" '(buf-move-up :which-key "L-(k) move up")
+  "Ll" '(buf-move-right :which-key "L-(l) move right")
   "mg" '(magit-status :which-key "(m)a(g)it")
   "<" '(recompile :which-key "recompile")
   "sco" '(corfu-mode :which-key "s-(c)orfu-(m)ode")
@@ -1932,6 +1953,7 @@ fi
 #+begin_src emacs-lisp
 (use-package all-the-icons
   :config
+  (all-the-icons-install-fonts 'install-without-asking)
   (add-to-list
    'all-the-icons-extension-icon-alist
    '("m"  all-the-icons-fileicon "matlab"  :face all-the-icons-orange)))
@@ -1947,6 +1969,10 @@ I don't use these not much
 (use-package dired-preview)
 #+end_src
 * Misc Packages
+** buffer move
+#+begin_src emacs-lisp
+(use-package buffer-move)
+#+end_src
 ** crux
 #+begin_src emacs-lisp
 (use-package crux)
