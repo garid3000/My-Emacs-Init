@@ -16,6 +16,22 @@
 #+LATEX_HEADER: %%\usepackage[subsection]{placeins} %% let float stay in sections
 #+LATEX_HEADER: %%\usepackage{flafter} 
 
+#+LATEX_HEADER: \usepackage{pmboxdraw}        %% box drawing set
+#+LATEX_HEADER: \usepackage{newunicodechar}
+#+LATEX_HEADER: \newunicodechar{┌}{\textSFi} 
+#+LATEX_HEADER: \newunicodechar{┐}{\textSFiii} 
+#+LATEX_HEADER: \newunicodechar{└}{\textSFii} 
+#+LATEX_HEADER: \newunicodechar{┘}{\textSFiv} 
+#+LATEX_HEADER: \newunicodechar{├}{\textSFviii}
+#+LATEX_HEADER: \newunicodechar{┤}{\textSFix}
+#+LATEX_HEADER: \newunicodechar{┬}{\textSFvi}
+#+LATEX_HEADER: \newunicodechar{┴}{\textSFvii}
+#+LATEX_HEADER: \newunicodechar{┼}{\textSFv}
+#+LATEX_HEADER: \newunicodechar{─}{\textSFx}
+#+LATEX_HEADER: \newunicodechar{│}{\textSFxi}
+
+
+
 
 #+LATEX_HEADER: \usepackage{caption}
 
