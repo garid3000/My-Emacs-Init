@@ -887,6 +887,12 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
 (setq major-mode-remap-alist
       '((bash-mode . bash-ts-mode)
         (python-mode . python-ts-mode)))
+
+;; below is fork of   https://github.com/emacs-tree-sitter/ts-fold
+;; reason I don't use (ts-fold)  <--- isn't good with builtin treesit
+
+(use-package treesit-fold
+  :straight (treesit-fold :type git :host github :repo "abougouffa/treesit-fold"))
 #+end_src
 ** rg
 #+begin_src emacs-lisp
@@ -902,7 +908,7 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
                    c "r" "nim" "gnu_make" "bash" "fish~3.6" "qt~6.1")
      do (devdocs-install (list (cons 'slug (format "%s" lang)))))))
 #+end_src
-** LSP-bridges
+** LSP-bridge
 This requires [[id:2bc28375-3cf3-4784-8a34-ecb1a2b0c24a][Straight.el]] to install.
 
 #+begin_src emacs-lisp
@@ -921,14 +927,17 @@ This requires [[id:2bc28375-3cf3-4784-8a34-ecb1a2b0c24a][Straight.el]] to instal
   (evil-define-key 'insert 'acm-mode-map     (kbd "C-p") 'acm-select-prev)
   (evil-define-key 'insert 'acm-mode-map     (kbd "C-h") 'acm-complete)
   :custom ;; (lsp-bridge-enable-profile    t)
-  ;;(lsp-bridge-python-lsp-server               "pyright")
   (lsp-bridge-python-multi-lsp-server    "pyright_ruff")
-  (acm-backend-codeium-candidate-min-length           2)
+  (acm-backend-codeium-candidate-min-length           0)
   (acm-backend-search-file-words-candidate-min-length 2)
-  (acm-backend-yas-candidates-number                  5)
-  ;;(acm-backend-yas-candidate-min-length             1)
-  ;;(acm-backend-lsp-candidate-min-length             2)
+  (acm-backend-yas-candidates-number                 10)
+  (acm-backend-lsp-candidate-min-length               2)
+  (acm-enable-codeium                                 t)
+  ;; need lsp-bridge-codeium-auth & lsp-bridge-codeium-input-auth-token
   ;;(acm-backend-elisp-candidate-min-length           2)
+  :bind (:map acm-mode-map
+              ("<tab>" . nil )
+              ("TAB" . nil ))
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; :bind ( :map acm-mode-map                                      ;;
@@ -941,7 +950,7 @@ This requires [[id:2bc28375-3cf3-4784-8a34-ecb1a2b0c24a][Straight.el]] to instal
   ;;         ("M-H" . acm-hide        ) ("C-H" . acm-hide        )  ;;
   ;;         ("M-G" . acm-select-last ) ("C-G" . acm-hide        )) ;;
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-)
+  )
 #+end_src
 ** COMMENT Corfu
 #+begin_src emacs-lisp
@@ -1330,13 +1339,15 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 #+attr_latex: :placement [H]
 #+caption: misc. development related
 #+name: tbl-kbind-dev
-| key(s) | function     | short description | mode | lambda |
-|--------+--------------+-------------------+------+--------|
-| mg     | magit-status | (m)a(g)it  🪄     | -    |        |
-| <      | recompile    | recompile         | -    |        |
-| sco    | corfu-mode   | s-(c)orfu-(m)ode  | -    |        |
-| se     | eglot        | s-(e)glot         | -    |        |
-| rg     | rg           | (r)ip-(g)rep  ~cr | -    |        |
+| key(s) | function              | short description         | mode | lambda |
+|--------+-----------------------+---------------------------+------+--------|
+| mg     | magit-status          | (m)a(g)it  🪄             | -    |        |
+| <      | recompile             | recompile                 | -    |        |
+| sco    | corfu-mode            | s-(c)orfu-(m)ode          | -    |        |
+| se     | eglot                 | s-(e)glot                 | -    |        |
+| rg     | rg                    | (r)ip-(g)rep  ~cr         | -    |        |
+| gs     | git-gutter:popup-hunk | (g)it-(s) popup hunk  ~cr | -    |        |
+| gd     | magit-ediff-compare   | ma(g)it-e(d) hunk  ~cr    | -    |        |
 
 **** Consult related (picking & choosing stuff)
 #+attr_latex: :placement [H]
@@ -1361,20 +1372,22 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 #+attr_latex: :placement [H]
 #+caption: Project (more like git-repo)
 #+name: tbl-global-general-keybindings-project
-| key(s) | function                   | short description              | mode | lambda |
-|--------+----------------------------+--------------------------------+------+--------|
-| p      | :ignore t                  | (📚-p)rojectl................. | -    |        |
-| pr     | lsp-bridge-find-references | p-(r)eferences                 | -    |        |
-| pd     | lsp-bridge-diagnostic-list | p-(d)iagnostic                 | -    |        |
-| pf     | project-find-file          | p-(f)ind-file                  | -    |        |
-| pz     | project-switch-project     | p-(z)ump-to-other-proj         | -    |        |
-| ps     | consult-git-grep           | p-(s)earch git files           | -    |        |
-| pS     | project-find-regexp        | p-(s)earch-in-proj             | -    |        |
-| pk     | project-kill-buffers       | p-(k)ill-buf-proj              | -    |        |
-| pl     | consult-project-buffer     | p-(l)ist-buf-proj              | -    |        |
-| v      | :ignore t                  | (📚-v)-project................ | -    |        |
-| vq     | format-all-buffer          | v-(q)-format-buffer            | -    |        |
-| vr     | lsp-bridge-rename          | v-(r)eplace                    | -    |        |
+| key(s) | function                          | short description              | mode | lambda |
+|--------+-----------------------------------+--------------------------------+------+--------|
+| p      | :ignore t                         | (📚-p)rojectl................. | -    |        |
+| pr     | lsp-bridge-find-references        | p-(r)eferences                 | -    |        |
+| pd     | lsp-bridge-diagnostic-list        | p-(d)iagnostic                 | -    |        |
+| pf     | project-find-file                 | p-(f)ind-file                  | -    |        |
+| pz     | project-switch-project            | p-(z)ump-to-other-proj         | -    |        |
+| ps     | consult-git-grep                  | p-(s)earch git files           | -    |        |
+| pS     | project-find-regexp               | p-(s)earch-in-proj             | -    |        |
+| pk     | project-kill-buffers              | p-(k)ill-buf-proj              | -    |        |
+| pl     | consult-project-buffer            | p-(l)ist-buf-proj              | -    |        |
+| pv     | lsp-bridge-workspace-list-symbols | p-(v)ariables                  | -    |        |
+| v      | :ignore t                         | (📚-v)-project................ | -    |        |
+| vq     | format-all-buffer                 | v-(q)-format-buffer            | -    |        |
+| vr     | lsp-bridge-rename                 | v-(r)eplace                    | -    |        |
+| vl     | lsp-bridge-workspace-list-symbols | v-(l)ist                       | -    |        |
 
 ***** COMMENT old lsp
 #+caption: this is version
@@ -1768,9 +1781,11 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "pS" '(project-find-regexp :which-key "p-(s)earch-in-proj")
   "pk" '(project-kill-buffers :which-key "p-(k)ill-buf-proj")
   "pl" '(consult-project-buffer :which-key "p-(l)ist-buf-proj")
+  "pv" '(lsp-bridge-workspace-list-symbols :which-key "p-(v)ariables")
   "v" '(:ignore t :which-key "(📚-v)-project................")
   "vq" '(format-all-buffer :which-key "v-(q)-format-buffer")
   "vr" '(lsp-bridge-rename :which-key "v-(r)eplace")
+  "vl" '(lsp-bridge-workspace-list-symbols :which-key "v-(l)ist")
   "b" '(:ignore t :which-key "(🔖-b)ookmark...................")
   "bm" '(consult-bookmark :which-key "b-(m)ark-consult")
   "bs" '(bookmark-set :which-key "b-(s)et")
@@ -1812,6 +1827,8 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "sco" '(corfu-mode :which-key "s-(c)orfu-(m)ode")
   "se" '(eglot :which-key "s-(e)glot")
   "rg" '(rg :which-key "(r)ip-(g)rep  ~cr")
+  "gs" '(git-gutter:popup-hunk :which-key "(g)it-(s) popup hunk  ~cr")
+  "gd" '(magit-ediff-compare :which-key "ma(g)it-e(d) hunk  ~cr")
   "oT" '(:ignore t :which-key "o-(T)able....................")
   "oTm" '(orgtbl-mode :which-key "oT-(m)ode")
   "oTc" '(orgtbl-create-or-convert-from-region :which-key "oT-(c)reate")
@@ -1985,6 +2002,12 @@ fi
 
 (use-package all-the-icons-dired)
 (add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
+
+
+(use-package all-the-icons-completion
+  :config
+  (all-the-icons-completion-mode)
+  (add-hook 'marginalia-mode-hook #'all-the-icons-completion-marginalia-setup))
 #+end_src
 ** Dired additionals
 I don't use these not much  
@@ -2025,6 +2048,7 @@ I don't use these not much
                                    "\\*Async Shell Command\\*"
                                    "\\*devdocs\\*"
                                    "\\*lsp-bridge-doc\\*"
+                                   "\\*git-gutter:diff\\*"
                                    help-mode
                                    compilation-mode))
   (popper-mode      +1)
