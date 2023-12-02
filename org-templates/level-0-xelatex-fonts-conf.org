@@ -50,6 +50,12 @@
 #+LATEX_HEADER: \definecolor{custommauve}{rgb}{0.6,0,0.8}
 
 
+#+LATEX_HEADER: \lstdefinelanguage{calc}{        % new calc language
+#+LATEX_HEADER:     % alsodigit = {-},           % I don't need this
+#+LATEX_HEADER:     keywords = {taylor, sin}
+#+LATEX_HEADER: }                                % it from from https://tex.stackexchange.com/a/317276/292504 
+
+
 #+LATEX_HEADER: \lstdefinelanguage{nim}{         % new nim language
 #+LATEX_HEADER:     % alsodigit = {-},           % I don't need this
 #+LATEX_HEADER:     keywords = {echo, import}
