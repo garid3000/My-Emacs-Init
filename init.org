@@ -198,33 +198,32 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   (delight
    '(
      ;; ----------  major modes  ----------------------------------
-     (sh-mode               "🐚- "                                )
-     (org-mode              "🦄-org "                             )
-     (python-mode           "🐍-py "                              )
-     (python-ts-mode        "🐍-py "                              )
-     (dired-mode            "📂-dired "                           )
-     (help-mode             "❔-help "                            )
+     (sh-mode               "shl "                              )
+     (org-mode              "org "                              )
+     (python-mode           "pyt "                              )
+     (python-ts-mode        "pyt "                              )
+     (dired-mode            "dir "                              )
+     (help-mode             "hlp "                              )
      ;; ----------  minor modes  ----------------------------------
-     (dired-omit-mode       "📁-hide "  dired                     )
-     (org-roam-mode         "🎠-or "    org-roam                  )
-     (which-key-mode        "🎹-wk "    which-key                 )
-     (git-gutter-mode       "👁️-gg "    git-gutter                )
-     (org-auto-tangle-mode  "🔽-at "    org-auto-tangle           )
-     (auto-revert-mode      "🔃-ar "    autorevert                )
-     (org-indent-mode       "👉-in "    org-indent                )
-     (org-src-mode          "🐴-os "    org                       )
-     (yas-minor-mode        "🔜-ys "    yasnippet                 )
-     (eldoc-mode            "📚-ed "    eldoc                     )
-     (magit-status-mode     "🪄-mg "    magit                     )
-     (lisp-interaction-mode "💋-el "    elisp-mode                )
-     (emacs-lisp-mode       "💋-el "    elisp-mode                )
-     (elpy-mode             "🐉-lpy "   elpy                      )
-     (command-log-mode      "📋-log "   command-log-mode          )
-     (flymake-mode          "🐤-flm "   flymake                   )
-     (lsp-bridge-mode       "🌉-lsp"    lsp-bridge                )
-     (evil-collection-unimpaired-mode "😈-vi "  evil-collection   )
-     (all-the-icons-dired-mode     nil     all-the-icons-dired.el )
-     (visual-line-mode             nil     simple                ))))
+     (dired-omit-mode       "dro "    dired                     )
+     (org-roam-mode         "orm "    org-roam                  )
+     (which-key-mode        "wky "    which-key                 )
+     (git-gutter-mode       "ggt "    git-gutter                )
+     (org-auto-tangle-mode  "tng "    org-auto-tangle           )
+     (auto-revert-mode      "arv "    autorevert                )
+     (org-indent-mode       "ind "    org-indent                )
+     (org-src-mode          "src "    org                       )
+     (yas-minor-mode        "yas "    yasnippet                 )
+     (eldoc-mode            "eld "    eldoc                     )
+     (magit-status-mode     "mgt "    magit                     )
+     (lisp-interaction-mode "eli "    elisp-mode                )
+     (emacs-lisp-mode       "eli "    elisp-mode                )
+     (command-log-mode      "clm "    command-log-mode          )
+     (flymake-mode          "flm "    flymake                   )
+     (lsp-bridge-mode       "lsp "    lsp-bridge                )
+     (evil-collection-unimpaired-mode "evc "  evil-collection   )
+     (all-the-icons-dired-mode     nil   all-the-icons-dired.el )
+     (visual-line-mode             nil   simple                 ))))
 #+end_src
 * M-x related (or selection method ?)
 ** vertico
@@ -300,7 +299,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
                    ("\\.gif\\'"                . "mpv    \"%s\""           )
                    ("\\.mp4\\'"                . "mpv    \"%s\""           )
                    ("\\.png\\'"                . "sxiv   \"%s\""           )
-                   ("\\.svg\\'"                . "sxiv   \"%s\""           )
+                   ("\\.svg\\'"                . "inkview \"%s\""          ) ;; inkscape's viewer
                    ("\\.jpeg\\'"               . "sxiv   \"%s\""           )
                    ("\\.jpg\\'"                . "sxiv   \"%s\""           )
                    ("\\.html\\'"               . "brave  \"%s\""           )
@@ -349,7 +348,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   (add-to-list 'org-structure-template-alist '("py2"  .  "src python :session pySess2 :results output :exports both :cache yes :eval never-export"))
   (add-to-list 'org-structure-template-alist '("sq"   .  "sqlite"))
   (add-to-list 'org-structure-template-alist '("mk"   .  "src makefile :tangle no"))
-  (add-to-list 'org-structure-template-alist '("ba"   .  "absract"))
+  (add-to-list 'org-structure-template-alist '("ba"   .  "abstract"))
   (require 'org-indent)
   )
 #+end_src
@@ -361,7 +360,8 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 (org-babel-do-load-languages
  'org-babel-load-languages
  '((python     . t)    ;; (scad    . t)
-   (emacs-lisp . t)    ;; (jupyter . t)
+   (emacs-lisp . t)
+   ;;(ein        . t)
    (latex      . t)    ;; (rust    . t)
    (shell      . t)    ;; (lisp    . t)
    (dot        . t)    ;; (C       . t)
@@ -427,12 +427,12 @@ When nil, use the default face background."
 ** Org hooked function                                          :customFunc:
 #+begin_src emacs-lisp
 (defun garid-custom/org-mode-hooked-func ()
-  (org-indent-mode)
-  (auto-fill-mode 0)
-  (visual-line-mode 1)
-  (display-line-numbers-mode -1)
-  (add-to-list 'completion-at-point-functions #'yasnippet-capf)
-  (add-to-list 'completion-at-point-functions #'tags-completion-at-point-function)
+  ;; (org-indent-mode)
+  ;; (auto-fill-mode 0)
+  ;; (visual-line-mode 1)
+  ;; (display-line-numbers-mode -1)
+  ;; (add-to-list 'completion-at-point-functions #'yasnippet-capf)
+  ;; (add-to-list 'completion-at-point-functions #'tags-completion-at-point-function)
   )
 #+end_src
 
@@ -587,6 +587,8 @@ When nil, use the default face background."
 ** Org agenda files
 #+begin_src emacs-lisp :results none
 (setq org-agenda-files (directory-files-recursively denote-directory "\\.org$"))
+(define-key org-agenda-mode-map "j" 'evil-next-line)
+(define-key org-agenda-mode-map "k" 'evil-previous-line)
 #+end_src
 ** Org capturing related
 #+begin_src emacs-lisp :results none
@@ -926,31 +928,40 @@ This requires [[id:2bc28375-3cf3-4784-8a34-ecb1a2b0c24a][Straight.el]] to instal
   (evil-define-key 'insert 'acm-mode-map     (kbd "C-n") 'acm-select-next)
   (evil-define-key 'insert 'acm-mode-map     (kbd "C-p") 'acm-select-prev)
   (evil-define-key 'insert 'acm-mode-map     (kbd "C-h") 'acm-complete)
-  :custom ;; (lsp-bridge-enable-profile    t)
-  (lsp-bridge-python-multi-lsp-server    "pyright_ruff")
+  :custom
   (acm-backend-codeium-candidate-min-length           0)
   (acm-backend-search-file-words-candidate-min-length 2)
   (acm-backend-yas-candidates-number                 10)
   (acm-backend-lsp-candidate-min-length               2)
   (acm-enable-codeium                                 t)
+  ;; (acm-enable-preview                                 t)
+  (acm-enable-icon                                  nil)
+  (lsp-bridge-python-multi-lsp-server    "pyright_ruff")
+  (lsp-bridge-enable-org-babel                        t)
+  (lsp-bridge-diagnostic-fetch-idle                   1)
   ;; need lsp-bridge-codeium-auth & lsp-bridge-codeium-input-auth-token
-  ;;(acm-backend-elisp-candidate-min-length           2)
+  ;; (acm-backend-elisp-candidate-min-length           2)
   :bind (:map acm-mode-map
               ("<tab>" . nil )
-              ("TAB" . nil ))
+              ("TAB"   . nil ))
 
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;; :bind ( :map acm-mode-map                                      ;;
-  ;;         ("M-j" . acm-select-next ) ("C-n" . acm-select-next )  ;;
-  ;;         ("M-k" . acm-select-prev ) ("C-p" . acm-select-prev )  ;;
-  ;;         ("M-n" . acm-select-next ) ("C-j" . acm-select-next )  ;;
-  ;;         ("M-p" . acm-select-prev ) ("C-k" . acm-select-prev )  ;;
-  ;;         ("M-d" . acm-doc-toggle  ) ("C-d" . acm-doc-toggle  )  ;;
-  ;;         ("M-f" . acm-filter      ) ("C-f" . acm-filter      )  ;;
-  ;;         ("M-H" . acm-hide        ) ("C-H" . acm-hide        )  ;;
-  ;;         ("M-G" . acm-select-last ) ("C-G" . acm-hide        )) ;;
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   )
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; :bind ( :map acm-mode-map                                      ;;
+;;         ("M-j" . acm-select-next ) ("C-n" . acm-select-next )  ;;
+;;         ("M-k" . acm-select-prev ) ("C-p" . acm-select-prev )  ;;
+;;         ("M-n" . acm-select-next ) ("C-j" . acm-select-next )  ;;
+;;         ("M-p" . acm-select-prev ) ("C-k" . acm-select-prev )  ;;
+;;         ("M-d" . acm-doc-toggle  ) ("C-d" . acm-doc-toggle  )  ;;
+;;         ("M-f" . acm-filter      ) ("C-f" . acm-filter      )  ;;
+;;         ("M-H" . acm-hide        ) ("C-H" . acm-hide        )  ;;
+;;         ("M-G" . acm-select-last ) ("C-G" . acm-hide        )) ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+#+end_src
+** COMMENT Eglot for the LSPs
+#+begin_src emacs-lisp
+(use-package eglot)
 #+end_src
 ** COMMENT Corfu
 #+begin_src emacs-lisp
@@ -960,8 +971,9 @@ This requires [[id:2bc28375-3cf3-4784-8a34-ecb1a2b0c24a][Straight.el]] to instal
   :custom
   (corfu-cycle            t          ) ;; Allows cycling through candidates
   (corfu-auto             t          ) ;; Enable auto completion nov23 C-M-i?
+  ;;(corfu-auto             nil          ) ;; Enable auto completion nov23 C-M-i?
   (corfu-auto-prefix      2          )
-  (corfu-auto-delay       0.0        )
+  (corfu-auto-delay       0.2        )
   (corfu-popupinfo-delay '(0.5 . 0.2))
   (corfu-preview-current   nil       )
   ;; (corfu-preview-current 'insert  ) ;; Do not preview current candidate
@@ -996,7 +1008,17 @@ This requires [[id:2bc28375-3cf3-4784-8a34-ecb1a2b0c24a][Straight.el]] to instal
 ** COMMENT Python
 #+begin_src emacs-lisp
 (use-package python
-  
+  :config
+  (evil-define-key 'normal 'python-mode-map  (kbd "SPC ,") 'garid-custom/run-python-on-this-file)
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; :bind (                                                 ;;
+  ;;        :map python-ts-mode-map                          ;;
+  ;;        ("SPC ," . garid-custom/run-python-on-this-file) ;;
+  ;;        :map python-mode-map                             ;;
+  ;;        ("SPC ," . garid-custom/run-python-on-this-file) ;;
+  ;;        )                                                ;;
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
   ;;  :hook
   ;;  (python-ts-mode
   ;;   . (lambda ()
@@ -1044,7 +1066,12 @@ This requires [[id:2bc28375-3cf3-4784-8a34-ecb1a2b0c24a][Straight.el]] to instal
 ;;   )                                                                                    ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 #+end_src
-
+** python run on buffer
+#+begin_src emacs-lisp
+(defun garid-custom/run-python-on-this-file ()
+        (interactive)
+        (async-shell-command (concat "python " (buffer-file-name)) ))
+#+end_src
 ** COMMENT hydra
 #+begin_src emacs-lisp
 (use-package hydra)
@@ -1060,10 +1087,6 @@ This requires [[id:2bc28375-3cf3-4784-8a34-ecb1a2b0c24a][Straight.el]] to instal
 ** COMMENT scad
 #+begin_src emacs-lisp
 (use-package scad-mode)
-#+end_src
-** COMMENT Eglot for the LSPs
-#+begin_src emacs-lisp
-(use-package eglot)
 #+end_src
 * Garid
 ** Open PDF exported by LaTeX externally                        :customFunc:
@@ -1256,6 +1279,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | Lj     | buf-move-down               | L-(j) move down                  | -    |        |
 | Lk     | buf-move-up                 | L-(k) move up                    | -    |        |
 | Ll     | buf-move-right              | L-(l) move right                 | -    |        |
+| LL     | tear-off-window             | L-(L) tear window to frame       | -    |        |
 
 **** Convenient
 #+attr_latex: :placement [H]
@@ -1339,15 +1363,19 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 #+attr_latex: :placement [H]
 #+caption: misc. development related
 #+name: tbl-kbind-dev
-| key(s) | function              | short description         | mode | lambda |
-|--------+-----------------------+---------------------------+------+--------|
-| mg     | magit-status          | (m)a(g)it  🪄             | -    |        |
-| <      | recompile             | recompile                 | -    |        |
-| sco    | corfu-mode            | s-(c)orfu-(m)ode          | -    |        |
-| se     | eglot                 | s-(e)glot                 | -    |        |
-| rg     | rg                    | (r)ip-(g)rep  ~cr         | -    |        |
-| gs     | git-gutter:popup-hunk | (g)it-(s) popup hunk  ~cr | -    |        |
-| gd     | magit-ediff-compare   | ma(g)it-e(d) hunk  ~cr    | -    |        |
+| key(s) | function              | short description          | mode | lambda |
+|--------+-----------------------+----------------------------+------+--------|
+| mg     | magit-status          | (m)a(g)it  🪄              | -    |        |
+| <      | recompile             | recompile                  | -    |        |
+| sco    | corfu-mode            | s-(c)orfu-(m)ode           | -    |        |
+| se     | eglot                 | s-(e)glot                  | -    |        |
+| rg     | rg                    | (r)ip-(g)rep  ~cr          | -    |        |
+| gs     | git-gutter:popup-hunk | (g)it-(s) popup hunk  ~cr  | -    |        |
+| gd     | magit-ediff-compare   | ma(g)it-e(d) hunk  ~cr     | -    |        |
+| P      | :ignore               | Python (inferior)🐍 ...... | -    |        |
+| Pr     | python-shell-restart  | P-(R)estart                | -    |        |
+| PP     | run-python            | P-(P) run-python           | -    |        |
+| Pk     | comint-send-eof       | P-(k) kill  (also C-c C-d) | -    |        |
 
 **** Consult related (picking & choosing stuff)
 #+attr_latex: :placement [H]
@@ -1591,7 +1619,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 **** (in org) org citation & footnotes
 #+attr_latex: :placement [H]
 #+caption: Insertings citations/footnote in org-file
-#+name: tbl-orgmode-general-keybindings-img
+#+name: tbl-orgmode-general-keybindings-cite
 | key(s) | function                                         | short description             | mode | lambda |
 |--------+--------------------------------------------------+-------------------------------+------+--------|
 | oI     | :ignore t                                        | o-(I)nsert................... | org  |        |
@@ -1641,7 +1669,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 :header-args+: :var tbl_17=tbl-orgmode-general-keybindings-find
 :header-args+: :var tbl_18=tbl-orgmode-general-keybindings-export
 :header-args+: :var tbl_19=tbl-orgmode-general-keybindings-link
-:header-args+: :var tbl_20=tbl-orgmode-general-keybindings-img
+:header-args+: :var tbl_20=tbl-orgmode-general-keybindings-cite
 :END:
 #+caption: converting
 #+name: src_that_converts_key_tables
@@ -1822,6 +1850,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "Lj" '(buf-move-down :which-key "L-(j) move down")
   "Lk" '(buf-move-up :which-key "L-(k) move up")
   "Ll" '(buf-move-right :which-key "L-(l) move right")
+  "LL" '(tear-off-window :which-key "L-(L) tear window to frame")
   "mg" '(magit-status :which-key "(m)a(g)it  🪄")
   "<" '(recompile :which-key "recompile")
   "sco" '(corfu-mode :which-key "s-(c)orfu-(m)ode")
@@ -1829,6 +1858,10 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "rg" '(rg :which-key "(r)ip-(g)rep  ~cr")
   "gs" '(git-gutter:popup-hunk :which-key "(g)it-(s) popup hunk  ~cr")
   "gd" '(magit-ediff-compare :which-key "ma(g)it-e(d) hunk  ~cr")
+  "P" '(:ignore :which-key "Python (inferior)🐍 ......")
+  "Pr" '(python-shell-restart :which-key "P-(R)estart")
+  "PP" '(run-python :which-key "P-(P) run-python")
+  "Pk" '(comint-send-eof :which-key "P-(k) kill  (also C-c C-d)")
   "oT" '(:ignore t :which-key "o-(T)able....................")
   "oTm" '(orgtbl-mode :which-key "oT-(m)ode")
   "oTc" '(orgtbl-create-or-convert-from-region :which-key "oT-(c)reate")
@@ -1838,6 +1871,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "oA" '(org-agenda :which-key "o-(A)genda")
   "oa" '(:ignore t :which-key "o-(a)genda...................")
   "oab" '(org-timeblock :which-key "o-a-(b)lock")
+  "oIo" '((lambda () (interactive) (find-file (nth 0 org-cite-global-bibliography)) ) :which-key "oI-(o)pen bibliography")
 )
 
 (garids-keybind/in-org-mode
@@ -1898,17 +1932,10 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "ol>" '(org-next-link :which-key "ol-(>)next link")
   "ol<" '(org-previous-link :which-key "ol-(<)prev link")
   "olo" '(org-open-at-point :which-key "ol-(o)pen (same as SPC o o)")
-  "oi" '(:ignore t :which-key "o-(i)mg......................")
-  "oip" '(org-download-clipboard :which-key "oi-(p)aste-clipboard")
-  "oiP" '(org-download-image :which-key "oi-(P)aste from path")
-  "oid" '(org-download-delete :which-key "oi-(d)elete file")
-  "oie" '(org-download-edit :which-key "oi-(e)dit externally")
-  "oir" '(org-download-rename-at-point :which-key "oi-(r)ename file")
-  "oit" '(org-toggle-inline-images :which-key "oi-(t)oggle shot/hide image")
-  "ois" '(:ignore t :which-key "oi-(s)ize....................")
-  "oisn" '((lambda () (interactive) (setq org-image-actual-width '(800)) ) :which-key "ois-(n)ormal 800px")
-  "oisb" '((lambda () (interactive) (setq org-image-actual-width '(1500)) ) :which-key "ois-(b)ig    1500px")
-  "oiss" '((lambda () (interactive) (setq org-image-actual-width '(400)) ) :which-key "ois-(s)mall  400px")
+  "oI" '(:ignore t :which-key "o-(I)nsert...................")
+  "oIb" '(org-cite-insert :which-key "oI-(c)itation")
+  "oIf" '(org-footnote-new :which-key "oI-(f)ootnote")
+  "oIF" '(org-footnote-action :which-key "oI-(F)ootnote-action")
 )
 #+end_src
 
@@ -1994,17 +2021,21 @@ fi
 ** Icons - Dired
 #+begin_src emacs-lisp
 (use-package all-the-icons
+  :if (display-graphic-p)
   :config
   (all-the-icons-install-fonts 'install-without-asking)
   (add-to-list
    'all-the-icons-extension-icon-alist
    '("m"  all-the-icons-fileicon "matlab"  :face all-the-icons-orange)))
 
-(use-package all-the-icons-dired)
-(add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
+(use-package all-the-icons-dired
+  :if (display-graphic-p)
+  :config (add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
+  )
 
 
 (use-package all-the-icons-completion
+  :if (display-graphic-p)
   :config
   (all-the-icons-completion-mode)
   (add-hook 'marginalia-mode-hook #'all-the-icons-completion-marginalia-setup))
