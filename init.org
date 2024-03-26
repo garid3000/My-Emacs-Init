@@ -62,14 +62,14 @@ I'm pulling packages from following 3 places (not sure that I need all three):
   (load bootstrap-file nil 'nomessage))
 #+end_src
 
-* Vi Movement Related
+* Vi Movement and other movement related
 ** vim-undo
 #+begin_src emacs-lisp
 (use-package undo-fu)
 #+end_src
 ** evil
 
-[[https://github.com/emacs-evil/evil][Evil]] stands for Extendable Vi Layer for Emacs.
+[[https://github.com/emacs-evil/evil][Evil]] stands for Extendable-Vi-Layer for Emacs.
 It emulates vi motion inside Emacs. 
 
 #+begin_src emacs-lisp
@@ -88,7 +88,7 @@ It emulates vi motion inside Emacs.
   ;; evil-want-C-i-jump     nil       ;; test I may need jumpy back and forth
   ;; for org-cycle (tab) working for terminal
   :config
-  (evil-define-key 'normal org-mode-map (kbd "TAB") #'org-cycle)
+  (evil-define-key 'normal  org-mode-map   (kbd "TAB") #'org-cycle)
   (evil-define-key 'normal 'prog-mode-map  (kbd "K")   'eldoc-box-help-at-point)
   ;; cuz https://emacs.stackexchange.com/a/73457/38482
   (evil-mode 1))
@@ -115,14 +115,19 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   :after evil
   :config (global-evil-surround-mode))
 #+end_src
-** evil testing
+** evil testing (not used that much)
 #+begin_src emacs-lisp
 (use-package evil-textobj-tree-sitter :ensure t)
 (define-key evil-outer-text-objects-map "f" (evil-textobj-tree-sitter-get-textobj "function.outer"))
 (define-key evil-inner-text-objects-map "f" (evil-textobj-tree-sitter-get-textobj "function.inner"))
 (define-key evil-outer-text-objects-map "a" (evil-textobj-tree-sitter-get-textobj ("conditional.outer" "loop.outer")))
 #+end_src
-
+** vim-like scroll (by1)
+#+begin_src emacs-lisp
+(setq scroll-step 1)
+(setq scroll-margin 7)
+(setq scroll-conservatively 9999)
+#+end_src
 * Theme & Colors
 ** Font
 #+begin_src emacs-lisp :results none
@@ -149,62 +154,30 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 
 ** Theme
 #+begin_src emacs-lisp :results none
-;; ;; (custom-set-faces
-;; ;;  '(line-number        ((t (:background "gray15"   :foreground "#7c6f64"))))
-;; ;;  '(mode-line          ((t (:background "dim gray" :foreground "white"))))
-;; ;;  '(mode-line-inactive ((t (:background nil)))))
-;; 
-;; ;; (use-package gruvbox-theme
-;; ;;   :config (load-theme 'gruvbox-dark-hard t))
-;; ;; (require 'modus-themes)
-;; ;; (use-package modus-themes)
-;; 
-;; (load-theme 'modus-vivendi)
-;; 
-;; (setq modus-themes-italic-constructs    t
-;;       modus-themes-bold-constructs      nil
-;;       modus-themes-mixed-fonts          nil
-;;       modus-themes-variable-pitch-ui    nil
-;;       modus-themes-custom-auto-reload   t
-;;       modus-themes-disable-other-themes t
-;;       modus-themes-prompts              '(italic bold)
-;;       modus-themes-completions          '((matches . (extrabold))
-;; 					  (selection . (semibold italic text-also)))
-;; 
-;;       modus-themes-org-blocks 'gray-background ; {nil,'gray-background,'tinted-background}
-;;       ;;modus-themes-org-blocks 'tinted-background ; {nil,'gray-background,'tinted-background}
-;;       ;; modus-themes-org-blocks nil ; {nil,'gray-background,'tinted-background}
-;; 
+;; (setq modus-themes-mode-line '(accented borderless)
+;;       modus-themes-bold-constructs t
+;;       modus-themes-italic-constructs t
+;;       modus-themes-fringes 'subtle
+;;       modus-themes-tabs-accented t
+;;       modus-themes-paren-match '(bold intense)
+;;       modus-themes-prompts '(bold intense)
+;;       ;; modus-themes-completions 'opinionated
+;;       modus-themes-org-blocks 'tinted-background
+;;       modus-themes-scale-headings t
+;;       modus-themes-region '(bg-only)
 ;;       modus-themes-headings
-;;       '((1                . (1.1)) ;; (variable-pitch 1.5)
-;;         (2                . (1.0))
-;;         (agenda-date      . (1.0))
-;;         (agenda-structure . (variable-pitch light 1.0))
-;;         (t                . (1.0))))
+;;       '((1 . (rainbow overline background 1.0))
+;;         (2 . (rainbow background 1.0))
+;;         (3 . (rainbow bold 1.0))
+;;         (t . (semilight 1.0))))
 
+;; ;; Load the dark theme by default
+;; (load-theme 'modus-vivendi t)
+;; (enable-theme 'modus-vivendi)           ;
 
-
-
-(setq modus-themes-mode-line '(accented borderless)
-      modus-themes-bold-constructs t
-      modus-themes-italic-constructs t
-      modus-themes-fringes 'subtle
-      modus-themes-tabs-accented t
-      modus-themes-paren-match '(bold intense)
-      modus-themes-prompts '(bold intense)
-      modus-themes-completions 'opinionated
-      modus-themes-org-blocks 'tinted-background
-      modus-themes-scale-headings t
-      modus-themes-region '(bg-only)
-      modus-themes-headings
-      '((1 . (rainbow overline background 1.0))
-        (2 . (rainbow background 1.0))
-        (3 . (rainbow bold 1.0))
-        (t . (semilight 1.0))))
-
-;; Load the dark theme by default
-(load-theme 'modus-vivendi t)
-(enable-theme 'modus-vivendi)
+(use-package uwu-theme
+  :config
+  (enable-theme 'uwu))
 #+end_src
 
 ** Terminal cursor
@@ -221,7 +194,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 ;; (set-fringe-mode 15)        ; Give some breathing room
 (menu-bar-mode   -1)        ; Disable the menu bar
 #+end_src
-** Display Number & cursor-line highlightnig
+** COMMENT Display Number & cursor-line highlightnig
 #+begin_src emacs-lisp
 ;; setting line
 (use-package display-line-numbers
@@ -252,7 +225,9 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
      (git-gutter-mode       "ggt "    git-gutter                )
      (org-auto-tangle-mode  "tng "    org-auto-tangle           )
      (auto-revert-mode      "arv "    autorevert                )
-     (org-indent-mode       "ind "    org-indent                )
+     ;;(org-indent-mode     "ind "    org-indent                )
+     (org-indent-mode        nil      org-indent                )
+     (org-num-mode          "onm "    org-indent                )
      (org-src-mode          "src "    org                       )
      (yas-minor-mode        "yas "    yasnippet                 )
      (eldoc-mode            "eld "    eldoc                     )
@@ -304,7 +279,10 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
               ("C-u"   . vertico-scroll-up   ) ("M-u"   . vertico-scroll-up   )
               ("C-d"   . vertico-scroll-down ) ("M-d"   . vertico-scroll-down )
               ("M-n"   . vertico-next        ) ("M-p"   . vertico-previous    ))
-  :custom (vertico-cycle t)
+  :custom
+  (vertico-cycle t)
+  (vertico-count 20)
+  (vertico-resize t)
   :init (vertico-mode)
   :config
 
@@ -375,6 +353,30 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 #+begin_src emacs-lisp
 (use-package consult)
 ;;  :bind (("M-f"  . consult-line))
+#+end_src
+*** consult-org-roam
+#+begin_src emacs-lisp
+(use-package consult-org-roam
+   :ensure t
+   :after org-roam
+   :init (require 'consult-org-roam)
+   ;; Activate the minor mode
+   (consult-org-roam-mode 1)
+   :custom
+   (consult-org-roam-grep-func #'consult-ripgrep)
+   (consult-org-roam-buffer-narrow-key ?r)
+   (consult-org-roam-buffer-after-buffers t)
+   :config
+   ;; Eventually suppress previewing for certain functions
+   (consult-customize consult-org-roam-forward-links :preview-key "M-.")
+   :bind
+   ;; Define some convenient keybindings as an addition
+   ("C-c n e" . consult-org-roam-file-find)
+   ("C-c n b" . consult-org-roam-backlinks)
+   ("C-c n B" . consult-org-roam-backlinks-recursive)
+   ("C-c n l" . consult-org-roam-forward-links)
+   ("C-c n r" . consult-org-roam-search)
+   )
 #+end_src
 ** orderless
 #+begin_src emacs-lisp
@@ -491,6 +493,14 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   ;;      )
   ;;     )
 
+  (defun my/org-num-format (numbering)
+    "My own numbering function uses two-digit numbers (0-padded on the left) for everything but the first number. It replaces the built-in `org-num-default-format` function. `NUMBERING' is a list of numbers."
+    (concat
+     (number-to-string (car numbering)) "." (mapconcat (lambda (x) (format "%02d" x)) (cdr numbering) ".") " "))
+
+
+  (setq org-num-format-function #'my/org-num-format)
+
 
   )
 #+end_src
@@ -562,6 +572,7 @@ When nil, use the default face background."
 #+begin_src emacs-lisp
 (defun garid-custom/org-mode-hooked-func ()
   (org-indent-mode)
+  (org-num-mode)
   ;; (auto-fill-mode 0)
   ;; (visual-line-mode 1)
   ;; (display-line-numbers-mode -1)
@@ -569,7 +580,6 @@ When nil, use the default face background."
   ;; (add-to-list 'completion-at-point-functions #'tags-completion-at-point-function)
   )
 #+end_src
-
 
 * Org Zettelkasten like (roam & denote)
 ** Org-Roam
@@ -718,7 +728,6 @@ When nil, use the default face background."
 ;;(citar-org-roam-note-title-template "=${=key=}= - ${title}\n#+subtitle: Garid's notes on this article\n#+author: paper authors: ${author}\n#+filetags: :literature:\n\n* Ideas\n\n* Notes\n\n")
 #+end_src
 
-
 ** Some used functions
 #+begin_src emacs-lisp
 (defun my/org-roam-filter-by-tag (tag-name)
@@ -731,17 +740,32 @@ When nil, use the default face background."
     ))
 
 (defun my/org-roam-find-node-exclude-kanji ()
-    (interactive)
-    (org-roam-node-find nil nil (my/org-roam-exclude-by-tag "kanji"))
-)
+  (interactive)
+  ;;(org-roam-node-find nil nil (my/org-roam-exclude-by-tag "kanji"))
+  (org-roam-node-find nil nil (lambda (node)
+                                (null (member "kanji" (org-roam-node-tags node)) )
+                                ))
+  )
+
+(defun my/org-roam-find-node-using-tag ()
+  (interactive)
+  ;;(org-roam-node-find nil nil (my/org-roam-exclude-by-tag "kanji"))
+  (org-roam-node-find
+   nil nil (lambda (node)
+             (null (member
+                    (completing-read "Select tag to search: " (org-roam-tag-completions) nil t "")
+                    (org-roam-node-tags node)) )
+             ))
+  )
 #+end_src
 * Org Time managements
 ** Org gtd
 #+begin_src emacs-lisp
 (use-package org-gtd
+  :after org
   :init
   (setq org-gtd-update-ack "3.0.0")
-  (setq org-gtd-directory (concat  (denote-directory) "/gtd")))
+  (setq org-gtd-directory (concat (denote-directory) "/gtd")))
 #+end_src
 
 #+RESULTS:
@@ -754,6 +778,14 @@ When nil, use the default face background."
 
 (define-key org-agenda-mode-map "j" 'evil-next-line)
 (define-key org-agenda-mode-map "k" 'evil-previous-line)
+
+
+(defun garid/write-agenda-to-file()
+  (interactive)
+  (org-agenda-write "/tmp/current-agenda-text")
+  )
+
+(add-hook 'org-agenda-finalize-hook 'garid/write-agenda-to-file)
 #+end_src
 ** Org capturing related
 #+begin_src emacs-lisp :results none
@@ -917,7 +949,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   )
 #+end_src
 
-*** Editing image software                                   :shell_script:
+*** Editing image software                                    :shell_script:
 #+begin_src shell :tangle garid/edit_img.sh
 #!/bin/sh
 
@@ -1045,18 +1077,65 @@ and later sets cursor at that point when you open that file.
   :config (global-git-gutter-mode))
 #+end_src
 
-** COMMENT Treesitter
+** Treesitter
 from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][mastering emacs article]].
 #+begin_src emacs-lisp
 (setq major-mode-remap-alist
-      '((bash-mode . bash-ts-mode)
+      '((bash-mode   . bash-ts-mode)
         (python-mode . python-ts-mode)))
 
 ;; below is fork of   https://github.com/emacs-tree-sitter/ts-fold
 ;; reason I don't use (ts-fold)  <--- isn't good with builtin treesit
 
-(use-package treesit-fold
-  :straight (treesit-fold :type git :host github :repo "abougouffa/treesit-fold"))
+;; (use-package treesit-fold
+;;   :straight (treesit-fold :type git :host github :repo "abougouffa/treesit-fold"))
+#+end_src
+** Corfu
+#+begin_src emacs-lisp
+;; from https://github.com/Gavinok/emacs.d/blob/3ccc6e35feb2903442c9f7625fba081d93a2fa36/init.el#L614
+(use-package corfu
+  ;; Optional customizations
+  :custom
+  (corfu-cycle            t          ) ;; Allows cycling through candidates
+  (corfu-auto             t          ) ;; Enable auto completion nov23 C-M-i?
+  (corfu-auto-prefix      2          )
+  (corfu-auto-delay       0.1        )
+  (corfu-popupinfo-delay '(0.1 . 0.1))
+  (corfu-preview-current   nil       )
+  (corfu-on-exact-match    nil       ) ;; Don't auto expand tempel snippets
+
+  ;; Optionally use TAB for cycling, default is `corfu-complete'.
+  :bind (:map corfu-map
+              ("M-SPC"      . corfu-insert-separator )
+              ("TAB"        . nil                    ); corfu-next)
+              ([tab]        . nil                    ); corfu-next)
+              ;;("S-TAB"     . corfu-previous        )
+              ("M-k"        . corfu-previous         )
+              ("M-j"        . corfu-next             )
+              ("S-<return>" . corfu-insert           )
+              ("M-h"        . corfu-insert           )
+              ("RET"        . nil                    ))
+
+  :init
+  ;; (global-corfu-mode    )
+  (corfu-history-mode   )
+  ;; (corfu-popupinfo-mode ) ; Popup completion info
+  :config
+  (add-hook 'eshell-mode-hook
+            (lambda () (setq-local corfu-quit-at-boundary t
+				   corfu-quit-no-match t
+				   corfu-auto nil)
+              (corfu-mode))))
+
+(straight-use-package
+ '(corfu-terminal
+   :type git
+   :repo "https://codeberg.org/akib/emacs-corfu-terminal.git"))
+
+(straight-use-package
+ '(corfu-doc-terminal
+   :type git
+   :repo "https://codeberg.org/akib/emacs-corfu-doc-terminal.git"))
 #+end_src
 ** COMMENT python run on buffer
 #+begin_src emacs-lisp
@@ -1149,49 +1228,6 @@ This requires [[id:2bc28375-3cf3-4784-8a34-ecb1a2b0c24a][Straight.el]] to instal
  '(corfu-doc-terminal
    :type git
    :repo "https://codeberg.org/akib/emacs-corfu-doc-terminal.git"))
-#+end_src
-** COMMENT Corfu
-#+begin_src emacs-lisp
-;; from https://github.com/Gavinok/emacs.d/blob/3ccc6e35feb2903442c9f7625fba081d93a2fa36/init.el#L614
-(use-package corfu
-  ;; Optional customizations
-  :custom
-  (corfu-cycle            t          ) ;; Allows cycling through candidates
-  (corfu-auto             t          ) ;; Enable auto completion nov23 C-M-i?
-  ;;(corfu-auto           nil          ) ;; Enable auto completion nov23 C-M-i?
-  (corfu-auto-prefix      2          )
-  (corfu-auto-delay       0.1        )
-  (corfu-popupinfo-delay '(0.1 . 0.1))
-  ;; (corfu-popupinfo-delay '(0.5 . 0.2))
-  (corfu-preview-current   nil       )
-  ;; (corfu-preview-current 'insert  ) ;; Do not preview current candidate
-  ;; (corfu-preselect-first  nil     )
-  ;; (corfu-preselect        'first  )
-  (corfu-on-exact-match     nil      ) ;; Don't auto expand tempel snippets
-
-  ;; Optionally use TAB for cycling, default is `corfu-complete'.
-  :bind (:map corfu-map
-              ("M-SPC"      . corfu-insert-separator )
-              ("TAB"        . nil                    ); corfu-next)
-              ([tab]        . nil                    ); corfu-next)
-              ;;("S-TAB"     . corfu-previous        )
-              ("M-k"        . corfu-previous         )
-              ("M-j"        . corfu-next             )
-              ("S-<return>" . corfu-insert           )
-              ("M-h"        . corfu-insert           )
-              ("RET"        . nil                    )
-              )
-
-  :init
-  (global-corfu-mode    )
-  (corfu-history-mode   )
-  (corfu-popupinfo-mode ) ; Popup completion info
-  :config
-  (add-hook 'eshell-mode-hook
-            (lambda () (setq-local corfu-quit-at-boundary t
-				   corfu-quit-no-match t
-				   corfu-auto nil)
-              (corfu-mode))))
 #+end_src
 ** COMMENT Python
 #+begin_src emacs-lisp
@@ -1429,6 +1465,7 @@ This requires [[id:2bc28375-3cf3-4784-8a34-ecb1a2b0c24a][Straight.el]] to instal
 | C-\vert | garid-custom/toggle-eng-mon-teq-input-methods | change toggle input (Eng-Mon-Teq)    |
 | <f9>    | org-gtd-capture                               | capture                              |
 | <f8>    | org-gtd-organize                              | gtd org                              |
+| C-<f8>  | org-gtd-clarify-item                          | gtd org                              |
 | C-<f9>  | org-gtd-process-inbox                         | process inbox                        |
 | <f7>    | org-gtd-engage                                | gtd engage                           |
 
@@ -1466,6 +1503,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 (global-set-key (kbd "C-|") 'garid-custom/toggle-eng-mon-teq-input-methods)
 (global-set-key (kbd "<f9>") 'org-gtd-capture)
 (global-set-key (kbd "<f8>") 'org-gtd-organize)
+(global-set-key (kbd "C-<f8>") 'org-gtd-clarify-item)
 (global-set-key (kbd "C-<f9>") 'org-gtd-process-inbox)
 (global-set-key (kbd "<f7>") 'org-gtd-engage)
 #+end_src
@@ -2198,7 +2236,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
  recentf-max-menu-items  30
  recentf-max-saved-items 30)
 #+end_src
-** Custom opening external terminal at current buffer            :customFunc:
+** Custom opening external terminal at current buffer           :customFunc:
 #+begin_src emacs-lisp
 (defun garid-custom/open-external-term-here ()
   (interactive)
@@ -2207,7 +2245,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
     user-emacs-directory "garid/open_external_term.sh" " " buffer-file-name)))
 ;;(shell-command (concat user-emacs-directory "garid/open_external_term.sh" " " buffer-file-name)))
 #+end_src
-*** shell script to open terminal                              :shell_script:
+*** shell script to open terminal                             :shell_script:
 #+begin_src shell :tangle garid/open_external_term.sh
 #!/bin/bash
 
@@ -2258,12 +2296,12 @@ fi
   :commands (dired dired-jump)
   :custom ((dired-listing-switches "-agho --group-directories-first"))
   :hook ((dired-mode . denote-dired-mode)
-         (dired-mode . dired-omit-mode))
+         (dired-mode . dired-omit-mode  ))
   :config
   (evil-collection-define-key 'normal 'dired-mode-map
     "h"          'dired-single-up-directory
     "l"          'dired-single-buffer
-    (kbd "C-s")  'dired-omit-mode ;; same keybinding with my lf config
+    (kbd "C-s")  'dired-omit-mode      ;; same keybinding with my lf config
     " "          'nil
     (kbd "N")    'mkdir)
   )
@@ -2271,7 +2309,7 @@ fi
 ** Icons - Dired
 #+begin_src emacs-lisp
 (use-package all-the-icons
-  :if (display-graphic-p)
+  ;; :if (display-graphic-p)
   :config
   (all-the-icons-install-fonts 'install-without-asking)
   (add-to-list
@@ -2279,13 +2317,13 @@ fi
    '("m"  all-the-icons-fileicon "matlab"  :face all-the-icons-orange)))
 
 (use-package all-the-icons-dired
-  :if (display-graphic-p)
+  ;; :if (display-graphic-p)
   :config (add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
   )
 
 
 (use-package all-the-icons-completion
-  :if (display-graphic-p)
+  ;; :if (display-graphic-p)
   :config
   (all-the-icons-completion-mode)
   (add-hook 'marginalia-mode-hook #'all-the-icons-completion-marginalia-setup))
