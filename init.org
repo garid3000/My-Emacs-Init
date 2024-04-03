@@ -122,7 +122,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 (define-key evil-inner-text-objects-map "f" (evil-textobj-tree-sitter-get-textobj "function.inner"))
 (define-key evil-outer-text-objects-map "a" (evil-textobj-tree-sitter-get-textobj ("conditional.outer" "loop.outer")))
 #+end_src
-** vim-like scroll (by1)
+** vim-like scroll (1 by 1)
 #+begin_src emacs-lisp
 (setq scroll-step 1)
 (setq scroll-margin 7)
@@ -177,7 +177,11 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 
 (use-package uwu-theme
   :config
-  (enable-theme 'uwu))
+  (enable-theme 'uwu)
+
+  (set-face-background 'mode-line "#2B3260")
+  (set-face-background 'mode-line-inactive "#2B3244")
+  )
 #+end_src
 
 ** Terminal cursor
@@ -193,17 +197,6 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 (tooltip-mode    -1)        ; Disable tooltips
 ;; (set-fringe-mode 15)        ; Give some breathing room
 (menu-bar-mode   -1)        ; Disable the menu bar
-#+end_src
-** COMMENT Display Number & cursor-line highlightnig
-#+begin_src emacs-lisp
-;; setting line
-(use-package display-line-numbers
-  :config
-  (setq display-line-numbers-type 'relative)
-  (global-display-line-numbers-mode 1)
-  )
-
-(global-hl-line-mode 1)
 #+end_src
 ** Delight
 #+begin_src emacs-lisp
@@ -240,6 +233,17 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
      (evil-collection-unimpaired-mode "evc "  evil-collection   )
      (all-the-icons-dired-mode     nil   all-the-icons-dired.el )
      (visual-line-mode             nil   simple                 ))))
+#+end_src
+** COMMENT Display Number & cursor-line highlightnig
+#+begin_src emacs-lisp
+;; setting line
+(use-package display-line-numbers
+  :config
+  (setq display-line-numbers-type 'relative)
+  (global-display-line-numbers-mode 1)
+  )
+
+(global-hl-line-mode 1)
 #+end_src
 ** COMMENT Tokyo theme
 #+begin_src emacs-lisp
@@ -278,54 +282,56 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
               ("C-f"   . vertico-exit        ) ("M-f"   . vertico-exit        )
               ("C-u"   . vertico-scroll-up   ) ("M-u"   . vertico-scroll-up   )
               ("C-d"   . vertico-scroll-down ) ("M-d"   . vertico-scroll-down )
-              ("M-n"   . vertico-next        ) ("M-p"   . vertico-previous    ))
+              ;; ("M-p"   . vertico-next        ) ("M-n"   . vertico-previous    )
+              ("M-h"   . vertico-exit  ))
   :custom
   (vertico-cycle t)
   (vertico-count 20)
-  (vertico-resize t)
+  ;; (vertico-resize t)
+  (vertico-resize nil)
   :init (vertico-mode)
-  :config
+  ;;:config
+  ;; (eval-when-compile (require 'cl-lib))
+  ;; (defvar-keymap vertico-reverse-map
+  ;;   :doc "Additional keymap activated in reverse mode."
+  ;;   "<remap> <beginning-of-buffer>" #'vertico-last
+  ;;   "<remap> <minibuffer-beginning-of-buffer>" #'vertico-last
+  ;;   "<remap> <end-of-buffer>" #'vertico-first
+  ;;   "<remap> <scroll-down-command>" #'vertico-scroll-up
+  ;;   "<remap> <scroll-up-command>" #'vertico-scroll-down
+  ;;   "<remap> <next-line>" #'vertico-previous
+  ;;   "<remap> <previous-line>" #'vertico-next
+  ;;   "<remap> <next-line-or-history-element>" #'vertico-previous
+  ;;   "<remap> <previous-line-or-history-element>" #'vertico-next
+  ;;   "<remap> <backward-paragraph>" #'vertico-next-group
+  ;;   "<remap> <forward-paragraph>" #'vertico-previous-group)
 
-  (eval-when-compile (require 'cl-lib))
-  (defvar-keymap vertico-reverse-map
-    :doc "Additional keymap activated in reverse mode."
-    "<remap> <beginning-of-buffer>" #'vertico-last
-    "<remap> <minibuffer-beginning-of-buffer>" #'vertico-last
-    "<remap> <end-of-buffer>" #'vertico-first
-    "<remap> <scroll-down-command>" #'vertico-scroll-up
-    "<remap> <scroll-up-command>" #'vertico-scroll-down
-    "<remap> <next-line>" #'vertico-previous
-    "<remap> <previous-line>" #'vertico-next
-    "<remap> <next-line-or-history-element>" #'vertico-previous
-    "<remap> <previous-line-or-history-element>" #'vertico-next
-    "<remap> <backward-paragraph>" #'vertico-next-group
-    "<remap> <forward-paragraph>" #'vertico-previous-group)
+  ;; (define-minor-mode vertico-reverse-mode
+  ;;   "Reverse the Vertico display."
+  ;;   :global t :group 'vertico
+  ;;   ;; Reset overlays
+  ;;   (dolist (buf (buffer-list))
+  ;;     (when-let ((ov (buffer-local-value 'vertico--candidates-ov buf)))
+  ;;       (overlay-put ov 'before-string nil)))
+  ;;   (cl-callf2 rassq-delete-all vertico-reverse-map minor-mode-map-alist)
+  ;;   (when vertico-reverse-mode
+  ;;     (push `(vertico--input . ,vertico-reverse-map) minor-mode-map-alist)))
 
-  (define-minor-mode vertico-reverse-mode
-    "Reverse the Vertico display."
-    :global t :group 'vertico
-    ;; Reset overlays
-    (dolist (buf (buffer-list))
-      (when-let ((ov (buffer-local-value 'vertico--candidates-ov buf)))
-        (overlay-put ov 'before-string nil)))
-    (cl-callf2 rassq-delete-all vertico-reverse-map minor-mode-map-alist)
-    (when vertico-reverse-mode
-      (push `(vertico--input . ,vertico-reverse-map) minor-mode-map-alist)))
+  ;; (cl-defmethod vertico--display-candidates (lines &context (vertico-reverse-mode (eql t)))
+  ;;   (move-overlay vertico--candidates-ov (point-min) (point-min))
+  ;;   (setq lines (nreverse lines))
+  ;;   (unless (eq vertico-resize t)
+  ;;     (setq lines (nconc (make-list (max 0 (- vertico-count (length lines))) "\n") lines)))
+  ;;   (let ((string (apply #'concat lines)))
+  ;;     (add-face-text-property 0 (length string) 'default 'append string)
+  ;;     (overlay-put vertico--candidates-ov 'before-string string)
+  ;;     (overlay-put vertico--candidates-ov 'after-string nil))
+  ;;   (vertico--resize-window (length lines)))
 
-  (cl-defmethod vertico--display-candidates (lines &context (vertico-reverse-mode (eql t)))
-    (move-overlay vertico--candidates-ov (point-min) (point-min))
-    (setq lines (nreverse lines))
-    (unless (eq vertico-resize t)
-      (setq lines (nconc (make-list (max 0 (- vertico-count (length lines))) "\n") lines)))
-    (let ((string (apply #'concat lines)))
-      (add-face-text-property 0 (length string) 'default 'append string)
-      (overlay-put vertico--candidates-ov 'before-string string)
-      (overlay-put vertico--candidates-ov 'after-string nil))
-    (vertico--resize-window (length lines)))
+  ;; (provide 'vertico-reverse)
 
-  (provide 'vertico-reverse)
-
-  (vertico-reverse-mode 1)
+  ;; (vertico-reverse-mode 1)
+  ;;
   )
 #+end_src
 *** COMMENT Posframe
@@ -425,7 +431,8 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
                    ("\\.svg\\'"                . "inkview \"%s\""          ) ;; inkscape's viewer
                    ("\\.jpeg\\'"               . "sxiv    \"%s\""          )
                    ("\\.jpg\\'"                . "sxiv    \"%s\""          )
-                   ("\\.html\\'"               . "brave   \"%s\""          )
+                   ;; ("\\.html\\'"               . "brave   \"%s\""          )
+                   ("\\.html\\'"               . "thorium-browser   \"%s\""          )
                    ("\\.pdf\\'"                . "sioyek  \"%s\""          )
                    ("\\.pdf::\\([0-9]+\\)?\\'" . "sioyek  \"%s\" --page %1")
                    ("\\.mkv\\'"                . "mpv     \"%s\""          )
@@ -450,6 +457,8 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   (org-latex-pdf-process                '("latexmk -shell-escape -f -pdf -%latex -interaction=nonstopmode -output-directory=%o %f"))
 
   ;; org-highlight-latex-and-related     '(latex script entities) -- lets try this for performance
+  ;;(org-highlight-latex-and-related        '(latex entities native)) ;; -- lets try this for performance
+  (org-highlight-latex-and-related        nil) ;; -- lets try this for performance
 
   ;;:init
   :config
@@ -578,6 +587,12 @@ When nil, use the default face background."
   ;; (display-line-numbers-mode -1)
   ;; (add-to-list 'completion-at-point-functions #'yasnippet-capf)
   ;; (add-to-list 'completion-at-point-functions #'tags-completion-at-point-function)
+
+  (when buffer-file-name ;; had to check buffer had file. (i.e. sometimes buffer don't have file yet, e.g. org-captures)
+    (setq org-download-image-dir (concat "./od-imgs/" (file-name-base buffer-file-name))
+          org-download-heading-lvl nil ;; nil == orgdownload not mkdir images in each corresponding directory
+          )
+    )
   )
 #+end_src
 
@@ -601,25 +616,26 @@ When nil, use the default face background."
                            "#+filetags: :nohtmlexport:\n"
                            "#+title: %<%Y-%m-%d>\n"
                            "#+auto_tangle: nil\n"
-                           "#+startup: show2levels\n")))))
+                           "#+startup: show2levels\n"
+                           "#+setupfile: ~/.config/emacs/org-templates/level-0-website-export-template.org"
+                           )))))
 
   (org-roam-capture-templates
    `(("d" "Default" plain "* %?"
       :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
                          ,(concat "#+title: ${title}\n"
                                   "#+filetags: :notag:\n"
-                                  "#+author: Garid Zorigoo\n"
                                   "#+date: %U\n"
-                                  "#+auto_tangle: nil\n"))
+                                  "#+setupfile: ~/.config/emacs/org-templates/level-0-website-export-template.org"
+                                  ))
       :unnarrowed t)
 
      ("r" "Research" plain "* %?"
       :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}__research.org"
                          ,(concat "#+title: ${title}\n"
                                   "#+filetags: :research:\n"
-                                  "#+author: Garid Zorigoo\n"
                                   "#+date: %U\n"
-                                  "#+auto_tangle: nil\n"
+                                  "#+setupfile: ~/.config/emacs/org-templates/level-0-website-export-template.org"
                                   ))
       :unnarrowed t)
 
@@ -629,7 +645,7 @@ When nil, use the default face background."
                                   "#+filetags: :kanji:\n"
                                   "#+author: Garid Zorigoo\n"
                                   "#+date: %U\n"
-                                  "#+auto_tangle: nil\n"
+                                  "#+setupfile: ~/.config/emacs/org-templates/level-0-website-export-template.org"
                                   ))
       :unnarrowed t)
 
@@ -640,7 +656,7 @@ When nil, use the default face background."
                                   "#+filetags: :plang:\n"
                                   "#+author: Garid Zorigoo\n"
                                   "#+date: %U\n"
-                                  "#+auto_tangle: nil\n"
+                                  "#+setupfile: ~/.config/emacs/org-templates/level-0-website-export-template.org"
                                   ))
       :unnarrowed t)
 
@@ -649,9 +665,8 @@ When nil, use the default face background."
       :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}__meta.org"
                          ,(concat "#+title: ${title}\n"
                                   "#+filetags: :meta:\n"
-                                  "#+author: Garid Zorigoo\n"
                                   "#+date: %U\n"
-                                  "#+auto_tangle: nil\n"
+                                  "#+setupfile: ~/.config/emacs/org-templates/level-0-website-export-template.org"
                                   ))
       :unnarrowed t)
 
@@ -775,6 +790,10 @@ When nil, use the default face background."
 ;; (setq org-agenda-files (directory-files-recursively denote-directory "\\.org$"))
 ;; (setq org-agenda-files (directory-files denote-directory t "\\.org$"))
 ;; (setq org-agenda-files (directory-files-recursively "/home/garid/gtd" "^[a-z].*\\.org$"))
+;; (setq org-agenda-files (directory-files-recursively "/home/garid/gtd" "^[a-z].*\\.org$"))
+;; (setq org-agenda-files (directory-files-recursively (concat (denote-directory) "gtd") "^[a-z].*\\.org$"))
+(setq org-agenda-files nil)
+
 
 (define-key org-agenda-mode-map "j" 'evil-next-line)
 (define-key org-agenda-mode-map "k" 'evil-previous-line)
@@ -876,7 +895,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 #+begin_src emacs-lisp
 (use-package ox-reveal)
 #+end_src
-** COMMENT website from org-roam directory
+** website from org-roam directory
 [[id:e7ee081e-a02b-4ab9-bccc-327a92bf2b09][create website from org-roam]]
 
 #+begin_src emacs-lisp
@@ -884,6 +903,8 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
       org-html-head-include-scripts       nil ;; Use our own scripts
       org-html-head-include-default-style nil ;; Use our own styles
       org-html-head "<link rel=\"stylesheet\" href=\"https://cdn.simplecss.org/simple.min.css\" />"
+      ;;org-html-head "<link rel=\"stylesheet\" href=\"https://gongzhitaao.org/orgcss/org.css\" />"
+
       )
 #+end_src
 
@@ -893,19 +914,22 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 #+begin_src emacs-lisp :exports code :results verbatim
 (setq
  org-publish-project-alist
- '(("Pensieve org -> html00"
+ '(("Pensieve org -> html"
     :base-directory "~/Pensieve"
+    :recursive t
     :publishing-function org-html-publish-to-html
     :publishing-directory "/tmp/garids_pensieve"
     :section-numbers nil
-    :with-toc nil)
+    :with-toc nil
+    :html_link_home: "index.html"
+    )
    ;;:html_head "<link rel=\"stylesheet\" href=\"/home/garid/org.css\">"
    ;; not sure why above line doesn't change css of thml output
    ;; that's why I copied from
    ;;https://systemcrafters.net/publishing-websites-with-org-mode/building-the-site/
    ;; above
 
-   ("Pensieve export imgs"
+   ("Pensieve export imgs --"
     :base-directory "~/Pensieve/od-imgs/"
     :base-extension "jpg\\|gif\\|png\\|svg"
     :recursive t
@@ -1137,6 +1161,28 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
    :type git
    :repo "https://codeberg.org/akib/emacs-corfu-doc-terminal.git"))
 #+end_src
+** Minibuffer
+#+begin_src emacs-lisp
+;; (setq completions-format 'one-column)
+;; (setq completions-header-format nil)
+;; (setq completions-max-height 20)
+;; (setq completion-auto-select nil)       ;
+
+;; ;; (define-key minibuffer-mode-map (kbd "C-n") 'minibuffer-next-completion)
+;; ;; (define-key minibuffer-mode-map (kbd "C-p") 'minibuffer-previous-completion)
+;; ;; 
+;; ;; (define-key completion-in-region-mode-map (kbd "C-n") 'minibuffer-next-completion)
+;; ;; (define-key completion-in-region-mode-map (kbd "C-p") 'minibuffer-previous-completion)
+
+
+
+(setq completion-in-region-function
+      (lambda (&rest args)
+        (apply (if vertico-mode
+                   #'consult-completion-in-region
+                 #'completion--in-region)
+               args)))
+#+end_src
 ** COMMENT python run on buffer
 #+begin_src emacs-lisp
 (defun garid-custom/run-python-on-this-file ()
@@ -1357,11 +1403,11 @@ This requires [[id:2bc28375-3cf3-4784-8a34-ecb1a2b0c24a][Straight.el]] to instal
 (defun gry/org-open-html ()
   (interactive)
   (call-process-shell-command
-   (concat "brave "                                  ;; try to open default PDF viewer
+   (concat "thorium-browser "                           ;; try to open default PDF viewer
            (file-name-directory buffer-file-name)       ;; directory of current file (buffer)
-           "/export_html/"                               ;; adds export directory name
+           "/export_html/"                              ;; adds export directory name
            (file-name-base)                             ;; filaname (of current file/buffer) without extension
-           ".html &"                                     ;; adds extension
+           ".html &"                                    ;; adds extension
            )))
 #+end_src
 
@@ -1411,6 +1457,20 @@ This requires [[id:2bc28375-3cf3-4784-8a34-ecb1a2b0c24a][Straight.el]] to instal
 	(set-input-method "cyrillic-mongolian")
       (if (string= default-input-method "cyrillic-mongolian")
 	  (set-input-method "TeQ-Math")))))
+#+end_src
+** copy to xclip without turning on the xclip mode
+#+begin_src emacs-lisp
+(defun gry-copy-to-x-clip()
+  (interactive)
+  (if (and (boundp 'xclip-mode) xclip-mode);; check if the xclip has turned on
+      (clipboard-kill-ring-save ( mark ) ( point ) )
+    (progn
+      (xclip-mode +1)
+      (clipboard-kill-ring-save ( mark ) ( point ) )
+      (xclip-mode -1)
+      )
+    )
+  )
 #+end_src
 ** COMMENT Distraction
 #+begin_src emacs-lisp
@@ -1522,7 +1582,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | SPC    | execute-extended-command      | M-x                  | -    |        |
 | f      | find-file                     | (f)ind-file          | -    |        |
 | d      | dired-jump                    | (d)irectory          | -    |        |
-| D      | :ignore t                     | (📂-D)ired           | -    |        |
+| D      | :ignore t                     | (D)ired              | -    |        |
 | Ds     | dired                         | D-(s)imple           | -    |        |
 | Dn     | dired-sidebar-jump-to-sidebar | D-(n) side-tree show | -    |        |
 | DN     | dired-sidebar-hide-sidebar    | D-(N) side-tree hide | -    |        |
@@ -1532,46 +1592,46 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 #+attr_latex: :placement [H]
 #+caption: buffer related commands
 #+name: tbl-kbind-buffer-related
-| key(s) | function                    | short description                | mode | lambda |
-|--------+-----------------------------+----------------------------------+------+--------|
-| l      | consult-buffer              | (l)ist-buffer                    | -    |        |
-| L      | :ignore t                   | (📝-L)buffer.................... | -    |        |
-| Lr     | revert-buffer-quick         | L-(r)eread                       | -    |        |
-| Le     | eval-buffer                 | L-(e)val                         | -    |        |
-| Li     | ibuffer                     | L-(i)buffer                      | -    |        |
-| Ln     | rename-buffer               | L-(r)ename                       | -    |        |
-| L<     | switch-to-prev-buffer       | L-(<)prev                        | -    |        |
-| L>     | switch-to-next-buffer       | L-(>)next                        | -    |        |
-| Ld     | crux-delete-file-and-buffer | L-(d)elete                       | -    |        |
-| Lc     | clone-indirect-buffer       | L-(c)lone                        | -    |        |
-| Ls     | crux-create-scratch-buffer  | L-(s)cratch-buffer               | -    |        |
-| Lh     | buf-move-left               | L-(h) move left                  | -    |        |
-| Lj     | buf-move-down               | L-(j) move down                  | -    |        |
-| Lk     | buf-move-up                 | L-(k) move up                    | -    |        |
-| Ll     | buf-move-right              | L-(l) move right                 | -    |        |
-| LL     | tear-off-window             | L-(L) tear window to frame       | -    |        |
+| key(s) | function                    | short description             | mode | lambda |
+|--------+-----------------------------+-------------------------------+------+--------|
+| l      | consult-buffer              | (l)ist-buffer                 | -    |        |
+| L      | :ignore t                   | (L)buffer.................... | -    |        |
+| Lr     | revert-buffer-quick         | L-(r)eread                    | -    |        |
+| Le     | eval-buffer                 | L-(e)val                      | -    |        |
+| Li     | ibuffer                     | L-(i)buffer                   | -    |        |
+| Ln     | rename-buffer               | L-(r)ename                    | -    |        |
+| L<     | switch-to-prev-buffer       | L-(<)prev                     | -    |        |
+| L>     | switch-to-next-buffer       | L-(>)next                     | -    |        |
+| Ld     | crux-delete-file-and-buffer | L-(d)elete                    | -    |        |
+| Lc     | clone-indirect-buffer       | L-(c)lone                     | -    |        |
+| Ls     | crux-create-scratch-buffer  | L-(s)cratch-buffer            | -    |        |
+| Lh     | buf-move-left               | L-(h) move left               | -    |        |
+| Lj     | buf-move-down               | L-(j) move down               | -    |        |
+| Lk     | buf-move-up                 | L-(k) move up                 | -    |        |
+| Ll     | buf-move-right              | L-(l) move right              | -    |        |
+| LL     | tear-off-window             | L-(L) tear window to frame    | -    |        |
 
 **** Convenient
 #+attr_latex: :placement [H]
 #+caption: Convenient commands
 #+name: tbl-kbind-zconvenients
-| key(s) | function                               | short description              | mode | lambda |
-|--------+----------------------------------------+--------------------------------+------+--------|
-| z      | :ignore t                              | (😎-z)conveniences............ | -    |        |
-| za     | garid-custom/align-regexp-and-untabify | z-(a)lign                      | -    |        |
-| zr     | replace-regexp                         | z-(r)eplace word in buf        | -    |        |
-| zh     | highlight-symbol-at-point              | z-(h)ighlight word             | -    |        |
-| zH     | unhighlight-regexp                     | z-(H)ighlight word off         | -    |        |
-| zs     | :ignore t                              | z-(✅-s)pell.................. | -    |        |
-| zsw    | ispell-word                            | zs-(w)ord                      | -    |        |
-| zsr    | ispell-region                          | zs-(r)egion                    | -    |        |
-| zsC    | ispell-comments-and-strings            | zs-(C)omment-full              | -    |        |
-| zsc    | ispell-comment-or-string-at-point      | zs-(c)omment-here              | -    |        |
-| zsb    | ispell-buffer                          | zs-(b)uffer                    | -    |        |
-| zsm    | ispell-message                         | zs-(m)essage                   | -    |        |
-| zsq    | ispell-kill-ispell                     | zs-(q)uit                      | -    |        |
-| zsl    | ispell-change-dictionary               | zs-(l)anguage en-mn            | -    |        |
-| ZQ     | kill-emacs                             | kill emacs                     | -    |        |
+| key(s) | function                               | short description           | mode | lambda |
+|--------+----------------------------------------+-----------------------------+------+--------|
+| z      | :ignore t                              | (z)conveniences............ | -    |        |
+| za     | garid-custom/align-regexp-and-untabify | z-(a)lign                   | -    |        |
+| zr     | replace-regexp                         | z-(r)eplace word in buf     | -    |        |
+| zh     | highlight-symbol-at-point              | z-(h)ighlight word          | -    |        |
+| zH     | unhighlight-regexp                     | z-(H)ighlight word off      | -    |        |
+| zs     | :ignore t                              | z-(s)pell.................. | -    |        |
+| zsw    | ispell-word                            | zs-(w)ord                   | -    |        |
+| zsr    | ispell-region                          | zs-(r)egion                 | -    |        |
+| zsC    | ispell-comments-and-strings            | zs-(C)omment-full           | -    |        |
+| zsc    | ispell-comment-or-string-at-point      | zs-(c)omment-here           | -    |        |
+| zsb    | ispell-buffer                          | zs-(b)uffer                 | -    |        |
+| zsm    | ispell-message                         | zs-(m)essage                | -    |        |
+| zsq    | ispell-kill-ispell                     | zs-(q)uit                   | -    |        |
+| zsl    | ispell-change-dictionary               | zs-(l)anguage en-mn         | -    |        |
+| ZQ     | kill-emacs                             | kill emacs                  | -    |        |
 
 **** System
 #+attr_latex: :placement [H]
@@ -1579,7 +1639,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 #+name: tbl-kbind-sys-related
 | key(s) | function                                                | short description              | mode | lambda |
 |--------+---------------------------------------------------------+--------------------------------+------+--------|
-| s      | :ignore t                                               | (💻-s)ys.....................  | -    |        |
+| s      | :ignore t                                               | (s)ystem.....................  | -    |        |
 | srf    | (recentf-open-files)                                    | s-(r)ecent-(f)iles             | -    | y      |
 | sl     | :ignore t                                               | s-(l)ine.....................  | -    |        |
 | sl5    | (setq display-line-numbers-width 5)                     | sl-(5) digit number            | -    | y      |
@@ -1592,12 +1652,12 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | st     | toggle-transparency                                     | s-(t)oggle-transparency        | -    |        |
 | scl    | (global-command-log-mode) (clm/open-command-log-buffer) | s-(c)md-(l)og                  | -    | y      |
 | sw     | whitespace-mode                                         | s-(w)hitespace                 | -    |        |
-| O      | :ignore t                                               | (📖-O)pen....................  | -    |        |
+| O      | :ignore t                                               | (O)pen........................ | -    |        |
 | Oe     | (find-file "~/.config/emacs/init.org")                  | O-(e)macs confg org            | -    | y      |
 | OE     | (find-file "~/.config/emacs/init.el")                   | O-(E)macs confg el             | -    | y      |
 | Ob     | (find-file (nth 0 org-cite-global-bibliography))        | O-(b)ibliography               | -    | y      |
 | OO     | (find-file org-default-notes-file)                      | O-(O)rg capture                | -    | y      |
-| t      | :ignore t                                               | (🧰-t)erminal................. | -    |        |
+| t      | :ignore t                                               | (t)erminal.................... | -    |        |
 | te     | eshell                                                  | t-(e)shell emacs-shell         | -    |        |
 | tv     | vterm                                                   | t-(v)term  vterm               | -    |        |
 | tx     | garid-custom/open-external-term-here                    | t-(x)ternal terminal           | -    |        |
@@ -1609,7 +1669,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 #+name: tbl-kbind-bookmarks
 | key(s) | function         | short description                | mode | lambda |
 |--------+------------------+----------------------------------+------+--------|
-| b      | :ignore t        | (🔖-b)ookmark................... | -    |        |
+| b      | :ignore t        | (b)ookmark...................... | -    |        |
 | bm     | consult-bookmark | b-(m)ark-consult                 | -    |        |
 | bs     | bookmark-set     | b-(s)et                          | -    |        |
 | bd     | bookmark-delete  | b-(d)elete                       | -    |        |
@@ -1621,11 +1681,11 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 #+name: tbl-kbind-help
 | key(s) | function                 | short description                | mode | lambda |
 |--------+--------------------------+----------------------------------+------+--------|
-| h      | :ignore t                | (❔-h)elp....................... | -    |        |
+| h      | :ignore t                | (h)elp.......................... | -    |        |
 | hh     | describe-symbol          | h-(h)elp symbol (elisp)          | -    |        |
 | hH     | describe-key             | h-(H)elp keybinding              | -    |        |
 | ho     | org-info                 | h-(o)rg info                     | -    |        |
-| hw     | which-key-show-top-level | h-(w)hich key  🎹                | -    |        |
+| hw     | which-key-show-top-level | h-(w)hich key                    | -    |        |
 | hd     | devdocs-lookup           | h-(d)evdocs lookup               | -    |        |
 | hm     | consult-man              | h-(m)an                          | -    |        |
 
@@ -1635,14 +1695,14 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 #+name: tbl-kbind-dev
 | key(s) | function              | short description          | mode | lambda |
 |--------+-----------------------+----------------------------+------+--------|
-| mg     | magit-status          | (m)a(g)it  🪄              | -    |        |
+| mg     | magit-status          | (m)a(g)it                  | -    |        |
 | <      | recompile             | recompile                  | -    |        |
 | sco    | corfu-mode            | s-(c)orfu-(m)ode           | -    |        |
 | se     | eglot                 | s-(e)glot                  | -    |        |
 | rg     | rg                    | (r)ip-(g)rep  ~cr          | -    |        |
 | gs     | git-gutter:popup-hunk | (g)it-(s) popup hunk  ~cr  | -    |        |
 | gd     | magit-ediff-compare   | ma(g)it-e(d) hunk  ~cr     | -    |        |
-| P      | :ignore               | Python (inferior)🐍 ...... | -    |        |
+| P      | :ignore               | Python (inferior)   ...... | -    |        |
 | Pr     | python-shell-restart  | P-(R)estart                | -    |        |
 | PP     | run-python            | P-(P) run-python           | -    |        |
 | Pk     | comint-send-eof       | P-(k) kill  (also C-c C-d) | -    |        |
@@ -1653,7 +1713,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 #+name: tbl-global-general-keybindings-consult
 | key(s) | function               | short description                | mode | lambda |
 |--------+------------------------+----------------------------------+------+--------|
-| c      | :ignore t              | (🤔-c)onsult.................... | -    |        |
+| c      | :ignore t              | (c)onsult....................... | -    |        |
 | co     | consult-org-heading    | c-(o)rg   == ofh                 | -    |        |
 | ci     | consult-imenu          | c-(i)menu                        | -    |        |
 | cm     | consult-man            | c-(m)an                          | -    |        |
@@ -1672,7 +1732,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 #+name: tbl-global-general-keybindings-project
 | key(s) | function                          | short description              | mode | lambda |
 |--------+-----------------------------------+--------------------------------+------+--------|
-| p      | :ignore t                         | (📚-p)rojectl................. | -    |        |
+| p      | :ignore t                         | (p)rojectl.................... | -    |        |
 | pr     | xref-find-references              | p-(r)eferences                 | -    |        |
 | pd     | consult-flymake                   | p-(d)iagnostic                 | -    |        |
 | pf     | project-find-file                 | p-(f)ind-file                  | -    |        |
@@ -1682,7 +1742,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | pk     | project-kill-buffers              | p-(k)ill-buf-proj              | -    |        |
 | pl     | consult-project-buffer            | p-(l)ist-buf-proj              | -    |        |
 | pv     | consult-imenu                     | p-(v)ariables                  | -    |        |
-| v      | :ignore t                         | (📚-v)-project................ | -    |        |
+| v      | :ignore t                         | (v)-project................... | -    |        |
 | vq     | format-all-buffer                 | v-(q)-format-buffer            | -    |        |
 | vr     | eglot-rename                      | v-(r)ename                     | -    |        |
 
@@ -1703,7 +1763,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 #+name: tbl-global-general-keybindings-denote
 | key(s) | function                 | short description              | mode | lambda |
 |--------+--------------------------+--------------------------------+------+--------|
-| R      | :ignore t                | (🧠-R)denote.................. | -    |        |
+| R      | :ignore t                | (R)denote..................... | -    |        |
 | Rr     | denote-rename-file       | R-(r)ename                     | -    |        |
 | Rf     | denote-open-or-create    | R-(f)ind                       | -    |        |
 | RD     | (dired denote-directory) | R-(D)ired                      | -    | y      |
@@ -1714,18 +1774,19 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 #+name: tbl-global-general-keybindings-yassnippet
 | key(s) | function               | short description             | mode | lambda |
 |--------+------------------------+-------------------------------+------+--------|
-| y      | :ignore t              | (🔜y)assnippet................. | -    |        |
+| y      | :ignore t              | (y)assnippet................. | -    |        |
 | yn     | yas-new-snippet        | y-(n)ew                       | -    |        |
 | yd     | yas-describe-tables    | y-(d)esc-table                | -    |        |
 | yv     | yas-visit-snippet-file | y-(v)isit                     | -    |        |
 | yi     | consult-yasnippet      | y-(i)nsert                    | -    |        |
+| yx     | gry-copy-to-x-clip     | y-(x) yank to xclip           | -    |        |
 
 **** Calc related
 #+caption: gnu-calc related
 #+name: tbl-global-general-keybindings-calc
 | key(s) | function      | short description                | mode | lambda |
 |--------+---------------+----------------------------------+------+--------|
-| C      | :ignore t     | (🔟-C)alc related............... | -    |        |
+| C      | :ignore t     | (C)alc related.................. | -    |        |
 | Ca     | calc          | C-(a) calc                       | -    |        |
 | Ce     | calc-embedded | C-(e) embedded                   | -    |        |
 | Cf     | full-calc     | C-(f) full                       | -    |        |
@@ -1736,7 +1797,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 #+name: tbl-global-general-keybindings-org-mode-related
 | key(s) | function          | short description                | mode | lambda |
 |--------+-------------------+----------------------------------+------+--------|
-| o      | :ignore t         | (🦄-o)rg........................ | -    |        |
+| o      | :ignore t         | (o)rg........................... | -    |        |
 | oo     | org-open-at-point | o-(o)pen                         | org  |        |
 | ,      | org-ctrl-c-ctrl-c | C-c C-c                          | org  |        |
 
@@ -1763,7 +1824,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 #+name: tbl-global-general-keybindings-org-roam-related
 | key(s) | function                                    | short description                | mode | lambda |
 |--------+---------------------------------------------+----------------------------------+------+--------|
-| r      | :ignore t                                   | (🎠-r)oam....................... | -    |        |
+| r      | :ignore t                                   | (r)oam.......................... | -    |        |
 | ruim   | org-roam-ui-mode                            | rui-(m)ode ui-in-browser         | -    |        |
 | rf     | my/org-roam-find-node-exclude-kanji         | r-(f)ind no kanji                | -    |        |
 | rF     | org-roam-node-find                          | r-(f)ind full find               | -    |        |
@@ -1792,14 +1853,14 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | os     | :ignore t                               | o-(s)ubtree.................. | org  |        |
 | osy    | org-copy-subtree                        | os-(y)ank (aka copy)          | org  |        |
 | osY    | org-id-copy                             | os-(Y)ank (ID)                | org  |        |
-| osv    | org-mark-subtree                        | os-(v)isually select          | org  |        |
+| osv    | org-mark-element                        | os-(v)isually select element  | org  |        |
 | osm    | org-refile                              | os-(m)ove                     | org  |        |
 | osd    | org-cut-subtree                         | os-(d)elete (aka cut)         | org  |        |
 | ost    | org-toggle-narrow-to-subtree            | os-(t)oggle narrow            | org  |        |
 | osn    | org-num-mode                            | os-(n)um mode                 | org  |        |
 | oss    | org-sort                                | os-(s)ort                     | org  |        |
 | osp    | org-set-property                        | os-(p)roperty                 | org  |        |
-| osI    | org-indent-mode                         | os-(I)ndent mode  👉          | org  |        |
+| osI    | org-indent-mode                         | os-(I)ndent mode              | org  |        |
 | osi    | :ignore t                               | os-(i)nsert heading.......... | org  |        |
 | osia   | org-insert-heading-after-current        | osi-(a)fter           C-RET   | org  |        |
 | osiA   | org-insert-todo-heading-respect-content | osi-(A)fter    todo C-S-RET   | org  |        |
@@ -1855,6 +1916,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | oxB    | (org-beamer-export-to-pdf nil t) | ox-(B)eamer subtree           | org  | y      |
 | oxp    | org-latex-export-to-pdf          | ox-(p)df latex                | org  |        |
 | oxr    | org-reveal-export-to-html        | ox-(r)eveal js                | org  |        |
+| oxh    | org-html-export-to-html          | ox-(h)tml                     | org  |        |
 | oxP    | (org-latex-export-to-pdf nil t)  | ox-(P)df latex subtree        | org  | y      |
 | oxo    | gry/org-open-pdf                 | ox-(o)pen exported pdf        | org  |        |
 | oxO    | gry/org-open-html                | ox-(O)pen exported html       | org  |        |
@@ -1998,13 +2060,13 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "SPC" '(execute-extended-command :which-key "M-x")
   "f" '(find-file :which-key "(f)ind-file")
   "d" '(dired-jump :which-key "(d)irectory")
-  "D" '(:ignore t :which-key "(📂-D)ired")
+  "D" '(:ignore t :which-key "(D)ired")
   "Ds" '(dired :which-key "D-(s)imple")
   "Dn" '(dired-sidebar-jump-to-sidebar :which-key "D-(n) side-tree show")
   "DN" '(dired-sidebar-hide-sidebar :which-key "D-(N) side-tree hide")
   "Dp" '(dired-preview-mode :which-key "D-(p) side-tree hide")
-  "o" '(:ignore t :which-key "(🦄-o)rg........................")
-  "r" '(:ignore t :which-key "(🎠-r)oam.......................")
+  "o" '(:ignore t :which-key "(o)rg...........................")
+  "r" '(:ignore t :which-key "(r)oam..........................")
   "ruim" '(org-roam-ui-mode :which-key "rui-(m)ode ui-in-browser")
   "rf" '(my/org-roam-find-node-exclude-kanji :which-key "r-(f)ind no kanji")
   "rF" '(org-roam-node-find :which-key "r-(f)ind full find")
@@ -2023,12 +2085,12 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "rdd" '(org-roam-dailies-goto-date :which-key "rd-(d)ate  goto date")
   "rd>" '(org-roam-dailies-goto-next-note :which-key "rd-(>)next")
   "rd<" '(org-roam-dailies-goto-previous-note :which-key "rd-(<)prev")
-  "z" '(:ignore t :which-key "(😎-z)conveniences............")
+  "z" '(:ignore t :which-key "(z)conveniences............")
   "za" '(garid-custom/align-regexp-and-untabify :which-key "z-(a)lign")
   "zr" '(replace-regexp :which-key "z-(r)eplace word in buf")
   "zh" '(highlight-symbol-at-point :which-key "z-(h)ighlight word")
   "zH" '(unhighlight-regexp :which-key "z-(H)ighlight word off")
-  "zs" '(:ignore t :which-key "z-(✅-s)pell..................")
+  "zs" '(:ignore t :which-key "z-(s)pell..................")
   "zsw" '(ispell-word :which-key "zs-(w)ord")
   "zsr" '(ispell-region :which-key "zs-(r)egion")
   "zsC" '(ispell-comments-and-strings :which-key "zs-(C)omment-full")
@@ -2038,12 +2100,13 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "zsq" '(ispell-kill-ispell :which-key "zs-(q)uit")
   "zsl" '(ispell-change-dictionary :which-key "zs-(l)anguage en-mn")
   "ZQ" '(kill-emacs :which-key "kill emacs")
-  "y" '(:ignore t :which-key "(🔜y)assnippet.................")
+  "y" '(:ignore t :which-key "(y)assnippet.................")
   "yn" '(yas-new-snippet :which-key "y-(n)ew")
   "yd" '(yas-describe-tables :which-key "y-(d)esc-table")
   "yv" '(yas-visit-snippet-file :which-key "y-(v)isit")
   "yi" '(consult-yasnippet :which-key "y-(i)nsert")
-  "s" '(:ignore t :which-key "(💻-s)ys.....................")
+  "yx" '(gry-copy-to-x-clip :which-key "y-(x) yank to xclip")
+  "s" '(:ignore t :which-key "(s)ystem.....................")
   "srf" '((lambda () (interactive) (recentf-open-files) ) :which-key "s-(r)ecent-(f)iles")
   "sl" '(:ignore t :which-key "s-(l)ine.....................")
   "sl5" '((lambda () (interactive) (setq display-line-numbers-width 5) ) :which-key "sl-(5) digit number")
@@ -2056,28 +2119,28 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "st" '(toggle-transparency :which-key "s-(t)oggle-transparency")
   "scl" '((lambda () (interactive) (global-command-log-mode) (clm/open-command-log-buffer) ) :which-key "s-(c)md-(l)og")
   "sw" '(whitespace-mode :which-key "s-(w)hitespace")
-  "O" '(:ignore t :which-key "(📖-O)pen....................")
+  "O" '(:ignore t :which-key "(O)pen........................")
   "Oe" '((lambda () (interactive) (find-file "~/.config/emacs/init.org") ) :which-key "O-(e)macs confg org")
   "OE" '((lambda () (interactive) (find-file "~/.config/emacs/init.el") ) :which-key "O-(E)macs confg el")
   "Ob" '((lambda () (interactive) (find-file (nth 0 org-cite-global-bibliography)) ) :which-key "O-(b)ibliography")
   "OO" '((lambda () (interactive) (find-file org-default-notes-file) ) :which-key "O-(O)rg capture")
-  "t" '(:ignore t :which-key "(🧰-t)erminal.................")
+  "t" '(:ignore t :which-key "(t)erminal....................")
   "te" '(eshell :which-key "t-(e)shell emacs-shell")
   "tv" '(vterm :which-key "t-(v)term  vterm")
   "tx" '(garid-custom/open-external-term-here :which-key "t-(x)ternal terminal")
   "tt" '(eat :which-key "t-ea(t) terminal")
-  "R" '(:ignore t :which-key "(🧠-R)denote..................")
+  "R" '(:ignore t :which-key "(R)denote.....................")
   "Rr" '(denote-rename-file :which-key "R-(r)ename")
   "Rf" '(denote-open-or-create :which-key "R-(f)ind")
   "RD" '((lambda () (interactive) (dired denote-directory) ) :which-key "R-(D)ired")
-  "h" '(:ignore t :which-key "(❔-h)elp.......................")
+  "h" '(:ignore t :which-key "(h)elp..........................")
   "hh" '(describe-symbol :which-key "h-(h)elp symbol (elisp)")
   "hH" '(describe-key :which-key "h-(H)elp keybinding")
   "ho" '(org-info :which-key "h-(o)rg info")
-  "hw" '(which-key-show-top-level :which-key "h-(w)hich key  🎹")
+  "hw" '(which-key-show-top-level :which-key "h-(w)hich key")
   "hd" '(devdocs-lookup :which-key "h-(d)evdocs lookup")
   "hm" '(consult-man :which-key "h-(m)an")
-  "p" '(:ignore t :which-key "(📚-p)rojectl.................")
+  "p" '(:ignore t :which-key "(p)rojectl....................")
   "pr" '(xref-find-references :which-key "p-(r)eferences")
   "pd" '(consult-flymake :which-key "p-(d)iagnostic")
   "pf" '(project-find-file :which-key "p-(f)ind-file")
@@ -2087,15 +2150,15 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "pk" '(project-kill-buffers :which-key "p-(k)ill-buf-proj")
   "pl" '(consult-project-buffer :which-key "p-(l)ist-buf-proj")
   "pv" '(consult-imenu :which-key "p-(v)ariables")
-  "v" '(:ignore t :which-key "(📚-v)-project................")
+  "v" '(:ignore t :which-key "(v)-project...................")
   "vq" '(format-all-buffer :which-key "v-(q)-format-buffer")
   "vr" '(eglot-rename :which-key "v-(r)ename")
-  "b" '(:ignore t :which-key "(🔖-b)ookmark...................")
+  "b" '(:ignore t :which-key "(b)ookmark......................")
   "bm" '(consult-bookmark :which-key "b-(m)ark-consult")
   "bs" '(bookmark-set :which-key "b-(s)et")
   "bd" '(bookmark-delete :which-key "b-(d)elete")
   "br" '(bookmark-rename :which-key "b-(r)ename")
-  "c" '(:ignore t :which-key "(🤔-c)onsult....................")
+  "c" '(:ignore t :which-key "(c)onsult.......................")
   "co" '(consult-org-heading :which-key "c-(o)rg   == ofh")
   "ci" '(consult-imenu :which-key "c-(i)menu")
   "cm" '(consult-man :which-key "c-(m)an")
@@ -2107,12 +2170,12 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "cF" '(consult-fd :which-key "c-(F)d   == $find")
   "ca" '(consult-org-agenda :which-key "c-(a)genda headings")
   "cg" '(consult-git-grep :which-key "c-(g)it grep  == ps")
-  "C" '(:ignore t :which-key "(🔟-C)alc related...............")
+  "C" '(:ignore t :which-key "(C)alc related..................")
   "Ca" '(calc :which-key "C-(a) calc")
   "Ce" '(calc-embedded :which-key "C-(e) embedded")
   "Cf" '(full-calc :which-key "C-(f) full")
   "l" '(consult-buffer :which-key "(l)ist-buffer")
-  "L" '(:ignore t :which-key "(📝-L)buffer....................")
+  "L" '(:ignore t :which-key "(L)buffer....................")
   "Lr" '(revert-buffer-quick :which-key "L-(r)eread")
   "Le" '(eval-buffer :which-key "L-(e)val")
   "Li" '(ibuffer :which-key "L-(i)buffer")
@@ -2127,14 +2190,14 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "Lk" '(buf-move-up :which-key "L-(k) move up")
   "Ll" '(buf-move-right :which-key "L-(l) move right")
   "LL" '(tear-off-window :which-key "L-(L) tear window to frame")
-  "mg" '(magit-status :which-key "(m)a(g)it  🪄")
+  "mg" '(magit-status :which-key "(m)a(g)it")
   "<" '(recompile :which-key "recompile")
   "sco" '(corfu-mode :which-key "s-(c)orfu-(m)ode")
   "se" '(eglot :which-key "s-(e)glot")
   "rg" '(rg :which-key "(r)ip-(g)rep  ~cr")
   "gs" '(git-gutter:popup-hunk :which-key "(g)it-(s) popup hunk  ~cr")
   "gd" '(magit-ediff-compare :which-key "ma(g)it-e(d) hunk  ~cr")
-  "P" '(:ignore :which-key "Python (inferior)🐍 ......")
+  "P" '(:ignore :which-key "Python (inferior)   ......")
   "Pr" '(python-shell-restart :which-key "P-(R)estart")
   "PP" '(run-python :which-key "P-(P) run-python")
   "Pk" '(comint-send-eof :which-key "P-(k) kill  (also C-c C-d)")
@@ -2161,14 +2224,14 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "os" '(:ignore t :which-key "o-(s)ubtree..................")
   "osy" '(org-copy-subtree :which-key "os-(y)ank (aka copy)")
   "osY" '(org-id-copy :which-key "os-(Y)ank (ID)")
-  "osv" '(org-mark-subtree :which-key "os-(v)isually select")
+  "osv" '(org-mark-element :which-key "os-(v)isually select element")
   "osm" '(org-refile :which-key "os-(m)ove")
   "osd" '(org-cut-subtree :which-key "os-(d)elete (aka cut)")
   "ost" '(org-toggle-narrow-to-subtree :which-key "os-(t)oggle narrow")
   "osn" '(org-num-mode :which-key "os-(n)um mode")
   "oss" '(org-sort :which-key "os-(s)ort")
   "osp" '(org-set-property :which-key "os-(p)roperty")
-  "osI" '(org-indent-mode :which-key "os-(I)ndent mode  👉")
+  "osI" '(org-indent-mode :which-key "os-(I)ndent mode")
   "osi" '(:ignore t :which-key "os-(i)nsert heading..........")
   "osia" '(org-insert-heading-after-current :which-key "osi-(a)fter           C-RET")
   "osiA" '(org-insert-todo-heading-respect-content :which-key "osi-(A)fter    todo C-S-RET")
@@ -2199,6 +2262,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "oxB" '((lambda () (interactive) (org-beamer-export-to-pdf nil t) ) :which-key "ox-(B)eamer subtree")
   "oxp" '(org-latex-export-to-pdf :which-key "ox-(p)df latex")
   "oxr" '(org-reveal-export-to-html :which-key "ox-(r)eveal js")
+  "oxh" '(org-html-export-to-html :which-key "ox-(h)tml")
   "oxP" '((lambda () (interactive) (org-latex-export-to-pdf nil t) ) :which-key "ox-(P)df latex subtree")
   "oxo" '(gry/org-open-pdf :which-key "ox-(o)pen exported pdf")
   "oxO" '(gry/org-open-html :which-key "ox-(O)pen exported html")
@@ -2306,7 +2370,7 @@ fi
     (kbd "N")    'mkdir)
   )
 #+end_src
-** Icons - Dired
+** COMMENT Icons - Dired
 #+begin_src emacs-lisp
 (use-package all-the-icons
   ;; :if (display-graphic-p)
@@ -2358,7 +2422,13 @@ I don't use these not much
   :ensure t ; or :straight t
   :bind (("C-`"   . popper-toggle      )
          ("M-`"   . popper-cycle       )
-         ("C-M-`" . popper-toggle-type ))
+         ("C-M-`" . popper-toggle-type )
+         ;; :map popper-mode-map
+         ;; ("TAB"   . forward-button     ) ;; mostly for terminal mode
+         ;; :map help-mode-map
+         ;; ("TAB"   . forward-button     ) ;; mostly for terminal mode
+
+         )
   :init
   (setq popper-reference-buffers '("\\*Messages\\*"
                                    "\\*eldoc\\*"
@@ -2376,7 +2446,7 @@ I don't use these not much
   (popper-echo-mode +1))
 #+end_src
 
-** emacs-everywhere
+** COMMENT emacs-everywhere
 #+begin_src emacs-lisp
 (use-package emacs-everywhere)
 #+end_src
@@ -2516,11 +2586,12 @@ I don't use these not much
 	   (concat "./"
 		   (file-name-base buffer-file-name))))))
 #+end_src
-* Custom set variable:
+* COMMENT Custom set variable:
 [[https://www.youtube.com/watch?v=tw2-rI2bxSg&t=1s][Initial idea from Systems crafter]], [[https://emacs.stackexchange.com/a/18785/38482][and code structure from this answer on emacs stackexchange]], and need to set ~enble-local-eval~ to ~t~ ()
 
 #+begin_src emacs-lisp
-(add-to-list 'safe-local-variable-values '(dired-omit-files         . "\\`[.]?#\\|\\`[.][.]?\\'\\|\\.html\\'\\|\\.tex\\'"    )) ;; <-- wokr
+;;(add-to-list 'safe-local-variable-values '(dired-omit-files         . "\\`[.]?#\\|\\`[.][.]?\\'\\|\\.html\\'\\|\\.tex\\'"    )) ;; <-- wokr
+(add-to-list 'safe-local-variable-values '(dired-omit-files         . "\\`[.]?#\\|\\`[.][.]?\\'\\|\\.a\\'\\|\\.tex\\'"    )) ;; <-- wokr
 ;;??(add-to-list 'safe-local-variable-values '(org-download-image-dir   . (concat "./od-imgs/" (file-name-base buffer-file-name))))
 (add-to-list 'safe-local-variable-values '(org-download-heading-lvl . nil                                                    ))
 ;;(put 'org-download-image-dir             'safe-local-variable #'stringp)  <--- didn't work 
