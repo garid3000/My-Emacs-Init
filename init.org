@@ -1662,6 +1662,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | tv     | vterm                                                   | t-(v)term  vterm               | -    |        |
 | tx     | garid-custom/open-external-term-here                    | t-(x)ternal terminal           | -    |        |
 | tt     | eat                                                     | t-ea(t) terminal               | -    |        |
+| Y      | gry-copy-to-x-clip                                      | (Y)ank to xclip                | -    |        |
 
 **** Bookmark
 #+attr_latex: :placement [H]
@@ -1779,7 +1780,6 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | yd     | yas-describe-tables    | y-(d)esc-table                | -    |        |
 | yv     | yas-visit-snippet-file | y-(v)isit                     | -    |        |
 | yi     | consult-yasnippet      | y-(i)nsert                    | -    |        |
-| yx     | gry-copy-to-x-clip     | y-(x) yank to xclip           | -    |        |
 
 **** Calc related
 #+caption: gnu-calc related
@@ -2105,7 +2105,6 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "yd" '(yas-describe-tables :which-key "y-(d)esc-table")
   "yv" '(yas-visit-snippet-file :which-key "y-(v)isit")
   "yi" '(consult-yasnippet :which-key "y-(i)nsert")
-  "yx" '(gry-copy-to-x-clip :which-key "y-(x) yank to xclip")
   "s" '(:ignore t :which-key "(s)ystem.....................")
   "srf" '((lambda () (interactive) (recentf-open-files) ) :which-key "s-(r)ecent-(f)iles")
   "sl" '(:ignore t :which-key "s-(l)ine.....................")
@@ -2129,6 +2128,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "tv" '(vterm :which-key "t-(v)term  vterm")
   "tx" '(garid-custom/open-external-term-here :which-key "t-(x)ternal terminal")
   "tt" '(eat :which-key "t-ea(t) terminal")
+  "Y" '(gry-copy-to-x-clip :which-key "(Y)ank to xclip")
   "R" '(:ignore t :which-key "(R)denote.....................")
   "Rr" '(denote-rename-file :which-key "R-(r)ename")
   "Rf" '(denote-open-or-create :which-key "R-(f)ind")
