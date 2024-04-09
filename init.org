@@ -91,7 +91,8 @@ It emulates vi motion inside Emacs.
   ;; for org-cycle (tab) working for terminal
   :config
   (evil-define-key 'normal  org-mode-map   (kbd "TAB") #'org-cycle)
-  (evil-define-key 'normal 'prog-mode-map  (kbd "K")   'eldoc-box-help-at-point)
+  ;;(evil-define-key 'normal 'prog-mode-map  (kbd "K")   'eldoc-box-help-at-point)
+  (evil-define-key 'normal 'prog-mode-map  (kbd "K")   'eldoc)
   ;; cuz https://emacs.stackexchange.com/a/73457/38482
   (evil-mode 1))
 #+end_src
@@ -1207,7 +1208,7 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
 ;; (use-package treesit-fold
 ;;   :straight (treesit-fold :type git :host github :repo "abougouffa/treesit-fold"))
 #+end_src
-** Corfu
+** COMMENT Corfu
 #+begin_src emacs-lisp
 ;; from https://github.com/Gavinok/emacs.d/blob/3ccc6e35feb2903442c9f7625fba081d93a2fa36/init.el#L614
 (use-package corfu
@@ -2570,6 +2571,7 @@ I don't use these not much
   :init
   (setq popper-reference-buffers '("\\*Messages\\*"
                                    "\\*eldoc\\*"
+                                   "\\*eldoc.*\\*" ;;regex
                                    "\\*xref\\*"
                                    "Output\\*$"
                                    "\\*Async Shell Command\\*"
