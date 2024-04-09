@@ -391,8 +391,8 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 (use-package orderless
   :ensure t
   :custom
-  (completion-styles '(orderless basic))
-  ;; (completion-styles '(orderless flex))
+  ;;(completion-styles '(orderless basic))
+  (completion-styles '(orderless flex))
   ;; (completion-category-overrides
   '((file (styles basic partial-completion))))
 #+end_src
@@ -471,6 +471,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   (require 'org-tempo)
   ;; org tempo should I make it yassnippet?
   (add-to-list 'org-structure-template-alist '("el"   .  "src emacs-lisp"))
+  (add-to-list 'org-structure-template-alist '("go"   .  "src go"))
   (add-to-list 'org-structure-template-alist '("sh"   .  "src sh"))
   (add-to-list 'org-structure-template-alist '("te"   .  "src text" ))
   (add-to-list 'org-structure-template-alist '("do"   .  "src dot" ))
@@ -519,16 +520,17 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 ** Org-babel languages related
 #+begin_src emacs-lisp
 (use-package ob-nim)
+(use-package ob-go)
 
 (org-babel-do-load-languages
  'org-babel-load-languages
- '((python     . t) (emacs-lisp . t)    
-   (latex      . t) (shell      . t)    
-   (dot        . t) (makefile   . t)    
+ '((python     . t) (emacs-lisp . t)
+   (latex      . t) (shell      . t)
+   (dot        . t) (makefile   . t)
    (sqlite     . t) (gnuplot    . t)
    (nim        . t) (plantuml   . t)
    (maxima     . t) (calc       . t)
-   (awk        . t)
+   (awk        . t) (go         . t)
    ))
 #+end_src
 
@@ -641,7 +643,7 @@ When nil, use the default face background."
       :unnarrowed t)
 
      ("r" "Research" plain "* %?"
-      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}__research.org"
+      :if-new (file+head "g_research/%<%Y%m%d%H%M%S>-${slug}__research.org"
                          ,(concat "#+title: ${title}\n"
                                   "#+filetags: :research:\n"
                                   "#+date: %U\n"
@@ -650,7 +652,7 @@ When nil, use the default face background."
       :unnarrowed t)
 
      ("k" "Kanji" plain "* %?"
-      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
+      :if-new (file+head "g_kanji/%<%Y%m%d%H%M%S>-${slug}.org"
                          ,(concat "#+title: ${title}\n"
                                   "#+filetags: :kanji:\n"
                                   "#+author: Garid Zorigoo\n"
@@ -683,7 +685,7 @@ When nil, use the default face background."
 
      ("P" "Project" plain
       "* Goals\n\n%?* Tasks\n\n** TODO Add initial tasks\n\n* Dates\n\n"
-      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
+      :if-new (file+head "g_project/%<%Y%m%d%H%M%S>-${slug}.org"
                          ,(concat "#+title: ${title}\n"
                                   "#+filetags: :Project:\n"
                                   "#+auto_tangle: nil"))
@@ -790,7 +792,9 @@ When nil, use the default face background."
   :after org
   :init
   (setq org-gtd-update-ack "3.0.0")
-  (setq org-gtd-directory (concat (denote-directory) "/gtd")))
+  (setq org-gtd-directory (concat (denote-directory) "/gtd"))
+  (org-gtd-mode 1)
+  )
 #+end_src
 
 #+RESULTS:
@@ -849,6 +853,13 @@ When nil, use the default face background."
 ** Org timeblock
 #+begin_src emacs-lisp
 (use-package org-timeblock)
+#+end_src
+** org timeline
+#+begin_src emacs-lisp
+(use-package org-timeline
+  :init
+  (add-hook 'org-agenda-finalize-hook 'org-timeline-insert-timeline :append)
+  )
 #+end_src
 * Org Exports
 ** Org \LaTeX{} export heading format (e.g. Todo color)         :customFunc:
@@ -914,6 +925,10 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
       org-html-head-include-default-style nil ;; Use our own styles
       ;;org-html-head "<link rel=\"stylesheet\" href=\"https://cdn.simplecss.org/simple.min.css\" />"
       org-html-head "<link rel=\"stylesheet\" type=\"text/css\" href=\"https://orgmode.org/worg/style/worg.css\"/>"
+      ;;org-html-head "<link rel=\"stylesheet\" type=\"text/css\" href=\"https://orgmode.org/worg/style/worg7.css\"/>"
+      ;; org-html-head "<link rel=\"stylesheet\" type=\"text/css\" href=\"https://orgmode.org/worg/style/worg-zenburn.css\"/>"
+      ;;org-html-head "<link rel=\"stylesheet\" type=\"text/css\" href=\"https://orgmode.org/worg/style/worg-classic.css\"/>"
+      ;;org-html-head "<link rel=\"stylesheet\" type=\"text/css\" href=\"https://orgmode.org/worg/style/zenburn-emacs.css\"/>"
       ;;org-html-head "<link rel=\"stylesheet\" href=\"https://orgmode.org/worg/style/worg.css\" />"
       ;;org-html-head "<link rel=\"stylesheet\" href=\"https://gongzhitaao.org/orgcss/org.css\" />"
       )
@@ -938,12 +953,42 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
     :section-numbers  org-export-with-section-numbers
     :with-toc         t
     :html_link_home  "index.html"
+    ;; :html-preamble "This is just a test"
+    :html-preamble "<div id=\"navbar\"> <ul>
+  <div class=\"stork-wrapper\">
+    <a href=\"/~zgarid/index.html\">Home</a>             &nbsp;
+    <a href=\"..\">Up/Back</a>                           &nbsp;
+    <a href=\"/~zgarid/meta-research.html\">Research</a> &nbsp;
+    <a href=\"/~zgarid/meta-python.html\">Python</a>     &nbsp;
+    <a href=\"/~zgarid/meta-cli.html\">CLI</a>           &nbsp;
+    <a href=\"/~zgarid/meta-org.html\">Org-Mode</a>      &nbsp;
+    <a href=\"/~zgarid/search.html\">Search</a>          &nbsp;
+    <input data-stork=\"federalist\" class=\"stork-input\" />
+    <div data-stork=\"federalist-output\" class=\"stork-output\"></div>
+  </div>
+</ul>
+<hr>
+</div>
+<script src=\"https://files.stork-search.net/releases/v1.6.0/stork.js\"></script>
+<script>
+stork.register(
+    'federalist', 'https://www.ep.sci.hokudai.ac.jp/~zgarid/garid_stork.st'
+)
+</script>
+"
+    ;; 
+    ;; 'https://github.com/garid3000/testy/raw/master/garid_stork.st'
+    ;; :html-divs ((preamble "header"  "preamble")
+    ;;             (content   "main"   "content")
+    ;;             (postamble "footer" "postamble"))
+
     )
    ;;:html_head "<link rel=\"stylesheet\" href=\"/home/garid/org.css\">"
    ;; not sure why above line doesn't change css of thml output
    ;; that's why I copied from
    ;;https://systemcrafters.net/publishing-websites-with-org-mode/building-the-site/
    ;; above
+
 
    ("Pensieve: od-imgs change position"
     :base-directory ,(concat org-roam-directory "od-imgs/")
@@ -953,7 +998,38 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
     :publishing-directory ,(concat org-roam-directory "website/od-imgs")
     ;; :publishing-directory "/tmp/asdf/img"
     :publishing-function org-publish-attachment)
-   ))
+
+   ;; ("Pensieve: org -> txt"
+   ;;  :base-directory ,org-roam-directory
+   ;;  ;; :base-directory "~/Pensieve/"
+   ;;  :recursive t
+   ;;  :publishing-function org-ascii-export-to-ascii
+   ;;  :publishing-directory ,(concat org-roam-directory "txt_for_stork")
+   ;;  :exclude ".*daily/.*org"  ;;; for excluding -daily
+   ;;  ;; :publishing-directory "/tmp/asdf"
+   ;;  ;;:publishing-directory (concat org-roam-directory "website")
+   ;;  ;; :section-numbers nil
+   ;;  :section-numbers  nil
+   ;;  ;; :with-toc         t
+   ;;  )
+
+   ;; ("Pensieve: org -> txt 2"
+   ;;  :base-directory ,org-roam-directory
+   ;;  ;; :base-directory "~/Pensieve/"
+   ;;  :recursive t
+   ;;  :publishing-function org-ascii-export-to-ascii
+   ;;  :publishing-directory ,(concat org-roam-directory "txt_for_stork")
+   ;;  :exclude ".*daily/.*org"  ;;; for excluding -daily
+   ;;  ;; :publishing-directory "/tmp/asdf"
+   ;;  ;;:publishing-directory (concat org-roam-directory "website")
+   ;;  ;; :section-numbers nil
+   ;;  :section-numbers  nil
+   ;;  :with-toc         nil
+   ;;  ;;:html_link_home  "index.html"
+   ;;  )
+
+   )
+ )
 #+end_src
 
 #+RESULTS:
@@ -1691,32 +1767,35 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 #+attr_latex: :placement [H]
 #+caption: system commmands
 #+name: tbl-kbind-sys-related
-| key(s) | function                                                | short description              | mode | lambda |
-|--------+---------------------------------------------------------+--------------------------------+------+--------|
-| s      | :ignore t                                               | (s)ystem.....................  | -    |        |
-| srf    | (recentf-open-files)                                    | s-(r)ecent-(f)iles             | -    | y      |
-| sl     | :ignore t                                               | s-(l)ine.....................  | -    |        |
-| sl5    | (setq display-line-numbers-width 5)                     | sl-(5) digit number            | -    | y      |
-| sl4    | (setq display-line-numbers-width 4)                     | sl-(4) digit number            | -    | y      |
-| sl3    | (setq display-line-numbers-width 3)                     | sl-(3) digit number            | -    | y      |
-| slm    | scroll-lock-mode                                        | sl-(m)ode scroll-lock-mode     | -    |        |
-| slv    | global-display-fill-column-indicator-mode               | sl-(v)ertical-line             | -    |        |
-| sln    | display-line-numbers-mode                               | sl-(n)umber toggle             | -    |        |
-| slr    | ruler-mode                                              | sl-(r)uler mode                | -    |        |
-| st     | toggle-transparency                                     | s-(t)oggle-transparency        | -    |        |
-| scl    | (global-command-log-mode) (clm/open-command-log-buffer) | s-(c)md-(l)og                  | -    | y      |
-| sw     | whitespace-mode                                         | s-(w)hitespace                 | -    |        |
-| O      | :ignore t                                               | (O)pen........................ | -    |        |
-| Oe     | (find-file "~/.config/emacs/init.org")                  | O-(e)macs confg org            | -    | y      |
-| OE     | (find-file "~/.config/emacs/init.el")                   | O-(E)macs confg el             | -    | y      |
-| Ob     | (find-file (nth 0 org-cite-global-bibliography))        | O-(b)ibliography               | -    | y      |
-| OO     | (find-file org-default-notes-file)                      | O-(O)rg capture                | -    | y      |
-| t      | :ignore t                                               | (t)erminal.................... | -    |        |
-| te     | eshell                                                  | t-(e)shell emacs-shell         | -    |        |
-| tv     | vterm                                                   | t-(v)term  vterm               | -    |        |
-| tx     | garid-custom/open-external-term-here                    | t-(x)ternal terminal           | -    |        |
-| tt     | eat                                                     | t-ea(t) terminal               | -    |        |
-| Y      | gry-copy-to-x-clip                                      | (Y)ank to xclip                | -    |        |
+| key(s) | function                                                 | short description              | mode | lambda |
+|--------+----------------------------------------------------------+--------------------------------+------+--------|
+| s      | :ignore t                                                | (s)ystem.....................  | -    |        |
+| srf    | (recentf-open-files)                                     | s-(r)ecent-(f)iles             | -    | y      |
+| sl     | :ignore t                                                | s-(l)ine.....................  | -    |        |
+| sl5    | (setq display-line-numbers-width 5)                      | sl-(5) digit number            | -    | y      |
+| sl4    | (setq display-line-numbers-width 4)                      | sl-(4) digit number            | -    | y      |
+| sl3    | (setq display-line-numbers-width 3)                      | sl-(3) digit number            | -    | y      |
+| slm    | scroll-lock-mode                                         | sl-(m)ode scroll-lock-mode     | -    |        |
+| slv    | global-display-fill-column-indicator-mode                | sl-(v)ertical-line             | -    |        |
+| sln    | display-line-numbers-mode                                | sl-(n)umber toggle             | -    |        |
+| slr    | ruler-mode                                               | sl-(r)uler mode                | -    |        |
+| st     | toggle-transparency                                      | s-(t)oggle-transparency        | -    |        |
+| scl    | (global-command-log-mode) (clm/open-command-log-buffer)  | s-(c)md-(l)og                  | -    | y      |
+| sw     | whitespace-mode                                          | s-(w)hitespace                 | -    |        |
+| O      | :ignore t                                                | (O)pen........................ | -    |        |
+| Oe     | (find-file "~/.config/emacs/init.org")                   | O-(e)macs confg org            | -    | y      |
+| OE     | (find-file "~/.config/emacs/init.el")                    | O-(E)macs confg el             | -    | y      |
+| Ob     | (find-file (nth 0 org-cite-global-bibliography))         | O-(b)ibliography               | -    | y      |
+| OO     | (find-file org-default-notes-file)                       | O-(O)rg capture                | -    | y      |
+| Oa     | (find-file "~/Documents/Personal/gtd/gtd_archive_2024")  | O-(a)rchive                    | -    | y      |
+| Ot     | (find-file "~/Documents/Personal/gtd/org-gtd-tasks.org") | O-(t)asks                      | -    | y      |
+| Oi     | (find-file "~/Documents/Personal/gtd/inbox.org")         | O-(i)nbox                      | -    | y      |
+| t      | :ignore t                                                | (t)erminal.................... | -    |        |
+| te     | eshell                                                   | t-(e)shell emacs-shell         | -    |        |
+| tv     | vterm                                                    | t-(v)term  vterm               | -    |        |
+| tx     | garid-custom/open-external-term-here                     | t-(x)ternal terminal           | -    |        |
+| tt     | eat                                                      | t-ea(t) terminal               | -    |        |
+| Y      | gry-copy-to-x-clip                                       | (Y)ank to xclip                | -    |        |
 
 **** Bookmark
 #+attr_latex: :placement [H]
@@ -2178,6 +2257,9 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "OE" '((lambda () (interactive) (find-file "~/.config/emacs/init.el") ) :which-key "O-(E)macs confg el")
   "Ob" '((lambda () (interactive) (find-file (nth 0 org-cite-global-bibliography)) ) :which-key "O-(b)ibliography")
   "OO" '((lambda () (interactive) (find-file org-default-notes-file) ) :which-key "O-(O)rg capture")
+  "Oa" '((lambda () (interactive) (find-file "~/Documents/Personal/gtd/gtd_archive_2024") ) :which-key "O-(a)rchive")
+  "Ot" '((lambda () (interactive) (find-file "~/Documents/Personal/gtd/org-gtd-tasks.org") ) :which-key "O-(t)asks")
+  "Oi" '((lambda () (interactive) (find-file "~/Documents/Personal/gtd/inbox.org") ) :which-key "O-(i)nbox")
   "t" '(:ignore t :which-key "(t)erminal....................")
   "te" '(eshell :which-key "t-(e)shell emacs-shell")
   "tv" '(vterm :which-key "t-(v)term  vterm")
