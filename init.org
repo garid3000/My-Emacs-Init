@@ -473,16 +473,16 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   ;; org tempo should I make it yassnippet?
   (add-to-list 'org-structure-template-alist '("el"   .  "src emacs-lisp"))
   (add-to-list 'org-structure-template-alist '("go"   .  "src go"))
-  (add-to-list 'org-structure-template-alist '("sh"   .  "src sh"))
+  (add-to-list 'org-structure-template-alist '("sh"   .  "src sh :eval no-export"))
   (add-to-list 'org-structure-template-alist '("te"   .  "src text" ))
   (add-to-list 'org-structure-template-alist '("do"   .  "src dot" ))
-  (add-to-list 'org-structure-template-alist '("do1"  .  "src dot :file /home/garid/orgfiles/... :exports results :tangle no :eval never-export" ))
+  (add-to-list 'org-structure-template-alist '("do1"  .  "src dot :file /home/garid/orgfiles/... :exports results :tangle no :eval no-export" ))
   (add-to-list 'org-structure-template-alist '("tm"   .  "src tmux" ))
   (add-to-list 'org-structure-template-alist '("tm1"  .  "src tmux :session tmuxSess1 :eval never-export" ))
   (add-to-list 'org-structure-template-alist '("tm2"  .  "src tmux :session tmuxSess2 :eval never-export" ))
   (add-to-list 'org-structure-template-alist '("py"   .  "src python"))
-  (add-to-list 'org-structure-template-alist '("py1"  .  "src python :session pySess1 :results output :exports both :cache yes :eval never-export"))
-  (add-to-list 'org-structure-template-alist '("py2"  .  "src python :session pySess2 :results output :exports both :cache yes :eval never-export"))
+  (add-to-list 'org-structure-template-alist '("py1"  .  "src python :session pySess1 :results output :exports both :cache yes :eval no-export"))
+  (add-to-list 'org-structure-template-alist '("py2"  .  "src python :session pySess2 :results output :exports both :cache yes :eval no-export"))
   (add-to-list 'org-structure-template-alist '("sq"   .  "sqlite"))
   (add-to-list 'org-structure-template-alist '("mk"   .  "src makefile :tangle no"))
   (add-to-list 'org-structure-template-alist '("ba"   .  "abstract"))
@@ -1208,7 +1208,7 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
 ;; (use-package treesit-fold
 ;;   :straight (treesit-fold :type git :host github :repo "abougouffa/treesit-fold"))
 #+end_src
-** COMMENT Corfu
+** Corfu
 #+begin_src emacs-lisp
 ;; from https://github.com/Gavinok/emacs.d/blob/3ccc6e35feb2903442c9f7625fba081d93a2fa36/init.el#L614
 (use-package corfu
@@ -1235,27 +1235,77 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
               ("RET"        . nil                    ))
 
   :init
-  ;; (global-corfu-mode    )
+  (global-corfu-mode    )
+  (corfu-doc-mode       )
   (corfu-history-mode   )
-  ;; (corfu-popupinfo-mode ) ; Popup completion info
+  (corfu-popupinfo-mode ) ; Popup completion info
   :config
   (add-hook 'eshell-mode-hook
             (lambda () (setq-local corfu-quit-at-boundary t
 				   corfu-quit-no-match t
 				   corfu-auto nil)
-              (corfu-mode))))
+              (corfu-mode)))
+  )
 
-(straight-use-package
- '(corfu-terminal
-   :type git
-   :repo "https://codeberg.org/akib/emacs-corfu-terminal.git"))
 
-(straight-use-package
- '(corfu-doc-terminal
-   :type git
-   :repo "https://codeberg.org/akib/emacs-corfu-doc-terminal.git"))
+(use-package corfu-terminal
+  :straight (corfu-terminal :type git :repo "https://codeberg.org/akib/emacs-corfu-terminal.git")
+  :init
+  (corfu-terminal-mode +1)
+  )
+
+
+(use-package corfu-doc-terminal
+  :straight (corfu-doc-terminal :type git :repo "https://codeberg.org/akib/emacs-corfu-doc-terminal.git")
+  :init
+  (corfu-doc-terminal-mode +1)
+
+  ;;(eglot-booster-mode +1)
+  )
+;;(straight-use-package
+;; '(corfu-terminal
+;;   :type git
+;;   :repo "https://codeberg.org/akib/emacs-corfu-terminal.git"))
+;;
+;;(straight-use-package
+;; '(corfu-doc-terminal
+;;   :type git
+;;   :repo "https://codeberg.org/akib/emacs-corfu-doc-terminal.git"))
 #+end_src
-** completion in region
+** Eglot for the LSPs
+#+begin_src emacs-lisp
+(use-package eglot
+  :config
+  (setq eldoc-echo-area-use-multiline-p 0)
+  (setq eglot-ignored-server-capabilities '(:documentHighlightProvider)))
+
+
+;; (straight-use-package
+;; '(eglot-booster
+;; :type git
+;; :repo "https://github.com/jdtsmith/eglot-booster"))
+;;
+(use-package eglot-booster
+  :straight (eglot-booster :type git :host github :repo "https://github.com/jdtsmith/eglot-booster")
+  :config
+  (eglot-booster-mode +1)
+  )
+
+
+
+
+;;(straight-use-package
+;; '(corfu-terminal
+;;   :type git
+;;   :repo "https://codeberg.org/akib/emacs-corfu-terminal.git"))
+
+
+;;(straight-use-package
+;; '(corfu-doc-terminal
+;;   :type git
+;;   :repo "https://codeberg.org/akib/emacs-corfu-doc-terminal.git"))
+#+end_src
+** COMMENT completion in region
 #+begin_src emacs-lisp
 ;; (setq completions-format 'one-column)
 ;; (setq completions-header-format nil)
@@ -1354,24 +1404,6 @@ This requires [[id:2bc28375-3cf3-4784-8a34-ecb1a2b0c24a][Straight.el]] to instal
 ;;         ("M-H" . acm-hide        ) ("C-H" . acm-hide        )  ;;
 ;;         ("M-G" . acm-select-last ) ("C-G" . acm-hide        )) ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-#+end_src
-** COMMENT Eglot for the LSPs
-#+begin_src emacs-lisp
-(use-package eglot
-  :config
-  (setq eldoc-echo-area-use-multiline-p 0)
-  (setq eglot-ignored-server-capabilities '(:documentHighlightProvider)))
-
-(straight-use-package
- '(corfu-terminal
-   :type git
-   :repo "https://codeberg.org/akib/emacs-corfu-terminal.git"))
-
-
-(straight-use-package
- '(corfu-doc-terminal
-   :type git
-   :repo "https://codeberg.org/akib/emacs-corfu-doc-terminal.git"))
 #+end_src
 ** COMMENT Python
 #+begin_src emacs-lisp
