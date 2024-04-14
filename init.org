@@ -596,13 +596,14 @@ When nil, use the default face background."
   (when buffer-file-name ;; had to check buffer had file. (i.e. sometimes buffer don't have file yet, e.g. org-captures)
     ;; (message (concat buffer-file-name " -- " (vc-find-root buffer-file-name ".git")))
     (if (vc-find-root buffer-file-name ".git") ;; (vc-root-dir)    ;; check if org file is in git directory
-        (setq org-download-image-dir   (concat (vc-find-root buffer-file-name ".git")
-                                               "/od-imgs/"
-                                               (file-name-base buffer-file-name))
+        (setq org-download-image-dir
+              (file-relative-name (concat (file-name-as-directory (vc-find-root buffer-file-name ".git"))
+                                          (file-name-as-directory "od-imgs")
+                                          (file-name-base buffer-file-name))
+                                  (file-name-directory buffer-file-name))
               org-download-heading-lvl nil) ;; nil == orgdownload not mkdir images in each corresponding directory
 
-      (setq org-download-image-dir      (concat "./shiod-imgs/"
-                                                (file-name-base buffer-file-name))
+      (setq org-download-image-dir   (concat "./shiod-imgs/" (file-name-base buffer-file-name))
             org-download-heading-lvl     nil)
       ) ;; nil == orgdownload not mkdir images in each corresponding directory
     )
@@ -851,7 +852,7 @@ When nil, use the default face background."
       ;;                          "* Later [[%x]]\n  %i\n  %a"))
       )
 #+end_src
-** Org timeblock
+** Org timebloc
 #+begin_src emacs-lisp
 (use-package org-timeblock)
 #+end_src
@@ -1236,7 +1237,7 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
 
   :init
   (global-corfu-mode    )
-  (corfu-doc-mode       )
+  ;;(corfu-doc-mode       )
   (corfu-history-mode   )
   (corfu-popupinfo-mode ) ; Popup completion info
   :config
@@ -1244,66 +1245,39 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
             (lambda () (setq-local corfu-quit-at-boundary t
 				   corfu-quit-no-match t
 				   corfu-auto nil)
-              (corfu-mode)))
-  )
+              (corfu-mode))))
+#+end_src
 
-
+** corfu Terminal mode
+#+begin_src emacs-lisp
 (use-package corfu-terminal
   :straight (corfu-terminal :type git :repo "https://codeberg.org/akib/emacs-corfu-terminal.git")
   :init
-  (corfu-terminal-mode +1)
-  )
-
+  (corfu-terminal-mode +1))
 
 (use-package corfu-doc-terminal
   :straight (corfu-doc-terminal :type git :repo "https://codeberg.org/akib/emacs-corfu-doc-terminal.git")
   :init
-  (corfu-doc-terminal-mode +1)
-
-  ;;(eglot-booster-mode +1)
-  )
-;;(straight-use-package
-;; '(corfu-terminal
-;;   :type git
-;;   :repo "https://codeberg.org/akib/emacs-corfu-terminal.git"))
-;;
-;;(straight-use-package
-;; '(corfu-doc-terminal
-;;   :type git
-;;   :repo "https://codeberg.org/akib/emacs-corfu-doc-terminal.git"))
+  (corfu-doc-terminal-mode +1))
 #+end_src
+
 ** Eglot for the LSPs
 #+begin_src emacs-lisp
 (use-package eglot
   :config
   (setq eldoc-echo-area-use-multiline-p 0)
   (setq eglot-ignored-server-capabilities '(:documentHighlightProvider)))
-
-
-;; (straight-use-package
-;; '(eglot-booster
-;; :type git
-;; :repo "https://github.com/jdtsmith/eglot-booster"))
-;;
+#+end_src
+** eglot booster
+#+begin_src emacs-lisp
 (use-package eglot-booster
-  :straight (eglot-booster :type git :host github :repo "https://github.com/jdtsmith/eglot-booster")
+  :straight (eglot-booster
+             :type git
+             :host github
+             :repo "jdtsmith/eglot-booster")
   :config
   (eglot-booster-mode +1)
   )
-
-
-
-
-;;(straight-use-package
-;; '(corfu-terminal
-;;   :type git
-;;   :repo "https://codeberg.org/akib/emacs-corfu-terminal.git"))
-
-
-;;(straight-use-package
-;; '(corfu-doc-terminal
-;;   :type git
-;;   :repo "https://codeberg.org/akib/emacs-corfu-doc-terminal.git"))
 #+end_src
 ** COMMENT completion in region
 #+begin_src emacs-lisp
@@ -1634,6 +1608,27 @@ This requires [[id:2bc28375-3cf3-4784-8a34-ecb1a2b0c24a][Straight.el]] to instal
   "zoom"
   ("n" org-next-link     "next")
   ("p" org-previous-link "prev"))
+#+end_src
+** put empty svg file at point
+#+begin_src emacs-lisp
+(defun garid/put-emtpy-svg-img-at-point ()
+  (interactive)
+  ;;Part 1: creates org-image if non existense
+  (unless (file-directory-p org-download-image-dir);; when not
+    (make-directory org-download-image-dir))
+
+  ;;Part 2: copy the template
+  (copy-file;; "~/.config/emacs/org-templates/template.svg"
+   (concat (file-name-directory user-init-file) "org-templates/template.svg")
+   (concat (file-name-as-directory org-download-image-dir)
+           (format-time-string "%Y%m%d-%H%M%S.svg")))
+
+  ;;Part 3: insert the link to the buffer
+  (insert
+   "[[file:"
+   (concat (file-name-as-directory org-download-image-dir)
+           (format-time-string "%Y%m%d-%H%M%S.svg"))
+   "]]"))
 #+end_src
 ** COMMENT Distraction
 #+begin_src emacs-lisp
@@ -2114,6 +2109,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | oid    | org-download-delete                   | oi-(d)elete file              | org  |        |
 | oie    | org-download-edit                     | oi-(e)dit externally          | org  |        |
 | oir    | org-download-rename-at-point          | oi-(r)ename file              | org  |        |
+| oic    | garid/put-emtpy-svg-img-at-point      | or-(c)reate svg               | org  |        |
 | oit    | org-toggle-inline-images              | oi-(t)oggle shot/hide image   | org  |        |
 | ois    | :ignore t                             | oi-(s)ize.................... | org  |        |
 | oisn   | (setq org-image-actual-width '(800))  | ois-(n)ormal 800px            | org  | y      |
@@ -2454,6 +2450,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "oid" '(org-download-delete :which-key "oi-(d)elete file")
   "oie" '(org-download-edit :which-key "oi-(e)dit externally")
   "oir" '(org-download-rename-at-point :which-key "oi-(r)ename file")
+  "oic" '(garid/put-emtpy-svg-img-at-point :which-key "or-(c)reate svg")
   "oit" '(org-toggle-inline-images :which-key "oi-(t)oggle shot/hide image")
   "ois" '(:ignore t :which-key "oi-(s)ize....................")
   "oisn" '((lambda () (interactive) (setq org-image-actual-width '(800)) ) :which-key "ois-(n)ormal 800px")
