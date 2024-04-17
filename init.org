@@ -7,7 +7,7 @@
 #+property:     header-args :tangle init.el
 #+setupfile:    ~/.config/emacs/org-templates/level-0-xelatex-fonts-conf.org
 #+options:      toc:t tags:nil  todo:t  tasks:t
-#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="https://orgmode.org/worg/style/worg.css"/>
+#+HTML_HEAD:    <link rel="stylesheet" type="text/css" href="https://orgmode.org/worg/style/worg.css"/>
 
 
 * From shell you can run make run:
@@ -864,7 +864,7 @@ When nil, use the default face background."
   )
 #+end_src
 * Org Exports
-** Org \LaTeX{} export heading format (e.g. Todo color)         :customFunc:
+** Org LaTeX export heading format (e.g. Todo color)            :customFunc:
 #+begin_src emacs-lisp
 (defun garid-custom/latex-formattig-headings
     (todo todo-type priority text tags _info)
@@ -1279,6 +1279,10 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
   (eglot-booster-mode +1)
   )
 #+end_src
+** hydra
+#+begin_src emacs-lisp
+(use-package hydra)
+#+end_src
 ** COMMENT completion in region
 #+begin_src emacs-lisp
 ;; (setq completions-format 'one-column)
@@ -1300,10 +1304,6 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
                    #'consult-completion-in-region
                  #'completion--in-region)
                args)))
-#+end_src
-** hydra
-#+begin_src emacs-lisp
-(use-package hydra)
 #+end_src
 ** COMMENT python run on buffer
 #+begin_src emacs-lisp
