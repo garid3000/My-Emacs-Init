@@ -1934,13 +1934,15 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 #+attr_latex: :placement [H]
 #+caption: yassnippet creation/browsing
 #+name: tbl-global-general-keybindings-yassnippet
-| key(s) | function               | short description             | mode | lambda |
-|--------+------------------------+-------------------------------+------+--------|
-| y      | :ignore t              | (y)assnippet................. | -    |        |
-| yn     | yas-new-snippet        | y-(n)ew                       | -    |        |
-| yd     | yas-describe-tables    | y-(d)esc-table                | -    |        |
-| yv     | yas-visit-snippet-file | y-(v)isit                     | -    |        |
-| yi     | consult-yasnippet      | y-(i)nsert                    | -    |        |
+| key(s) | function                | short description             | mode | lambda |
+|--------+-------------------------+-------------------------------+------+--------|
+| y      | :ignore t               | (y)assnippet................. | -    |        |
+| yn     | yas-new-snippet         | y-(n)ew                       | -    |        |
+| yt     | yas-describe-tables     | y-(t)able description table   | -    |        |
+| yv     | yas-visit-snippet-file  | y-(v)isit                     | -    |        |
+| yi     | consult-yasnippet       | y-(i)nsert                    | -    |        |
+| ya     | yas-activate-extra-mode | y-(a)ctivate extra mode       | -    |        |
+| yd     | yas-activate-extra-mode | y-(de)activate extra mode     | -    |        |
 
 **** Calc related
 #+caption: gnu-calc related
@@ -2265,9 +2267,11 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "ZQ" '(kill-emacs :which-key "kill emacs")
   "y" '(:ignore t :which-key "(y)assnippet.................")
   "yn" '(yas-new-snippet :which-key "y-(n)ew")
-  "yd" '(yas-describe-tables :which-key "y-(d)esc-table")
+  "yt" '(yas-describe-tables :which-key "y-(t)able description table")
   "yv" '(yas-visit-snippet-file :which-key "y-(v)isit")
   "yi" '(consult-yasnippet :which-key "y-(i)nsert")
+  "ya" '(yas-activate-extra-mode :which-key "y-(a)ctivate extra mode")
+  "yd" '(yas-activate-extra-mode :which-key "y-(de)activate extra mode")
   "s" '(:ignore t :which-key "(s)ystem.....................")
   "srf" '((lambda () (interactive) (recentf-open-files) ) :which-key "s-(r)ecent-(f)iles")
   "sl" '(:ignore t :which-key "s-(l)ine.....................")
