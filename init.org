@@ -532,6 +532,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
    (nim        . t) (plantuml   . t)
    (maxima     . t) (calc       . t)
    (awk        . t) (go         . t)
+   (asymptote . t)
    ))
 #+end_src
 
@@ -663,12 +664,33 @@ When nil, use the default face background."
                                   ))
       :unnarrowed t)
 
+     ("M" "Math" plain "* %?"
+      :if-new (file+head "g_math/%<%Y%m%d%H%M%S>-${slug}.org"
+                         ,(concat "#+title: ${title}\n"
+                                  "#+filetags: :math:\n"
+                                  "#+author: Garid Zorigoo\n"
+                                  "#+date: %U\n"
+                                  "#+setupfile: ~/.config/emacs/org-templates/level-0-website-export-template.org\n"
+                                  "#+setupfile: ~/.config/emacs/org-templates/level-0-xelatex-fonts-conf.org"
+                                  ))
+      :unnarrowed t)
 
      ("p" "Programming language" plain "* %?"
       :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
                          ,(concat "#+title: ${title}\n"
                                   "#+filetags: :plang:\n"
                                   "#+author: Garid Zorigoo\n"
+                                  "#+date: %U\n"
+                                  "#+setupfile: ~/.config/emacs/org-templates/level-0-website-export-template.org"
+                                  ))
+      :unnarrowed t)
+
+
+     ("g" "Golang Notes" plain "* %?"
+      :if-new (file+head "g_go/%<%Y%m%d%H%M%S>-${slug}.org"
+                         ,(concat ;;"#+title: ${title}\n"
+                                  "#+filetags: :go:\n"
+                                  ;;"#+author: Garid Zorigoo\n"
                                   "#+date: %U\n"
                                   "#+setupfile: ~/.config/emacs/org-templates/level-0-website-export-template.org"
                                   ))
@@ -920,7 +942,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 #+end_src
 ** Website from org-roam directory
 [[id:e7ee081e-a02b-4ab9-bccc-327a92bf2b09][create website from org-roam]]
-
+*** COMMENT prep
 #+begin_src emacs-lisp
 (setq org-html-validation-link            nil ;; Don't show validation link
       org-html-head-include-scripts       nil ;; Use our own scripts
@@ -938,7 +960,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 
 #+RESULTS:
 : <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
-
+*** exporing
 #+begin_src emacs-lisp :exports code :results verbatim
 (setq
  org-publish-project-alist
