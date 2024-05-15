@@ -1493,22 +1493,17 @@ This requires [[id:2bc28375-3cf3-4784-8a34-ecb1a2b0c24a][Straight.el]] to instal
 (use-package scad-mode)
 #+end_src
 * Garid
-** Open PDF exported by LaTeX externally                        :customFunc:
+** Open PDF/HMTL exported by LaTeX externally                   :customFunc:
 #+begin_src emacs-lisp
 (defun replace-in-string (what with in)
   (replace-regexp-in-string (regexp-quote what) with in nil 'literal))
 
-;; (defun gry/org-open-pdf ()        ;; old version that served me for very long time
-;;   (interactive)
-;;   (call-process-shell-command
-;;    (concat "zathura "
-;; 	   (replace-in-string ".org" ".pdf &" buffer-file-name))))
 
 (defun gry/org-open-pdf ()
   (interactive)
   (call-process-shell-command
    (concat "xdg-open "                                  ;; try to open default PDF viewer
-           (file-name-directory buffer-file-name)       ;; directory of current file (buffer)
+           (file-name-directory buffer-file-name)       ;; directory of current file/buffer
            "/export_tex/"                               ;; adds export directory name
            (file-name-base)                             ;; filaname (of current file/buffer) without extension
            ".pdf &"                                     ;; adds extension
@@ -1517,8 +1512,8 @@ This requires [[id:2bc28375-3cf3-4784-8a34-ecb1a2b0c24a][Straight.el]] to instal
 (defun gry/org-open-html ()
   (interactive)
   (call-process-shell-command
-   (concat "thorium-browser "                           ;; try to open default PDF viewer
-           (file-name-directory buffer-file-name)       ;; directory of current file (buffer)
+   (concat "xdg-open "                                  ;; try to open default PDF viewer
+           (file-name-directory buffer-file-name)       ;; directory of current file/buffer
            "/export_html/"                              ;; adds export directory name
            (file-name-base)                             ;; filaname (of current file/buffer) without extension
            ".html &"                                    ;; adds extension
@@ -1538,7 +1533,6 @@ This requires [[id:2bc28375-3cf3-4784-8a34-ecb1a2b0c24a][Straight.el]] to instal
       (kmacro-lambda-form [?v ?t tab ?v ?t ?| ?v ?t] 0 "%d"))
 
 ;;(load "~/.config/emacs/garid/garids-abbrev-typos.el")	;; garid typos
-;; (setq path-to-ctags "/usr/bin/ctags")
 #+end_src
 
 ** Custom Aligner function (with untabify)                      :customFunc:
@@ -2484,9 +2478,8 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 #+begin_src emacs-lisp
 ;; recent files configuration
 (recentf-mode 1)
-(setq
- recentf-max-menu-items  30
- recentf-max-saved-items 30)
+(setq recentf-max-menu-items  30
+      recentf-max-saved-items 30)
 #+end_src
 ** Custom opening external terminal at current buffer           :customFunc:
 #+begin_src emacs-lisp
