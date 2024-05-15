@@ -118,9 +118,9 @@
 #+LATEX_HEADER: }
 
 
- #+LATEX_HEADER: \hypersetup{   %using answer https://tex.stackexchange.com/a/847/292504
- #+LATEX_HEADER:     colorlinks,
- #+LATEX_HEADER:     linkcolor={red!50!black},
- #+LATEX_HEADER:     citecolor={blue!50!black},
- #+LATEX_HEADER:     urlcolor={blue!80!black}
- #+LATEX_HEADER: }
+#+LATEX_HEADER: \hypersetup{   %using answer https://tex.stackexchange.com/a/847/292504
+#+LATEX_HEADER:     colorlinks,
+#+LATEX_HEADER:     linkcolor={red!50!black},
+#+LATEX_HEADER:     citecolor={blue!50!black},
+#+LATEX_HEADER:     urlcolor={blue!80!black}
+#+LATEX_HEADER: }
