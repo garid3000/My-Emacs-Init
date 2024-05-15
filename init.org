@@ -473,6 +473,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   ;; org tempo should I make it yassnippet?
   (add-to-list 'org-structure-template-alist '("el"   .  "src emacs-lisp"))
   (add-to-list 'org-structure-template-alist '("go"   .  "src go"))
+  (add-to-list 'org-structure-template-alist '("go1"  .  "src go :exports both :eval never-export"))
   (add-to-list 'org-structure-template-alist '("sh"   .  "src sh :eval no-export"))
   (add-to-list 'org-structure-template-alist '("te"   .  "src text" ))
   (add-to-list 'org-structure-template-alist '("do"   .  "src dot" ))
@@ -1277,10 +1278,10 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
   :init
   (corfu-terminal-mode +1))
 
-(use-package corfu-doc-terminal
-  :straight (corfu-doc-terminal :type git :repo "https://codeberg.org/akib/emacs-corfu-doc-terminal.git")
-  :init
-  (corfu-doc-terminal-mode +1))
+;; (use-package corfu-doc-terminal
+;;   :straight (corfu-doc-terminal :type git :repo "https://codeberg.org/akib/emacs-corfu-doc-terminal.git")
+;;   :init
+;;   (corfu-doc-terminal-mode +1))
 #+end_src
 
 ** Eglot for the LSPs
