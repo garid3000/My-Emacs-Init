@@ -1306,6 +1306,23 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
 #+begin_src emacs-lisp
 (use-package hydra)
 #+end_src
+** Indent bars
+#+begin_src emacs-lisp
+(use-package indent-bars
+  ;;:load-path "~/code/emacs/indent-bars"
+  :straight (indent-bars :type git :host github :repo "jdtsmith/indent-bars")
+  :custom
+  (indent-bars-treesit-support   t)
+  (indent-bars-no-descend-string nil)
+  (indent-bars-prefer-character  "|")
+  (indent-bars-treesit-ignore-blank-lines-types '("module"))
+  (indent-bars-treesit-wrap '((python argument_list parameters ; for python, as an example
+				      list list_comprehension
+				      dictionary dictionary_comprehension
+				      parenthesized_expression subscript)))
+  :hook ((python-base-mode yaml-mode) . indent-bars-mode))
+#+end_src
+
 ** COMMENT completion in region
 #+begin_src emacs-lisp
 ;; (setq completions-format 'one-column)
@@ -1463,32 +1480,6 @@ This requires [[id:2bc28375-3cf3-4784-8a34-ecb1a2b0c24a][Straight.el]] to instal
 ;;   )                                                                                    ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 #+end_src
-** COMMENT Indent bars
-#+begin_src emacs-lisp
-;; (use-package indent-bars
-;;   :straight (indent-bars :type git :host github :repo "jdtsmith/indent-bars")
-;;   :hook ((python-ts-mode) . indent-bars-mode)) 
-#+end_src
-
-#+begin_src emacs-lisp
-(use-package indent-bars
-  ;;:load-path "~/code/emacs/indent-bars"
-  :straight (indent-bars :type git :host github :repo "jdtsmith/indent-bars")
-  :custom
-  (indent-bars-treesit-support t)
-  (indent-bars-no-descend-string nil)
-  (indent-bars-prefer-character "|")
-  (indent-bars-treesit-ignore-blank-lines-types '("module"))
-  (indent-bars-treesit-wrap '((python argument_list parameters ; for python, as an example
-				      list list_comprehension
-				      dictionary dictionary_comprehension
-				      parenthesized_expression subscript)))
-  :hook ((python-base-mode yaml-mode) . indent-bars-mode))
-#+end_src
-
-#+RESULTS:
-| indent-bars-mode |
-
 ** COMMENT Dump jump
 #+begin_src emacs-lisp
 (use-package dumb-jump
