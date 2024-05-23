@@ -507,13 +507,14 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   ;;      )
   ;;     )
 
-  (defun my/org-num-format (numbering)
-    "My own numbering function uses two-digit numbers (0-padded on the left) for everything but the first number. It replaces the built-in `org-num-default-format` function. `NUMBERING' is a list of numbers."
-    (concat
-     (number-to-string (car numbering)) "." (mapconcat (lambda (x) (format "%02d" x)) (cdr numbering) ".") " "))
 
 
-  (setq org-num-format-function #'my/org-num-format)
+  ;;;;;;;;;;;; MY numbering method ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; (defun my/org-num-format (numbering)
+  ;;   "My own numbering function uses two-digit numbers (0-padded on the left) for everything but the first number. It replaces the built-in `org-num-default-format` function. `NUMBERING' is a list of numbers."
+  ;;   (concat
+  ;;    (number-to-string (car numbering)) "." (mapconcat (lambda (x) (format "%02d" x)) (cdr numbering) ".") " "))
+  ;; (setq org-num-format-function #'my/org-num-format)
 
 
   )
@@ -819,10 +820,15 @@ When nil, use the default face background."
   (setq org-gtd-update-ack "3.0.0")
   (setq org-gtd-directory (concat (denote-directory) "/gtd"))
   (org-gtd-mode 1)
+
+  :bind (
+         :map org-agenda-mode-map ("C-<f8>"   . org-gtd-clarify-agenda-item)
+         :map org-mode-map        ("C-<f8>"   . org-gtd-clarify-item)
+         :map org-gtd-clarify-map ("<f8>"     . org-gtd-organize)
+         )
+
   )
 #+end_src
-
-#+RESULTS:
 
 ** Org agenda files
 #+begin_src emacs-lisp :results none
@@ -1690,7 +1696,6 @@ This requires [[id:2bc28375-3cf3-4784-8a34-ecb1a2b0c24a][Straight.el]] to instal
 | C-/     | comment-line                                  | set selected lines comment           |
 | C-\vert | garid-custom/toggle-eng-mon-teq-input-methods | change toggle input (Eng-Mon-Teq)    |
 | <f9>    | org-gtd-capture                               | capture                              |
-| <f8>    | org-gtd-organize                              | gtd org                              |
 | C-<f8>  | org-gtd-clarify-item                          | gtd org                              |
 | C-<f9>  | org-gtd-process-inbox                         | process inbox                        |
 | <f7>    | org-gtd-engage                                | gtd engage                           |
@@ -1728,7 +1733,6 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 (global-set-key (kbd "C-/") 'comment-line)
 (global-set-key (kbd "C-|") 'garid-custom/toggle-eng-mon-teq-input-methods)
 (global-set-key (kbd "<f9>") 'org-gtd-capture)
-(global-set-key (kbd "<f8>") 'org-gtd-organize)
 (global-set-key (kbd "C-<f8>") 'org-gtd-clarify-item)
 (global-set-key (kbd "C-<f9>") 'org-gtd-process-inbox)
 (global-set-key (kbd "<f7>") 'org-gtd-engage)
@@ -2614,6 +2618,7 @@ I don't use these not much
   (setq popper-reference-buffers '("\\*Messages\\*"
                                    "\\*eldoc\\*"
                                    "\\*eldoc.*\\*" ;;regex
+                                   "\\*Outline.*\\*" ;;regex
                                    "\\*xref\\*"
                                    "Output\\*$"
                                    "\\*Async Shell Command\\*"
