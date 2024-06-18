@@ -546,7 +546,12 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   :after  org
   :hook   (org-mode . org-bullets-mode)
   :custom (org-bullets-bullet-list
-           '("◉" "○" "●" "○" "●" "○" "●")))
+           ;;'("◉" "○" "●" "○" "●" "○" "●")
+           '("Ⅰ" "Ⅱ" "Ⅲ" "Ⅳ" "Ⅴ" "Ⅵ" "Ⅶ")
+           ;;'("ⅰ" "ⅱ" "ⅲ" "ⅳ" "ⅴ" "ⅵ" "ⅶ")
+           ;;'("➀" "➁" "➌" "❺" "⑸ " "⒍" "７")
+
+           ))
 #+end_src
 ** Org inline transparent image background                      :customFunc:
 #+begin_src emacs-lisp
