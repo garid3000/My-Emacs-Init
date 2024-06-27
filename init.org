@@ -1649,22 +1649,34 @@ This requires [[id:2bc28375-3cf3-4784-8a34-ecb1a2b0c24a][Straight.el]] to instal
            (format-time-string "%Y%m%d-%H%M%S.svg"))
    "]]"))
 #+end_src
-** COMMENT Distraction
+** some helper for writing
+#+begin_src emacs-lisp
+(use-package selectric-mode)
+(use-package typewriter-roll-mode)
+(use-package writeroom-mode)
+#+end_src
+
+** Distraction
 #+begin_src emacs-lisp
 (defun gry/distraction-free-on ()
   (interactive)
   (writeroom-mode 1)
+  (typewriter-roll-mode 1)
   (turn-off-evil-mode)
+  (selectric-mode 1)
   (display-line-numbers-mode -1)
-  (set-face-attribute 'default nil :font "Iosevka Etoile" :height 140))
+  ;; (set-face-attribute 'default nil :font "Iosevka Etoile" :height 140))
+  (set-face-attribute 'default nil :font "M+ 1p medium" :height 140))
 ;; (set-face-attribute 'default nil :font "Terminus" :height 140)
 
 (defun gry/distraction-free-off ()
   (interactive)
   (writeroom-mode -1)
+  (typewriter-roll-mode -1)
+  (selectric-mode -1)
   (turn-on-evil-mode)
-  (display-line-numbers-mode 1)
-  (set-face-attribute 'default nil :font "Iosevka Gry" :height 120))
+  ;;#(display-line-numbers-mode 1)
+  (set-face-attribute 'default nil :font "Iosevka Term SS06" :height 120))
 #+end_src
 * Keybinding
 ** Which-key
