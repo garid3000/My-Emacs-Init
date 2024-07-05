@@ -136,9 +136,26 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 #+begin_src emacs-lisp :results none
 ;; if my main machine use following fonts
 ;; On arch, I installed with =yay -s ttf-iosevka-term-ss06=
+
+(defun font-available-p (font-name)
+  ;; https://emacsredux.com/blog/2021/12/22/check-if-a-font-is-available-with-emacs-lisp/
+  (find-font (font-spec :name font-name)))
+
+
 (when (eq system-type 'gnu/linux)
-  (set-face-attribute       'default nil :font "Iosevka Term SS06" :height 120)
-  (setq default-frame-alist '((font . "Iosevka Term SS06")))
+
+  (cond
+   ((font-available-p "Iosevka Term SS06"    )
+    (progn
+      (set-face-attribute       'default nil :font "Iosevka Term SS06" :height 120)
+      (setq default-frame-alist '((font . "Iosevka Term SS06" )))))
+   ((font-available-p "Iosevka"    )
+    (progn
+      (set-face-attribute       'default nil :font "Iosevka" :height 120)
+      (setq default-frame-alist '((font . "Iosevka" )))))
+   )
+
+
   (set-fontset-font "fontset-default"
                     'japanese-jisx0208
                     '("DejaVu Sans" . "iso10646-1"))
@@ -1667,7 +1684,23 @@ This requires [[id:2bc28375-3cf3-4784-8a34-ecb1a2b0c24a][Straight.el]] to instal
   (display-line-numbers-mode -1)
   (corfu-mode -1)
   ;; (set-face-attribute 'default nil :font "Iosevka Etoile" :height 140))
-  (set-face-attribute 'default nil :font "M+ 1p medium" :height 140))
+  ;;(set-face-attribute 'default nil :font "M+ 1p medium" :height 140))
+  
+
+  (cond
+   ((font-available-p "Courier New"  ) (set-face-attribute 'default nil :font "Courier New"  :height 140))
+   ((font-available-p "Terminus"     ) (set-face-attribute 'default nil :font "Terminus"     :height 140))
+   ((font-available-p "M+ 1p medium" ) (set-face-attribute 'default nil :font "M+ 1p medium" :height 140))
+   )
+  )
+
+
+
+
+
+
+
+
 ;; (set-face-attribute 'default nil :font "Terminus" :height 140)
 
 (defun gry/distraction-free-off ()
@@ -1678,7 +1711,14 @@ This requires [[id:2bc28375-3cf3-4784-8a34-ecb1a2b0c24a][Straight.el]] to instal
   (corfu-mode +1)
   (turn-on-evil-mode)
   ;;#(display-line-numbers-mode 1)
-  (set-face-attribute 'default nil :font "Iosevka Term SS06" :height 120))
+  
+
+  (cond
+   ((font-available-p "Iosevka Term SS06")(set-face-attribute 'default nil :font "Iosevka Term SS06" :height 120))
+   ((font-available-p "Iosevka")(set-face-attribute 'default nil :font "Iosevka" :height 120))
+   )
+
+  )
 #+end_src
 * Keybinding
 ** Which-key
