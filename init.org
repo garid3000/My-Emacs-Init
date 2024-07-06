@@ -1692,6 +1692,8 @@ This requires [[id:2bc28375-3cf3-4784-8a34-ecb1a2b0c24a][Straight.el]] to instal
    ((font-available-p "Terminus"       ) (set-face-attribute 'default nil :font "Terminus"        :height 140))
    ((font-available-p "M+ 1p medium"   ) (set-face-attribute 'default nil :font "M+ 1p medium"    :height 140))
    )
+
+  ;; (set-face-attribute 'fixed-pitch nil :font "Iosevka Term SS06")
   )
 
 (defun gry/distraction-free-off ()
