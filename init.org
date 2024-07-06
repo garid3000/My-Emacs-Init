@@ -1683,42 +1683,30 @@ This requires [[id:2bc28375-3cf3-4784-8a34-ecb1a2b0c24a][Straight.el]] to instal
   (selectric-mode 1)
   (display-line-numbers-mode -1)
   (corfu-mode -1)
-  ;; (set-face-attribute 'default nil :font "Iosevka Etoile" :height 140))
-  ;;(set-face-attribute 'default nil :font "M+ 1p medium" :height 140))
-  
+  (cua-mode +1)
 
   (cond
-   ((font-available-p "Courier New"  ) (set-face-attribute 'default nil :font "Courier New"  :height 140))
-   ((font-available-p "Terminus"     ) (set-face-attribute 'default nil :font "Terminus"     :height 140))
-   ((font-available-p "M+ 1p medium" ) (set-face-attribute 'default nil :font "M+ 1p medium" :height 140))
+   ((font-available-p "Iosevka Aile"   ) (set-face-attribute 'default nil :font "Iosevka Aile"    :height 140))
+   ((font-available-p "Liberation Sans") (set-face-attribute 'default nil :font "Liberation Sans" :height 140))
+   ((font-available-p "Courier New"    ) (set-face-attribute 'default nil :font "Courier New"     :height 140))
+   ((font-available-p "Terminus"       ) (set-face-attribute 'default nil :font "Terminus"        :height 140))
+   ((font-available-p "M+ 1p medium"   ) (set-face-attribute 'default nil :font "M+ 1p medium"    :height 140))
    )
   )
 
-
-
-
-
-
-
-
-;; (set-face-attribute 'default nil :font "Terminus" :height 140)
-
 (defun gry/distraction-free-off ()
   (interactive)
+  (cua-mode -1)
   (writeroom-mode -1)
   (typewriter-roll-mode -1)
   (selectric-mode -1)
   (corfu-mode +1)
   (turn-on-evil-mode)
-  ;;#(display-line-numbers-mode 1)
-  
 
   (cond
-   ((font-available-p "Iosevka Term SS06")(set-face-attribute 'default nil :font "Iosevka Term SS06" :height 120))
-   ((font-available-p "Iosevka")(set-face-attribute 'default nil :font "Iosevka" :height 120))
-   )
-
-  )
+   ((font-available-p "Iosevka Term SS06") (set-face-attribute 'default nil :font "Iosevka Term SS06" :height 120))
+   ((font-available-p "Iosevka"          ) (set-face-attribute 'default nil :font "Iosevka"           :height 120))
+   ))
 #+end_src
 * Keybinding
 ** Which-key
