@@ -302,12 +302,14 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
               ("C-f"   . vertico-exit        ) ("M-f"   . vertico-exit        )
               ("C-u"   . vertico-scroll-up   ) ("M-u"   . vertico-scroll-up   )
               ("C-d"   . vertico-scroll-down ) ("M-d"   . vertico-scroll-down )
-              ;; ("M-p"   . vertico-next        ) ("M-n"   . vertico-previous    )
-              ("M-h"   . vertico-exit  ))
+              ;; ("M-p"   . vertico-next     ) ("M-n"   . vertico-previous    )
+              ("M-h"   . vertico-exit  )
+              ("M-q" . vertico-quick-insert  ) ("C-q" . vertico-quick-exit    )
+              )
   :custom
+  (require 'vertico-quick)
   (vertico-cycle t)
   (vertico-count 20)
-  ;; (vertico-resize t)
   (vertico-resize nil)
   :init (vertico-mode)
   ;;:config
