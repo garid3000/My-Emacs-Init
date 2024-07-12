@@ -1986,12 +1986,17 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 #+attr_latex: :placement [H]
 #+caption: Denote
 #+name: tbl-global-general-keybindings-denote
-| key(s) | function                 | short description              | mode | lambda |
-|--------+--------------------------+--------------------------------+------+--------|
-| R      | :ignore t                | (R)denote..................... | -    |        |
-| Rr     | denote-rename-file       | R-(r)ename                     | -    |        |
-| Rf     | denote-open-or-create    | R-(f)ind                       | -    |        |
-| RD     | (dired denote-directory) | R-(D)ired                      | -    | y      |
+| key(s) | function                                    | short description             | mode | lambda |
+|--------+---------------------------------------------+-------------------------------+------+--------|
+| n      | :ignore t                                   | de(n)ote..................... | -    |        |
+| nr     | denote-rename-file                          | n-(r)ename                    | -    |        |
+| nf     | denote-open-or-create                       | n-(f)ind                      | -    |        |
+| nd     | (dired denote-directory)                    | n-(d)ired                     | -    | y      |
+| nj     | denote-journal-extras-new-entry             | n-(j)ournal                   | -    |        |
+| nJ     | denote-journal-extras-new-or-existing-entry | n-(J)ournal-find              | -    |        |
+| nil    | denote-insert-link                          | n-(i)nsert-link               | -    |        |
+| nij    | denote-journal-extras-link-or-create-entry  | n-(i)nsert-journal-link       | -    |        |
+
 
 **** Yas-snippet
 #+attr_latex: :placement [H]
@@ -2364,10 +2369,14 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "tx" '(garid-custom/open-external-term-here :which-key "t-(x)ternal terminal")
   "tt" '(eat :which-key "t-ea(t) terminal")
   "Y" '(gry-copy-to-x-clip :which-key "(Y)ank to xclip")
-  "R" '(:ignore t :which-key "(R)denote.....................")
-  "Rr" '(denote-rename-file :which-key "R-(r)ename")
-  "Rf" '(denote-open-or-create :which-key "R-(f)ind")
-  "RD" '((lambda () (interactive) (dired denote-directory) ) :which-key "R-(D)ired")
+  "n" '(:ignore t :which-key "de(n)ote.....................")
+  "nr" '(denote-rename-file :which-key "n-(r)ename")
+  "nf" '(denote-open-or-create :which-key "n-(f)ind")
+  "nd" '((lambda () (interactive) (dired denote-directory) ) :which-key "n-(d)ired")
+  "nj" '(denote-journal-extras-new-entry :which-key "n-(j)ournal")
+  "nJ" '(denote-journal-extras-new-or-existing-entry :which-key "n-(J)ournal-find")
+  "nil" '(denote-insert-link :which-key "n-(i)nsert-link")
+  "nij" '(denote-journal-extras-link-or-create-entry :which-key "n-(i)nsert-journal-link")
   "h" '(:ignore t :which-key "(h)elp..........................")
   "hh" '(describe-symbol :which-key "h-(h)elp symbol (elisp)")
   "hH" '(describe-key :which-key "h-(H)elp keybinding")
