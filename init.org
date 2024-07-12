@@ -2586,33 +2586,10 @@ fi
     (kbd "N")    'mkdir)
   )
 #+end_src
-** COMMENT Icons - Dired
-#+begin_src emacs-lisp
-(use-package all-the-icons
-  ;; :if (display-graphic-p)
-  :config
-  (all-the-icons-install-fonts 'install-without-asking)
-  (add-to-list
-   'all-the-icons-extension-icon-alist
-   '("m"  all-the-icons-fileicon "matlab"  :face all-the-icons-orange)))
-
-(use-package all-the-icons-dired
-  ;; :if (display-graphic-p)
-  :config (add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
-  )
-
-
-(use-package all-the-icons-completion
-  ;; :if (display-graphic-p)
-  :config
-  (all-the-icons-completion-mode)
-  (add-hook 'marginalia-mode-hook #'all-the-icons-completion-marginalia-setup))
-#+end_src
 ** Dired additionals
 I don't use these not much  
 #+begin_src emacs-lisp
 (use-package dired-single)
-(use-package dired-sidebar)
 (use-package dired-preview)
 #+end_src
 * Misc Packages
@@ -2720,47 +2697,14 @@ I don't use these not much
 #+begin_src emacs-lisp
 (use-package notmuch)
 #+end_src
-*** COMMENT org-contacts
-#+begin_src emacs-lisp
-(setq mu4e-org-contacts-file "/home/garid/roamnotes/20230417200051-org_contacs.org")
-(add-to-list 'mu4e-headers-actions '("org-contact-add" . mu4e-action-add-org-contact) t)
-(add-to-list 'mu4e-view-actions    '("org-contact-add" . mu4e-action-add-org-contact) t)
-#+end_src
 ** COMMENT eww web browser
 #+begin_src emacs-lisp
-(setq
-  browse-url-browser-function 'eww-browse-url ; Use eww as the default browser
-  shr-use-fonts  nil                          ; No special fonts
-  shr-use-colors nil                          ; No colours
-  shr-indentation 2                           ; Left-side margin
-  shr-width 85                                ; Fold text to 85 columns
-  eww-search-prefix "https://lite.duckduckgo.com/lite/?q=")    ; Use another engine for searching
-#+end_src
-** COMMENT translate
-#+begin_src emacs-lisp
-(use-package go-translate)
-(setq gts-translate-list '(("en" "ja")))
-(setq gts-default-translator
-      (gts-translator
-       :picker	(gts-prompt-picker)
-       :engines (list (gts-bing-engine) (gts-google-engine))
-       :render	(gts-buffer-render)))
-#+end_src
-** COMMENT writeroom
-#+begin_src emacs-lisp
-(use-package writeroom-mode
-  :ensure t
-  :bind (:map writeroom-mode-map
-              ("<backspace>" . ignore) ("<deletechar>"   . ignore)
-              ("<delete>"    . ignore) ("<M-backspace>"  . ignore)
-              ("<M-DEL>"     . ignore) ("<up>"           . ignore)
-              ("<down>"      . ignore) ("<left>"         . ignore)
-              ("<right>"     . ignore)))
-
-
-(use-package writeroom-mode
-  :ensure t
-  :custom ((setq org-hyperscheduler-readonly-mode nil)))
+(setq browse-url-browser-function 'eww-browse-url               ; Use eww as the default browser
+      shr-use-fonts                nil                          ; No special fonts
+      shr-use-colors               nil                          ; No colours
+      shr-indentation              2                            ; Left-side margin
+      shr-width                    85                           ; Fold text to 85 columns
+      eww-search-prefix "https://lite.duckduckgo.com/lite/?q=") ; Use another engine for searching
 #+end_src
 ** COMMENT spray
 #+begin_src emacs-lisp
@@ -2768,53 +2712,14 @@ I don't use these not much
     :ensure t
     :bind (("<f6>"  . spray-mode)))
 #+end_src
-** COMMENT write good
-#+begin_src emacs-lisp
-(add-to-list 'load-path "/home/garid/.config/emacs/writegood-mode")
-(use-package writegood-mode)
-#+end_src
-** COMMENT academic
-#+begin_src emacs-lisp
-(use-package academic-phrases)
-#+end_src
-** COMMENT emacs restart
-#+begin_src emacs-lisp
-(use-package restart-emacs)
-#+end_src
 * Finish Notifier
 #+begin_src emacs-lisp
 (call-process-shell-command "notify-send \"Emacs\" \"Emacs server has inialized\" &") 
 #+end_src
 
-* COMMENT Custom set variable:
-#+begin_src emacs-lisp
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(ignored-local-variable-values
-   '((eval setq org-download-image-dir
-	   (concat "./od-imgs/"
-		   (file-name-base buffer-file-name)))))
- '(package-selected-packages
-   '(consult-eglot laas zoom zig-mode xelb writeroom-mode which-key vterm vertico-posframe use-package undo-fu typescript-mode tree-sitter-langs toc-org tmr svg-tag-mode sudo-utils sr-speedbar sqlite spray shrink-path selectric-mode scad-mode rust-mode ripgrep rg restart-emacs rainbow-delimiters pyvenv python-x python-mode prescient ppp popup-kill-ring popper pfuture ox-hugo org-web-tools org-tree-slide org-tanglesync org-sidebar org-present org-pomodoro org-noter-pdftools org-hyperscheduler org-fragtog org-edna org-download org-contrib org-contacts org-bullets org-auto-tangle org-agenda-property orderless olivetti ob-tmux ob-rust notmuch nord-theme no-littering multi-term mew matlab-mode mastodon marginalia macrostep latex-math-preview kind-icon keyfreq jupyter ivy-posframe ibuffer-sidebar hydra highlight-indentation hide-lines helpful gtags-mode gruvbox-theme graphviz-dot-mode grammarly go-translate go-mode gnuplot ggtags general geiser-mit format-all forge flyspell-lazy flymake-python-pyflakes flycheck-aspell evil-tex evil-terminal-cursor-changer evil-org evil-nerd-commenter evil-collection eterm-256color eshell-git-prompt eradio emms-player-simple-mpv embark-consult emacsql-sqlite emacs-everywhere elfeed-score eglot edwina dumb-jump dracula-theme dired-single dired-sidebar dired-open dired-hide-dotfiles desktop-environment deft darkroom csv-mode crux corfu-terminal corfu-doc consult-yasnippet consult-org-roam company-ctags company-box command-log-mode citar-org-roam citar-embark cfrs cdlatex bui browse-kill-ring bibtex-completion auto-package-update async-await arduino-mode all-the-icons-dired all-the-icons-completion agtags ace-window 2048-game))
- '(safe-local-variable-values
-   '((eval setq org-download-image-dir
-	   (concat "./"
-		   (file-name-base buffer-file-name))))))
-#+end_src
 * Custom set variable:
 [[https://www.youtube.com/watch?v=tw2-rI2bxSg&t=1s][Initial idea from Systems crafter]], [[https://emacs.stackexchange.com/a/18785/38482][and code structure from this answer on emacs stackexchange]], and need to set ~enble-local-eval~ to ~t~ ()
 
 #+begin_src emacs-lisp
 (add-to-list 'safe-local-variable-values '(dired-omit-files         . "\\`[.]?#\\|\\`[.][.]?\\'\\|\\.html\\'\\|\\.tex\\'"    )) ;; <-- wokr
-;; (add-to-list 'safe-local-variable-values '(dired-omit-files         . "\\`[.]?#\\|\\`[.][.]?\\'\\|\\.a\\'\\|\\.tex\\'"    )) ;; <-- wokr
-;;??(add-to-list 'safe-local-variable-values '(org-download-image-dir   . (concat "./od-imgs/" (file-name-base buffer-file-name))))
-;; (add-to-list 'safe-local-variable-values '(org-download-heading-lvl . nil                                                    ))
-;;(put 'org-download-image-dir             'safe-local-variable #'stringp)  <--- didn't work 
-;;(put 'org-download-image-dir             'safe-local-variable (lambda (_) t)) <--didn' work
-
-;(setq enable-local-eval t)
-;;(setq enable-local-eval :safe) ;;https://emacs.stackexchange.com/a/38/38482
 #+end_src
