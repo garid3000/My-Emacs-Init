@@ -962,7 +962,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 
 #+RESULTS:
 : <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
-*** exporing
+*** exporting
 #+begin_src emacs-lisp :exports code :results verbatim
 (setq
  org-publish-project-alist
@@ -1060,11 +1060,6 @@ stork.register(
 
 #+RESULTS:
 : (("Pensieve org -> html00" :base-directory "~/Pensieve" :publishing-function org-html-publish-to-html :publishing-directory "/tmp/garids_pensieve" :section-numbers nil :with-toc nil) ("Pensieve export imgs" :base-directory "~/Pensieve/od-imgs/" :base-extension "jpg\\|gif\\|png\\|svg" :recursive t :publishing-directory "/tmp/garids_pensieve/od-imgs" :publishing-function org-publish-attachment))
-
-** COMMENT latex
-#+begin_src emacs-lisp
-(use-package auctex)
-#+end_src
 
 * Org Misc:
 ** Org-download for handling images 
