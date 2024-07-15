@@ -132,74 +132,27 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 (setq scroll-conservatively 9999)
 #+end_src
 * Theme & Colors
-** Font
-#+begin_src emacs-lisp :results none
-;; if my main machine use following fonts
-;; On arch, I installed with =yay -s ttf-iosevka-term-ss06=
+** Fonts
+#+begin_src emacs-lisp
+(when (member "Iosevka" (font-family-list))
+  (set-face-attribute 'default        nil :font "Iosevka" :height 120)
+  (set-face-attribute 'fixed-pitch    nil :family "Iosevka"))
 
-(defun font-available-p (font-name)
-  ;; https://emacsredux.com/blog/2021/12/22/check-if-a-font-is-available-with-emacs-lisp/
-  (find-font (font-spec :name font-name)))
+(when (member "Iosevka Term SS06" (font-family-list))
+  (set-face-attribute 'default        nil :font "Iosevka Term SS06" :height 120)
+  (set-face-attribute 'fixed-pitch    nil :family "Iosevka Term SS06"))
 
-
-(when (eq system-type 'gnu/linux)
-
-  (cond
-   ((font-available-p "Iosevka Term SS06"    )
-    (progn
-      (set-face-attribute       'default nil :font "Iosevka Term SS06" :height 120)
-      (setq default-frame-alist '((font . "Iosevka Term SS06" )))))
-   ((font-available-p "Iosevka"    )
-    (progn
-      (set-face-attribute       'default nil :font "Iosevka" :height 120)
-      (setq default-frame-alist '((font . "Iosevka" )))))
-   )
-
-
-  (set-fontset-font "fontset-default"
-                    'japanese-jisx0208
-                    '("DejaVu Sans" . "iso10646-1"))
-  (message "hello from linux"))
-
-;; for my openbsd machine use this font
-;; On openbsd, I installed with =pkg_add iosevka=
-(when (eq system-type 'berkeley-unix)
-  (set-face-attribute       'default nil :font "Iosevka Term" :height 80)
-  (setq default-frame-alist '((font . "Iosevka Term")))
-  (set-fontset-font "fontset-default"
-                    'japanese-jisx0208
-                    '("DejaVu Sans" . "iso10646-1"))
-  (message "hello from bsd"))
+(when (member "Iosevka Aile" (font-family-list))
+  (set-face-attribute 'variable-pitch nil :family "Iosevka Aile" :height 1.18))
 #+end_src
 
 ** Theme
 #+begin_src emacs-lisp :results none
-;; (setq modus-themes-mode-line '(accented borderless)
-;;       modus-themes-bold-constructs t
-;;       modus-themes-italic-constructs t
-;;       modus-themes-fringes 'subtle
-;;       modus-themes-tabs-accented t
-;;       modus-themes-paren-match '(bold intense)
-;;       modus-themes-prompts '(bold intense)
-;;       ;; modus-themes-completions 'opinionated
-;;       modus-themes-org-blocks 'tinted-background
-;;       modus-themes-scale-headings t
-;;       modus-themes-region '(bg-only)
-;;       modus-themes-headings
-;;       '((1 . (rainbow overline background 1.0))
-;;         (2 . (rainbow background 1.0))
-;;         (3 . (rainbow bold 1.0))
-;;         (t . (semilight 1.0))))
-
-;; ;; Load the dark theme by default
-;; (load-theme 'modus-vivendi t)
-;; (enable-theme 'modus-vivendi)           ;
-
 (use-package uwu-theme
   :config
   (enable-theme 'uwu)
 
-  (set-face-background 'mode-line "#2B3260")
+  (set-face-background 'mode-line          "#2B3260")
   (set-face-background 'mode-line-inactive "#2B3244")
   )
 #+end_src
@@ -215,7 +168,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 (scroll-bar-mode -1)        ; Disable visible scrollbar
 (tool-bar-mode   -1)        ; Disable the toolbar
 (tooltip-mode    -1)        ; Disable tooltips
-;; (set-fringe-mode 15)        ; Give some breathing room
+; (set-fringe-mode 15)        ; Give some breathing room
 (menu-bar-mode   -1)        ; Disable the menu bar
 #+end_src
 ** Delight
@@ -241,6 +194,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
      ;;(org-indent-mode     "ind "    org-indent                )
      (org-indent-mode        nil      org-indent                )
      (org-num-mode          "onm "    org-indent                )
+     (org-gtd-mode          "gtd "    org-gtd                   )
      (org-src-mode          "src "    org                       )
      (yas-minor-mode        "yas "    yasnippet                 )
      (eldoc-mode            "eld "    eldoc                     )
@@ -254,6 +208,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
      (all-the-icons-dired-mode     nil   all-the-icons-dired.el )
      (visual-line-mode             nil   simple                 ))))
 #+end_src
+
 ** Display Number & cursor-line highlightnig
 #+begin_src emacs-lisp
 ;; setting line
@@ -415,7 +370,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   (org-image-actual-width            '(800)          );; sets images size TODO for different size
   (org-src-tab-acts-natively         t               )
   (org-src-preserve-indentation      nil             );; scr-blk
-  (org-src-fontify-natively t)
+  (org-src-fontify-natively          t               )
   (org-edit-src-content-indentation  0               );; scr-blk
   (org-startup-folded                "fold"          );; folds property drawers, good for roam nodes
   (org-plantuml-jar-path             "/usr/share/java/plantuml/plantuml.jar" );; this may differ on different machines
@@ -1275,9 +1230,9 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
   ;; Optional customizations
   :custom
   (corfu-cycle            t          ) ;; Allows cycling through candidates
-  (corfu-auto             t          ) ;; Enable auto completion nov23 C-M-i?
-  (corfu-auto-prefix      2          )
-  (corfu-auto-delay       0.1        )
+  ;; (corfu-auto             t          ) ;; Enable auto completion nov23 C-M-i?
+  ;; (corfu-auto-prefix      2          )
+  ;; (corfu-auto-delay       0.1        )
   (corfu-popupinfo-delay '(0.1 . 0.1))
   (corfu-preview-current   nil       )
   (corfu-on-exact-match    nil       ) ;; Don't auto expand tempel snippets
@@ -1307,7 +1262,7 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
               (corfu-mode))))
 #+end_src
 
-** corfu Terminal mode
+** COMMENT corfu Terminal mode
 #+begin_src emacs-lisp
 (use-package corfu-terminal
   :straight (corfu-terminal :type git :repo "https://codeberg.org/akib/emacs-corfu-terminal.git")
@@ -1694,12 +1649,15 @@ This requires [[id:2bc28375-3cf3-4784-8a34-ecb1a2b0c24a][Straight.el]] to instal
   (cua-mode +1)
 
   (cond
-   ((font-available-p "Iosevka Aile"   ) (set-face-attribute 'default nil :font "Iosevka Aile"    :height 140))
-   ((font-available-p "Liberation Sans") (set-face-attribute 'default nil :font "Liberation Sans" :height 140))
-   ((font-available-p "Courier New"    ) (set-face-attribute 'default nil :font "Courier New"     :height 140))
-   ((font-available-p "Terminus"       ) (set-face-attribute 'default nil :font "Terminus"        :height 140))
-   ((font-available-p "M+ 1p medium"   ) (set-face-attribute 'default nil :font "M+ 1p medium"    :height 140))
+   ;;((font-available-p "Iosevka Aile"   ) (set-face-attribute 'org-default nil :font "Iosevka Aile" :weight 'bold :height 140))
+   ((member "Iosevka Aile"    (font-family-list)) (set-face-attribute 'default nil :font "Iosevka Aile"    :height 140))
+   ((member "Liberation Sans" (font-family-list)) (set-face-attribute 'default nil :font "Liberation Sans" :height 140))
+   ((member "Courier New"     (font-family-list)) (set-face-attribute 'default nil :font "Courier New"     :height 140))
+   ((member "Terminus"        (font-family-list)) (set-face-attribute 'default nil :font "Terminus"        :height 140))
+   ((member "M+ 1p medium"    (font-family-list)) (set-face-attribute 'default nil :font "M+ 1p medium"    :height 140))
    )
+  
+
 
   ;; (set-face-attribute 'fixed-pitch nil :font "Iosevka Term SS06")
   )
@@ -1714,10 +1672,12 @@ This requires [[id:2bc28375-3cf3-4784-8a34-ecb1a2b0c24a][Straight.el]] to instal
   (turn-on-evil-mode)
 
   (cond
-   ((font-available-p "Iosevka Term SS06") (set-face-attribute 'default nil :font "Iosevka Term SS06" :height 120))
-   ((font-available-p "Iosevka"          ) (set-face-attribute 'default nil :font "Iosevka"           :height 120))
+   ((member "Iosevka Term SS06" (font-family-list)) (set-face-attribute 'default nil :font "Iosevka Term SS06" :height 120))
+   ((member "Iosevka"           (font-family-list)) (set-face-attribute 'default nil :font "Iosevka"           :height 120))
    ))
 #+end_src
+
+
 * Keybinding
 ** Which-key
 #+begin_src emacs-lisp
