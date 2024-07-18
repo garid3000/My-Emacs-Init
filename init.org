@@ -1311,6 +1311,12 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
 				      parenthesized_expression subscript)))
   :hook ((python-base-mode yaml-mode) . indent-bars-mode))
 #+end_src
+** graphviz
+#+begin_src emacs-lisp
+(use-package graphviz-dot-mode
+    :ensure t
+)
+#+end_src
 
 ** COMMENT corfu Terminal mode
 #+begin_src emacs-lisp
@@ -1640,6 +1646,7 @@ This requires [[id:2bc28375-3cf3-4784-8a34-ecb1a2b0c24a][Straight.el]] to instal
            (format-time-string "%Y%m%d-%H%M%S.svg"))
    "]]"))
 #+end_src
+* Writting & Reading
 ** Writting packages
 #+begin_src emacs-lisp
 (use-package selectric-mode
@@ -1687,6 +1694,18 @@ This requires [[id:2bc28375-3cf3-4784-8a34-ecb1a2b0c24a][Straight.el]] to instal
    ))
 #+end_src
 
+** COMMENT spray
+#+begin_src emacs-lisp
+(use-package spray
+    :ensure t
+    :bind (("<f6>"  . spray-mode)))
+#+end_src
+
+** PDF tools
+#+begin_src emacs-lisp
+(use-package pdf-tools
+  :ensure t)
+#+end_src
 * Keybinding
 ** Which-key
 #+begin_src emacs-lisp
@@ -2648,12 +2667,6 @@ I don't use these not much
   (popper-echo-mode +1))
 #+end_src
 
-** graphviz
-#+begin_src emacs-lisp
-(use-package graphviz-dot-mode
-    :ensure t
-)
-#+end_src
 ** COMMENT emacs-everywhere
 #+begin_src emacs-lisp
 (use-package emacs-everywhere)
@@ -2714,12 +2727,6 @@ I don't use these not much
       shr-indentation              2                            ; Left-side margin
       shr-width                    85                           ; Fold text to 85 columns
       eww-search-prefix "https://lite.duckduckgo.com/lite/?q=") ; Use another engine for searching
-#+end_src
-** COMMENT spray
-#+begin_src emacs-lisp
-(use-package spray
-    :ensure t
-    :bind (("<f6>"  . spray-mode)))
 #+end_src
 * Finish Notifier
 #+begin_src emacs-lisp
