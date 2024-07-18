@@ -41,16 +41,6 @@ latex-mode
 (verbatim "\\begin{verbatim}\n" r> n> "\\end{verbatim}")
 (verbatimm "\\begin{verbatim*}\n" r> n> "\\end{verbatim*}")
 
-texinfo-mode
-
-(defmac "@defmac " p n> r> "@end defmac")
-(defun "@defun " p n> r> "@end defun")
-(defvar "@defvar " p n> r> "@end defvar")
-(example "@example " p n> r> "@end example")
-(lisp "@lisp " p n> r> "@end lisp")
-(bullet "@itemize @bullet{}" n> r> "@end itemize")
-(code "@code{" p "}")
-(var "@var{" p "}")
 
 lisp-mode emacs-lisp-mode ;; Specify multiple modes
 
@@ -120,9 +110,6 @@ rst-mode
 
 (title (make-string (length title) ?=) n (p "Title: " title) n (make-string (length title) ?=) n)
 
-java-mode
-
-(class "public class " (p (file-name-base (or (buffer-file-name) (buffer-name)))) " {" n> r> n "}")
 
 c-mode :when (re-search-backward "^\\S-*$" (line-beginning-position) 'noerror)
 
@@ -147,8 +134,8 @@ org-mode
 (src "#+begin_src " q n r n "#+end_src")
 (gnuplot "#+begin_src gnuplot :var data=" (p "table") " :file " (p "plot.png") n r n "#+end_src" :post (org-edit-src-code))
 (elisp "#+begin_src emacs-lisp" n r n "#+end_src" :post (org-edit-src-code))
-(inlsrc "src_" p "{" q "}")
-(title "#+title: " p n "#+author: Daniel Mendler" n "#+language: en")
+(inlsrc "src_" p "[:exports code]{" q "}")
+(title "#+title: " p n "#+author: Garid Zorigoo" n "#+language: en")
 
 ;; Local Variables:
 ;; mode: lisp-data

@@ -1146,7 +1146,7 @@ and later sets cursor at that point when you open that file.
          ("M-*" . tempel-insert))
 
   :init
-  (setq tempel-path "~/.config/emacs/tempel/templates.el")
+  (setq tempel-path "~/.config/emacs/tempel/templates.eld")
 
   ;; Setup completion at point
   (defun tempel-setup-capf ()
