@@ -67,7 +67,32 @@ I'm pulling packages from following 3 places (not sure that I need all three):
 * Vi Movement and other movement related
 ** vim-undo
 #+begin_src emacs-lisp
-(use-package undo-fu)
+(use-package undo-fu
+  :ensure t)
+#+end_src
+** evil-collection
+[[https://github.com/emacs-evil/evil-collection][Evil-collection]] is sets of evil keybindings for various modes in Emacs.
+Most notably I like to use magit, sometimes email.
+
+- I may need to reconside using this. and do my own keybindings for the major modes.
+
+#+begin_src emacs-lisp
+;;; Vim Bindings Everywhere else
+(use-package evil-collection
+  :ensure t
+  :after evil
+  :config
+  (setq evil-want-integration t)
+  (evil-collection-init))
+#+end_src
+** evil-surround
+I sometimes use. It can wrap (visually) selected region with quotation mark or parenthesis.
+
+#+begin_src emacs-lisp
+(use-package evil-surround
+  :ensure t
+  :after evil
+  :config (global-evil-surround-mode))
 #+end_src
 ** evil
 
@@ -77,7 +102,7 @@ It emulates vi motion inside Emacs.
 #+begin_src emacs-lisp
 ;; Vim Bindings
 (use-package evil
-  :demand t
+  :ensure t
   :bind (;; ("<escape>" . keyboard-escape-quit  )  commented on nov21
          ;; ("M-j"      . evil-scroll-line-down )  C-e
          ;; ("M-k"      . evil-scroll-line-up   )  C-y
@@ -96,34 +121,15 @@ It emulates vi motion inside Emacs.
   ;; cuz https://emacs.stackexchange.com/a/73457/38482
   (evil-mode 1))
 #+end_src
-** evil-collection
-[[https://github.com/emacs-evil/evil-collection][Evil-collection]] is sets of evil keybindings for various modes in Emacs.
-Most notably I like to use magit, sometimes email.
-
-- I may need to reconside using this. and do my own keybindings for the major modes.
-
-#+begin_src emacs-lisp
-;;; Vim Bindings Everywhere else
-(use-package evil-collection
-  :after evil
-  :config
-  (setq evil-want-integration t)
-  (evil-collection-init))
-#+end_src
-** evil-surround
-I sometimes use. It can wrap (visually) selected region with quotation mark or parenthesis.
-
-#+begin_src emacs-lisp
-(use-package evil-surround
-  :after evil
-  :config (global-evil-surround-mode))
-#+end_src
 ** evil testing (not used that much)
 #+begin_src emacs-lisp
-(use-package evil-textobj-tree-sitter :ensure t)
-(define-key evil-outer-text-objects-map "f" (evil-textobj-tree-sitter-get-textobj "function.outer"))
-(define-key evil-inner-text-objects-map "f" (evil-textobj-tree-sitter-get-textobj "function.inner"))
-(define-key evil-outer-text-objects-map "a" (evil-textobj-tree-sitter-get-textobj ("conditional.outer" "loop.outer")))
+(use-package evil-textobj-tree-sitter
+  :ensure t
+  :config
+  (define-key evil-outer-text-objects-map "f" (evil-textobj-tree-sitter-get-textobj "function.outer"))
+  (define-key evil-inner-text-objects-map "f" (evil-textobj-tree-sitter-get-textobj "function.inner"))
+  (define-key evil-outer-text-objects-map "a" (evil-textobj-tree-sitter-get-textobj ("conditional.outer" "loop.outer")))
+  )
 #+end_src
 ** vim-like scroll (1 by 1)
 #+begin_src emacs-lisp
@@ -149,6 +155,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 ** Theme
 #+begin_src emacs-lisp :results none
 (use-package uwu-theme
+  :ensure t
   :config
   (enable-theme 'uwu)
 
@@ -160,6 +167,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 ** Terminal cursor
 #+begin_src emacs-lisp :results none
 (use-package evil-terminal-cursor-changer
+  :ensure t
   :config (evil-terminal-cursor-changer-activate))
 
 #+end_src
@@ -174,6 +182,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 ** Delight
 #+begin_src emacs-lisp
 (use-package delight
+  :ensure t
   :config
   (delight
    '(
@@ -213,6 +222,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 #+begin_src emacs-lisp
 ;; setting line
 (use-package display-line-numbers
+  :ensure t
   :config
   (setq display-line-numbers-type 'relative)
   (global-display-line-numbers-mode -1)
@@ -242,48 +252,6 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   (vertico-count 20)
   (vertico-resize nil)
   :init (vertico-mode)
-  ;;:config
-  ;; (eval-when-compile (require 'cl-lib))
-  ;; (defvar-keymap vertico-reverse-map
-  ;;   :doc "Additional keymap activated in reverse mode."
-  ;;   "<remap> <beginning-of-buffer>" #'vertico-last
-  ;;   "<remap> <minibuffer-beginning-of-buffer>" #'vertico-last
-  ;;   "<remap> <end-of-buffer>" #'vertico-first
-  ;;   "<remap> <scroll-down-command>" #'vertico-scroll-up
-  ;;   "<remap> <scroll-up-command>" #'vertico-scroll-down
-  ;;   "<remap> <next-line>" #'vertico-previous
-  ;;   "<remap> <previous-line>" #'vertico-next
-  ;;   "<remap> <next-line-or-history-element>" #'vertico-previous
-  ;;   "<remap> <previous-line-or-history-element>" #'vertico-next
-  ;;   "<remap> <backward-paragraph>" #'vertico-next-group
-  ;;   "<remap> <forward-paragraph>" #'vertico-previous-group)
-
-  ;; (define-minor-mode vertico-reverse-mode
-  ;;   "Reverse the Vertico display."
-  ;;   :global t :group 'vertico
-  ;;   ;; Reset overlays
-  ;;   (dolist (buf (buffer-list))
-  ;;     (when-let ((ov (buffer-local-value 'vertico--candidates-ov buf)))
-  ;;       (overlay-put ov 'before-string nil)))
-  ;;   (cl-callf2 rassq-delete-all vertico-reverse-map minor-mode-map-alist)
-  ;;   (when vertico-reverse-mode
-  ;;     (push `(vertico--input . ,vertico-reverse-map) minor-mode-map-alist)))
-
-  ;; (cl-defmethod vertico--display-candidates (lines &context (vertico-reverse-mode (eql t)))
-  ;;   (move-overlay vertico--candidates-ov (point-min) (point-min))
-  ;;   (setq lines (nreverse lines))
-  ;;   (unless (eq vertico-resize t)
-  ;;     (setq lines (nconc (make-list (max 0 (- vertico-count (length lines))) "\n") lines)))
-  ;;   (let ((string (apply #'concat lines)))
-  ;;     (add-face-text-property 0 (length string) 'default 'append string)
-  ;;     (overlay-put vertico--candidates-ov 'before-string string)
-  ;;     (overlay-put vertico--candidates-ov 'after-string nil))
-  ;;   (vertico--resize-window (length lines)))
-
-  ;; (provide 'vertico-reverse)
-
-  ;; (vertico-reverse-mode 1)
-  ;;
   )
 #+end_src
 *** COMMENT Posframe
@@ -309,7 +277,9 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 #+end_src
 ** consult
 #+begin_src emacs-lisp
-(use-package consult)
+(use-package consult
+  :ensure t
+)
 ;;  :bind (("M-f"  . consult-line))
 #+end_src
 *** consult-org-roam
@@ -349,6 +319,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 ** savehist
 #+begin_src emacs-lisp
 (use-package savehist
+  :ensure t
   :init (savehist-mode))
 #+end_src
 * Org
@@ -472,6 +443,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 #+begin_src emacs-lisp
 (use-package ob-nim)
 (use-package ob-go)
+(use-package ob-asymptote)
 
 (org-babel-do-load-languages
  'org-babel-load-languages
@@ -489,6 +461,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 ** Org-bullet
 #+begin_src emacs-lisp
 (use-package org-bullets
+  :ensure t
   :after  org
   :hook   (org-mode . org-bullets-mode)
   :custom (org-bullets-bullet-list
@@ -687,11 +660,12 @@ When nil, use the default face background."
 #+end_src
 ** Org-roam-ui
 #+begin_src emacs-lisp
-(use-package org-roam-ui)
+(use-package org-roam-ui :ensure t)
 #+end_src
 ** Denote
 #+begin_src emacs-lisp
 (use-package denote
+  :ensure t
   :custom
   (denote-directory       (expand-file-name "~/Documents/Personal"))
   (denote-known-keywords '(  "finance"  "failures"  "philosophy"  )))
@@ -765,6 +739,7 @@ When nil, use the default face background."
 ** Org gtd
 #+begin_src emacs-lisp
 (use-package org-gtd
+  :ensure t
   :after org
   :init
   (setq org-gtd-update-ack "3.0.0")
@@ -831,7 +806,7 @@ When nil, use the default face background."
       ;;                          "* Later [[%x]]\n  %i\n  %a"))
       )
 #+end_src
-** Org timebloc
+** Org timeblock
 #+begin_src emacs-lisp
 (use-package org-timeblock)
 #+end_src
@@ -877,7 +852,7 @@ When nil, use the default face background."
 ** Ox-hugo 
 #+begin_src emacs-lisp
 (use-package ox-hugo
-  :ensure nil 
+  :ensure t 
   :after ox)
 #+end_src
 ** Org export directory                                         :customFunc:
@@ -895,7 +870,9 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 #+end_src
 ** Ox-reveal
 #+begin_src emacs-lisp
-(use-package ox-reveal)
+(use-package ox-reveal
+  :ensure t
+)
 #+end_src
 ** Website from org-roam directory
 [[id:e7ee081e-a02b-4ab9-bccc-327a92bf2b09][create website from org-roam]]
@@ -1068,6 +1045,7 @@ esac
 ** Org-auto-tangle for handling tangled source blocks
 #+begin_src emacs-lisp
 (use-package org-auto-tangle
+  :ensure t
   :defer t
   :hook   (org-mode   .   org-auto-tangle-mode)
   :custom (org-auto-tangle-default    nil))
@@ -1076,7 +1054,7 @@ esac
 ** Org-transclusion for documentation
 #+begin_src emacs-lisp
 (use-package org-transclusion
-  :ensure nil
+  :ensure t
   :bind (:map org-mode-map
               ("<f12>"   . org-transclusion-add     )
               ("M-<f12>" . org-transclusion-add-all )
@@ -1120,7 +1098,9 @@ esac
 * Development Environment / Programming
 ** rg
 #+begin_src emacs-lisp
-(use-package rg)
+(use-package rg
+  :ensure t
+)
 #+end_src
 ** Save place mode
 This mode saves the last cursor point when you close a file,
@@ -1157,14 +1137,16 @@ and later sets cursor at that point when you open that file.
 #+begin_src emacs-lisp
 ;; Configure Tempel
 (use-package tempel
+  :ensure t
   ;; Require trigger prefix before template name when completing.
   ;; :custom
   ;; (tempel-trigger-prefix "<")
-
   :bind (("M-+" . tempel-complete) ;; Alternative tempel-expand
+         ("M-8" . tempel-complete) ;; Alternative tempel-expand
          ("M-*" . tempel-insert))
 
   :init
+  (setq tempel-path "~/.config/emacs/tempel/templates.el")
 
   ;; Setup completion at point
   (defun tempel-setup-capf ()
@@ -1187,11 +1169,11 @@ and later sets cursor at that point when you open that file.
   ;; either locally or globally. `expand-abbrev' is bound to C-x '.
   ;; (add-hook 'prog-mode-hook #'tempel-abbrev-mode)
   ;; (global-tempel-abbrev-mode)
-)
+  )
 
 ;; Optional: Add tempel-collection.
 ;; The package is young and doesn't have comprehensive coverage.
-(use-package tempel-collection)
+;; (use-package tempel-collection)
 #+end_src
 ** Parenthesis: (electric-pair-mode)
 #+begin_src emacs-lisp
@@ -1205,8 +1187,11 @@ and later sets cursor at that point when you open that file.
 #+end_src
 ** Git related
 #+begin_src emacs-lisp
-(use-package magit)
+(use-package magit
+  :ensure t)
+
 (use-package git-gutter
+  :ensure t
   :config (global-git-gutter-mode))
 #+end_src
 
@@ -1228,6 +1213,7 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
 ;; from https://github.com/Gavinok/emacs.d/blob/3ccc6e35feb2903442c9f7625fba081d93a2fa36/init.el#L614
 (use-package corfu
   ;; Optional customizations
+  :ensure t
   :custom
   (corfu-cycle            t          ) ;; Allows cycling through candidates
   ;; (corfu-auto             t          ) ;; Enable auto completion nov23 C-M-i?
@@ -1261,11 +1247,12 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
 				   corfu-auto nil)
               (corfu-mode))))
 #+end_src
-** cape
+** Cape
 #+begin_src emacs-lisp
 (use-package cape
   ;; Bind prefix keymap providing all Cape commands under a mnemonic key.
   ;; Press C-c p ? to for help.
+  :ensure t
   :bind ("C-c p" . cape-prefix-map) ;; Alternative keys: M-p, M-+, ...
   ;; Alternatively bind Cape commands individually.
   ;; :bind (("C-c p d" . cape-dabbrev)
@@ -1284,19 +1271,6 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
   ;; ...
 )
 #+end_src
-** COMMENT corfu Terminal mode
-#+begin_src emacs-lisp
-(use-package corfu-terminal
-  :straight (corfu-terminal :type git :repo "https://codeberg.org/akib/emacs-corfu-terminal.git")
-  :init
-  (corfu-terminal-mode +1))
-
-;; (use-package corfu-doc-terminal
-;;   :straight (corfu-doc-terminal :type git :repo "https://codeberg.org/akib/emacs-corfu-doc-terminal.git")
-;;   :init
-;;   (corfu-doc-terminal-mode +1))
-#+end_src
-
 ** Eglot for the LSPs
 #+begin_src emacs-lisp
 (use-package eglot
@@ -1304,9 +1278,10 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
   (setq eldoc-echo-area-use-multiline-p 0)
   (setq eglot-ignored-server-capabilities '(:documentHighlightProvider)))
 #+end_src
-** eglot booster
+** Eglot booster
 #+begin_src emacs-lisp
 (use-package eglot-booster
+  :ensure t
   :straight (eglot-booster
              :type git
              :host github
@@ -1323,6 +1298,7 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
 #+begin_src emacs-lisp
 (use-package indent-bars
   ;;:load-path "~/code/emacs/indent-bars"
+  :ensure t
   :straight (indent-bars :type git :host github :repo "jdtsmith/indent-bars")
   :custom
   (indent-bars-treesit-support   t)
@@ -1334,6 +1310,19 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
 				      dictionary dictionary_comprehension
 				      parenthesized_expression subscript)))
   :hook ((python-base-mode yaml-mode) . indent-bars-mode))
+#+end_src
+
+** COMMENT corfu Terminal mode
+#+begin_src emacs-lisp
+(use-package corfu-terminal
+  :straight (corfu-terminal :type git :repo "https://codeberg.org/akib/emacs-corfu-terminal.git")
+  :init
+  (corfu-terminal-mode +1))
+
+;; (use-package corfu-doc-terminal
+;;   :straight (corfu-doc-terminal :type git :repo "https://codeberg.org/akib/emacs-corfu-doc-terminal.git")
+;;   :init
+;;   (corfu-doc-terminal-mode +1))
 #+end_src
 
 ** COMMENT completion in region
@@ -1651,14 +1640,19 @@ This requires [[id:2bc28375-3cf3-4784-8a34-ecb1a2b0c24a][Straight.el]] to instal
            (format-time-string "%Y%m%d-%H%M%S.svg"))
    "]]"))
 #+end_src
-** some helper for writing
+** Writting packages
 #+begin_src emacs-lisp
-(use-package selectric-mode)
-(use-package typewriter-roll-mode)
-(use-package writeroom-mode)
+(use-package selectric-mode
+  :ensure t)
+
+(use-package typewriter-roll-mode
+  :ensure t)
+
+(use-package writeroom-mode
+  :ensure t)
 #+end_src
 
-** Distraction
+** Writting Distraction free
 #+begin_src emacs-lisp
 (defun gry/distraction-free-on ()
   (interactive)
@@ -1671,18 +1665,12 @@ This requires [[id:2bc28375-3cf3-4784-8a34-ecb1a2b0c24a][Straight.el]] to instal
   (cua-mode +1)
 
   (cond
-   ;;((font-available-p "Iosevka Aile"   ) (set-face-attribute 'org-default nil :font "Iosevka Aile" :weight 'bold :height 140))
    ((member "Iosevka Aile"    (font-family-list)) (set-face-attribute 'default nil :font "Iosevka Aile"    :height 140))
    ((member "Liberation Sans" (font-family-list)) (set-face-attribute 'default nil :font "Liberation Sans" :height 140))
    ((member "Courier New"     (font-family-list)) (set-face-attribute 'default nil :font "Courier New"     :height 140))
    ((member "Terminus"        (font-family-list)) (set-face-attribute 'default nil :font "Terminus"        :height 140))
    ((member "M+ 1p medium"    (font-family-list)) (set-face-attribute 'default nil :font "M+ 1p medium"    :height 140))
-   )
-  
-
-
-  ;; (set-face-attribute 'fixed-pitch nil :font "Iosevka Term SS06")
-  )
+   ))
 
 (defun gry/distraction-free-off ()
   (interactive)
@@ -1699,11 +1687,11 @@ This requires [[id:2bc28375-3cf3-4784-8a34-ecb1a2b0c24a][Straight.el]] to instal
    ))
 #+end_src
 
-
 * Keybinding
 ** Which-key
 #+begin_src emacs-lisp
 (use-package which-key
+  :ensure t
   :custom
   (which-key-popup-type            'side-window               )
   (which-key-side-window-location  'left                      )
@@ -2607,7 +2595,8 @@ fi
 I don't use these not much  
 #+begin_src emacs-lisp
 (use-package dired-single)
-(use-package dired-preview)
+(use-package dired-preview
+  :ensure t)
 #+end_src
 * Misc Packages
 ** buffer move
@@ -2616,7 +2605,8 @@ I don't use these not much
 #+end_src
 ** crux
 #+begin_src emacs-lisp
-(use-package crux)
+(use-package crux
+  :ensure t)
 #+end_src
 ** command-log-mode
 #+begin_src emacs-lisp
@@ -2658,13 +2648,15 @@ I don't use these not much
   (popper-echo-mode +1))
 #+end_src
 
+** graphviz
+#+begin_src emacs-lisp
+(use-package graphviz-dot-mode
+    :ensure t
+)
+#+end_src
 ** COMMENT emacs-everywhere
 #+begin_src emacs-lisp
 (use-package emacs-everywhere)
-#+end_src
-** graphviz
-#+begin_src emacs-lisp
-(use-package graphviz-dot-mode)
 #+end_src
 * COMMENT Unused
 ** COMMENT Mail & contacts:
