@@ -1175,6 +1175,16 @@ and later sets cursor at that point when you open that file.
 ;; The package is young and doesn't have comprehensive coverage.
 ;; (use-package tempel-collection)
 #+end_src
+
+#+begin_src emacs-lisp
+(defun gry/choose-from-list-and-insert-it (asdf)
+  (interactive)
+  (insert (let ((choices asdf))
+    (completing-read "Choose: " choices)))
+  ;;(insert choices)
+)
+#+end_src
+
 ** Parenthesis: (electric-pair-mode)
 #+begin_src emacs-lisp
 ;; enable electric pair

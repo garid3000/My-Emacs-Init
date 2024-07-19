@@ -119,6 +119,7 @@ c-mode :when (re-search-backward "^\\S-*$" (line-beginning-position) 'noerror)
 org-mode
 
 (caption "#+caption: ")
+(name "#+name: " :post (gry/choose-from-list-and-insert-it '("fig:" "tbl:" "eqn:" "lst:")))
 (drawer ":" p ":" n r ":end:")
 (begin "#+begin_" (s name) n> r> n "#+end_" name)
 (quote "#+begin_quote" n> r> n "#+end_quote")
@@ -136,6 +137,15 @@ org-mode
 (elisp "#+begin_src emacs-lisp" n r n "#+end_src" :post (org-edit-src-code))
 (inlsrc "src_" p "[:exports code]{" q "}")
 (title "#+title: " p n "#+author: Garid Zorigoo" n "#+language: en")
+(shell "#+begin_src sh :eval no-export :results verbatim :exports both" n "#!/bin/sh" n r n  "#+end_src" :post (org-edit-src-code))
+(results "results " :post (gry/choose-from-list-and-insert-it
+                           '("verbatim" "value" "output" "table" "file xxx :output-dir .../"
+                             "list" "scalar" "code" "draw" "html" "latex" "link" "org" "pp")))
+(var "#+header: :var outputVar=" :post (insert (concat org-download-image-dir "/filename.svg") ))
+
+(wrap "wrap " :post (gry/choose-from-list-and-insert-it '("example" "src python" "src sh" "src bash")))
+(startup "#+startup " :post (gry/choose-from-list-and-insert-it '("overview" "content" "showall" "showeverything" "show2levels"  "show3levels"  "show4levels"  "show5levels")))
+(cache "cache " :post (gry/choose-from-list-and-insert-it '("yes" "no")))
 
 ;; Local Variables:
 ;; mode: lisp-data
