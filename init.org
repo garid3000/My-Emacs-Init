@@ -1694,6 +1694,17 @@ This requires [[id:2bc28375-3cf3-4784-8a34-ecb1a2b0c24a][Straight.el]] to instal
    ))
 #+end_src
 
+** PDF tools
+#+begin_src emacs-lisp
+(use-package pdf-tools
+  :ensure t)
+#+end_src
+
+** tmr - timer
+#+begin_src emacs-lisp
+(use-package tmr
+  :ensure t)
+#+end_src
 ** COMMENT spray
 #+begin_src emacs-lisp
 (use-package spray
@@ -1701,11 +1712,6 @@ This requires [[id:2bc28375-3cf3-4784-8a34-ecb1a2b0c24a][Straight.el]] to instal
     :bind (("<f6>"  . spray-mode)))
 #+end_src
 
-** PDF tools
-#+begin_src emacs-lisp
-(use-package pdf-tools
-  :ensure t)
-#+end_src
 * Keybinding
 ** Which-key
 #+begin_src emacs-lisp
