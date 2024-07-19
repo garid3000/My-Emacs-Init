@@ -1899,15 +1899,16 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 #+attr_latex: :placement [H]
 #+caption: Help for emacs/elisp related
 #+name: tbl-kbind-help
-| key(s) | function                 | short description                | mode | lambda |
-|--------+--------------------------+----------------------------------+------+--------|
-| h      | :ignore t                | (h)elp.......................... | -    |        |
-| hh     | describe-symbol          | h-(h)elp symbol (elisp)          | -    |        |
-| hH     | describe-key             | h-(H)elp keybinding              | -    |        |
-| ho     | org-info                 | h-(o)rg info                     | -    |        |
-| hw     | which-key-show-top-level | h-(w)hich key                    | -    |        |
-| hd     | devdocs-lookup           | h-(d)evdocs lookup               | -    |        |
-| hm     | consult-man              | h-(m)an                          | -    |        |
+| key(s) | function                    | short description                | mode | lambda |
+|--------+-----------------------------+----------------------------------+------+--------|
+| h      | :ignore t                   | (h)elp.......................... | -    |        |
+| hh     | describe-symbol             | h-(h)elp symbol (elisp)          | -    |        |
+| hH     | describe-key                | h-(H)elp keybinding              | -    |        |
+| ho     | org-info                    | h-(o)rg info                     | -    |        |
+| hw     | which-key-show-top-level    | h-(w)hich key                    | -    |        |
+| hd     | devdocs-lookup              | h-(d)evdocs lookup               | -    |        |
+| hm     | consult-man                 | h-(m)an                          | -    |        |
+| hb     | habitica-hydra-control/body | habitica                         | -    |        |
 
 **** Development commands
 #+attr_latex: :placement [H]
@@ -2379,6 +2380,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "hw" '(which-key-show-top-level :which-key "h-(w)hich key")
   "hd" '(devdocs-lookup :which-key "h-(d)evdocs lookup")
   "hm" '(consult-man :which-key "h-(m)an")
+  "hb" '(habitica-hydra-control/body :which-key "habitica")
   "p" '(:ignore t :which-key "(p)rojectl....................")
   "pr" '(xref-find-references :which-key "p-(r)eferences")
   "pd" '(consult-flymake :which-key "p-(d)iagnostic")
@@ -2666,7 +2668,57 @@ I don't use these not much
   (popper-mode      +1)
   (popper-echo-mode +1))
 #+end_src
+** habitica
+#+begin_src emacs-lisp
+(use-package habitica
+  :ensure t
+  )
+#+end_src
 
+
+#+begin_src emacs-lisp
+(defhydra habitica-hydra-control ()
+  "
+^task^                         ^checklist^                          ^movement^
+^^^^^^^^---------------------------------------------------------------------------------------
+_g_: refresh                   _c a_: checklist add                  _j_: vi.down
+_n_: new task                  _c t_: checklist toggle               _k_: vi.up
+_+_: + task/habit              _c d_: checklist delete               _<tab>_: org cycle
+_-_: - task/habit              _c r_: checklist rename               _h_: vi.left
+_t_: toggle todo state                                               _l_: vi.right
+_d_: deadline set                                                    _C-j_: org-forward-heading-same-level
+_i_: intensity set                                                   _C-k_: org-backard-heading-same-level
+_q_: add a tag to task                                               _M-S-<return>_: habitica-new-task
+_Q_: delete a tag to task
+"
+
+  ("g"     habitica-tasks               )
+  ("n"     habitica-new-task            )
+  ("+"     habitica-up-task             )
+  ("-"     habitica-down-task           )
+  ("t"     habitica-todo-task           )
+  ("d"     habitica-set-deadline        )
+  ("i"     habitica-set-difficulty      )
+  ("q"     habitica-add-tag-to-task     )
+  ("Q"     habitica-remove-tag-to-task  )
+
+  ("c a"     habitica-add-item-to-checklist      )
+  ("c t"     habitica-score-checklist-item       )
+  ("c d"     habitica-delete-item-from-checklist )
+  ("c r"     habitica-rename-item-on-checklist   )
+
+  ("j"            next-line                       )
+  ("k"            previous-line                   )
+  ("h"            backward-char                   )
+  ("l"            forward-char                    )
+  ("C-j"          org-forward-heading-same-level  )
+  ("C-k"          org-backward-heading-same-level )
+  ("M-S-<return>" habitica-new-task               )
+  ("<tab>"        org-cycle                       )
+  ("/"            org-sparse-tree                 )
+  ("D E L" habitica-delete-task "delete task")
+  )
+#+end_src
 ** COMMENT emacs-everywhere
 #+begin_src emacs-lisp
 (use-package emacs-everywhere)
