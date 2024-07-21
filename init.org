@@ -1556,7 +1556,9 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
 #+begin_src emacs-lisp
 (use-package spray
     :ensure t
-    :bind (("<f6>"  . spray-mode)))
+    :bind (("<f6>"  . spray-mode))
+    :hook ((spray-mode . gry/distraction-free-on))
+)
 #+end_src
 
 * Keybinding
@@ -2407,7 +2409,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 ;;(shell-command (concat user-emacs-directory "garid/open_external_term.sh" " " buffer-file-name)))
 #+end_src
 ** shell script to open terminal                              :shell_script:
-#+begin_src shell :tangle garid/open_external_term.sh
+#+begin_src bash :tangle garid/open_external_term.sh
 #!/bin/bash
 
 # Open System termianl $TERMINAL at $1:
