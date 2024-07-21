@@ -571,9 +571,9 @@ When nil, use the default face background."
       :unnarrowed t)
 
      ("r" "Research" plain "* %?"
-      :if-new (file+head "g_research/%<%Y%m%d%H%M%S>-${slug}__research.org"
+      :if-new (file+head "g_research/%<%Y%m%d%H%M%S>-${slug}__rsch.org"
                          ,(concat "#+title: ${title}\n"
-                                  "#+filetags: :research:\n"
+                                  "#+filetags: :rsch:\n"
                                   "#+date: %U\n"
                                   "#+setupfile: ~/.config/emacs/org-templates/level-0-website-export-template.org"
                                   ))
@@ -660,7 +660,8 @@ When nil, use the default face background."
 #+end_src
 ** Org-roam-ui
 #+begin_src emacs-lisp
-(use-package org-roam-ui :ensure t)
+(use-package org-roam-ui
+  :ensure t)
 #+end_src
 ** Denote
 #+begin_src emacs-lisp
@@ -724,14 +725,25 @@ When nil, use the default face background."
                                 ))
   )
 
+(defun my/org-roam-find-node-by-focus-tag ()
+  (interactive)
+  ;;(org-roam-node-find nil nil (my/org-roam-exclude-by-tag "kanji"))
+  (org-roam-node-find
+   nil nil (lambda (node)
+             ;;(null (member "kanji" (org-roam-node-tags node)) )
+             (member garids-focus-tag (org-roam-node-tags node)) 
+             ))
+  )
+
+
 (defun my/org-roam-find-node-using-tag ()
   (interactive)
   ;;(org-roam-node-find nil nil (my/org-roam-exclude-by-tag "kanji"))
   (org-roam-node-find
    nil nil (lambda (node)
-             (null (member
+             (member
                     (completing-read "Select tag to search: " (org-roam-tag-completions) nil t "")
-                    (org-roam-node-tags node)) )
+                    (org-roam-node-tags node)) 
              ))
   )
 #+end_src
@@ -1180,9 +1192,13 @@ and later sets cursor at that point when you open that file.
 (defun gry/choose-from-list-and-insert-it (asdf)
   (interactive)
   (insert (let ((choices asdf))
+    (completing-read "Choose: " choices))))
+
+
+(defun gry/choose-from-list-and-return-it (asdf)
+  (interactive)
+  (let ((choices asdf))
     (completing-read "Choose: " choices)))
-  ;;(insert choices)
-)
 #+end_src
 
 ** Parenthesis: (electric-pair-mode)
@@ -1560,7 +1576,18 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
     :hook ((spray-mode . gry/distraction-free-on))
 )
 #+end_src
+** garids working states
+#+begin_src emacs-lisp
+(setq garids-focus-tag "rsch")
+(setq garids-focus-tag-list '("bps" "hkdn" "rsch" "yak"))
+;; (setq garids-focus-tag (gry/choose-from-list-and-return-it garids-focus-tag-list))
 
+(defun garid/focus-change-tag ()
+  "this changes the tag of my work focus"
+  (interactive)
+  (setq garids-focus-tag (gry/choose-from-list-and-return-it garids-focus-tag-list))
+  (message (concat "focus tag changed to " garids-focus-tag)))
+#+end_src
 * Keybinding
 ** Which-key
 #+begin_src emacs-lisp
@@ -1724,6 +1751,9 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | st     | toggle-transparency                                      | s-(t)oggle-transparency        | -    |        |
 | scl    | (global-command-log-mode) (clm/open-command-log-buffer)  | s-(c)md-(l)og                  | -    | y      |
 | sw     | whitespace-mode                                          | s-(w)hitespace                 | -    |        |
+| sg     | :ignore t                                                | s-garid                        | -    |        |
+| sgd    | gry/distraction-free-on                                  | sg-distaction                  | -    |        |
+| sgf    | garid/focus-change-tag                                   | sg-focus change                | -    |        |
 | O      | :ignore t                                                | (O)pen........................ | -    |        |
 | Oe     | (find-file "~/.config/emacs/init.org")                   | O-(e)macs confg org            | -    | y      |
 | OE     | (find-file "~/.config/emacs/init.el")                    | O-(E)macs confg el             | -    | y      |
@@ -1911,23 +1941,29 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 |--------+---------------------------------------------+----------------------------------+------+--------|
 | r      | :ignore t                                   | (r)oam.......................... | -    |        |
 | ruim   | org-roam-ui-mode                            | rui-(m)ode ui-in-browser         | -    |        |
-| rf     | my/org-roam-find-node-exclude-kanji         | r-(f)ind no kanji                | -    |        |
-| rF     | org-roam-node-find                          | r-(f)ind full find               | -    |        |
+| rf     | my/org-roam-find-node-by-focus-tag          | r-(f)ind focus                   | -    |        |
+| rF     | consult-org-roam-file-find                  | r-(f)ind full find               | -    |        |
 | rl     | org-roam-buffer-toggle                      | r-(l)toggle                      | -    |        |
 | rL     | org-roam-buffer-display-dedicated           | r-(L)dedicated                   | -    |        |
 | ri     | org-roam-node-insert                        | r-(i)nsert                       | -    |        |
 | rI     | garid-custom/org-roam-node-insert-immediate | r-(I)nsert-immediate             | -    |        |
 | rt     | :ignore t                                   | r-(t)ag......................    | -    |        |
 | rta    | org-roam-tag-add                            | rt-(a)dd                         | -    |        |
-| rtd    | org-roam-tag-remove                         | rt-(r)emove                      | -    |        |
-| rd     | :ignore t                                   | r-(d)aily....................    | -    |        |
-| rdc    | org-roam-dailies-capture-today              | rd-(c)apture                     | -    |        |
-| rdr    | org-roam-dailies-goto-today                 | rd-(t)oday                       | -    |        |
-| rdt    | org-roam-dailies-goto-tomorrow              | rd-(T)omorrow                    | -    |        |
-| rdy    | org-roam-dailies-goto-yesterday             | rd-(y)esterday                   | -    |        |
-| rdd    | org-roam-dailies-goto-date                  | rd-(d)ate  goto date             | -    |        |
-| rd>    | org-roam-dailies-goto-next-note             | rd-(>)next                       | -    |        |
-| rd<    | org-roam-dailies-goto-previous-note         | rd-(<)prev                       | -    |        |
+| rtr    | org-roam-tag-remove                         | rt-(r)emove                      | -    |        |
+| rj     | :ignore t                                   | r-(d)aily.journal............    | -    |        |
+| rjc    | org-roam-dailies-capture-today              | rj-(c)apture                     | -    |        |
+| rjr    | org-roam-dailies-goto-today                 | rj-(t)oday                       | -    |        |
+| rjt    | org-roam-dailies-goto-tomorrow              | rj-(T)omorrow                    | -    |        |
+| rjy    | org-roam-dailies-goto-yesterday             | rj-(y)esterday                   | -    |        |
+| rjd    | org-roam-dailies-goto-date                  | rj-(d)ate  goto date             | -    |        |
+| rj>    | org-roam-dailies-goto-next-note             | rj-(>)next                       | -    |        |
+| rj<    | org-roam-dailies-goto-previous-note         | rj-(<)prev                       | -    |        |
+| rd     | (dired org-roam-directory)                  | r-(d)ired                        | -    | y      |
+| rc     | :ignore t                                   | r-(c)onsults..................   | -    |        |
+| rcb    | consult-org-roam-backlinks                  | rc-(b)acklink                    | -    |        |
+| rcs    | consult-org-roam-search                     | rc-(s)earch                      | -    |        |
+| rcf    | consult-org-roam-forwardlink                | rc-forwardlink                   | -    |        |
+| rcF    | consult-org-roam-find-file                  | rc-Find                          | -    |        |
 
 **** (in-org) subtree operations
 #+attr_latex: :placement [H]
@@ -2154,23 +2190,29 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "o" '(:ignore t :which-key "(o)rg...........................")
   "r" '(:ignore t :which-key "(r)oam..........................")
   "ruim" '(org-roam-ui-mode :which-key "rui-(m)ode ui-in-browser")
-  "rf" '(my/org-roam-find-node-exclude-kanji :which-key "r-(f)ind no kanji")
-  "rF" '(org-roam-node-find :which-key "r-(f)ind full find")
+  "rf" '(my/org-roam-find-node-by-focus-tag :which-key "r-(f)ind focus")
+  "rF" '(consult-org-roam-file-find :which-key "r-(f)ind full find")
   "rl" '(org-roam-buffer-toggle :which-key "r-(l)toggle")
   "rL" '(org-roam-buffer-display-dedicated :which-key "r-(L)dedicated")
   "ri" '(org-roam-node-insert :which-key "r-(i)nsert")
   "rI" '(garid-custom/org-roam-node-insert-immediate :which-key "r-(I)nsert-immediate")
   "rt" '(:ignore t :which-key "r-(t)ag......................")
   "rta" '(org-roam-tag-add :which-key "rt-(a)dd")
-  "rtd" '(org-roam-tag-remove :which-key "rt-(r)emove")
-  "rd" '(:ignore t :which-key "r-(d)aily....................")
-  "rdc" '(org-roam-dailies-capture-today :which-key "rd-(c)apture")
-  "rdr" '(org-roam-dailies-goto-today :which-key "rd-(t)oday")
-  "rdt" '(org-roam-dailies-goto-tomorrow :which-key "rd-(T)omorrow")
-  "rdy" '(org-roam-dailies-goto-yesterday :which-key "rd-(y)esterday")
-  "rdd" '(org-roam-dailies-goto-date :which-key "rd-(d)ate  goto date")
-  "rd>" '(org-roam-dailies-goto-next-note :which-key "rd-(>)next")
-  "rd<" '(org-roam-dailies-goto-previous-note :which-key "rd-(<)prev")
+  "rtr" '(org-roam-tag-remove :which-key "rt-(r)emove")
+  "rj" '(:ignore t :which-key "r-(d)aily.journal............")
+  "rjc" '(org-roam-dailies-capture-today :which-key "rj-(c)apture")
+  "rjr" '(org-roam-dailies-goto-today :which-key "rj-(t)oday")
+  "rjt" '(org-roam-dailies-goto-tomorrow :which-key "rj-(T)omorrow")
+  "rjy" '(org-roam-dailies-goto-yesterday :which-key "rj-(y)esterday")
+  "rjd" '(org-roam-dailies-goto-date :which-key "rj-(d)ate  goto date")
+  "rj>" '(org-roam-dailies-goto-next-note :which-key "rj-(>)next")
+  "rj<" '(org-roam-dailies-goto-previous-note :which-key "rj-(<)prev")
+  "rd" '((lambda () (interactive) (dired org-roam-directory) ) :which-key "r-(d)ired")
+  "rc" '(:ignore t :which-key "r-(c)onsults..................")
+  "rcb" '(consult-org-roam-backlinks :which-key "rc-(b)acklink")
+  "rcs" '(consult-org-roam-search :which-key "rc-(s)earch")
+  "rcf" '(consult-org-roam-forwardlink :which-key "rc-forwardlink")
+  "rcF" '(consult-org-roam-find-file :which-key "rc-Find")
   "z" '(:ignore t :which-key "(z)conveniences............")
   "za" '(garid-custom/align-regexp-and-untabify :which-key "z-(a)lign")
   "zr" '(replace-regexp :which-key "z-(r)eplace word in buf")
@@ -2207,6 +2249,9 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "st" '(toggle-transparency :which-key "s-(t)oggle-transparency")
   "scl" '((lambda () (interactive) (global-command-log-mode) (clm/open-command-log-buffer) ) :which-key "s-(c)md-(l)og")
   "sw" '(whitespace-mode :which-key "s-(w)hitespace")
+  "sg" '(:ignore t :which-key "s-garid")
+  "sgd" '(gry/distraction-free-on :which-key "sg-distaction")
+  "sgf" '(garid/focus-change-tag :which-key "sg-focus change")
   "O" '(:ignore t :which-key "(O)pen........................")
   "Oe" '((lambda () (interactive) (find-file "~/.config/emacs/init.org") ) :which-key "O-(e)macs confg org")
   "OE" '((lambda () (interactive) (find-file "~/.config/emacs/init.el") ) :which-key "O-(E)macs confg el")
