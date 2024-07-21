@@ -1328,56 +1328,11 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
 )
 #+end_src
 
-** COMMENT corfu Terminal mode
+** scad
 #+begin_src emacs-lisp
-(use-package corfu-terminal
-  :straight (corfu-terminal :type git :repo "https://codeberg.org/akib/emacs-corfu-terminal.git")
-  :init
-  (corfu-terminal-mode +1))
-
-;; (use-package corfu-doc-terminal
-;;   :straight (corfu-doc-terminal :type git :repo "https://codeberg.org/akib/emacs-corfu-doc-terminal.git")
-;;   :init
-;;   (corfu-doc-terminal-mode +1))
+(use-package scad-mode
+  :ensure t)
 #+end_src
-
-** COMMENT completion in region
-#+begin_src emacs-lisp
-;; (setq completions-format 'one-column)
-;; (setq completions-header-format nil)
-;; (setq completions-max-height 20)
-;; (setq completion-auto-select nil)       ;
-
-;; ;; (define-key minibuffer-mode-map (kbd "C-n") 'minibuffer-next-completion)
-;; ;; (define-key minibuffer-mode-map (kbd "C-p") 'minibuffer-previous-completion)
-;; ;; 
-;; ;; (define-key completion-in-region-mode-map (kbd "C-n") 'minibuffer-next-completion)
-;; ;; (define-key completion-in-region-mode-map (kbd "C-p") 'minibuffer-previous-completion)
-
-
-
-(setq completion-in-region-function
-      (lambda (&rest args)
-        (apply (if vertico-mode
-                   #'consult-completion-in-region
-                 #'completion--in-region)
-               args)))
-#+end_src
-** COMMENT python run on buffer
-#+begin_src emacs-lisp
-(defun garid-custom/run-python-on-this-file ()
-        (interactive)
-        (async-shell-command (concat "python " (buffer-file-name)) ))
-#+end_src
-** COMMENT cape yassnippets
-Following makes yassnippet available for corfu (or other completers)
-#+begin_src emacs-lisp
-(use-package cape)
-(use-package yasnippet-capf
-  :after cape
-  :config (add-to-list 'completion-at-point-functions #'yasnippet-capf))
-#+end_src
-
 ** COMMENT devdocs
 #+begin_src emacs-lisp
 (use-package devdocs
@@ -1387,128 +1342,6 @@ Following makes yassnippet available for corfu (or other completers)
      for lang in '("python~3.11" "numpy~1.21" "matplotlib~3.6" "pandas~1"
                    c "r" "nim" "gnu_make" "bash" "fish~3.6" "qt~6.1")
      do (devdocs-install (list (cons 'slug (format "%s" lang)))))))
-#+end_src
-** COMMENT LSP-bridge
-This requires [[id:2bc28375-3cf3-4784-8a34-ecb1a2b0c24a][Straight.el]] to install.
-
-#+begin_src emacs-lisp
-(use-package lsp-bridge
-  :straight '(lsp-bridge
-              :type git
-              :host github
-              :repo "manateelazycat/lsp-bridge"
-              :files (:defaults "*.el" "*.py" "acm" "core" "langserver" "multiserver" "resources")
-              :build (:not compile))
-  :init
-  ;; (global-lsp-bridge-mode)
-  (evil-define-key 'normal 'python-mode-map  (kbd "g d") 'lsp-bridge-find-def)
-  (evil-define-key 'normal 'python-mode-map  (kbd "K")   'lsp-bridge-popup-documentation)
-  (evil-define-key 'insert 'acm-mode-map     (kbd "C-n") 'acm-select-next)
-  (evil-define-key 'insert 'acm-mode-map     (kbd "C-p") 'acm-select-prev)
-  (evil-define-key 'insert 'acm-mode-map     (kbd "C-h") 'acm-complete)
-  :custom
-  (acm-backend-codeium-candidate-min-length           0)
-  (acm-backend-search-file-words-candidate-min-length 2)
-  (acm-backend-yas-candidates-number                 10)
-  (acm-backend-lsp-candidate-min-length               2)
-  (acm-enable-codeium                                 t)
-  ;; (acm-enable-preview                                 t)
-  (acm-enable-icon                                  nil)
-  (lsp-bridge-python-multi-lsp-server    "pyright_ruff")
-  (lsp-bridge-enable-org-babel                        t)
-  (lsp-bridge-diagnostic-fetch-idle                   1)
-  ;; need lsp-bridge-codeium-auth & lsp-bridge-codeium-input-auth-token
-  ;; (acm-backend-elisp-candidate-min-length           2)
-  :bind (:map acm-mode-map
-              ("<tab>" . nil )
-              ("TAB"   . nil ))
-
-  )
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; :bind ( :map acm-mode-map                                      ;;
-;;         ("M-j" . acm-select-next ) ("C-n" . acm-select-next )  ;;
-;;         ("M-k" . acm-select-prev ) ("C-p" . acm-select-prev )  ;;
-;;         ("M-n" . acm-select-next ) ("C-j" . acm-select-next )  ;;
-;;         ("M-p" . acm-select-prev ) ("C-k" . acm-select-prev )  ;;
-;;         ("M-d" . acm-doc-toggle  ) ("C-d" . acm-doc-toggle  )  ;;
-;;         ("M-f" . acm-filter      ) ("C-f" . acm-filter      )  ;;
-;;         ("M-H" . acm-hide        ) ("C-H" . acm-hide        )  ;;
-;;         ("M-G" . acm-select-last ) ("C-G" . acm-hide        )) ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-#+end_src
-** COMMENT Python
-#+begin_src emacs-lisp
-(use-package python
-  :config
-  (evil-define-key 'normal 'python-mode-map  (kbd "SPC ,") 'garid-custom/run-python-on-this-file)
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;; :bind (                                                 ;;
-  ;;        :map python-ts-mode-map                          ;;
-  ;;        ("SPC ," . garid-custom/run-python-on-this-file) ;;
-  ;;        :map python-mode-map                             ;;
-  ;;        ("SPC ," . garid-custom/run-python-on-this-file) ;;
-  ;;        )                                                ;;
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-  ;;  :hook
-  ;;  (python-ts-mode
-  ;;   . (lambda ()
-  ;;       ;;(add-to-list 'completion-at-point-functions #'yasnippet-capf)
-  ;;       (add-to-list 'completion-at-point-functions #'python-completion-at-point)
-  ;;       (add-to-list 'completion-at-point-functions #'tags-completion-at-point-function)
-  ;;       (display-fill-column-indicator-mode 1)
-  ;;       (setq fill-column 79)
-  ;;       (message "Python mode started" )
-  ;;       ))
-  ;;  (inferior-python-mode
-  ;;   . (lambda ()
-  ;;       (add-to-list 'completion-at-point-functions #'yasnippet-capf)
-  ;;       (add-to-list 'completion-at-point-functions #'python-completion-at-point)
-  ;;       (add-to-list 'completion-at-point-functions #'tags-completion-at-point-function)
-  ;;       (display-fill-column-indicator-mode 1)
-  ;;       (setq fill-column 79)
-  ;;       (message "Python mode started" )
-  ;;       ))
-
-  )
-
-;;(use-package elpy
-;;  :ensure t
-;;  :defer t
-;;  :init
-;;  (advice-add 'python-ts-mode :before 'elpy-enable)
-;;
-;;  :hook
-;;  (python-ts-mode . (lambda ()
-;;                      (define-key evil-normal-state-map (kbd "K") 'elpy-doc)
-;;                      (define-key evil-normal-state-map (kbd "K") 'elpy-doc)
-;;                      ))
-;;  )
-
-;; :bind (:map python-ts-mode-map ("K" . elpy-doc ))
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;    ;;;;;;;;;;
-;; (use-package python-cell                                                               ;;
-;;   :hook (python-mode .
-;;         (lambda () (setq python-cell-cellbreak-regexp "^[[:space:]]*#[[:space:]]=="))) ;;
-;;                                                                                        ;;
-;;   ;;                                                                                   ;;
-;;   ;; (define-key python-cell-mode-map (kbd "M-J") nil)                                 ;;
-;;   ;; (define-key python-cell-mode-map (kbd "M-K") nil)                                 ;;
-;;   )                                                                                    ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-#+end_src
-** COMMENT Dump jump
-#+begin_src emacs-lisp
-(use-package dumb-jump
-  :config
-  (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
-  (setq xref-show-definitions-function #'xref-show-definitions-completing-read)
-  )
-#+end_src
-** COMMENT scad
-#+begin_src emacs-lisp
-(use-package scad-mode)
 #+end_src
 * Garid
 ** Open PDF/HMTL exported by LaTeX externally                   :customFunc:
@@ -1678,8 +1511,10 @@ This requires [[id:2bc28375-3cf3-4784-8a34-ecb1a2b0c24a][Straight.el]] to instal
   (turn-off-evil-mode)
   (selectric-mode 1)
   (display-line-numbers-mode -1)
-  (corfu-mode -1)
+  (global-corfu-mode -1)
   (cua-mode +1)
+  (which-key-mode -1)
+  (vertico-mode -1)
 
   (cond
    ((member "Iosevka Aile"    (font-family-list)) (set-face-attribute 'default nil :font "Iosevka Aile"    :height 140))
@@ -1695,8 +1530,10 @@ This requires [[id:2bc28375-3cf3-4784-8a34-ecb1a2b0c24a][Straight.el]] to instal
   (writeroom-mode -1)
   (typewriter-roll-mode -1)
   (selectric-mode -1)
-  (corfu-mode +1)
+  (global-corfu-mode +1)
   (turn-on-evil-mode)
+  (which-key-mode +1)
+  (vertico-mode +1)
 
   (cond
    ((member "Iosevka Term SS06" (font-family-list)) (set-face-attribute 'default nil :font "Iosevka Term SS06" :height 120))
@@ -1715,7 +1552,7 @@ This requires [[id:2bc28375-3cf3-4784-8a34-ecb1a2b0c24a][Straight.el]] to instal
 (use-package tmr
   :ensure t)
 #+end_src
-** COMMENT spray
+** spray
 #+begin_src emacs-lisp
 (use-package spray
     :ensure t
@@ -1729,7 +1566,8 @@ This requires [[id:2bc28375-3cf3-4784-8a34-ecb1a2b0c24a][Straight.el]] to instal
   :ensure t
   :custom
   (which-key-popup-type            'side-window               )
-  (which-key-side-window-location  'left                      )
+  ;;(which-key-side-window-location  'left                    )
+  (which-key-side-window-location  'bottom                    )
   (which-key-idle-delay             0.5                       )
   (which-key-idle-secondary-delay   0.01                      )
   (which-key-side-window-max-width  0.5                       )
@@ -1897,6 +1735,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | tv     | vterm                                                    | t-(v)term  vterm               | -    |        |
 | tx     | garid-custom/open-external-term-here                     | t-(x)ternal terminal           | -    |        |
 | tt     | eat                                                      | t-ea(t) terminal               | -    |        |
+| tm     | tmr-with-description                                     | t-(m)er                        | -    |        |
 | Y      | gry-copy-to-x-clip                                       | (Y)ank to xclip                | -    |        |
 
 **** Bookmark
@@ -2008,7 +1847,6 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | nJ     | denote-journal-extras-new-or-existing-entry | n-(J)ournal-find              | -    |        |
 | nil    | denote-insert-link                          | n-(i)nsert-link               | -    |        |
 | nij    | denote-journal-extras-link-or-create-entry  | n-(i)nsert-journal-link       | -    |        |
-
 
 **** Yas-snippet
 #+attr_latex: :placement [H]
@@ -2380,6 +2218,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "tv" '(vterm :which-key "t-(v)term  vterm")
   "tx" '(garid-custom/open-external-term-here :which-key "t-(x)ternal terminal")
   "tt" '(eat :which-key "t-ea(t) terminal")
+  "tm" '(tmr-with-description :which-key "t-(m)er")
   "Y" '(gry-copy-to-x-clip :which-key "(Y)ank to xclip")
   "n" '(:ignore t :which-key "de(n)ote.....................")
   "nr" '(denote-rename-file :which-key "n-(r)ename")
@@ -2567,7 +2406,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
     user-emacs-directory "garid/open_external_term.sh" " " buffer-file-name)))
 ;;(shell-command (concat user-emacs-directory "garid/open_external_term.sh" " " buffer-file-name)))
 #+end_src
-*** shell script to open terminal                             :shell_script:
+** shell script to open terminal                              :shell_script:
 #+begin_src shell :tangle garid/open_external_term.sh
 #!/bin/bash
 
@@ -2601,7 +2440,7 @@ fi
 
 #+begin_src emacs-lisp
 (setq-default bidi-paragraph-direction 'left-to-right )
-(setq bidi-inhibit-bpa t                              )
+(setq         bidi-inhibit-bpa          t             )
 #+end_src
 
 * Dired
@@ -2625,7 +2464,8 @@ fi
     "l"          'dired-single-buffer
     (kbd "C-s")  'dired-omit-mode      ;; same keybinding with my lf config
     " "          'nil
-    (kbd "N")    'mkdir)
+    (kbd "N")    'mkdir
+    (kbd "C-n")  'mkdir)
   )
 #+end_src
 ** Dired additionals
