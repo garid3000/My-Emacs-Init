@@ -387,6 +387,13 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   ;; (org-highlight-latex-and-related      nil)
   (org-highlight-latex-and-related        '(latex entities native))
 
+
+  (org-tag-alist '((:startgroup . nil)
+                    ("@rsch" . ?r) ("@bps" . ?w)  ("@home" . ?h)
+                    (:endgroup . nil)
+                    ("psm" . ?p) ("4bc" . ?4) ("idea" . ?i) ("lit" . ?l) ("yak" . ?y) ("tool" . ?y)
+                    ))
+
   :config
   (require 'org-tempo)
   (require 'org-indent)
@@ -1957,6 +1964,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | osm    | org-refile                              | os-(m)ove                     | org  |        |
 | osd    | org-cut-subtree                         | os-(d)elete (aka cut)         | org  |        |
 | ost    | org-toggle-narrow-to-subtree            | os-(t)oggle narrow            | org  |        |
+| osT    | org-set-tags-command                    | os-(t)ags                     | org  |        |
 | osn    | org-num-mode                            | os-(n)um mode                 | org  |        |
 | oss    | org-sort                                | os-(s)ort                     | org  |        |
 | osp    | org-set-property                        | os-(p)roperty                 | org  |        |
@@ -2353,6 +2361,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "osm" '(org-refile :which-key "os-(m)ove")
   "osd" '(org-cut-subtree :which-key "os-(d)elete (aka cut)")
   "ost" '(org-toggle-narrow-to-subtree :which-key "os-(t)oggle narrow")
+  "osT" '(org-set-tags-command :which-key "os-(t)ags")
   "osn" '(org-num-mode :which-key "os-(n)um mode")
   "oss" '(org-sort :which-key "os-(s)ort")
   "osp" '(org-set-property :which-key "os-(p)roperty")
