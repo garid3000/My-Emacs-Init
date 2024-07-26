@@ -116,6 +116,14 @@ c-mode :when (re-search-backward "^\\S-*$" (line-beginning-position) 'noerror)
 (inc "#include <" (p (concat (file-name-base (or (buffer-file-name) (buffer-name))) ".h")) ">")
 (incc "#include \"" (p (concat (file-name-base (or (buffer-file-name) (buffer-name))) ".h")) "\"")
 
+
+python-mode
+
+(callback "self.ui." p ".clicked.connect(self." p ")")
+(fn "def " p "(" p ") -> None:" r> "return")
+(mt "def " p "(self, " p ") -> None:" n> n> "return")
+
+
 org-mode
 
 (caption "#+caption: ")

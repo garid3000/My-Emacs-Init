@@ -65,19 +65,51 @@ I'm pulling packages from following 3 places (not sure that I need all three):
 #+end_src
 
 * Vi Movement and other movement related
-** vim-undo
+** undo-tree
+undo-tree is emacs's undo & redo helper with built-in tree graph of versions.
+
 #+begin_src emacs-lisp
-(use-package undo-fu
-  :ensure t)
+(use-package undo-tree
+  :ensure t
+  :config
+  (global-undo-tree-mode))
+#+end_src
+
+** evil
+[[https://github.com/emacs-evil/evil][Evil]] stands for Extendable-Vi-Layer for Emacs.
+It emulates vi motion inside Emacs. 
+
+#+begin_src emacs-lisp
+;; Vim Bindings
+(use-package evil
+  :ensure t
+  :bind (;; ("<escape>" . keyboard-escape-quit  )  commented on nov21
+         ;; ("M-j"      . evil-scroll-line-down )  C-e
+         ;; ("M-k"      . evil-scroll-line-up   )  C-y
+         ;; ("M-d"      . evil-scroll-page-down )  G
+         ;; ("M-u"      . evil-scroll-page-up   )  g g
+         )
+  :custom
+  (evil-want-keybinding     nil)
+  (evil-undo-system         'undo-tree)
+  (evil-want-C-i-jump       t)
+  ;; evil-want-C-i-jump     nil       ;; test I may need jumpy back and forth
+
+  ;; not much related with evil but related to movement
+  (scroll-step           1)
+  (scroll-margin         7)
+  (scroll-conservatively 9999)
+
+  :config
+  (evil-define-key 'normal  org-mode-map   (kbd "TAB") #'org-cycle)
+  ;; for org-cycle (tab) working for terminal
+  (evil-define-key 'normal 'prog-mode-map  (kbd "K")   'eldoc) ;; or 'eldoc-box-help-at-point
+  (evil-mode 1))
 #+end_src
 ** evil-collection
 [[https://github.com/emacs-evil/evil-collection][Evil-collection]] is sets of evil keybindings for various modes in Emacs.
-Most notably I like to use magit, sometimes email.
-
-- I may need to reconside using this. and do my own keybindings for the major modes.
 
 #+begin_src emacs-lisp
-;;; Vim Bindings Everywhere else
 (use-package evil-collection
   :ensure t
   :after evil
@@ -94,49 +126,18 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   :after evil
   :config (global-evil-surround-mode))
 #+end_src
-** evil
-
-[[https://github.com/emacs-evil/evil][Evil]] stands for Extendable-Vi-Layer for Emacs.
-It emulates vi motion inside Emacs. 
-
-#+begin_src emacs-lisp
-;; Vim Bindings
-(use-package evil
-  :ensure t
-  :bind (;; ("<escape>" . keyboard-escape-quit  )  commented on nov21
-         ;; ("M-j"      . evil-scroll-line-down )  C-e
-         ;; ("M-k"      . evil-scroll-line-up   )  C-y
-         ;; ("M-d"      . evil-scroll-page-down )  G
-         ;; ("M-u"      . evil-scroll-page-up   )  g g
-         )
-  :init (setq evil-want-keybinding      nil
-              evil-undo-system         'undo-fu )
-
-  ;; evil-want-C-i-jump     nil       ;; test I may need jumpy back and forth
-  ;; for org-cycle (tab) working for terminal
-  :config
-  (evil-define-key 'normal  org-mode-map   (kbd "TAB") #'org-cycle)
-  ;;(evil-define-key 'normal 'prog-mode-map  (kbd "K")   'eldoc-box-help-at-point)
-  (evil-define-key 'normal 'prog-mode-map  (kbd "K")   'eldoc)
-  ;; cuz https://emacs.stackexchange.com/a/73457/38482
-  (evil-mode 1))
-#+end_src
-** evil testing (not used that much)
+** evil treesitter based visual selection (not used that much)
 #+begin_src emacs-lisp
 (use-package evil-textobj-tree-sitter
   :ensure t
+  :after evil
   :config
   (define-key evil-outer-text-objects-map "f" (evil-textobj-tree-sitter-get-textobj "function.outer"))
   (define-key evil-inner-text-objects-map "f" (evil-textobj-tree-sitter-get-textobj "function.inner"))
   (define-key evil-outer-text-objects-map "a" (evil-textobj-tree-sitter-get-textobj ("conditional.outer" "loop.outer")))
   )
 #+end_src
-** vim-like scroll (1 by 1)
-#+begin_src emacs-lisp
-(setq scroll-step 1)
-(setq scroll-margin 7)
-(setq scroll-conservatively 9999)
-#+end_src
+
 * Theme & Colors
 ** Fonts
 #+begin_src emacs-lisp
@@ -159,8 +160,14 @@ It emulates vi motion inside Emacs.
   :config
   (enable-theme 'uwu)
 
+  ;; not related with this theme itself but generally relates to generally
   (set-face-background 'mode-line          "#2B3260")
   (set-face-background 'mode-line-inactive "#2B3244")
+  (scroll-bar-mode -1)        ; Disable visible scrollbar
+  (tool-bar-mode   -1)        ; Disable the toolbar
+  (tooltip-mode    -1)        ; Disable tooltips
+  ;; (set-fringe-mode 15)     ; Give some breathing room
+  (menu-bar-mode   -1)        ; Disable the menu bar
   )
 #+end_src
 
@@ -169,16 +176,8 @@ It emulates vi motion inside Emacs.
 (use-package evil-terminal-cursor-changer
   :ensure t
   :config (evil-terminal-cursor-changer-activate))
+#+end_src
 
-#+end_src
-** Emacs Interface config
-#+begin_src emacs-lisp
-(scroll-bar-mode -1)        ; Disable visible scrollbar
-(tool-bar-mode   -1)        ; Disable the toolbar
-(tooltip-mode    -1)        ; Disable tooltips
-; (set-fringe-mode 15)        ; Give some breathing room
-(menu-bar-mode   -1)        ; Disable the menu bar
-#+end_src
 ** Delight
 #+begin_src emacs-lisp
 (use-package delight
@@ -194,26 +193,28 @@ It emulates vi motion inside Emacs.
      (dired-mode            "dir "                              )
      (help-mode             "hlp "                              )
      ;; ----------  minor modes  ----------------------------------
-     (dired-omit-mode       "dro "    dired                     )
-     (org-roam-mode         "orm "    org-roam                  )
-     (which-key-mode        "wky "    which-key                 )
-     (git-gutter-mode       "ggt "    git-gutter                )
-     (org-auto-tangle-mode  "tng "    org-auto-tangle           )
-     (auto-revert-mode      "arv "    autorevert                )
-     ;;(org-indent-mode     "ind "    org-indent                )
-     (org-indent-mode        nil      org-indent                )
-     (org-num-mode          "onm "    org-indent                )
-     (org-gtd-mode          "gtd "    org-gtd                   )
-     (org-src-mode          "src "    org                       )
-     (yas-minor-mode        "yas "    yasnippet                 )
-     (eldoc-mode            "eld "    eldoc                     )
-     (magit-status-mode     "mgt "    magit                     )
-     (lisp-interaction-mode "eli "    elisp-mode                )
-     (emacs-lisp-mode       "eli "    elisp-mode                )
-     (command-log-mode      "clm "    command-log-mode          )
-     (flymake-mode          "flm "    flymake                   )
-     (lsp-bridge-mode       "lsp "    lsp-bridge                )
-     (evil-collection-unimpaired-mode "evc "  evil-collection   )
+     (dired-omit-mode       "dro "   )   ;;   dired
+     (org-roam-mode         "orm "   )   ;;   org-roam
+     (which-key-mode        "wky "   )   ;;   which-key
+     (git-gutter-mode       "ggt "   )   ;;   git-gutter
+     (org-auto-tangle-mode  "tng "   )   ;;   org-auto-tangle
+     (auto-revert-mode      "arv "   )   ;;   autorevert
+     (org-indent-mode        nil     )   ;;   org-indent
+     (org-num-mode          "onm "   )   ;;   org-indent
+     (org-gtd-mode          "gtd "   )   ;;   org-gtd
+     (org-src-mode          "src "   )   ;;   org
+     (consult-org-roam-mode "crm "   )   ;;   consult-org-roam
+     (yas-minor-mode        "yas "   )   ;;   yasnippet
+     (eldoc-mode            "eld "   )   ;;   eldoc
+     (magit-status-mode     "mgt "   )   ;;   magit
+     (undo-tree-mode        "utr "   )   ;;   undo-tree
+     (lisp-interaction-mode "eli "   )   ;;   elisp-mode
+     (emacs-lisp-mode       "eli "   )   ;;   elisp-mode
+     (command-log-mode      "clm "   )   ;;   command-log-mode
+     (flymake-mode          "flm "   )   ;;   flymake
+     (lsp-bridge-mode       "lsp "   )   ;;   lsp-bridge
+     (org-edna-mode         "edn "   )   ;;   edna
+     (evil-collection-unimpaired-mode "evc " )  ;;  evil-collection
      (all-the-icons-dired-mode     nil   all-the-icons-dired.el )
      (visual-line-mode             nil   simple                 ))))
 #+end_src
@@ -229,6 +230,7 @@ It emulates vi motion inside Emacs.
   )
 
 (global-hl-line-mode 1)
+(setq visible-bell t)
 #+end_src
 
 * Minibuffer completion, selection, suggestion
@@ -242,16 +244,18 @@ It emulates vi motion inside Emacs.
               ("C-f"   . vertico-exit        ) ("M-f"   . vertico-exit        )
               ("C-u"   . vertico-scroll-up   ) ("M-u"   . vertico-scroll-up   )
               ("C-d"   . vertico-scroll-down ) ("M-d"   . vertico-scroll-down )
-              ;; ("M-p"   . vertico-next     ) ("M-n"   . vertico-previous    )
-              ("M-h"   . vertico-exit  )
+              ("M-p"   . vertico-previous    ) ("M-n"   . vertico-next        )
+              ("M-h"   . vertico-exit        )
               ("M-q" . vertico-quick-insert  ) ("C-q" . vertico-quick-exit    )
               )
-  :custom
+  :init
   (require 'vertico-quick)
-  (vertico-cycle t)
-  (vertico-count 20)
+  :custom
+  (vertico-cycle  t)
+  (vertico-count  15)
   (vertico-resize nil)
-  :init (vertico-mode)
+  :config
+  (vertico-mode)
   )
 #+end_src
 *** COMMENT Posframe
@@ -278,11 +282,10 @@ It emulates vi motion inside Emacs.
 ** consult
 #+begin_src emacs-lisp
 (use-package consult
-  :ensure t
-)
+  :ensure t)
 ;;  :bind (("M-f"  . consult-line))
 #+end_src
-*** consult-org-roam
+** consult-org-roam
 #+begin_src emacs-lisp
 (use-package consult-org-roam
    :ensure t
@@ -329,31 +332,34 @@ It emulates vi motion inside Emacs.
 #+begin_src emacs-lisp :noeval
 (use-package org
   ;; :require (org-tempo)
-  :bind (:map org-mode-map
-              ("C-S-j" . org-next-visible-heading     )
-              ("C-S-k" . org-previous-visible-heading ))
+  :bind
+  (:map org-mode-map
+        ("C-S-j" . org-next-visible-heading     )
+        ("C-S-k" . org-previous-visible-heading ))
 
-  :hook (org-mode . garid-custom/org-mode-hooked-func)
+  :hook
+  (org-mode . garid-custom/org-mode-hooked-func)
+
   :custom
-  (org-ellipsis                      " ▼"            );; folded subtree symbol
-  (org-hide-emphasis-markers         t               )
-  (org-log-done                      t               )
-  (org-image-actual-width            '(800)          );; sets images size TODO for different size
-  (org-src-tab-acts-natively         t               )
-  (org-src-preserve-indentation      nil             );; scr-blk
-  (org-src-fontify-natively          t               )
-  (org-edit-src-content-indentation  0               );; scr-blk
-  (org-startup-folded                "fold"          );; folds property drawers, good for roam nodes
-  (org-plantuml-jar-path             "/usr/share/java/plantuml/plantuml.jar" );; this may differ on different machines
+  (org-ellipsis                      " ▼"   )
+  (org-hide-emphasis-markers         t       )
+  (org-log-done                      t       )
+  (org-image-actual-width            '(800)  )
+  (org-src-tab-acts-natively         t       )
+  (org-src-preserve-indentation      nil     )
+  (org-src-fontify-natively          t       )
+  (org-edit-src-content-indentation  0       )
+  (org-startup-folded                "fold"  )
+  (org-plantuml-jar-path             "/usr/share/java/plantuml/plantuml.jar" )  ;; this may differ on different machines
   (org-file-apps '((auto-mode                  . emacs                     )
                    ("\\.gif\\'"                . "mpv     \"%s\""          )
                    ("\\.mp4\\'"                . "mpv     \"%s\""          )
                    ("\\.png\\'"                . "sxiv    \"%s\""          )
-                   ("\\.svg\\'"                . "inkview \"%s\""          ) ;; inkscape's viewer
+                   ("\\.svg\\'"                . "inkview \"%s\""          )
                    ("\\.jpeg\\'"               . "sxiv    \"%s\""          )
                    ("\\.jpg\\'"                . "sxiv    \"%s\""          )
-                   ;; ("\\.html\\'"               . "brave   \"%s\""          )
-                   ("\\.html\\'"               . "thorium-browser   \"%s\""          )
+                   ;; ("\\.html\\'"            . "brave   \"%s\""          )
+                   ;; ("\\.html\\'"            . "thorium-browser   \"%s\"")
                    ("\\.pdf\\'"                . "sioyek  \"%s\""          )
                    ("\\.pdf::\\([0-9]+\\)?\\'" . "sioyek  \"%s\" --page %1")
                    ("\\.mkv\\'"                . "mpv     \"%s\""          )
@@ -370,22 +376,20 @@ It emulates vi motion inside Emacs.
                             ("DONE"  . "dim gray"  )
                             ("CNCL"  . (:foreground "gray30" :weight bold))))
 
-  ;; (org-latex-listings               t)  apparently this was obsolete thus swaped with below
+  ;; latex related
   (org-latex-src-block-backend          t                                      )
   (org-latex-format-headline-function   'garid-custom/latex-formattig-headings )
   (org-latex-active-timestamp-format     "\\textcolor{orange}{%s}"             )
   (org-latex-inactive-timestamp-format   "\\textcolor{Brown}{%s}"              )
   (org-latex-pdf-process                '("latexmk -shell-escape -f -pdf -%latex -interaction=nonstopmode -output-directory=%o %f"))
 
-  ;; org-highlight-latex-and-related     '(latex script entities) -- lets try this for performance
-  (org-highlight-latex-and-related        '(latex entities native)) ;; -- lets try this for performance
-  ;; (org-highlight-latex-and-related        nil) ;; -- lets try this for performance
+  ;; (org-highlight-latex-and-related     '(latex script entities))
+  ;; (org-highlight-latex-and-related      nil)
+  (org-highlight-latex-and-related        '(latex entities native))
 
-  ;;:init
   :config
   (require 'org-tempo)
   (require 'org-indent)
-  ;; :after (org-tempo org-indent)
   (plist-put    org-format-latex-options   :scale 1.7      )    ;; latex equation previewing
   (add-to-list 'org-latex-packages-alist   '("" "listings" ))
   (add-to-list 'org-latex-packages-alist   '("" "color"    ))
@@ -407,35 +411,6 @@ It emulates vi motion inside Emacs.
   (add-to-list 'org-structure-template-alist '("sq"   .  "sqlite"))
   (add-to-list 'org-structure-template-alist '("mk"   .  "src makefile :tangle no"))
   (add-to-list 'org-structure-template-alist '("ba"   .  "abstract"))
-
-
-  ;;   (if (string= "unspecified-bg" (face-attribute 'default :background))
-  ;;       (progn
-  ;;        (set-face-attribute 'org-block nil            :background "#020223")
-  ;;        (set-face-attribute 'org-block-begin-line nil :background "#020223") ;; :extend t)
-  ;;        (set-face-attribute 'org-block-end-line nil   :background "#020223") ;; :extend t)
-  ;;        )
-  ;;
-  ;;     (progn
-  ;;        (set-face-attribute 'org-block nil            :background "#020223")
-  ;;        (set-face-attribute 'org-block-begin-line nil :background "#020223") ;;   :extend t)
-  ;;        (set-face-attribute 'org-block-end-line nil   :background "#020223") ;;   :extend t)
-  ;;      ;; (set-face-attribute 'org-block nil :background (color-darken-name (face-attribute 'default :background) 30))
-  ;;      ;; (set-face-attribute 'org-block-begin-line nil :background (color-darken-name (face-attribute 'default :background) 30))
-  ;;      ;; (set-face-attribute 'org-block-end-line nil :background (color-darken-name (face-attribute 'default :background) 30))
-  ;;      )
-  ;;     )
-
-
-
-  ;;;;;;;;;;;; MY numbering method ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;; (defun my/org-num-format (numbering)
-  ;;   "My own numbering function uses two-digit numbers (0-padded on the left) for everything but the first number. It replaces the built-in `org-num-default-format` function. `NUMBERING' is a list of numbers."
-  ;;   (concat
-  ;;    (number-to-string (car numbering)) "." (mapconcat (lambda (x) (format "%02d" x)) (cdr numbering) ".") " "))
-  ;; (setq org-num-format-function #'my/org-num-format)
-
-
   )
 #+end_src
 
@@ -514,10 +489,6 @@ When nil, use the default face background."
   (org-indent-mode)
   (org-num-mode)
   ;; (auto-fill-mode 0)
-  ;; (visual-line-mode 1)
-  ;; (display-line-numbers-mode -1)
-  ;; (add-to-list 'completion-at-point-functions #'yasnippet-capf)
-  ;; (add-to-list 'completion-at-point-functions #'tags-completion-at-point-function)
 
   (when buffer-file-name ;; had to check buffer had file. (i.e. sometimes buffer don't have file yet, e.g. org-captures)
     ;; (message (concat buffer-file-name " -- " (vc-find-root buffer-file-name ".git")))
@@ -548,7 +519,7 @@ When nil, use the default face background."
                                                       'face 'org-tag)))
   (org-roam-v2-ack t)
   (org-roam-directory "~/Pensieve/")
-  (org-roam-completion-everywhere t)
+  (org-roam-completion-everywhere t)  ;; do I need this?
   (org-roam-dailies-capture-templates
    `(("d" "default" entry "* %<%I:%M %p>: %?"
       :if-new (file+head "%<%Y-%m-%d>.org"
@@ -750,6 +721,7 @@ When nil, use the default face background."
 * Org Time managements
 ** Org gtd
 #+begin_src emacs-lisp
+(setq org-gtd-done "DONE")
 (use-package org-gtd
   :ensure t
   :after org
@@ -758,11 +730,9 @@ When nil, use the default face background."
   (setq org-gtd-directory (concat (denote-directory) "/gtd"))
   (org-gtd-mode 1)
 
-  :bind (
-         :map org-agenda-mode-map ("C-<f8>"   . org-gtd-clarify-agenda-item)
+  :bind (:map org-agenda-mode-map ("C-<f8>"   . org-gtd-clarify-agenda-item)
          :map org-mode-map        ("C-<f8>"   . org-gtd-clarify-item)
-         :map org-gtd-clarify-map ("<f8>"     . org-gtd-organize)
-         )
+         :map org-gtd-clarify-map ("<f8>"     . org-gtd-organize))
 
   )
 #+end_src
@@ -1108,11 +1078,10 @@ esac
 #+end_src
 
 * Development Environment / Programming
-** rg
+** rg: ripgrep
 #+begin_src emacs-lisp
 (use-package rg
-  :ensure t
-)
+  :ensure t)
 #+end_src
 ** Save place mode
 This mode saves the last cursor point when you close a file,
@@ -1245,33 +1214,41 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
   ;; (corfu-auto             t          ) ;; Enable auto completion nov23 C-M-i?
   ;; (corfu-auto-prefix      2          )
   ;; (corfu-auto-delay       0.1        )
-  (corfu-popupinfo-delay '(0.1 . 0.1))
+  (corfu-popupinfo-delay '(2.0 . 1.0))
   (corfu-preview-current   nil       )
   (corfu-on-exact-match    nil       ) ;; Don't auto expand tempel snippets
 
   ;; Optionally use TAB for cycling, default is `corfu-complete'.
   :bind (:map corfu-map
               ("M-SPC"      . corfu-insert-separator )
-              ("TAB"        . nil                    ); corfu-next)
-              ([tab]        . nil                    ); corfu-next)
+              ("TAB"        . corfu-insert           )
+              ([tab]        . corfu-insert           )
               ;;("S-TAB"     . corfu-previous        )
-              ("M-k"        . corfu-previous         )
-              ("M-j"        . corfu-next             )
+              ;; ("M-k"        . corfu-previous      )
+              ;; ("M-j"        . corfu-next          )
               ("S-<return>" . corfu-insert           )
               ("M-h"        . corfu-insert           )
               ("RET"        . nil                    ))
 
   :init
+  ;; (setq tab-always-indent 'complete)
+  ;;:config
   (global-corfu-mode    )
-  ;;(corfu-doc-mode       )
   (corfu-history-mode   )
   (corfu-popupinfo-mode ) ; Popup completion info
-  :config
-  (add-hook 'eshell-mode-hook
-            (lambda () (setq-local corfu-quit-at-boundary t
-				   corfu-quit-no-match t
-				   corfu-auto nil)
-              (corfu-mode))))
+  ;; :config
+  ;; (add-hook 'eshell-mode-hook
+  ;;           (lambda () (setq-local corfu-quit-at-boundary t
+  ;;       			   corfu-quit-no-match t
+  ;;       			   corfu-auto nil)
+  ;;             (corfu-mode)))
+
+  :hook
+  (eshell-mode-hook . (lambda () (setq-local corfu-quit-at-boundary t
+        			             corfu-quit-no-match t
+        			             corfu-auto nil)
+                        (corfu-mode)))
+  )
 #+end_src
 ** Cape
 #+begin_src emacs-lisp
@@ -1285,14 +1262,14 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
   ;;        ("C-c p h" . cape-history)
   ;;        ("C-c p f" . cape-file)
   ;;        ...)
-  :init
+  ;; :init
   ;; Add to the global default value of `completion-at-point-functions' which is
   ;; used by `completion-at-point'.  The order of the functions matters, the
   ;; first function returning a result wins.  Note that the list of buffer-local
   ;; completion functions takes precedence over the global list.
-  (add-hook 'completion-at-point-functions #'cape-dabbrev)
-  (add-hook 'completion-at-point-functions #'cape-file)
-  (add-hook 'completion-at-point-functions #'cape-elisp-block)
+  ;; (add-hook 'completion-at-point-functions #'cape-dabbrev)
+  ;; (add-hook 'completion-at-point-functions #'cape-file)
+  ;; (add-hook 'completion-at-point-functions #'cape-elisp-block)
   ;; (add-hook 'completion-at-point-functions #'cape-history)
   ;; ...
 )
@@ -1769,6 +1746,8 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | tt     | eat                                                      | t-ea(t) terminal               | -    |        |
 | tm     | tmr-with-description                                     | t-(m)er                        | -    |        |
 | Y      | gry-copy-to-x-clip                                       | (Y)ank to xclip                | -    |        |
+| u      | :ignore                                                  | (u)ndo-tree                    | -    |        |
+| ut     | undo-tree-visualize                                      | (u)ndo-(t)ree                  | -    |        |
 
 **** Bookmark
 #+attr_latex: :placement [H]
@@ -2267,6 +2246,8 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "tt" '(eat :which-key "t-ea(t) terminal")
   "tm" '(tmr-with-description :which-key "t-(m)er")
   "Y" '(gry-copy-to-x-clip :which-key "(Y)ank to xclip")
+  "u" '(:ignore :which-key "(u)ndo-tree")
+  "ut" '(undo-tree-visualize :which-key "(u)ndo-(t)ree")
   "n" '(:ignore t :which-key "de(n)ote.....................")
   "nr" '(denote-rename-file :which-key "n-(r)ename")
   "nf" '(denote-open-or-create :which-key "n-(f)ind")
@@ -2500,11 +2481,11 @@ fi
 ** Core dired
 #+begin_src emacs-lisp
 (use-package dired
-  :ensure nil
+  :ensure   nil
   :commands (dired dired-jump)
-  :custom ((dired-listing-switches "-agho --group-directories-first"))
-  :hook ((dired-mode . denote-dired-mode)
-         (dired-mode . dired-omit-mode  ))
+  :custom   ((dired-listing-switches "-agho --group-directories-first"))
+  :hook     ((dired-mode . denote-dired-mode)
+             (dired-mode . dired-omit-mode  ))
   :config
   (evil-collection-define-key 'normal 'dired-mode-map
     "h"          'dired-single-up-directory
