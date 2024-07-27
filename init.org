@@ -258,7 +258,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   (vertico-mode)
   )
 #+end_src
-*** COMMENT Posframe
+** COMMENT vertico-posframe
 #+begin_src emacs-lisp
 (use-package vertico-posframe
   :ensure t
@@ -326,7 +326,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   :init (savehist-mode))
 #+end_src
 * Org
-** Org mode configuration
+** org-mode configuration
 #+caption: org config
 #+name: lst_org
 #+begin_src emacs-lisp :noeval
@@ -389,9 +389,11 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 
 
   (org-tag-alist '((:startgroup . nil)
-                    ("@rsch" . ?r) ("@bps" . ?w)  ("@home" . ?h)
+                    ("@rsch" . ?r) ("@bps" . ?w) ("@home" . ?h)
                     (:endgroup . nil)
-                    ("psm" . ?p) ("4bc" . ?4) ("idea" . ?i) ("lit" . ?l) ("yak" . ?y) ("tool" . ?y)
+                    ("psm" . ?p) ("4bc" . ?4) ("idea" . ?i)
+                    ("lit" . ?l) ("yak" . ?y) ("tool" . ?y)
+                    ("tdbt" . ?t) ("rndm" . ?R) 
                     ))
 
   :config
@@ -421,11 +423,31 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   )
 #+end_src
 
-** Org-babel languages related
+** org-babel languages related
 #+begin_src emacs-lisp
 (use-package ob-nim)
 (use-package ob-go)
 (use-package ob-asymptote)
+;; (use-package ob-tmux
+;;   ;; Install package automatically (optional)
+;;   :ensure t
+;;   :custom
+;;   (org-babel-default-header-args:tmux
+;;    '((:results  .  "silent"  )
+;;      (:session  .  "default" )
+;;      (:socket   .  nil       )))
+;;   ;; The tmux sessions are prefixed with the following string.
+;;   ;; You can customize this if you like.
+;;   (org-babel-tmux-session-prefix "ob-")
+;;   ;; The terminal that will be used.
+;;   ;; You can also customize the options passed to the terminal.
+;;   ;; The default terminal is "gnome-terminal" with options "--".
+;;   (org-babel-tmux-terminal "st")
+;;   (org-babel-tmux-terminal-opts '("-T" "ob-tmux" "-e"))
+;;   ;; Finally, if your tmux is not in your $PATH for whatever reason, you
+;;   ;; may set the path to the tmux binary as follows:
+;;   (org-babel-tmux-location "/usr/bin/tmux"))
+
 
 (org-babel-do-load-languages
  'org-babel-load-languages
@@ -440,7 +462,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
    ))
 #+end_src
 
-** Org-bullet
+** org-bullet
 #+begin_src emacs-lisp
 (use-package org-bullets
   :ensure t
@@ -515,7 +537,7 @@ When nil, use the default face background."
 #+end_src
 
 * Org Zettelkasten like (roam & denote)
-** Org-Roam
+** org-roam
 #+begin_src emacs-lisp
 (use-package org-roam
   ;; :requires org-roam-dailies ??
@@ -626,22 +648,12 @@ When nil, use the default face background."
   (org-roam-db-autosync-mode))
 #+end_src
 
-** Org-Roam (custom) function for inserting node                :customFunc:
-#+begin_src emacs-lisp
-(defun garid-custom/org-roam-node-insert-immediate (arg &rest args)
-  (interactive "P")
-  (let ((args (cons arg args))
-        (org-roam-capture-templates
-	 (list (append (car org-roam-capture-templates)
-		       '(:immediate-finish t)))))
-    (apply #'org-roam-node-insert args)))
-#+end_src
-** Org-roam-ui
+** org-roam-ui
 #+begin_src emacs-lisp
 (use-package org-roam-ui
   :ensure t)
 #+end_src
-** Denote
+** denote
 #+begin_src emacs-lisp
 (use-package denote
   :ensure t
@@ -649,7 +661,7 @@ When nil, use the default face background."
   (denote-directory       (expand-file-name "~/Documents/Personal"))
   (denote-known-keywords '(  "finance"  "failures"  "philosophy"  )))
 #+end_src
-** Bibliography
+** citar
 #+begin_src emacs-lisp
 (use-package citar
   :no-require
@@ -666,12 +678,14 @@ When nil, use the default face background."
   (citar-library-paths           (list (concat (file-name-as-directory denote-directory) "lit/")) )
   ;; ("~/Documents/papers")
   )
-
+#+end_src
+** citar-org-roam
+#+begin_src emacs-lisp
 (use-package citar-org-roam
   :after citar org-roam
   :no-require
   :custom
-  (citar-org-roam-subdir              "citar-notes")
+  (citar-org-roam-subdir                      "citar-notes")
   (citar-org-roam-note-title-template (concat "=${=key=}= - ${title}\n"
                                               "#+subtitle: Garid's notes on this article\n"
                                               "#+author: paper authors: ${author}\n"
@@ -684,7 +698,17 @@ When nil, use the default face background."
 ;;(citar-org-roam-note-title-template "=${=key=}= - ${title}\n#+subtitle: Garid's notes on this article\n#+author: paper authors: ${author}\n#+filetags: :literature:\n\n* Ideas\n\n* Notes\n\n")
 #+end_src
 
-** Some used functions
+** org-roam (custom) function for inserting node                :customFunc:
+#+begin_src emacs-lisp
+(defun garid-custom/org-roam-node-insert-immediate (arg &rest args)
+  (interactive "P")
+  (let ((args (cons arg args))
+        (org-roam-capture-templates
+	 (list (append (car org-roam-capture-templates)
+		       '(:immediate-finish t)))))
+    (apply #'org-roam-node-insert args)))
+#+end_src
+** org-roam (custom) functions for tag searching
 #+begin_src emacs-lisp
 (defun my/org-roam-filter-by-tag (tag-name)
   (lambda (node)
@@ -726,9 +750,8 @@ When nil, use the default face background."
   )
 #+end_src
 * Org Time managements
-** Org gtd
+** org-gtd
 #+begin_src emacs-lisp
-(setq org-gtd-done "DONE")
 (use-package org-gtd
   :ensure t
   :after org
@@ -744,28 +767,34 @@ When nil, use the default face background."
   )
 #+end_src
 
-** Org agenda files
+** org-agenda
 #+begin_src emacs-lisp :results none
 ;; (setq org-agenda-files (directory-files-recursively denote-directory "\\.org$"))
 ;; (setq org-agenda-files (directory-files denote-directory t "\\.org$"))
 ;; (setq org-agenda-files (directory-files-recursively "/home/garid/gtd" "^[a-z].*\\.org$"))
 ;; (setq org-agenda-files (directory-files-recursively "/home/garid/gtd" "^[a-z].*\\.org$"))
 ;; (setq org-agenda-files (directory-files-recursively (concat (denote-directory) "gtd") "^[a-z].*\\.org$"))
-(setq org-agenda-files nil)
 
+(use-package org-agenda
+  :ensure   nil
 
-(define-key org-agenda-mode-map "j" 'evil-next-line)
-(define-key org-agenda-mode-map "k" 'evil-previous-line)
+  :bind (:map org-agenda-mode-map
+              ("j" . evil-next-line    )
+              ("k" . evil-previous-line)
+              )
+  :config
+  (setq org-agenda-files nil))
 
-
-(defun garid/write-agenda-to-file()
-  (interactive)
-  (org-agenda-write "/tmp/current-agenda-text")
-  )
-
-(add-hook 'org-agenda-finalize-hook 'garid/write-agenda-to-file)
+;; (define-key org-agenda-mode-map "j" 'evil-next-line    )
+;; (define-key org-agenda-mode-map "k" 'evil-previous-line)
+;; (defun garid/write-agenda-to-file()
+;;   (interactive)
+;;   (org-agenda-write "/tmp/current-agenda-text")
+;;   )
+;; 
+;; (add-hook 'org-agenda-finalize-hook 'garid/write-agenda-to-file)
 #+end_src
-** Org capturing related
+** org capturing related
 #+begin_src emacs-lisp :results none
 (require 'org-protocol)
 (setq org-agenda-start-with-log-mode t
@@ -795,7 +824,7 @@ When nil, use the default face background."
       ;;                          "* Later [[%x]]\n  %i\n  %a"))
       )
 #+end_src
-** Org timeblock
+** org-timeblock
 #+begin_src emacs-lisp
 (use-package org-timeblock)
 #+end_src
@@ -806,8 +835,8 @@ When nil, use the default face background."
   (add-hook 'org-agenda-finalize-hook 'org-timeline-insert-timeline :append)
   )
 #+end_src
-* Org Exports
-** Org LaTeX export heading format (e.g. Todo color)            :customFunc:
+* Org Exporting related
+** org to latex export heading format (e.g. Todo color)         :customFunc:
 #+begin_src emacs-lisp
 (defun garid-custom/latex-formattig-headings
     (todo todo-type priority text tags _info)
@@ -838,13 +867,13 @@ When nil, use the default face background."
   (setf (plist-get (cdr (assq 'imagemagick org-preview-latex-process-alist)) :latex-compiler)
         '("xelatex -interaction nonstopmode -output-directory %o %f")))
 #+end_src
-** Ox-hugo 
+** ox-hugo 
 #+begin_src emacs-lisp
 (use-package ox-hugo
   :ensure t 
   :after ox)
 #+end_src
-** Org export directory                                         :customFunc:
+** export directory                                             :customFunc:
 ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stackexchange]]
 
 #+begin_src emacs-lisp
@@ -857,11 +886,10 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
       (when (not (file-directory-p pub-dir))
        (make-directory pub-dir))))
 #+end_src
-** Ox-reveal
+** ox-reveal
 #+begin_src emacs-lisp
 (use-package ox-reveal
-  :ensure t
-)
+  :ensure t)
 #+end_src
 ** Website from org-roam directory
 [[id:e7ee081e-a02b-4ab9-bccc-327a92bf2b09][create website from org-roam]]
@@ -983,32 +1011,20 @@ stork.register(
 : (("Pensieve org -> html00" :base-directory "~/Pensieve" :publishing-function org-html-publish-to-html :publishing-directory "/tmp/garids_pensieve" :section-numbers nil :with-toc nil) ("Pensieve export imgs" :base-directory "~/Pensieve/od-imgs/" :base-extension "jpg\\|gif\\|png\\|svg" :recursive t :publishing-directory "/tmp/garids_pensieve/od-imgs" :publishing-function org-publish-attachment))
 
 * Org Misc:
-** Org-download for handling images 
-*** Org-download package itself
+** org-download package itself
 #+begin_src emacs-lisp
 (use-package org-download
   :ensure t
   :custom
   (org-download-display-inline-images  nil                                 )
-  ;;(org-download-edit-cmd             "/home/garid/.garid/edit_img.sh %s" )
   (org-download-edit-cmd               (concat user-emacs-directory
                                                "garid/edit_img.sh %s"))
-
-  :config
-  ;; (defun my-org-download-set-dir ()     ;
-  ;;   "Set `org-download-image-dir` to the directory of the current
-  ;;       buffer's file."
-  ;;   (setq-local
-  ;;    org-download-image-dir (concat (file-name-directory (buffer-file-name))
-  ;;                                   "/images/" (file-name-base buffer-file-name) "/")
-  ;;    org-download-heading-lvl nil))  ;; suggestion by https://emacs.stackexchange.com/a/79298/38482
-
-  (org-download-enable)
   ;;:hook ((org-mode . my-org-download-set-dir))
-  )
+  :config
+  (org-download-enable))
 #+end_src
 
-*** Editing image software                                    :shell_script:
+** org-download editing shell script                          :shell_script:
 #+begin_src shell :tangle garid/edit_img.sh
 #!/bin/sh
 
@@ -1031,16 +1047,16 @@ case "$ext" in
 esac
 #+end_src
 
-** Org-auto-tangle for handling tangled source blocks
+** org-auto-tangle
 #+begin_src emacs-lisp
 (use-package org-auto-tangle
   :ensure t
-  :defer t
+  :defer  t
   :hook   (org-mode   .   org-auto-tangle-mode)
   :custom (org-auto-tangle-default    nil))
 #+end_src
 
-** Org-transclusion for documentation
+** org-transclusion
 #+begin_src emacs-lisp
 (use-package org-transclusion
   :ensure t
@@ -1057,39 +1073,7 @@ esac
   :custom (org-contacts-files
            '("~/roamnotes/20230417200051-org_contacs.org")))
 #+end_src
-** COMMENT org tmux babel
-#+begin_src emacs-lisp
-(use-package ob-tmux
-  ;; Install package automatically (optional)
-  :ensure t
-  :custom
-  (org-babel-default-header-args:tmux
-   '((:results  .  "silent"  )
-     (:session  .  "default" )
-     (:socket   .  nil       )))
-  ;; The tmux sessions are prefixed with the following string.
-  ;; You can customize this if you like.
-  (org-babel-tmux-session-prefix "ob-")
-  ;; The terminal that will be used.
-  ;; You can also customize the options passed to the terminal.
-  ;; The default terminal is "gnome-terminal" with options "--".
-  (org-babel-tmux-terminal "st")
-  (org-babel-tmux-terminal-opts '("-T" "ob-tmux" "-e"))
-  ;; Finally, if your tmux is not in your $PATH for whatever reason, you
-  ;; may set the path to the tmux binary as follows:
-  (org-babel-tmux-location "/usr/bin/tmux"))
-#+end_src
-** COMMENT org-tree-slide
-#+begin_src emacs-lisp
-(use-package org-tree-slide)
-#+end_src
-
-* Development Environment / Programming
-** rg: ripgrep
-#+begin_src emacs-lisp
-(use-package rg
-  :ensure t)
-#+end_src
+* Coding related
 ** Save place mode
 This mode saves the last cursor point when you close a file,
 and later sets cursor at that point when you open that file.
@@ -1123,7 +1107,6 @@ and later sets cursor at that point when you open that file.
 #+end_src
 ** Tempel
 #+begin_src emacs-lisp
-;; Configure Tempel
 (use-package tempel
   :ensure t
   ;; Require trigger prefix before template name when completing.
@@ -1177,7 +1160,7 @@ and later sets cursor at that point when you open that file.
     (completing-read "Choose: " choices)))
 #+end_src
 
-** Parenthesis: (electric-pair-mode)
+** electric-pair-mode: auto parenthesis closing
 #+begin_src emacs-lisp
 ;; enable electric pair
 (electric-pair-mode 1)
@@ -1187,17 +1170,7 @@ and later sets cursor at that point when you open that file.
       (lambda (c)
         (if (char-equal c ?\<) t (electric-pair-default-inhibit c))))
 #+end_src
-** Git related
-#+begin_src emacs-lisp
-(use-package magit
-  :ensure t)
-
-(use-package git-gutter
-  :ensure t
-  :config (global-git-gutter-mode))
-#+end_src
-
-** Treesitter
+** treesitter
 from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][mastering emacs article]].
 #+begin_src emacs-lisp
 (setq major-mode-remap-alist
@@ -1210,7 +1183,7 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
 ;; (use-package treesit-fold
 ;;   :straight (treesit-fold :type git :host github :repo "abougouffa/treesit-fold"))
 #+end_src
-** Corfu
+** corfu
 #+begin_src emacs-lisp
 ;; from https://github.com/Gavinok/emacs.d/blob/3ccc6e35feb2903442c9f7625fba081d93a2fa36/init.el#L614
 (use-package corfu
@@ -1257,7 +1230,7 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
                         (corfu-mode)))
   )
 #+end_src
-** Cape
+** cape
 #+begin_src emacs-lisp
 (use-package cape
   ;; Bind prefix keymap providing all Cape commands under a mnemonic key.
@@ -1281,14 +1254,19 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
   ;; ...
 )
 #+end_src
-** Eglot for the LSPs
+** eglot for the LSPs
 #+begin_src emacs-lisp
 (use-package eglot
   :config
   (setq eldoc-echo-area-use-multiline-p 0)
   (setq eglot-ignored-server-capabilities '(:documentHighlightProvider)))
 #+end_src
-** Eglot booster
+** consult eglot variable search inside project
+#+begin_src emacs-lisp
+(use-package consult-eglot
+  :ensure t)
+#+end_src
+** eglot booster
 #+begin_src emacs-lisp
 (use-package eglot-booster
   :ensure t
@@ -1324,8 +1302,7 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
 ** graphviz
 #+begin_src emacs-lisp
 (use-package graphviz-dot-mode
-    :ensure t
-)
+    :ensure t)
 #+end_src
 
 ** scad
@@ -1333,6 +1310,26 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
 (use-package scad-mode
   :ensure t)
 #+end_src
+* Coding convenients
+** rg: ripgrep
+#+begin_src emacs-lisp
+(use-package rg
+  :ensure t)
+#+end_src
+
+** magit: git control
+#+begin_src emacs-lisp
+(use-package magit
+  :ensure t)
+#+end_src
+
+** git-gutter: git diff shows on the side
+#+begin_src emacs-lisp
+(use-package git-gutter
+  :ensure t
+  :config (global-git-gutter-mode))
+#+end_src
+
 ** COMMENT devdocs
 #+begin_src emacs-lisp
 (use-package devdocs
@@ -1343,6 +1340,7 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
                    c "r" "nim" "gnu_make" "bash" "fish~3.6" "qt~6.1")
      do (devdocs-install (list (cons 'slug (format "%s" lang)))))))
 #+end_src
+
 * Garid
 ** Open PDF/HMTL exported by LaTeX externally                   :customFunc:
 #+begin_src emacs-lisp
@@ -1824,21 +1822,22 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 #+attr_latex: :placement [H]
 #+caption: Project (more like git-repo)
 #+name: tbl-global-general-keybindings-project
-| key(s) | function                          | short description              | mode | lambda |
-|--------+-----------------------------------+--------------------------------+------+--------|
-| p      | :ignore t                         | (p)rojectl.................... | -    |        |
-| pr     | xref-find-references              | p-(r)eferences                 | -    |        |
-| pd     | consult-flymake                   | p-(d)iagnostic                 | -    |        |
-| pf     | project-find-file                 | p-(f)ind-file                  | -    |        |
-| pz     | project-switch-project            | p-(z)ump-to-other-proj         | -    |        |
-| ps     | consult-git-grep                  | p-(s)earch git files           | -    |        |
-| pS     | project-find-regexp               | p-(s)earch-in-proj             | -    |        |
-| pk     | project-kill-buffers              | p-(k)ill-buf-proj              | -    |        |
-| pl     | consult-project-buffer            | p-(l)ist-buf-proj              | -    |        |
-| pv     | consult-imenu                     | p-(v)ariables                  | -    |        |
-| v      | :ignore t                         | (v)-project................... | -    |        |
-| vq     | format-all-buffer                 | v-(q)-format-buffer            | -    |        |
-| vr     | eglot-rename                      | v-(r)ename                     | -    |        |
+| key(s) | function               | short description              | mode | lambda |
+|--------+------------------------+--------------------------------+------+--------|
+| p      | :ignore t              | (p)rojectl.................... | -    |        |
+| pr     | xref-find-references   | p-(r)eferences                 | -    |        |
+| pR     | consult-eglot-symbols  | p-(R)eferences consult         | -    |        |
+| pd     | consult-flymake        | p-(d)iagnostic                 | -    |        |
+| pf     | project-find-file      | p-(f)ind-file                  | -    |        |
+| pz     | project-switch-project | p-(z)ump-to-other-proj         | -    |        |
+| ps     | consult-git-grep       | p-(s)earch git files           | -    |        |
+| pS     | project-find-regexp    | p-(s)earch-in-proj             | -    |        |
+| pk     | project-kill-buffers   | p-(k)ill-buf-proj              | -    |        |
+| pl     | consult-project-buffer | p-(l)ist-buf-proj              | -    |        |
+| pv     | consult-imenu          | p-(v)ariables                  | -    |        |
+| v      | :ignore t              | (v)-project................... | -    |        |
+| vq     | format-all-buffer      | v-(q)-format-buffer            | -    |        |
+| vr     | eglot-rename           | v-(r)ename                     | -    |        |
 
 ***** COMMENT old lsp
 #+caption: this is version
@@ -2274,6 +2273,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "hb" '(habitica-hydra-control/body :which-key "habitica")
   "p" '(:ignore t :which-key "(p)rojectl....................")
   "pr" '(xref-find-references :which-key "p-(r)eferences")
+  "pR" '(consult-eglot-symbols :which-key "p-(R)eferences consult")
   "pd" '(consult-flymake :which-key "p-(d)iagnostic")
   "pf" '(project-find-file :which-key "p-(f)ind-file")
   "pz" '(project-switch-project :which-key "p-(z)ump-to-other-proj")
@@ -2429,7 +2429,6 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 * System:
 ** Recent files
 #+begin_src emacs-lisp
-;; recent files configuration
 (recentf-mode 1)
 (setq recentf-max-menu-items  30
       recentf-max-saved-items 30)
@@ -2472,7 +2471,7 @@ else
 	return 0
 fi
 #+end_src
-** Make long file faster?
+** Make long file faster
 [[https://200ok.ch/posts/2020-09-29_comprehensive_guide_on_handling_long_lines_in_emacs.html][this article]]
 
 #+begin_src emacs-lisp
@@ -2481,13 +2480,13 @@ fi
 #+end_src
 
 * Dired
-** Change ls in bsd:
+** bsd related fix
 #+begin_src emacs-lisp
 (when (eq system-type 'berkeley-unix)
   (setq insert-directory-program "gls"))
 ;; can be include ~:if .....~ in usepackage below
 #+end_src
-** Core dired
+** dired: directory
 #+begin_src emacs-lisp
 (use-package dired
   :ensure   nil
@@ -2505,7 +2504,7 @@ fi
     (kbd "C-n")  'mkdir)
   )
 #+end_src
-** Dired additionals
+** dired: additionals
 I don't use these not much  
 #+begin_src emacs-lisp
 (use-package dired-single)
@@ -2565,13 +2564,9 @@ I don't use these not much
 #+begin_src emacs-lisp
 (use-package habitica
   :ensure t
-  )
-#+end_src
-
-
-#+begin_src emacs-lisp
-(defhydra habitica-hydra-control ()
-  "
+  :config
+  (defhydra habitica-hydra-control ()
+    "
 ^task^                         ^checklist^                          ^movement^
 ^^^^^^^^---------------------------------------------------------------------------------------
 _g_: refresh                   _c a_: checklist add                  _j_: vi.down
@@ -2585,31 +2580,31 @@ _q_: add a tag to task                                               _M-S-<retur
 _Q_: delete a tag to task
 "
 
-  ("g"     habitica-tasks               )
-  ("n"     habitica-new-task            )
-  ("+"     habitica-up-task             )
-  ("-"     habitica-down-task           )
-  ("t"     habitica-todo-task           )
-  ("d"     habitica-set-deadline        )
-  ("i"     habitica-set-difficulty      )
-  ("q"     habitica-add-tag-to-task     )
-  ("Q"     habitica-remove-tag-to-task  )
+    ("g"            habitica-tasks                      )
+    ("n"            habitica-new-task                   )
+    ("+"            habitica-up-task                    )
+    ("-"            habitica-down-task                  )
+    ("t"            habitica-todo-task                  )
+    ("d"            habitica-set-deadline               )
+    ("i"            habitica-set-difficulty             )
+    ("q"            habitica-add-tag-to-task            )
+    ("Q"            habitica-remove-tag-to-task         )
 
-  ("c a"     habitica-add-item-to-checklist      )
-  ("c t"     habitica-score-checklist-item       )
-  ("c d"     habitica-delete-item-from-checklist )
-  ("c r"     habitica-rename-item-on-checklist   )
+    ("c a"          habitica-add-item-to-checklist      )
+    ("c t"          habitica-score-checklist-item       )
+    ("c d"          habitica-delete-item-from-checklist )
+    ("c r"          habitica-rename-item-on-checklist   )
 
-  ("j"            next-line                       )
-  ("k"            previous-line                   )
-  ("h"            backward-char                   )
-  ("l"            forward-char                    )
-  ("C-j"          org-forward-heading-same-level  )
-  ("C-k"          org-backward-heading-same-level )
-  ("M-S-<return>" habitica-new-task               )
-  ("<tab>"        org-cycle                       )
-  ("/"            org-sparse-tree                 )
-  ("D E L" habitica-delete-task "delete task")
+    ("j"            next-line                           )
+    ("k"            previous-line                       )
+    ("h"            backward-char                       )
+    ("l"            forward-char                        )
+    ("C-j"          org-forward-heading-same-level      )
+    ("C-k"          org-backward-heading-same-level     )
+    ("M-S-<return>" habitica-new-task                   )
+    ("<tab>"        org-cycle                           )
+    ("/"            org-sparse-tree                     )
+    ("D E L" habitica-delete-task "delete task"         ))
   )
 #+end_src
 ** COMMENT emacs-everywhere
@@ -2617,8 +2612,7 @@ _Q_: delete a tag to task
 (use-package emacs-everywhere)
 #+end_src
 * COMMENT Unused
-** COMMENT Mail & contacts:
-*** COMMENT mu4e
+** COMMENT mu4e
 #+begin_src emacs-lisp
 ;; (delete 'mu4e evil-collection-mode-list)
 ;; (delete 'mu4e-conversation evil-collection-mode-list)
@@ -2660,7 +2654,7 @@ _Q_: delete a tag to task
       smtpmail-stream-type  'ssl)
 (setq message-send-mail-function 'smtpmail-send-it)
 #+end_src
-*** COMMENT notmuch
+** COMMENT notmuch
 #+begin_src emacs-lisp
 (use-package notmuch)
 #+end_src
