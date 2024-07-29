@@ -537,6 +537,19 @@ When nil, use the default face background."
 #+end_src
 
 * Org Zettelkasten like (roam & denote)
+#+begin_src emacs-lisp
+(setq garids-brain-dumping-directory "~/BrainDump/")
+#+end_src
+
+** denote
+#+begin_src emacs-lisp
+(use-package denote
+  :ensure t
+  :custom
+  ;; (denote-directory    (expand-file-name "~/Documents/Personal"))
+  (denote-directory    (concat garids-brain-dumping-directory "denote"))
+  (denote-known-keywords '(  "finance"  "failures"  "philosophy"  )))
+#+end_src
 ** org-roam
 #+begin_src emacs-lisp
 (use-package org-roam
@@ -547,7 +560,8 @@ When nil, use the default face background."
                                           (propertize "${tags:30}"
                                                       'face 'org-tag)))
   (org-roam-v2-ack t)
-  (org-roam-directory "~/Pensieve/")
+  ;; (org-roam-directory "~/Pensieve/")
+  (org-roam-directory (concat garids-brain-dumping-directory "roam"))
   (org-roam-completion-everywhere t)  ;; do I need this?
   (org-roam-dailies-capture-templates
    `(("d" "default" entry "* %<%I:%M %p>: %?"
@@ -653,14 +667,6 @@ When nil, use the default face background."
 (use-package org-roam-ui
   :ensure t)
 #+end_src
-** denote
-#+begin_src emacs-lisp
-(use-package denote
-  :ensure t
-  :custom
-  (denote-directory       (expand-file-name "~/Documents/Personal"))
-  (denote-known-keywords '(  "finance"  "failures"  "philosophy"  )))
-#+end_src
 ** citar
 #+begin_src emacs-lisp
 (use-package citar
@@ -755,14 +761,19 @@ When nil, use the default face background."
 (use-package org-gtd
   :ensure t
   :after org
-  :init
-  (setq org-gtd-update-ack "3.0.0")
-  (setq org-gtd-directory (concat (denote-directory) "/gtd"))
-  (org-gtd-mode 1)
+
+  :custom
+  (org-gtd-directory    (concat garids-brain-dumping-directory "gtd"))
+
 
   :bind (:map org-agenda-mode-map ("C-<f8>"   . org-gtd-clarify-agenda-item)
          :map org-mode-map        ("C-<f8>"   . org-gtd-clarify-item)
          :map org-gtd-clarify-map ("<f8>"     . org-gtd-organize))
+  :init
+  (setq org-gtd-update-ack "3.0.0")
+
+  :config
+  (org-gtd-mode 1)
 
   )
 #+end_src
