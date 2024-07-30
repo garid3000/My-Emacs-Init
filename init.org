@@ -319,6 +319,44 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   ;; (completion-category-overrides
   '((file (styles basic partial-completion))))
 #+end_src
+** embark
+#+begin_src emacs-lisp
+(defun garid/embark-org-insert-ref-of-tbl-fig-src-eq (x)
+  (interactive "sSearch Term: ")
+  (insert
+   (format "[[%s]]"
+           (nth 1 (split-string
+                   (replace-regexp-in-string "[^[:alnum:]_-\\: #+]" "" x)
+                   ) )
+           )))
+
+(defun garid/embark-org-insert-ref-to-label-inside-eq (input-string)
+  (interactive "sSearch Term: ")
+  (insert
+   (format "\\ref{%s}"
+           (if (string-match "\\\\label{\\([^}]+\\)}" input-string)
+               (match-string 1 input-string)
+             nil)
+           )
+   ))
+
+
+(use-package embark
+  :ensure t
+  :bind (
+         ("C-." . embark-act)
+         ("M-." . embark-dwim)
+         ("C-h B" . embark-bindings)
+
+         :map embark-general-map
+         ("G" . my/embark-google-search)
+         ("t" . garid/embark-org-insert-ref-of-tbl-fig-src-eq)
+         ("e" . garid/embark-org-insert-ref-to-label-inside-eq)
+         )
+
+  :init
+  (setq prefix-help-command #'embark-prefix-help-command))
+#+end_src
 ** savehist
 #+begin_src emacs-lisp
 (use-package savehist
@@ -379,7 +417,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   ;; latex related
   (org-latex-src-block-backend          t                                      )
   (org-latex-format-headline-function   'garid-custom/latex-formattig-headings )
-  (org-latex-active-timestamp-format     "\\textcolor{orange}{%s}"             )
+  (org-latex-active-timestamp-format     "\\textcolor{}{%s}"             )
   (org-latex-inactive-timestamp-format   "\\textcolor{Brown}{%s}"              )
   (org-latex-pdf-process                '("latexmk -shell-escape -f -pdf -%latex -interaction=nonstopmode -output-directory=%o %f"))
 
@@ -695,7 +733,7 @@ When nil, use the default face background."
   (citar-org-roam-note-title-template (concat "=${=key=}= - ${title}\n"
                                               "#+subtitle: Garid's notes on this article\n"
                                               "#+author: paper authors: ${author}\n"
-                                              "#+filetags: :literature:\n\n"
+                                              "#+filetags: :lit:\n\n"
                                               "*Ideas\n\n* Notes\n\n"))
   :config
   (citar-org-roam-mode)
@@ -1222,7 +1260,7 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
               ("RET"        . nil                    ))
 
   :init
-  ;; (setq tab-always-indent 'complete)
+  (setq tab-always-indent 'complete)
   ;;:config
   (global-corfu-mode    )
   (corfu-history-mode   )
@@ -1937,6 +1975,8 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 |--------+---------------------------------------------+----------------------------------+------+--------|
 | r      | :ignore t                                   | (r)oam.......................... | -    |        |
 | ruim   | org-roam-ui-mode                            | rui-(m)ode ui-in-browser         | -    |        |
+| ruio   | org-roam-ui-open                            | rui-(o)pen ui-in-browser         | -    |        |
+| ruil   | org-roam-node-local                         | rui-(l)ocal ui-in-browser        | -    |        |
 | rf     | my/org-roam-find-node-by-focus-tag          | r-(f)ind focus                   | -    |        |
 | rF     | consult-org-roam-file-find                  | r-(f)ind full find               | -    |        |
 | rl     | org-roam-buffer-toggle                      | r-(l)toggle                      | -    |        |
@@ -2013,15 +2053,17 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 #+attr_latex: :placement [H]
 #+caption: jumping or finding stuff in org file
 #+name: tbl-orgmode-general-keybindings-find
-| key(s) | function                   | short description             | mode | lambda |
-|--------+----------------------------+-------------------------------+------+--------|
-| of     | :ignore t                  | o-(f)ind..................... | org  |        |
-| ofh    | (consult-org-heading)      | of-(h)eading                  | org  | y      |
-| ofn    | (consult-line "#+name"   ) | of-(n)amed table/eq/src       | org  | y      |
-| ofr    | (consult-line "#+result" ) | of-(r)esult        /src       | org  | y      |
-| ofs    | (consult-line "#+begin_" ) | of-(s)ource src-block         | org  | y      |
-| j      | org-next-block             | (j) jump to next src-block    | org  |        |
-| k      | org-previous-block         | (k) jump to prev src-block    | org  |        |
+| key(s) | function                        | short description             | mode | lambda |
+|--------+---------------------------------+-------------------------------+------+--------|
+| of     | :ignore t                       | o-(f)ind..................... | org  |        |
+| ofh    | (consult-org-heading)           | of-(h)eading                  | org  | y      |
+| ofn    | (consult-line "^#+name"   )     | of-(n)amed table/eq/src       | org  | y      |
+| ofr    | (consult-line "^#+result" )     | of-(r)esult        /src       | org  | y      |
+| ofs    | (consult-line "^#+begin_" )     | of-(s)ource src-block         | org  | y      |
+| ofl    | (consult-line "\\\\label{.*}" ) | of-(l)abel                    | org  | y      |
+| ofr    | (consult-line "\\\\ref{.*}" )   | of-(r)ef                      | org  | y      |
+| j      | org-next-block                  | (j) jump to next src-block    | org  |        |
+| k      | org-previous-block              | (k) jump to prev src-block    | org  |        |
 
 **** (in-org) exporting (latex) related
 #+attr_latex: :placement [H]
@@ -2187,6 +2229,8 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "o" '(:ignore t :which-key "(o)rg...........................")
   "r" '(:ignore t :which-key "(r)oam..........................")
   "ruim" '(org-roam-ui-mode :which-key "rui-(m)ode ui-in-browser")
+  "ruio" '(org-roam-ui-open :which-key "rui-(o)pen ui-in-browser")
+  "ruil" '(org-roam-node-local :which-key "rui-(l)ocal ui-in-browser")
   "rf" '(my/org-roam-find-node-by-focus-tag :which-key "r-(f)ind focus")
   "rF" '(consult-org-roam-file-find :which-key "r-(f)ind full find")
   "rl" '(org-roam-buffer-toggle :which-key "r-(l)toggle")
@@ -2397,9 +2441,11 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "oad" '(org-deadline :which-key "oa-(d)eadline")
   "of" '(:ignore t :which-key "o-(f)ind.....................")
   "ofh" '((lambda () (interactive) (consult-org-heading) ) :which-key "of-(h)eading")
-  "ofn" '((lambda () (interactive) (consult-line "#+name"   ) ) :which-key "of-(n)amed table/eq/src")
-  "ofr" '((lambda () (interactive) (consult-line "#+result" ) ) :which-key "of-(r)esult        /src")
-  "ofs" '((lambda () (interactive) (consult-line "#+begin_" ) ) :which-key "of-(s)ource src-block")
+  "ofn" '((lambda () (interactive) (consult-line "^#+name"   ) ) :which-key "of-(n)amed table/eq/src")
+  "ofr" '((lambda () (interactive) (consult-line "^#+result" ) ) :which-key "of-(r)esult        /src")
+  "ofs" '((lambda () (interactive) (consult-line "^#+begin_" ) ) :which-key "of-(s)ource src-block")
+  "ofl" '((lambda () (interactive) (consult-line "\\\\label{.*}" ) ) :which-key "of-(l)abel")
+  "ofr" '((lambda () (interactive) (consult-line "\\\\ref{.*}" ) ) :which-key "of-(r)ef")
   "j" '(org-next-block :which-key "(j) jump to next src-block")
   "k" '(org-previous-block :which-key "(k) jump to prev src-block")
   "ox" '(:ignore t :which-key "o-(x)port....................")

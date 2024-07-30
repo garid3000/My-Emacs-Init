@@ -144,16 +144,32 @@ org-mode
 (gnuplot "#+begin_src gnuplot :var data=" (p "table") " :file " (p "plot.png") n r n "#+end_src" :post (org-edit-src-code))
 (elisp "#+begin_src emacs-lisp" n r n "#+end_src" :post (org-edit-src-code))
 (inlsrc "src_" p "[:exports code]{" q "}")
-(title "#+title: " p n "#+author: Garid Zorigoo" n "#+language: en")
+(title "#+title: " p n "#+author: Garid Zorigoo" n "#+language: en" n  "#+startup: show2levels" n "#+auto_tangle: t")
+(toc "#+options: " n :post (gry/choose-from-list-and-insert-it '("toc:t" "toc:2" "toc:nil")))
 (shell "#+begin_src sh :eval no-export :results verbatim :exports both" n "#!/bin/sh" n r n  "#+end_src" :post (org-edit-src-code))
+
+(startup "#+startup " :post (gry/choose-from-list-and-insert-it '("overview" "content" "showall" "showeverything" "show2levels"  "show3levels"  "show4levels"  "show5levels")))
+(imgw "#+attr_latex: :width 0.9\textwidth" n "#+attr_html:  :width 100% :height 100%")
+(oxr "#+reveal_root: https://cdn.jsdelivr.net/npm/reveal.js" n "#+reveal_theme: "  :post (gry/choose-from-list-and-insert-it '("black" "white" "league" "beige" "night" "serif" "solarized" "moon" "dracula" "sky" "blood")))
+(oxt "#+setupfile: ~/.config/emacs/org-templates/level-0-xelatex-fonts-conf.org")
+(printbibliograph "#+print_bibliography:")
+
 (results "results " :post (gry/choose-from-list-and-insert-it
                            '("verbatim" "value" "output" "table" "file xxx :output-dir .../"
                              "list" "scalar" "code" "draw" "html" "latex" "link" "org" "pp")))
 (var "#+header: :var outputVar=" :post (insert (concat org-download-image-dir "/filename.svg") ))
-
-(wrap "wrap " :post (gry/choose-from-list-and-insert-it '("example" "src python" "src sh" "src bash")))
-(startup "#+startup " :post (gry/choose-from-list-and-insert-it '("overview" "content" "showall" "showeverything" "show2levels"  "show3levels"  "show4levels"  "show5levels")))
 (cache "cache " :post (gry/choose-from-list-and-insert-it '("yes" "no")))
+(wrap "wrap " :post (gry/choose-from-list-and-insert-it '("example" "src python" "src sh" "src bash")))
+(eval "eval " :post (gry/choose-from-list-and-insert-it '("never-export" "no" "yes")))
+(exports "exports " :post (gry/choose-from-list-and-insert-it '("code" "results" "both" "none")))
+(session "session " :post (gry/choose-from-list-and-insert-it '("SessionName")))
+
+(equation "\\begin{equation}" r> n> "\\end{equation}")
+(equationlabel "\\label{"  r  "}" )
+(equationref   "\\ref{"    r  "}" )
+
+
+
 
 ;; Local Variables:
 ;; mode: lisp-data
