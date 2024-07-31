@@ -268,6 +268,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   (setq vertico-count 30)
   )
 #+end_src
+
 ** marginalia
 #+begin_src emacs-lisp
 ;; brief explanations on M-x entries
@@ -326,9 +327,9 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   (insert
    (format "[[%s]]"
            (nth 1 (split-string
-                   (replace-regexp-in-string "[^[:alnum:]_-\\: #+]" "" x)
-                   ) )
-           )))
+                   (replace-regexp-in-string "[^[:alnum:-]]" "" x)
+                   ;;(replace-regexp-in-string "[^[:alnum:]_-\\: #+]" "" x)
+                   )))))
 
 (defun garid/embark-org-insert-ref-to-label-inside-eq (input-string)
   (interactive "sSearch Term: ")
@@ -336,27 +337,25 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
    (format "\\ref{%s}"
            (if (string-match "\\\\label{\\([^}]+\\)}" input-string)
                (match-string 1 input-string)
-             nil)
-           )
-   ))
+             nil
+             ))))
 
 
 (use-package embark
   :ensure t
-  :bind (
-         ("C-." . embark-act)
-         ("M-." . embark-dwim)
-         ("C-h B" . embark-bindings)
+  :bind (("C-."    . embark-act                                     )
+         ("M-."    . embark-dwim                                    )
+         ("C-h B"  . embark-bindings                                )
 
          :map embark-general-map
-         ("G" . my/embark-google-search)
-         ("t" . garid/embark-org-insert-ref-of-tbl-fig-src-eq)
-         ("e" . garid/embark-org-insert-ref-to-label-inside-eq)
-         )
+         ("G"      . my/embark-google-search                        )
+         ("t"      . garid/embark-org-insert-ref-of-tbl-fig-src-eq  )
+         ("e"      . garid/embark-org-insert-ref-to-label-inside-eq ))
 
   :init
   (setq prefix-help-command #'embark-prefix-help-command))
 #+end_src
+
 ** savehist
 #+begin_src emacs-lisp
 (use-package savehist

@@ -120,51 +120,89 @@ c-mode :when (re-search-backward "^\\S-*$" (line-beginning-position) 'noerror)
 python-mode
 
 (callback "self.ui." p ".clicked.connect(self." p ")")
-(fn "def " p "(" p ") -> None:" r> "return")
-(mt "def " p "(self, " p ") -> None:" n> n> "return")
+(fn       "def " p "(" p ") -> None:" r> "return")
+(mt       "def " p "(self, " p ") -> None:" n> n> "return")
 
 
 org-mode
 
-(caption "#+caption: ")
-(name "#+name: " :post (gry/choose-from-list-and-insert-it '("fig:" "tbl:" "eqn:" "lst:")))
-(drawer ":" p ":" n r ":end:")
-(begin "#+begin_" (s name) n> r> n "#+end_" name)
-(quote "#+begin_quote" n> r> n "#+end_quote")
-(sidenote "#+begin_sidenote" n> r> n "#+end_sidenote")
-(marginnote "#+begin_marginnote" n> r> n "#+end_marginnote")
-(example "#+begin_example" n> r> n "#+end_example")
-(center "#+begin_center" n> r> n "#+end_center")
-(ascii "#+begin_export ascii" n> r> n "#+end_export")
-(html "#+begin_export html" n> r> n "#+end_export")
-(latex "#+begin_export latex" n> r> n "#+end_export")
-(comment "#+begin_comment" n> r> n "#+end_comment")
-(verse "#+begin_verse" n> r> n "#+end_verse")
-(src "#+begin_src " q n r n "#+end_src")
-(gnuplot "#+begin_src gnuplot :var data=" (p "table") " :file " (p "plot.png") n r n "#+end_src" :post (org-edit-src-code))
-(elisp "#+begin_src emacs-lisp" n r n "#+end_src" :post (org-edit-src-code))
-(inlsrc "src_" p "[:exports code]{" q "}")
-(title "#+title: " p n "#+author: Garid Zorigoo" n "#+language: en" n  "#+startup: show2levels" n "#+auto_tangle: t")
-(toc "#+options: " n :post (gry/choose-from-list-and-insert-it '("toc:t" "toc:2" "toc:nil")))
-(shell "#+begin_src sh :eval no-export :results verbatim :exports both" n "#!/bin/sh" n r n  "#+end_src" :post (org-edit-src-code))
+(caption    "#+caption: ")
+hname       "#+name: "
+            :post (gry/choose-from-list-and-insert-it '("fig-" "tbl-" "eqn-" "lst-")))
+(drawer     ":" p
+            ":" n r
+            ":end:")
+(begin      "#+begin_" (s name) n> r> n
+            "#+end_" name)
+(quote      "#+begin_quote" n> r> n
+            "#+end_quote")
+(sidenote   "#+begin_sidenote" n> r> n
+            "#+end_sidenote")
+(marginnote "#+begin_marginnote" n> r> n
+            "#+end_marginnote")
+(example    "#+begin_example" n> r> n
+            "#+end_example")
+(center     "#+begin_center" n> r> n
+            "#+end_center")
+(ascii      "#+begin_export ascii" n> r> n
+            "#+end_export")
+(html       "#+begin_export html" n> r> n
+            "#+end_export")
+(latex      "#+begin_export latex" n> r> n
+            "#+end_export")
+(comment    "#+begin_comment" n> r> n
+            "#+end_comment")
+(verse      "#+begin_verse" n> r> n
+            "#+end_verse")
+(src        "#+begin_src " q n r n
+            "#+end_src")
+(gnuplot    "#+begin_src gnuplot :var data=" (p "table") " :file " (p "plot.png") n r n "#+end_src" :post (org-edit-src-code))
+(elisp      "#+begin_src emacs-lisp" n r n
+            "#+end_src"
+            :post (org-edit-src-code))
+(inlsrc     "src_" p
+            "[:exports code]{" q
+            "}")
+(title      "#+title: " p n
+            "#+author: Garid Zorigoo" n
+            "#+language: en" n
+            "#+startup: show2levels" n
+            "#+auto_tangle: t")
+(toc        "#+options: " n
+            :post (gry/choose-from-list-and-insert-it '("toc:t" "toc:2" "toc:nil")))
+(shell      "#+begin_src sh :eval no-export :results verbatim :exports both" n
+            "#!/bin/sh" n r n
+            "#+end_src"
+            :post (org-edit-src-code))
 
-(startup "#+startup " :post (gry/choose-from-list-and-insert-it '("overview" "content" "showall" "showeverything" "show2levels"  "show3levels"  "show4levels"  "show5levels")))
-(imgw "#+attr_latex: :width 0.9\textwidth" n "#+attr_html:  :width 100% :height 100%")
-(oxr "#+reveal_root: https://cdn.jsdelivr.net/npm/reveal.js" n "#+reveal_theme: "  :post (gry/choose-from-list-and-insert-it '("black" "white" "league" "beige" "night" "serif" "solarized" "moon" "dracula" "sky" "blood")))
-(oxt "#+setupfile: ~/.config/emacs/org-templates/level-0-xelatex-fonts-conf.org")
-(printbibliograph "#+print_bibliography:")
+(startup    "#+startup "
+            :post (gry/choose-from-list-and-insert-it '("overview" "content" "showall" "showeverything" "show2levels"  "show3levels"  "show4levels"  "show5levels")))
+(imgw       "#+attr_latex: :width 0.9\textwidth" n
+            "#+attr_html:  :width 100% :height 100%")
+(oxr        "#+reveal_root: https://cdn.jsdelivr.net/npm/reveal.js" n
+            "#+reveal_theme: "
+            :post (gry/choose-from-list-and-insert-it '("black" "white" "league" "beige" "night" "serif" "solarized" "moon" "dracula" "sky" "blood")))
+(oxt        "#+setupfile: ~/.config/emacs/org-templates/level-0-xelatex-fonts-conf.org")
+(allrefs    "#+print_bibliography:")
+(printbib   "#+print_bibliography:")
 
 (results "results " :post (gry/choose-from-list-and-insert-it
                            '("verbatim" "value" "output" "table" "file xxx :output-dir .../"
                              "list" "scalar" "code" "draw" "html" "latex" "link" "org" "pp")))
-(var "#+header: :var outputVar=" :post (insert (concat org-download-image-dir "/filename.svg") ))
-(cache "cache " :post (gry/choose-from-list-and-insert-it '("yes" "no")))
-(wrap "wrap " :post (gry/choose-from-list-and-insert-it '("example" "src python" "src sh" "src bash")))
-(eval "eval " :post (gry/choose-from-list-and-insert-it '("never-export" "no" "yes")))
-(exports "exports " :post (gry/choose-from-list-and-insert-it '("code" "results" "both" "none")))
-(session "session " :post (gry/choose-from-list-and-insert-it '("SessionName")))
+(var           "#+header: :var outputVar="
+               :post (insert (concat org-download-image-dir "/filename.svg") ))
+(cache         "cache "
+               :post (gry/choose-from-list-and-insert-it '("yes" "no")))
+(wrap          "wrap "
+               :post (gry/choose-from-list-and-insert-it '("example" "src python" "src sh" "src bash")))
+(eval          "eval "
+               :post (gry/choose-from-list-and-insert-it '("never-export" "no" "yes")))
+(exports       "exports "
+               :post (gry/choose-from-list-and-insert-it '("code" "results" "both" "none")))
+(session       "session "
+               :post (gry/choose-from-list-and-insert-it '("SessionName")))
 
-(equation "\\begin{equation}" r> n> "\\end{equation}")
+(equation      "\\begin{equation}" r> n> "\\end{equation}")
 (equationlabel "\\label{"  r  "}" )
 (equationref   "\\ref{"    r  "}" )
 
