@@ -43,3 +43,5 @@
 /.init.org.~undo-tree~
 .bookmark.*
 /.bookmarks.~undo-tree~
+/image-dired/
+/.init.el.~undo-tree~

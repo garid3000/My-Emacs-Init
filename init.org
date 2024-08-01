@@ -249,29 +249,17 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
               ("M-q" . vertico-quick-insert  ) ("C-q" . vertico-quick-exit    )
               )
   :init
-  (require 'vertico-quick)
+  (require 'vertico-quick )
   :custom
-  (vertico-cycle  t)
-  (vertico-count  15)
-  (vertico-resize nil)
+  (vertico-cycle     t    )
+  (vertico-count     15   )
+  (vertico-resize    nil  )
   :config
-  (vertico-mode)
+  (vertico-mode           )
   )
 #+end_src
-** COMMENT vertico-posframe
-#+begin_src emacs-lisp
-(use-package vertico-posframe
-  :ensure t
-  :config
-  (vertico-posframe-mode)
-  (set-face-background 'vertico-posframe "#3c3836")
-  (setq vertico-count 30)
-  )
-#+end_src
-
 ** marginalia
 #+begin_src emacs-lisp
-;; brief explanations on M-x entries
 (use-package marginalia
   :after vertico
   :ensure t
@@ -496,6 +484,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
    (maxima     . t) (calc       . t)
    (awk        . t) (go         . t)
    (asymptote . t)
+   (ditaa     . t)
    ))
 #+end_src
 
@@ -536,9 +525,6 @@ When nil, use the default face background."
 
 (setq org-inline-image-background "white")
 #+end_src
-
-#+RESULTS:
-: white
 
 ** Org toggle hide/shot hyperlink                               :customFunc:
 #+begin_src emacs-lisp
@@ -1409,7 +1395,8 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
 (defun gry/org-open-html ()
   (interactive)
   (call-process-shell-command
-   (concat "xdg-open "                                  ;; try to open default PDF viewer
+   ;; (concat "xdg-open "                               ;; try to open default PDF viewer
+   (concat "$BROWSER "                                  ;; try to open default PDF viewer
            (file-name-directory buffer-file-name)       ;; directory of current file/buffer
            "/export_html/"                              ;; adds export directory name
            (file-name-base)                             ;; filaname (of current file/buffer) without extension
@@ -1535,6 +1522,26 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
            (format-time-string "%Y%m%d-%H%M%S.svg"))
    "]]"))
 #+end_src
+** Jumping ref's label in org or latex
+#+begin_src emacs-lisp
+(defun garid/jump-label-def-of-ref-at-point-word ()
+  ""
+  (interactive)
+  ;; jump to closing } part of:  \ref{...}
+  (progn
+    (search-forward "}")
+    (backward-char 1))
+
+  ;; copy and consult-line with thing inside of {} parenthesis of \ref{...}
+  (let ((start (search-backward "{" nil t))
+        (end (search-forward "}" nil t)))
+    (if (and start end)
+        (let ((content (buffer-substring-no-properties (1+ start) (1- end))))
+          (consult-line (format "\\label{%s}" content))
+          )
+      (message "No matching braces found."))))
+#+end_src
+
 * Writting & Reading
 ** Writting packages
 #+begin_src emacs-lisp
@@ -1946,6 +1953,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 |--------+-------------------------------------------------------------+----------------------------------+------+--------|
 | o      | :ignore t                                                   | (o)rg........................... | -    |        |
 | oo     | org-open-at-point                                           | o-(o)pen                         | org  |        |
+| oO     | garid/jump-label-def-of-ref-at-point-word                   | o-(O)pen ref def                 | org  |        |
 | od     | code-from-internet/org-link-open-parent-with-dired-at-point | o-(d)irectory open               | org  |        |
 | ,      | org-ctrl-c-ctrl-c                                           | C-c C-c                          | org  |        |
 
@@ -2401,6 +2409,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 
 (garids-keybind/in-org-mode
   "oo" '(org-open-at-point :which-key "o-(o)pen")
+  "oO" '(garid/jump-label-def-of-ref-at-point-word :which-key "o-(O)pen ref def")
   "od" '(code-from-internet/org-link-open-parent-with-dired-at-point :which-key "o-(d)irectory open")
   "," '(org-ctrl-c-ctrl-c :which-key "C-c C-c")
   "oTx" '(org-table-export :which-key "oT-(x)port as csv file")
