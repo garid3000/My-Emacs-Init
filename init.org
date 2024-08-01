@@ -1597,7 +1597,13 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
 ** PDF tools
 #+begin_src emacs-lisp
 (use-package pdf-tools
-  :ensure t)
+  :ensure t
+  :bind (:map pdf-view-mode-map
+              ("t" . pdf-outline)
+              )
+  :mode  ("\\.pdf\\'" . pdf-view-mode)
+  :config
+  (pdf-tools-install))
 #+end_src
 
 ** tmr - timer
