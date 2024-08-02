@@ -735,12 +735,10 @@ When nil, use the default face background."
                                               "#+subtitle: Garid's notes on this article\n"
                                               "#+author: paper authors: ${author}\n"
                                               "#+filetags: :lit:\n\n"
-                                              "*Ideas\n\n* Notes\n\n"))
+                                              "* Ideas\n\n* Notes\n\n"))
   :config
-  (citar-org-roam-mode)
-  )
+  (citar-org-roam-mode))
 
-;;(citar-org-roam-note-title-template "=${=key=}= - ${title}\n#+subtitle: Garid's notes on this article\n#+author: paper authors: ${author}\n#+filetags: :literature:\n\n* Ideas\n\n* Notes\n\n")
 #+end_src
 
 ** org-roam (custom) function for inserting node                :customFunc:
@@ -1814,6 +1812,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | Oe     | (find-file "~/.config/emacs/init.org")                   | O-(e)macs confg org            | -    | y      |
 | OE     | (find-file "~/.config/emacs/init.el")                    | O-(E)macs confg el             | -    | y      |
 | Ob     | (find-file (nth 0 org-cite-global-bibliography))         | O-(b)ibliography               | -    | y      |
+| Oc     | citar-open                                               | O-(c)itaiton                   | -    |        |
 | OO     | (find-file org-default-notes-file)                       | O-(O)rg capture                | -    | y      |
 | Oa     | (find-file "~/Documents/Personal/gtd/gtd_archive_2024")  | O-(a)rchive                    | -    | y      |
 | Ot     | (find-file "~/Documents/Personal/gtd/org-gtd-tasks.org") | O-(t)asks                      | -    | y      |
@@ -2323,6 +2322,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "Oe" '((lambda () (interactive) (find-file "~/.config/emacs/init.org") ) :which-key "O-(e)macs confg org")
   "OE" '((lambda () (interactive) (find-file "~/.config/emacs/init.el") ) :which-key "O-(E)macs confg el")
   "Ob" '((lambda () (interactive) (find-file (nth 0 org-cite-global-bibliography)) ) :which-key "O-(b)ibliography")
+  "Oc" '(citar-open :which-key "O-(c)itaiton")
   "OO" '((lambda () (interactive) (find-file org-default-notes-file) ) :which-key "O-(O)rg capture")
   "Oa" '((lambda () (interactive) (find-file "~/Documents/Personal/gtd/gtd_archive_2024") ) :which-key "O-(a)rchive")
   "Ot" '((lambda () (interactive) (find-file "~/Documents/Personal/gtd/org-gtd-tasks.org") ) :which-key "O-(t)asks")
