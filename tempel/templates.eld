@@ -169,6 +169,7 @@ org-mode
 (equationlabel                "\\label{"  r  "}" )
 (equationref                  "\\ref{"    r  "}" )
 
+(latexdocclass                "#+latex_class: extarticle" r> n> "#+LATEX_CLASS_OPTIONS: [a4paper, 8pt, twocolumn]")
 
 
 
