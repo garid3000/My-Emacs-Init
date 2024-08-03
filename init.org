@@ -375,28 +375,29 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 
   :custom
   (org-ellipsis                      " ▼"   )
-  (org-hide-emphasis-markers         t       )
-  (org-log-done                      t       )
-  (org-image-actual-width            '(800)  )
-  (org-src-tab-acts-natively         t       )
-  (org-src-preserve-indentation      nil     )
-  (org-src-fontify-natively          t       )
-  (org-edit-src-content-indentation  0       )
-  (org-startup-folded                "fold"  )
-  (org-plantuml-jar-path             "/usr/share/java/plantuml/plantuml.jar" )  ;; this may differ on different machines
-  (org-file-apps '((auto-mode                  . emacs                     )
-                   ("\\.gif\\'"                . "mpv     \"%s\""          )
-                   ("\\.mp4\\'"                . "mpv     \"%s\""          )
-                   ("\\.png\\'"                . "sxiv    \"%s\""          )
-                   ("\\.svg\\'"                . "inkview \"%s\""          )
-                   ("\\.jpeg\\'"               . "sxiv    \"%s\""          )
-                   ("\\.jpg\\'"                . "sxiv    \"%s\""          )
-                   ;; ("\\.html\\'"            . "brave   \"%s\""          )
-                   ;; ("\\.html\\'"            . "thorium-browser   \"%s\"")
-                   ("\\.pdf\\'"                . "sioyek  \"%s\""          )
-                   ("\\.pdf::\\([0-9]+\\)?\\'" . "sioyek  \"%s\" --page %1")
-                   ("\\.mkv\\'"                . "mpv     \"%s\""          )
-                   ("\\.xopp\\'"               . "xournalpp \"%s\""        )))
+  (org-hide-emphasis-markers         t      )
+  (org-log-done                      t      )
+  (org-image-actual-width            '(800) )
+  (org-src-tab-acts-natively         t      )
+  (org-src-preserve-indentation      nil    )
+  (org-src-fontify-natively          t      )
+  (org-edit-src-content-indentation  0      )
+  (org-startup-folded                "fold" )
+  (org-plantuml-jar-path             "/usr/share/java/plantuml/plantuml.jar" )
+  ;; this may differ on different machines
+  (org-file-apps '((auto-mode                  . emacs                       )
+                   ("\\.gif\\'"                . "mpv     \"%s\""            )
+                   ("\\.mp4\\'"                . "mpv     \"%s\""            )
+                   ("\\.png\\'"                . "sxiv    \"%s\""            )
+                   ("\\.svg\\'"                . "inkview \"%s\""            )
+                   ("\\.jpeg\\'"               . "sxiv    \"%s\""            )
+                   ("\\.jpg\\'"                . "sxiv    \"%s\""            )
+                   ;; ("\\.html\\'"            . "brave   \"%s\""            )
+                   ;; ("\\.html\\'"            . "thorium-browser   \"%s\""  )
+                   ("\\.pdf\\'"                . "sioyek  \"%s\""            )
+                   ("\\.pdf::\\([0-9]+\\)?\\'" . "sioyek  \"%s\" --page %1"  )
+                   ("\\.mkv\\'"                . "mpv     \"%s\""            )
+                   ("\\.xopp\\'"               . "xournalpp \"%s\""          )))
 
 
   (org-todo-keywords      '((sequence
@@ -410,11 +411,12 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
                             ("CNCL"  . (:foreground "gray30" :weight bold))))
 
   ;; latex related
-  (org-latex-src-block-backend          t                                      )
-  (org-latex-format-headline-function   'garid-custom/latex-formattig-headings )
-  (org-latex-active-timestamp-format     "\\textcolor{Brown}{%s}"             )
-  (org-latex-inactive-timestamp-format   "\\textcolor{Brown}{%s}"              )
-  (org-latex-pdf-process                '("latexmk -shell-escape -f -pdf -%latex -interaction=nonstopmode -output-directory=%o %f"))
+  (org-latex-src-block-backend          'listings                                             )
+  (org-latex-format-headline-function   'garid-custom/latex-formattig-headings                )
+  (org-latex-active-timestamp-format     "\\textcolor{Brown}{%s}"                             )
+  (org-latex-inactive-timestamp-format   "\\textcolor{Brown}{%s}"                             )
+  (org-latex-pdf-process
+   '("latexmk -shell-escape -f -pdf -%latex -interaction=nonstopmode -output-directory=%o %f" ))
 
   ;; (org-highlight-latex-and-related     '(latex script entities))
   ;; (org-highlight-latex-and-related      nil)
@@ -430,8 +432,9 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
                    ))
 
   :config
-  (require 'org-tempo)
-  (require 'org-indent)
+  (require 'org-tempo  )
+  (require 'org-indent )
+  (require 'ox-latex   ) 
   (plist-put    org-format-latex-options   :scale 1.7      )    ;; latex equation previewing
   (add-to-list 'org-latex-packages-alist   '("" "listings" ))
   (add-to-list 'org-latex-packages-alist   '("" "color"    ))
@@ -512,9 +515,6 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   :hook   (org-mode . org-bullets-mode)
   :custom (org-bullets-bullet-list
            '("Ⅰ" "Ⅱ" "Ⅲ" "Ⅳ" "Ⅴ" "Ⅵ" "Ⅶ")
-           ;;'("ⅰ" "ⅱ" "ⅲ" "ⅳ" "ⅴ" "ⅵ" "ⅶ")
-           ;;'("➀" "➁" "➌" "❺" "⑸ " "⒍" "７")
-           ;;'("◉" "○" "●" "○" "●" "○" "●")
            ))
 #+end_src
 ** Org inline transparent image background                      :customFunc:
@@ -585,9 +585,9 @@ When nil, use the default face background."
 (use-package denote
   :ensure t
   :custom
-  ;; (denote-directory    (expand-file-name "~/Documents/Personal"))
-  (denote-directory    (concat garids-brain-dumping-directory "denote"))
-  (denote-known-keywords '(  "finance"  "failures"  "philosophy"  )))
+  ;; (denote-directory    (expand-file-name "~/Documents/Personal"       ))
+  (denote-directory       (concat garids-brain-dumping-directory "denote"))
+  (denote-known-keywords  '(  "finance"  "failures"  "philosophy"        )))
 #+end_src
 ** org-roam
 #+begin_src emacs-lisp
@@ -803,9 +803,9 @@ When nil, use the default face background."
   (org-gtd-directory    (concat garids-brain-dumping-directory "gtd"))
 
 
-  :bind (:map org-agenda-mode-map ("C-<f8>"   . org-gtd-clarify-agenda-item)
-         :map org-mode-map        ("C-<f8>"   . org-gtd-clarify-item)
-         :map org-gtd-clarify-map ("<f8>"     . org-gtd-organize))
+  :bind (:map org-agenda-mode-map ("C-<f8>"   . org-gtd-clarify-agenda-item )
+         :map org-mode-map        ("C-<f8>"   . org-gtd-clarify-item        )
+         :map org-gtd-clarify-map ("<f8>"     . org-gtd-organize            ))
   :init
   (setq org-gtd-update-ack "3.0.0")
 
@@ -1305,9 +1305,11 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
 ** eglot for the LSPs
 #+begin_src emacs-lisp
 (use-package eglot
-  :config
-  (setq eldoc-echo-area-use-multiline-p 0)
-  (setq eglot-ignored-server-capabilities '(:documentHighlightProvider)))
+  ;; :config
+  ;; (setq eldoc-echo-area-use-multiline-p 0)
+  ;; (setq eglot-ignored-server-capabilities '(:documentHighlightProvider))
+  ;; (add-hook 'eglot-connect-hook (lambda () (eldoc-mode -1)))
+  )
 #+end_src
 ** consult eglot variable search inside project
 #+begin_src emacs-lisp
