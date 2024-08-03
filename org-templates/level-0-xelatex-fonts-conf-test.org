@@ -14,8 +14,28 @@
 #+LATEX_HEADER: \usepackage{keystroke}       %% keyboard
 #+LATEX_HEADER: \usepackage{float} 
 #+LATEX_HEADER: \usepackage{listings} 
+
+
+#+LATEX_HEADER:  \usepackage[
+#+LATEX_HEADER:      math-style=ISO,
+#+LATEX_HEADER:      bold-style=ISO,
+#+LATEX_HEADER:      partial=upright,
+#+LATEX_HEADER:      nabla=upright
+#+LATEX_HEADER:  ]{unicode-math}
+#+LATEX_HEADER:
+#+LATEX_HEADER:  \setmainfont{Libertinus Serif}
+#+LATEX_HEADER:  \setsansfont{Libertinus Sans}
+#+LATEX_HEADER:  \setmathfont{Libertinus Math}
+
+
+#+LATEX_HEADER:  \usepackage{polyglossia}
+#+LATEX_HEADER:  \setdefaultlanguage{mongolia}
+
+
+#+LATEX_HEADER: %\usepackage{libertine,libertinust1math} % added 2019/11/28
 #+LATEX_HEADER: %%\usepackage[subsection]{placeins} %% let float stay in sections
 #+LATEX_HEADER: %%\usepackage{flafter} 
+
 
 #+LATEX_HEADER: \usepackage{pmboxdraw}        %% box drawing set
 #+LATEX_HEADER: \usepackage{newunicodechar}
@@ -31,16 +51,6 @@
 #+LATEX_HEADER: \newunicodechar{─}{\textSFx}
 #+LATEX_HEADER: \newunicodechar{│}{\textSFxi}
 
-
-#+LATEX_HEADER: \newunicodechar{Ⅰ}{\mbox{I}}
-#+LATEX_HEADER: \newunicodechar{Ⅱ}{\mbox{II}}
-#+LATEX_HEADER: \newunicodechar{Ⅲ}{\mbox{III}}
-#+LATEX_HEADER: \newunicodechar{Ⅳ}{\mbox{IV}}
-#+LATEX_HEADER: \newunicodechar{Ⅴ}{\mbox{V}}
-#+LATEX_HEADER: \newunicodechar{Ⅵ}{\mbox{VI}}
-#+LATEX_HEADER: \newunicodechar{Ⅶ}{\mbox{VII}}
-
-#+LATEX_HEADER: %\newunicodechar{▼}{v}
 
 
 #+LATEX_HEADER: \usepackage{caption}
@@ -73,24 +83,15 @@
 
 
 #+LATEX_HEADER: \lstdefinelanguage{shell}{       % new makefile -> shell language
-#+LATEX_HEADER:     keywords = {if, fi, case, esac, echo, convert},
-#+LATEX_HEADER:     comment=[l]{\#},
-#+LATEX_HEADER:     commentstyle=\color{Gray}\ttfamily,
-#+LATEX_HEADER:     stringstyle=\color{ForestGreen}\ttfamily,
-#+LATEX_HEADER:     morestring=[b]",
+#+LATEX_HEADER:     keywords = {run, emacs}
 #+LATEX_HEADER: }                                % it from from https://tex.stackexchange.com/a/317276/292504 
 
 #+LATEX_HEADER: \lstdefinelanguage{text}{       % new makefile -> shell language
 #+LATEX_HEADER: }                                % it from from https://tex.stackexchange.com/a/317276/292504 
 
 #+LATEX_HEADER: \lstdefinelanguage{Lisp}{        % new Lip language
-#+LATEX_HEADER:     % alsodigit = {-},           
-#+LATEX_HEADER:     otherkeywords = {use\-package, \:hook, \:custom, \:map, \:bind, \:config, \:ensure, \:after, add\-to\-list, defcustom, defun, lambda, interactive},           
-#+LATEX_HEADER:     comment=[l]{;},
-#+LATEX_HEADER:     commentstyle=\color{Gray}\ttfamily,
-#+LATEX_HEADER:     stringstyle=\color{ForestGreen}\ttfamily,
-#+LATEX_HEADER:     morestring=[b]",
-#+LATEX_HEADER:     keywords = {setq, require}
+#+LATEX_HEADER:     % alsodigit = {-},           % I don't need this
+#+LATEX_HEADER:     keywords = {setq, use-package}
 #+LATEX_HEADER: }                                % it from from https://tex.stackexchange.com/a/317276/292504 
 
 
@@ -107,10 +108,10 @@
 
         
 #+LATEX_HEADER: %\setmainfont{CMU Serif}                %\setmainfont{Iosevka Etoile Light}
-#+LATEX_HEADER: \setmainfont{Linux Libertine O}                %\setmainfont{Iosevka Etoile Light}
+#+LATEX_HEADER: %\setmainfont{Linux Libertine}                %\setmainfont{Iosevka Etoile Light}
 #+LATEX_HEADER: %\setmainfont{Iosevka Etoile Light}
 #+LATEX_HEADER: %\setmainfont{Iosevka Aile Light}
-#+LATEX_HEADER: \setmonofont{Iosevka Term SS06}  %\setmonofont{DejaVu Sans Condensed}
+#+LATEX_HEADER: %\setmonofont{Iosevka Term Slab Light}  %\setmonofont{DejaVu Sans Condensed}
 #+LATEX_HEADER: %\setmonofont{L}  %\setmonofont{DejaVu Sans Condensed}
 #+LATEX_HEADER: \newfontfamily\myregularfont{CMU Serif}
 #+LATEX_HEADER: \newfontfamily\myCJKfont{IPAMincho}
