@@ -1243,7 +1243,7 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
   ;; (corfu-auto             t          ) ;; Enable auto completion nov23 C-M-i?
   ;; (corfu-auto-prefix      2          )
   ;; (corfu-auto-delay       0.1        )
-  (corfu-popupinfo-delay '(2.0 . 1.0))
+  (corfu-popupinfo-delay '(0.8 . 0.2))
   (corfu-preview-current   nil       )
   (corfu-on-exact-match    nil       ) ;; Don't auto expand tempel snippets
 

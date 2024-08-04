@@ -104,6 +104,16 @@
 #+LATEX_HEADER:     keywords = {file, transclude}
 #+LATEX_HEADER: }                                % modified from from https://tex.stackexchange.com/a/317276/292504 
 
+#+LATEX_HEADER: \lstdefinelanguage{Python}{         % new org language
+#+LATEX_HEADER:   morekeywords=[1]{,as,assert,nonlocal,with,yield,self,True,False,None,for,while,def,import,}, % Python builtin
+#+LATEX_HEADER:   morekeywords=[2]{,__init__,__add__,__mul__,__div__,__sub__,__call__,__getitem__,__setitem__,__eq__,__ne__,__nonzero__,__rmul__,__radd__,__repr__,__str__,__get__,__truediv__,__pow__,__name__,__future__,__all__,}, % magic methods
+#+LATEX_HEADER:   morekeywords=[3]{,object,type,isinstance,copy,deepcopy,zip,enumerate,reversed,list,set,len,dict,tuple,range,xrange,append,execfile,real,imag,reduce,str,repr,}, % common functions
+#+LATEX_HEADER:   morekeywords=[4]{,Exception,NameError,IndexError,SyntaxError,TypeError,ValueError,OverflowError,ZeroDivisionError,}, % errors
+#+LATEX_HEADER:   morekeywords=[5]{,ode,fsolve,sqrt,exp,sin,cos,arctan,arctan2,arccos,pi, array,norm,solve,dot,arange,isscalar,max,sum,flatten,shape,reshape,find,any,all,abs,plot,linspace,legend,quad,polyval,polyfit,hstack,concatenate,vstack,column_stack,empty,zeros,ones,rand,vander,grid,pcolor,eig,eigs,eigvals,svd,qr,tan,det,logspace,roll,min,mean,cumsum,cumprod,diff,vectorize,lstsq,cla,eye,xlabel,ylabel,squeeze,}, % numpy / math
+#+LATEX_HEADER:   morestring=[b]",
+#+LATEX_HEADER:   morestring=[b]',
+#+LATEX_HEADER: }                                % modified from from https://tex.stackexchange.com/a/317276/292504 
+
 
 
 #+LATEX_HEADER: \definecolor{codegreen}{rgb}{0,0.6,0}
@@ -117,7 +127,8 @@
 #+LATEX_HEADER:     keywordstyle=\color{magenta},
 #+LATEX_HEADER:     numberstyle=\tiny\color{codegray}, %\noncopynumber,
 #+LATEX_HEADER:     stringstyle=\color{codepurple},
-#+LATEX_HEADER:     basicstyle=\ttfamily\footnotesize,
+#+LATEX_HEADER:     %basicstyle=\ttfamily\footnotesize,
+#+LATEX_HEADER:     basicstyle=\ttfamily\scriptsize,
 #+LATEX_HEADER:     breakatwhitespace=false,         
 #+LATEX_HEADER:     breaklines=true,                 
 #+LATEX_HEADER:     captionpos=b,                    
@@ -158,13 +169,18 @@
 
 
 
-        
-#+LATEX_HEADER: %\setmainfont{CMU Serif}                %\setmainfont{Iosevka Etoile Light}
-#+LATEX_HEADER: \setmainfont{Linux Libertine O}                %\setmainfont{Iosevka Etoile Light}
-#+LATEX_HEADER: %\setmainfont{Iosevka Etoile Light}
-#+LATEX_HEADER: %\setmainfont{Iosevka Aile Light}
-#+LATEX_HEADER: \setmonofont{Iosevka Term SS06}  %\setmonofont{DejaVu Sans Condensed}
-#+LATEX_HEADER: %\setmonofont{L}  %\setmonofont{DejaVu Sans Condensed}
+#+LATEX_HEADER:  \usepackage[
+#+LATEX_HEADER:      math-style=ISO,
+#+LATEX_HEADER:      bold-style=ISO,
+#+LATEX_HEADER:      partial=upright,
+#+LATEX_HEADER:      nabla=upright
+#+LATEX_HEADER:  ]{unicode-math}
+#+LATEX_HEADER: %\setmainfont{CMU Serif}
+#+LATEX_HEADER: \setmainfont{Linux Libertine O}
+#+LATEX_HEADER: \setmathfont{Libertinus Math}
+#+LATEX_HEADER: \setmonofont{Iosevka Term SS06}
+#+LATEX_HEADER: \urlstyle{same}
+
 #+LATEX_HEADER: \newfontfamily\myregularfont{CMU Serif}
 #+LATEX_HEADER: \newfontfamily\myCJKfont{IPAMincho}
 #+LATEX_HEADER: \setTransitionsForCJK{\myCJKfont}{\myregularfont} 

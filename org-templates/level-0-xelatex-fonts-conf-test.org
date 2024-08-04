@@ -26,6 +26,7 @@
 #+LATEX_HEADER:  \setmainfont{Libertinus Serif}
 #+LATEX_HEADER:  \setsansfont{Libertinus Sans}
 #+LATEX_HEADER:  \setmathfont{Libertinus Math}
+#+LATEX_HEADER:  \setmonofont{Iosevka SS15}
 
 
 #+LATEX_HEADER:  \usepackage{polyglossia}
