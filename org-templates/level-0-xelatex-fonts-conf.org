@@ -105,6 +105,59 @@
 #+LATEX_HEADER: }                                % modified from from https://tex.stackexchange.com/a/317276/292504 
 
 
+
+#+LATEX_HEADER: \definecolor{codegreen}{rgb}{0,0.6,0}
+#+LATEX_HEADER: \definecolor{codegray}{rgb}{0.5,0.5,0.5}
+#+LATEX_HEADER: \definecolor{codepurple}{rgb}{0.58,0,0.82}
+#+LATEX_HEADER: \definecolor{backcolour}{rgb}{0.97,0.97,0.93}
+#+LATEX_HEADER: 
+#+LATEX_HEADER: \lstdefinestyle{mystyle}{
+#+LATEX_HEADER:     backgroundcolor=\color{backcolour},   
+#+LATEX_HEADER:     commentstyle=\color{Gray}\ttfamily,
+#+LATEX_HEADER:     keywordstyle=\color{magenta},
+#+LATEX_HEADER:     numberstyle=\tiny\color{codegray}, %\noncopynumber,
+#+LATEX_HEADER:     stringstyle=\color{codepurple},
+#+LATEX_HEADER:     basicstyle=\ttfamily\footnotesize,
+#+LATEX_HEADER:     breakatwhitespace=false,         
+#+LATEX_HEADER:     breaklines=true,                 
+#+LATEX_HEADER:     captionpos=b,                    
+#+LATEX_HEADER:     keepspaces=true,                 
+#+LATEX_HEADER:     numbers=left,                    
+#+LATEX_HEADER:     numbersep=5pt,                  
+#+LATEX_HEADER:     showspaces=false,                
+#+LATEX_HEADER:     showstringspaces=false,
+#+LATEX_HEADER:     showtabs=false,                  
+#+LATEX_HEADER:     tabsize=4,
+#+LATEX_HEADER:     frame=single,	                   
+#+LATEX_HEADER: }
+#+LATEX_HEADER: 
+#+LATEX_HEADER: \lstset{style=mystyle}
+
+#+LATEX_HEADER: %\lstset{
+#+LATEX_HEADER: %  %keywordstyle=\color{blue},
+#+LATEX_HEADER: %  %commentstyle=\color{red},
+#+LATEX_HEADER: %  %stringstyle=\color{cyan},
+#+LATEX_HEADER: %  stringstyle=\color{RedViolet}, %custommauve
+#+LATEX_HEADER: %  keywordstyle=\color{RoyalPurple},
+#+LATEX_HEADER: %  commentstyle=\color{OliveGreen},
+#+LATEX_HEADER: %  %basicstyle=\ttfamily\footnotesize,
+#+LATEX_HEADER: %  basicstyle=\ttfamily\scriptsize,
+#+LATEX_HEADER: %  breaklines=true,             %firstnumber=1000,
+#+LATEX_HEADER: %  keepspaces=true,                 
+#+LATEX_HEADER: %  numbers=left,                    
+#+LATEX_HEADER: %  numbersep=5pt,                   
+#+LATEX_HEADER: %  numberstyle=\tiny\color{customgray},    
+#+LATEX_HEADER: %  showspaces=false,                
+#+LATEX_HEADER: %  showstringspaces=false,       %showtabs=true,                  
+#+LATEX_HEADER: %  stepnumber=1,                    
+#+LATEX_HEADER: %}
+
+
+
+
+
+
+
         
 #+LATEX_HEADER: %\setmainfont{CMU Serif}                %\setmainfont{Iosevka Etoile Light}
 #+LATEX_HEADER: \setmainfont{Linux Libertine O}                %\setmainfont{Iosevka Etoile Light}
@@ -115,25 +168,7 @@
 #+LATEX_HEADER: \newfontfamily\myregularfont{CMU Serif}
 #+LATEX_HEADER: \newfontfamily\myCJKfont{IPAMincho}
 #+LATEX_HEADER: \setTransitionsForCJK{\myCJKfont}{\myregularfont} 
-#+LATEX_HEADER: \lstset{
-#+LATEX_HEADER:   %keywordstyle=\color{blue},
-#+LATEX_HEADER:   %commentstyle=\color{red},
-#+LATEX_HEADER:   %stringstyle=\color{cyan},
-#+LATEX_HEADER:   stringstyle=\color{RedViolet}, %custommauve
-#+LATEX_HEADER:   keywordstyle=\color{RoyalPurple},
-#+LATEX_HEADER:   commentstyle=\color{OliveGreen},
-#+LATEX_HEADER:   %basicstyle=\ttfamily\footnotesize,
-#+LATEX_HEADER:   basicstyle=\ttfamily\scriptsize,
-#+LATEX_HEADER:   breaklines=true,             %firstnumber=1000,
-#+LATEX_HEADER:   frame=single,	                   
-#+LATEX_HEADER:   keepspaces=true,                 
-#+LATEX_HEADER:   numbers=left,                    
-#+LATEX_HEADER:   numbersep=5pt,                   
-#+LATEX_HEADER:   numberstyle=\tiny\color{customgray},    
-#+LATEX_HEADER:   showspaces=false,                
-#+LATEX_HEADER:   showstringspaces=false,       %showtabs=true,                  
-#+LATEX_HEADER:   stepnumber=1,                    
-#+LATEX_HEADER: }
+
 
 
 #+LATEX_HEADER: \hypersetup{   %using answer https://tex.stackexchange.com/a/847/292504

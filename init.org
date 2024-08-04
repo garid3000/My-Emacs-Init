@@ -416,7 +416,8 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   (org-latex-active-timestamp-format     "\\textcolor{Brown}{%s}"                             )
   (org-latex-inactive-timestamp-format   "\\textcolor{Brown}{%s}"                             )
   (org-latex-pdf-process
-   '("latexmk -shell-escape -f -pdf -%latex -interaction=nonstopmode -output-directory=%o %f" ))
+   '("latexmk -shell-escape -f -xelatex -%latex -interaction=nonstopmode -output-directory=%o %f" )) ;; -output-driver=\"xdvipdfmx -z 0\" 
+   ;;'("latexmk -shell-escape -f -pdf -%latex -interaction=nonstopmode -output-directory=%o %f" ))
 
   ;; (org-highlight-latex-and-related     '(latex script entities))
   ;; (org-highlight-latex-and-related      nil)
