@@ -1558,7 +1558,28 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
           )
       (message "No matching braces found."))))
 #+end_src
+** drawing
+#+begin_src emacs-lisp
+(use-package edraw-mode
+  :straight (edraw-mode
+             :type git
+             :host github
+             :repo "misohena/el-easydraw")
+  :config
+  ;;(edraw-org-setup-default)
 
+  (with-eval-after-load 'org
+    (require 'edraw-org)
+    (edraw-org-setup-default))
+  ;; When using the org-export-in-background option (when using the
+  ;; asynchronous export function), the following settings are
+  ;; required. This is because Emacs started in a separate process does
+  ;; not load org.el but only ox.el.
+  (with-eval-after-load "ox"
+    (require 'edraw-org)
+    (edraw-org-setup-exporter))
+  )
+#+end_src
 * Writting & Reading
 ** Writting packages
 #+begin_src emacs-lisp
