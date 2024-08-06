@@ -47,3 +47,5 @@
 /.init.el.~undo-tree~
 /org-templates/export_tex/
 /persist/
+/.edraw-custom.eshapes.~undo-tree~
+/.#edraw-custom.eshapes

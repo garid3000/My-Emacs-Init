@@ -142,6 +142,8 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   :config
   (define-key evil-outer-text-objects-map "f" (evil-textobj-tree-sitter-get-textobj "function.outer"))
   (define-key evil-inner-text-objects-map "f" (evil-textobj-tree-sitter-get-textobj "function.inner"))
+  (define-key evil-inner-text-objects-map "c" (evil-textobj-tree-sitter-get-textobj "class.inner"))
+  (define-key evil-outer-text-objects-map "c" (evil-textobj-tree-sitter-get-textobj "class.inner"))
   (define-key evil-outer-text-objects-map "a" (evil-textobj-tree-sitter-get-textobj ("conditional.outer" "loop.outer")))
   )
 #+end_src
@@ -1814,42 +1816,42 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 #+attr_latex: :placement [H]
 #+caption: system commmands
 #+name: tbl-kbind-sys-related
-| key(s) | function                                                 | short description              | mode | lambda |
-|--------+----------------------------------------------------------+--------------------------------+------+--------|
-| s      | :ignore t                                                | (s)ystem.....................  | -    |        |
-| srf    | (recentf-open-files)                                     | s-(r)ecent-(f)iles             | -    | y      |
-| sl     | :ignore t                                                | s-(l)ine.....................  | -    |        |
-| sl5    | (setq display-line-numbers-width 5)                      | sl-(5) digit number            | -    | y      |
-| sl4    | (setq display-line-numbers-width 4)                      | sl-(4) digit number            | -    | y      |
-| sl3    | (setq display-line-numbers-width 3)                      | sl-(3) digit number            | -    | y      |
-| slm    | scroll-lock-mode                                         | sl-(m)ode scroll-lock-mode     | -    |        |
-| slv    | global-display-fill-column-indicator-mode                | sl-(v)ertical-line             | -    |        |
-| sln    | display-line-numbers-mode                                | sl-(n)umber toggle             | -    |        |
-| slr    | ruler-mode                                               | sl-(r)uler mode                | -    |        |
-| st     | toggle-transparency                                      | s-(t)oggle-transparency        | -    |        |
-| scl    | (global-command-log-mode) (clm/open-command-log-buffer)  | s-(c)md-(l)og                  | -    | y      |
-| sw     | whitespace-mode                                          | s-(w)hitespace                 | -    |        |
-| sg     | :ignore t                                                | s-garid                        | -    |        |
-| sgd    | gry/distraction-free-on                                  | sg-distaction                  | -    |        |
-| sgf    | garid/focus-change-tag                                   | sg-focus change                | -    |        |
-| O      | :ignore t                                                | (O)pen........................ | -    |        |
-| Oe     | (find-file "~/.config/emacs/init.org")                   | O-(e)macs confg org            | -    | y      |
-| OE     | (find-file "~/.config/emacs/init.el")                    | O-(E)macs confg el             | -    | y      |
-| Ob     | (find-file (nth 0 org-cite-global-bibliography))         | O-(b)ibliography               | -    | y      |
-| Oc     | citar-open                                               | O-(c)itaiton                   | -    |        |
-| OO     | (find-file org-default-notes-file)                       | O-(O)rg capture                | -    | y      |
-| Oa     | (find-file "~/Documents/Personal/gtd/gtd_archive_2024")  | O-(a)rchive                    | -    | y      |
-| Ot     | (find-file "~/Documents/Personal/gtd/org-gtd-tasks.org") | O-(t)asks                      | -    | y      |
-| Oi     | (find-file "~/Documents/Personal/gtd/inbox.org")         | O-(i)nbox                      | -    | y      |
-| t      | :ignore t                                                | (t)erminal.................... | -    |        |
-| te     | eshell                                                   | t-(e)shell emacs-shell         | -    |        |
-| tv     | vterm                                                    | t-(v)term  vterm               | -    |        |
-| tx     | garid-custom/open-external-term-here                     | t-(x)ternal terminal           | -    |        |
-| tt     | eat                                                      | t-ea(t) terminal               | -    |        |
-| tm     | tmr-with-description                                     | t-(m)er                        | -    |        |
-| Y      | gry-copy-to-x-clip                                       | (Y)ank to xclip                | -    |        |
-| u      | :ignore                                                  | (u)ndo-tree                    | -    |        |
-| ut     | undo-tree-visualize                                      | (u)ndo-(t)ree                  | -    |        |
+| key(s) | function                                                    | short description              | mode | lambda |
+|--------+-------------------------------------------------------------+--------------------------------+------+--------|
+| s      | :ignore t                                                   | (s)ystem.....................  | -    |        |
+| srf    | (recentf-open-files)                                        | s-(r)ecent-(f)iles             | -    | y      |
+| sl     | :ignore t                                                   | s-(l)ine.....................  | -    |        |
+| sl5    | (setq display-line-numbers-width 5)                         | sl-(5) digit number            | -    | y      |
+| sl4    | (setq display-line-numbers-width 4)                         | sl-(4) digit number            | -    | y      |
+| sl3    | (setq display-line-numbers-width 3)                         | sl-(3) digit number            | -    | y      |
+| slm    | scroll-lock-mode                                            | sl-(m)ode scroll-lock-mode     | -    |        |
+| slv    | global-display-fill-column-indicator-mode                   | sl-(v)ertical-line             | -    |        |
+| sln    | display-line-numbers-mode                                   | sl-(n)umber toggle             | -    |        |
+| slr    | ruler-mode                                                  | sl-(r)uler mode                | -    |        |
+| scl    | (global-command-log-mode) (clm/open-command-log-buffer)     | s-(c)md-(l)og                  | -    | y      |
+| sw     | whitespace-mode                                             | s-(w)hitespace                 | -    |        |
+| sg     | :ignore t                                                   | s-garid                        | -    |        |
+| sgd    | gry/distraction-free-on                                     | sg-distaction                  | -    |        |
+| sgf    | garid/focus-change-tag                                      | sg-focus change                | -    |        |
+| O      | :ignore t                                                   | (O)pen........................ | -    |        |
+| Oe     | (find-file "~/.config/emacs/init.org")                      | O-(e)macs confg org            | -    | y      |
+| OE     | (find-file "~/.config/emacs/init.el")                       | O-(E)macs confg el             | -    | y      |
+| Ob     | (find-file (nth 0 org-cite-global-bibliography))            | O-(b)ibliography               | -    | y      |
+| Oc     | citar-open                                                  | O-(c)itaiton                   | -    |        |
+| OO     | (find-file org-default-notes-file)                          | O-(O)rg capture                | -    | y      |
+| Oa     | (find-file (concat org-gtd-directory "/gtd_archive_2024") ) | O-(a)rchive                    | -    | y      |
+| Ot     | (find-file (concat org-gtd-directory "/org-gtd-tasks.org")) | O-(t)asks                      | -    | y      |
+| Oi     | (find-file (concat org-gtd-directory "/inbox.org")        ) | O-(i)nbox                      | -    | y      |
+| t      | :ignore t                                                   | (t)erminal.................... | -    |        |
+| te     | eshell                                                      | t-(e)shell emacs-shell         | -    |        |
+| tv     | vterm                                                       | t-(v)term  vterm               | -    |        |
+| tx     | garid-custom/open-external-term-here                        | t-(x)ternal terminal           | -    |        |
+| tt     | eat                                                         | t-ea(t) terminal               | -    |        |
+| tm     | tmr-with-description                                        | t-(m)er                        | -    |        |
+| Y      | gry-copy-to-x-clip                                          | (Y)ank to xclip                | -    |        |
+| u      | :ignore                                                     | (u)ndo-tree                    | -    |        |
+| ut     | undo-tree-visualize                                         | (u)ndo-(t)ree                  | -    |        |
+#+TBLFM: 
 
 **** Bookmark
 #+attr_latex: :placement [H]
@@ -2336,7 +2338,6 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "slv" '(global-display-fill-column-indicator-mode :which-key "sl-(v)ertical-line")
   "sln" '(display-line-numbers-mode :which-key "sl-(n)umber toggle")
   "slr" '(ruler-mode :which-key "sl-(r)uler mode")
-  "st" '(toggle-transparency :which-key "s-(t)oggle-transparency")
   "scl" '((lambda () (interactive) (global-command-log-mode) (clm/open-command-log-buffer) ) :which-key "s-(c)md-(l)og")
   "sw" '(whitespace-mode :which-key "s-(w)hitespace")
   "sg" '(:ignore t :which-key "s-garid")
@@ -2348,9 +2349,9 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "Ob" '((lambda () (interactive) (find-file (nth 0 org-cite-global-bibliography)) ) :which-key "O-(b)ibliography")
   "Oc" '(citar-open :which-key "O-(c)itaiton")
   "OO" '((lambda () (interactive) (find-file org-default-notes-file) ) :which-key "O-(O)rg capture")
-  "Oa" '((lambda () (interactive) (find-file "~/Documents/Personal/gtd/gtd_archive_2024") ) :which-key "O-(a)rchive")
-  "Ot" '((lambda () (interactive) (find-file "~/Documents/Personal/gtd/org-gtd-tasks.org") ) :which-key "O-(t)asks")
-  "Oi" '((lambda () (interactive) (find-file "~/Documents/Personal/gtd/inbox.org") ) :which-key "O-(i)nbox")
+  "Oa" '((lambda () (interactive) (find-file (concat org-gtd-directory "/gtd_archive_2024") ) ) :which-key "O-(a)rchive")
+  "Ot" '((lambda () (interactive) (find-file (concat org-gtd-directory "/org-gtd-tasks.org")) ) :which-key "O-(t)asks")
+  "Oi" '((lambda () (interactive) (find-file (concat org-gtd-directory "/inbox.org")        ) ) :which-key "O-(i)nbox")
   "t" '(:ignore t :which-key "(t)erminal....................")
   "te" '(eshell :which-key "t-(e)shell emacs-shell")
   "tv" '(vterm :which-key "t-(v)term  vterm")
