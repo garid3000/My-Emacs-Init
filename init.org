@@ -590,7 +590,12 @@ When nil, use the default face background."
   :custom
   ;; (denote-directory    (expand-file-name "~/Documents/Personal"       ))
   (denote-directory       (concat garids-brain-dumping-directory "denote"))
-  (denote-known-keywords  '(  "finance"  "failures"  "philosophy"        )))
+  (denote-known-keywords  '(  "finance"  "failures"  "philosophy"        ))
+  (denote-templates       '( (biblio . "* Abstract\n\n* Review")
+                             (plain  . nil)
+                             ))
+
+  )
 #+end_src
 ** org-roam
 #+begin_src emacs-lisp
@@ -716,7 +721,6 @@ When nil, use the default face background."
   :custom
   (org-cite-global-bibliography (list (concat (file-name-as-directory denote-directory)
                                               "20220101T010101--references__study.bib")))
-  ;; (org-cite-global-bibliography '("~/Documents/Personal/20220101T010101--references__study.bib"))
   (org-cite-insert-processor    'citar                        )
   (org-cite-follow-processor    'citar                        )
   (org-cite-activate-processor  'citar                        )
@@ -725,9 +729,12 @@ When nil, use the default face background."
   ;; https://lucidmanager.org/productivity/emacs-bibtex-mode/
   (citar-library-paths           (list (concat (file-name-as-directory denote-directory) "lit/")) )
   ;; ("~/Documents/papers")
+  :hook
+  (org-mode   . citar-capf-setup)
+  (LaTeX-mode . citar-capf-setup)
   )
 #+end_src
-** citar-org-roam
+** COMMENT citar-org-roam
 #+begin_src emacs-lisp
 (use-package citar-org-roam
   :after citar org-roam
@@ -743,7 +750,40 @@ When nil, use the default face background."
   (citar-org-roam-mode))
 
 #+end_src
-
+** citar-denote
+#+begin_src emacs-lisp
+(use-package citar-denote
+  :ensure t
+  :demand t ;; Ensure minor mode loads
+  :after (:any citar denote)
+  :custom
+  ;; Package defaults
+  (citar-denote-file-type             'org)
+  (citar-denote-keyword               "bib")
+  (citar-denote-signature             nil)
+  ;;(citar-denote-subdir              nil)  
+  (citar-denote-subdir                "litnotes")  ;; usefull
+  (citar-denote-template              'biblio)     ;; 'biblio is defined at denote
+  (citar-denote-title-format          "author-year-title")
+  (citar-denote-title-format-andstr   "and")
+  (citar-denote-title-format-authors  1)
+  (citar-denote-use-bib-keywords      nil)
+  :preface
+  (bind-key "C-c w n" #'citar-denote-open-note)
+  :init
+  (citar-denote-mode)
+  ;; Bind all available commands
+  :bind (("C-c w d" . citar-denote-dwim)
+         ("C-c w e" . citar-denote-open-reference-entry)
+         ("C-c w a" . citar-denote-add-citekey)
+         ("C-c w k" . citar-denote-remove-citekey)
+         ("C-c w r" . citar-denote-find-reference)
+         ("C-c w l" . citar-denote-link-reference)
+         ("C-c w f" . citar-denote-find-citation)
+         ("C-c w x" . citar-denote-nocite)
+         ("C-c w y" . citar-denote-cite-nocite)
+         ("C-c w z" . citar-denote-nobib)))
+#+end_src
 ** org-roam (custom) function for inserting node                :customFunc:
 #+begin_src emacs-lisp
 (defun garid-custom/org-roam-node-insert-immediate (arg &rest args)
@@ -1955,14 +1995,15 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 #+name: tbl-global-general-keybindings-denote
 | key(s) | function                                    | short description             | mode | lambda |
 |--------+---------------------------------------------+-------------------------------+------+--------|
-| n      | :ignore t                                   | de(n)ote..................... | -    |        |
-| nr     | denote-rename-file                          | n-(r)ename                    | -    |        |
-| nf     | denote-open-or-create                       | n-(f)ind                      | -    |        |
-| nd     | (dired denote-directory)                    | n-(d)ired                     | -    | y      |
-| nj     | denote-journal-extras-new-entry             | n-(j)ournal                   | -    |        |
-| nJ     | denote-journal-extras-new-or-existing-entry | n-(J)ournal-find              | -    |        |
-| nil    | denote-insert-link                          | n-(i)nsert-link               | -    |        |
-| nij    | denote-journal-extras-link-or-create-entry  | n-(i)nsert-journal-link       | -    |        |
+| n      | :ignore t                                   | ...de.n.ote.................. | -    |        |
+| nr     | denote-rename-file                          | n-r.ename                     | -    |        |
+| nf     | denote-open-or-create                       | n-f.ind                       | -    |        |
+| nd     | (dired denote-directory)                    | n-d.ired                      | -    | y      |
+| nj     | denote-journal-extras-new-entry             | n-j.ournal                    | -    |        |
+| nJ     | denote-journal-extras-new-or-existing-entry | n-J.ournal-find               | -    |        |
+| nil    | denote-insert-link                          | n-i.nsert-link                | -    |        |
+| nij    | denote-journal-extras-link-or-create-entry  | n-i.nsert-journal-link        | -    |        |
+| nt     | denote-template                             | n-t.emplate                   | -    |        |
 
 **** Yas-snippet
 #+attr_latex: :placement [H]
@@ -2141,7 +2182,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 |--------+-----------------------------------------+-------------------------------+------+--------|
 | ol     | :ignore t                               | o-(l)ink..................... | org  |        |
 | old    | garid-custom/org-toggle-link-n-emphasis | ol-(d)escription show/hide    | org  |        |
-| oli    | (org-insert-link)                       | ol-(i)nsert                   | org  | y      |
+| oli    | org-insert-link                         | ol-(i)nsert                   | org  |        |
 | oln    | hydra-org-link-jumper/body              | ol-(n)ext link                | org  |        |
 | olp    | hydra-org-link-jumper/body              | ol-(p)rev link                | org  |        |
 | olo    | org-open-at-point                       | ol-(o)pen (same as SPC o o)   | org  |        |
@@ -2361,14 +2402,15 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "Y" '(gry-copy-to-x-clip :which-key "(Y)ank to xclip")
   "u" '(:ignore :which-key "(u)ndo-tree")
   "ut" '(undo-tree-visualize :which-key "(u)ndo-(t)ree")
-  "n" '(:ignore t :which-key "de(n)ote.....................")
-  "nr" '(denote-rename-file :which-key "n-(r)ename")
-  "nf" '(denote-open-or-create :which-key "n-(f)ind")
-  "nd" '((lambda () (interactive) (dired denote-directory) ) :which-key "n-(d)ired")
-  "nj" '(denote-journal-extras-new-entry :which-key "n-(j)ournal")
-  "nJ" '(denote-journal-extras-new-or-existing-entry :which-key "n-(J)ournal-find")
-  "nil" '(denote-insert-link :which-key "n-(i)nsert-link")
-  "nij" '(denote-journal-extras-link-or-create-entry :which-key "n-(i)nsert-journal-link")
+  "n" '(:ignore t :which-key "...de.n.ote..................")
+  "nr" '(denote-rename-file :which-key "n-r.ename")
+  "nf" '(denote-open-or-create :which-key "n-f.ind")
+  "nd" '((lambda () (interactive) (dired denote-directory) ) :which-key "n-d.ired")
+  "nj" '(denote-journal-extras-new-entry :which-key "n-j.ournal")
+  "nJ" '(denote-journal-extras-new-or-existing-entry :which-key "n-J.ournal-find")
+  "nil" '(denote-insert-link :which-key "n-i.nsert-link")
+  "nij" '(denote-journal-extras-link-or-create-entry :which-key "n-i.nsert-journal-link")
+  "nt" '(denote-template :which-key "n-t.emplate")
   "h" '(:ignore t :which-key "(h)elp..........................")
   "hh" '(describe-symbol :which-key "h-(h)elp symbol (elisp)")
   "hH" '(describe-key :which-key "h-(H)elp keybinding")
@@ -2512,7 +2554,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "op" '(org-latex-preview :which-key "o-(p)review")
   "ol" '(:ignore t :which-key "o-(l)ink.....................")
   "old" '(garid-custom/org-toggle-link-n-emphasis :which-key "ol-(d)escription show/hide")
-  "oli" '((lambda () (interactive) (org-insert-link) ) :which-key "ol-(i)nsert")
+  "oli" '(org-insert-link :which-key "ol-(i)nsert")
   "oln" '(hydra-org-link-jumper/body :which-key "ol-(n)ext link")
   "olp" '(hydra-org-link-jumper/body :which-key "ol-(p)rev link")
   "olo" '(org-open-at-point :which-key "ol-(o)pen (same as SPC o o)")
