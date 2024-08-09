@@ -1935,19 +1935,23 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 #+attr_latex: :placement [H]
 #+caption: misc. development related
 #+name: tbl-kbind-dev
-| key(s) | function              | short description          | mode | lambda |
-|--------+-----------------------+----------------------------+------+--------|
-| mg     | magit-status          | (m)a(g)it                  | -    |        |
-| <      | recompile             | recompile                  | -    |        |
-| sco    | corfu-mode            | s-(c)orfu-(m)ode           | -    |        |
-| se     | eglot                 | s-(e)glot                  | -    |        |
-| rg     | rg                    | (r)ip-(g)rep  ~cr          | -    |        |
-| gs     | git-gutter:popup-hunk | (g)it-(s) popup hunk  ~cr  | -    |        |
-| gd     | magit-ediff-compare   | ma(g)it-e(d) hunk  ~cr     | -    |        |
-| P      | :ignore               | Python (inferior)   ...... | -    |        |
-| Pr     | python-shell-restart  | P-(R)estart                | -    |        |
-| PP     | run-python            | P-(P) run-python           | -    |        |
-| Pk     | comint-send-eof       | P-(k) kill  (also C-c C-d) | -    |        |
+| key(s) | function                      | short description          | mode | lambda |
+|--------+-------------------------------+----------------------------+------+--------|
+| mg     | magit-status                  | (m)a(g)it                  | -    |        |
+| <      | recompile                     | recompile                  | -    |        |
+| sco    | corfu-mode                    | s-(c)orfu-(m)ode           | -    |        |
+| se     | eglot                         | s-(e)glot                  | -    |        |
+| rg     | rg                            | (r)ip-(g)rep               | -    |        |
+| gS     | git-gutter:stage-hunk         | g-.S.tage hunkk            | -    |        |
+| gs     | git-gutter:popup-hunk         | g-.s. popup hunk           | -    |        |
+| gr     | git-gutter:update-all-windows | g-.r.efresh                | -    |        |
+| gn     | git-gutter:next-hunk          | g-.n.ext                   | -    |        |
+| gp     | git-gutter:previous-hunk      | g-.n.ext                   | -    |        |
+| gd     | magit-ediff-compare           | ma(g)it-e(d) hunk          | -    |        |
+| P      | :ignore                       | Python (inferior)   ...... | -    |        |
+| Pr     | python-shell-restart          | P-(R)estart                | -    |        |
+| PP     | run-python                    | P-(P) run-python           | -    |        |
+| Pk     | comint-send-eof               | P-(k) kill  (also C-c C-d) | -    |        |
 
 **** Consult related (picking & choosing stuff)
 #+attr_latex: :placement [H]
@@ -2306,8 +2310,6 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "d" '(dired-jump :which-key "(d)irectory")
   "D" '(:ignore t :which-key "(D)ired")
   "Ds" '(dired :which-key "D-(s)imple")
-  "Dn" '(dired-sidebar-jump-to-sidebar :which-key "D-(n) side-tree show")
-  "DN" '(dired-sidebar-hide-sidebar :which-key "D-(N) side-tree hide")
   "Dp" '(dired-preview-mode :which-key "D-(p) side-tree hide")
   "o" '(:ignore t :which-key "(o)rg...........................")
   "r" '(:ignore t :which-key "(r)oam..........................")
@@ -2361,7 +2363,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "yd" '(yas-activate-extra-mode :which-key "y-(de)activate extra mode")
   "yo" '(org-insert-structure-template :which-key "y-(o)rg templates")
   "s" '(:ignore t :which-key "(s)ystem.....................")
-  "srf" '((lambda () (interactive) (recentf-open-files) ) :which-key "s-(r)ecent-(f)iles")
+  "srf" '(recentf-open-files :which-key "s-(r)ecent-(f)iles")
   "sl" '(:ignore t :which-key "s-(l)ine.....................")
   "sl5" '((lambda () (interactive) (setq display-line-numbers-width 5) ) :which-key "sl-(5) digit number")
   "sl4" '((lambda () (interactive) (setq display-line-numbers-width 4) ) :which-key "sl-(4) digit number")
@@ -2465,9 +2467,13 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "<" '(recompile :which-key "recompile")
   "sco" '(corfu-mode :which-key "s-(c)orfu-(m)ode")
   "se" '(eglot :which-key "s-(e)glot")
-  "rg" '(rg :which-key "(r)ip-(g)rep  ~cr")
-  "gs" '(git-gutter:popup-hunk :which-key "(g)it-(s) popup hunk  ~cr")
-  "gd" '(magit-ediff-compare :which-key "ma(g)it-e(d) hunk  ~cr")
+  "rg" '(rg :which-key "(r)ip-(g)rep")
+  "gS" '(git-gutter:stage-hunk :which-key "g-.S.tage hunkk")
+  "gs" '(git-gutter:popup-hunk :which-key "g-.s. popup hunk")
+  "gr" '(git-gutter:update-all-windows :which-key "g-.r.efresh")
+  "gn" '(git-gutter:next-hunk :which-key "g-.n.ext")
+  "gp" '(git-gutter:previous-hunk :which-key "g-.n.ext")
+  "gd" '(magit-ediff-compare :which-key "ma(g)it-e(d) hunk")
   "P" '(:ignore :which-key "Python (inferior)   ......")
   "Pr" '(python-shell-restart :which-key "P-(R)estart")
   "PP" '(run-python :which-key "P-(P) run-python")
