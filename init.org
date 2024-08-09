@@ -791,8 +791,36 @@ When nil, use the default face background."
         (org-roam-capture-templates
 	 (list (append (car org-roam-capture-templates)
 		       '(:immediate-finish t)))))
-    (apply #'org-roam-node-insert args)))
+    (apply #'org-roam-node-insert args)
+    ))
 #+end_src
+** denote (custom) function for inserting node                  :customFunc:
+#+begin_src emacs-lisp
+(defun garid-custom/denote-node-insert-immediate(start end)
+  ;; create emtpy denote note on the regions
+  (interactive "r")
+  (let* ((tmp-str-marked              (string-trim (buffer-substring start end) ))
+         (tmp-cur-time-of-this-note  (current-time)))
+    (delete-region start end)
+    (denote
+     tmp-str-marked
+     '("future")
+     nil             ;; filetype
+     "tmp"           ;; sub dir
+     (format-time-string "%Y-%m-%d %H:%M:%S" tmp-cur-time-of-this-note) ;; timestampe
+     )
+
+    (save-buffer)
+    (kill-buffer)
+
+    (insert (format "[[denote:%s][%s]]"
+                    (format-time-string "%Y%m%dT%H%M%S" tmp-cur-time-of-this-note)
+                    tmp-str-marked
+                    ))
+    ))
+#+end_src
+
+
 ** org-roam (custom) functions for tag searching
 #+begin_src emacs-lisp
 (defun my/org-roam-filter-by-tag (tag-name)
@@ -2008,6 +2036,8 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | nil    | denote-insert-link                          | n-i.nsert-link                | -    |        |
 | nij    | denote-journal-extras-link-or-create-entry  | n-i.nsert-journal-link        | -    |        |
 | nt     | denote-template                             | n-t.emplate                   | -    |        |
+| nI     | garid-custom/denote-node-insert-immediate   | n-I.nsert-note                | -    |        |
+
 
 **** Yas-snippet
 #+attr_latex: :placement [H]
@@ -2404,6 +2434,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "nil" '(denote-insert-link :which-key "n-i.nsert-link")
   "nij" '(denote-journal-extras-link-or-create-entry :which-key "n-i.nsert-journal-link")
   "nt" '(denote-template :which-key "n-t.emplate")
+  "nI" '(garid-custom/denote-node-insert-immediate :which-key "n-I.nsert-note")
   "h" '(:ignore t :which-key "(h)elp..........................")
   "hh" '(describe-symbol :which-key "h-(h)elp symbol (elisp)")
   "hH" '(describe-key :which-key "h-(H)elp keybinding")
