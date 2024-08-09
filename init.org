@@ -728,7 +728,6 @@ When nil, use the default face background."
   (bibtex-dialect               'biblatex                     )
   ;; https://lucidmanager.org/productivity/emacs-bibtex-mode/
   (citar-library-paths           (list (concat (file-name-as-directory denote-directory) "lit/")) )
-  ;; ("~/Documents/papers")
   :hook
   (org-mode   . citar-capf-setup)
   (LaTeX-mode . citar-capf-setup)
@@ -1100,7 +1099,11 @@ stork.register(
 
 #+RESULTS:
 : (("Pensieve org -> html00" :base-directory "~/Pensieve" :publishing-function org-html-publish-to-html :publishing-directory "/tmp/garids_pensieve" :section-numbers nil :with-toc nil) ("Pensieve export imgs" :base-directory "~/Pensieve/od-imgs/" :base-extension "jpg\\|gif\\|png\\|svg" :recursive t :publishing-directory "/tmp/garids_pensieve/od-imgs" :publishing-function org-publish-attachment))
-
+** htmlize - source code syntax in html export
+#+begin_src emacs-lisp
+(use-package htmlize
+  :ensure t)
+#+end_src
 * Org Misc:
 ** org-download package itself
 #+begin_src emacs-lisp
