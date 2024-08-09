@@ -1813,8 +1813,6 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | d      | dired-jump                    | (d)irectory          | -    |        |
 | D      | :ignore t                     | (D)ired              | -    |        |
 | Ds     | dired                         | D-(s)imple           | -    |        |
-| Dn     | dired-sidebar-jump-to-sidebar | D-(n) side-tree show | -    |        |
-| DN     | dired-sidebar-hide-sidebar    | D-(N) side-tree hide | -    |        |
 | Dp     | dired-preview-mode            | D-(p) side-tree hide | -    |        |
 
 **** Buffer and operations on buffer
@@ -1869,7 +1867,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | key(s) | function                                                    | short description              | mode | lambda |
 |--------+-------------------------------------------------------------+--------------------------------+------+--------|
 | s      | :ignore t                                                   | (s)ystem.....................  | -    |        |
-| srf    | (recentf-open-files)                                        | s-(r)ecent-(f)iles             | -    | y      |
+| srf    | recentf-open-files                                          | s-(r)ecent-(f)iles             | -    |        |
 | sl     | :ignore t                                                   | s-(l)ine.....................  | -    |        |
 | sl5    | (setq display-line-numbers-width 5)                         | sl-(5) digit number            | -    | y      |
 | sl4    | (setq display-line-numbers-width 4)                         | sl-(4) digit number            | -    | y      |
@@ -1987,17 +1985,6 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | v      | :ignore t              | (v)-project................... | -    |        |
 | vq     | format-all-buffer      | v-(q)-format-buffer            | -    |        |
 | vr     | eglot-rename           | v-(r)ename                     | -    |        |
-
-***** COMMENT old lsp
-#+caption: this is version
-#+name:    tbl-old
-| pr | lsp-bridge-find-references        | p-(r)eferences | - |   |
-| pr | xref-find-references              | p-(r)eferences | - |   |
-| pd | consult-flymake                   | p-(d)iagnostic | - |   |
-| pd | lsp-bridge-diagnostic-list        | p-(d)iagnostic | - |   |
-| vr | project-query-replace-regexp      | v-(r)eplace    | - |   |
-| vr | lsp-bridge-rename                 | v-(r)eplace    | - |   |
-| pv | lsp-bridge-workspace-list-symbols | p-(v)ariables  | - |   |
 
 **** Denote related
 #+attr_latex: :placement [H]
