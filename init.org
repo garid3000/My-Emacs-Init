@@ -2184,7 +2184,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | oxO    | gry/org-open-html                | ox-(O)pen exported html       | org  |        |
 | op     | org-latex-preview                | o-(p)review                   | org  |        |
 
-**** (in org) org link 
+**** (in org) org link, cite, footnote
 #+attr_latex: :placement [H]
 #+caption: org-link related
 #+name: tbl-orgmode-general-keybindings-link
@@ -2196,6 +2196,9 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | oln    | hydra-org-link-jumper/body              | ol-(n)ext link                | org  |        |
 | olp    | hydra-org-link-jumper/body              | ol-(p)rev link                | org  |        |
 | olo    | org-open-at-point                       | ol-(o)pen (same as SPC o o)   | org  |        |
+| olf    | org-footnote-new                        | ol-(f)ootnote                 | org  |        |
+| olF    | org-footnote-action                     | ol-(F)ootnote-action          | org  |        |
+| olc    | org-cite-insert                         | ol-(c)itation                 | org  |        |
 
 **** (in org) org image
 #+attr_latex: :placement [H]
@@ -2215,18 +2218,8 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | oisn   | (setq org-image-actual-width '(800))  | ois-(n)ormal 800px            | org  | y      |
 | oisb   | (setq org-image-actual-width '(1500)) | ois-(b)ig    1500px           | org  | y      |
 | oiss   | (setq org-image-actual-width '(400))  | ois-(s)mall  400px            | org  | y      |
+| oii    | (insert "[[edraw:]]" )                    | oi-(i)nline edraw             | org  | y      |
 
-**** (in org) org citation & footnotes
-#+attr_latex: :placement [H]
-#+caption: Insertings citations/footnote in org-file
-#+name: tbl-orgmode-general-keybindings-cite
-| key(s) | function                                         | short description             | mode | lambda |
-|--------+--------------------------------------------------+-------------------------------+------+--------|
-| oI     | :ignore t                                        | o-(I)nsert................... | org  |        |
-| oIb    | org-cite-insert                                  | oI-(c)itation                 | org  |        |
-| oIf    | org-footnote-new                                 | oI-(f)ootnote                 | org  |        |
-| oIF    | org-footnote-action                              | oI-(F)ootnote-action          | org  |        |
-| oIo    | (find-file (nth 0 org-cite-global-bibliography)) | oI-(o)pen bibliography        | -    | y      |
 *** Converting tables actual keybinding
 **** General.el config
 #+begin_src emacs-lisp
@@ -2269,16 +2262,14 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 :header-args+: :var tbl_17=tbl-orgmode-general-keybindings-find
 :header-args+: :var tbl_18=tbl-orgmode-general-keybindings-export
 :header-args+: :var tbl_19=tbl-orgmode-general-keybindings-link
-:header-args+: :var tbl_20=tbl-orgmode-general-keybindings-cite
-:header-args+: :var tbl_21=tbl-orgmode-general-keybindings-img
+:header-args+: :var tbl_20=tbl-orgmode-general-keybindings-img
 :END:
 #+caption: converting
 #+name: src_that_converts_key_tables
 #+begin_src elisp :wrap src emacs-lisp :tangle no
 (setq tblall (append tbl_00 tbl_01 tbl_02 tbl_03 tbl_04 tbl_05 tbl_06 tbl_07 tbl_08 tbl_09
                      tbl_10 tbl_11 tbl_12 tbl_13 tbl_14 tbl_15 tbl_16 tbl_17 tbl_18 tbl_19
-                     tbl_20 tbl_21
-                     ))
+                     tbl_20))
 
 
 
@@ -2500,7 +2491,6 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "oA" '(org-agenda :which-key "o-(A)genda")
   "oa" '(:ignore t :which-key "o-(a)genda...................")
   "oab" '(org-timeblock :which-key "o-a-(b)lock")
-  "oIo" '((lambda () (interactive) (find-file (nth 0 org-cite-global-bibliography)) ) :which-key "oI-(o)pen bibliography")
 )
 
 (garids-keybind/in-org-mode
@@ -2568,10 +2558,9 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "oln" '(hydra-org-link-jumper/body :which-key "ol-(n)ext link")
   "olp" '(hydra-org-link-jumper/body :which-key "ol-(p)rev link")
   "olo" '(org-open-at-point :which-key "ol-(o)pen (same as SPC o o)")
-  "oI" '(:ignore t :which-key "o-(I)nsert...................")
-  "oIb" '(org-cite-insert :which-key "oI-(c)itation")
-  "oIf" '(org-footnote-new :which-key "oI-(f)ootnote")
-  "oIF" '(org-footnote-action :which-key "oI-(F)ootnote-action")
+  "olf" '(org-footnote-new :which-key "ol-(f)ootnote")
+  "olF" '(org-footnote-action :which-key "ol-(F)ootnote-action")
+  "olc" '(org-cite-insert :which-key "ol-(c)itation")
   "oi" '(:ignore t :which-key "o-(i)mg......................")
   "oip" '(org-download-clipboard :which-key "oi-(p)aste-clipboard")
   "oiP" '(org-download-image :which-key "oi-(P)aste from path")
@@ -2584,6 +2573,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "oisn" '((lambda () (interactive) (setq org-image-actual-width '(800)) ) :which-key "ois-(n)ormal 800px")
   "oisb" '((lambda () (interactive) (setq org-image-actual-width '(1500)) ) :which-key "ois-(b)ig    1500px")
   "oiss" '((lambda () (interactive) (setq org-image-actual-width '(400)) ) :which-key "ois-(s)mall  400px")
+  "oii" '((lambda () (interactive) (insert "[[edraw:]]" ) ) :which-key "oi-(i)nline edraw")
 )
 #+end_src
 

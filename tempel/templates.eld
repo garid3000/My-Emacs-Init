@@ -171,6 +171,7 @@ org-mode
 
 (latexdocclass                "#+latex_class: extarticle" r> n> "#+LATEX_CLASS_OPTIONS: [a4paper, 8pt, twocolumn]")
 
+(latexstayhere                "#+attr_latex: :placement [H]")
 
 
 ;; Local Variables:
