@@ -1478,6 +1478,16 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
 ;;(load "~/.config/emacs/garid/garids-abbrev-typos.el")	;; garid typos
 #+end_src
 
+** latex mode hookk
+#+begin_src emacs-lisp
+(use-package latex
+  :ensure nil
+  :config
+  ;;(add-hook 'LaTeX-mode-hook (function (lambda() (set-input-method "TeQ-Math"))))
+  (add-hook 'latex-mode-hook (function (lambda() (set-input-method "TeQ-Math"))))
+  )
+#+end_src
+
 ** Custom Aligner function (with untabify)                      :customFunc:
 #+begin_src emacs-lisp
 (defun garid-custom/align-regexp-and-untabify (beg end)
