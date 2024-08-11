@@ -1187,6 +1187,12 @@ esac
               ("M-<f12>" . org-transclusion-add-all )
               ("<f11>"   . org-transclusion-mode    )))
 #+end_src
+
+** exercism
+#+begin_src emacs-lisp
+(use-package exercism)
+#+end_src
+
 ** COMMENT org contacts
 #+begin_src emacs-lisp
 (use-package org-contacts
