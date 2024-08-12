@@ -820,7 +820,6 @@ When nil, use the default face background."
     ))
 #+end_src
 
-
 ** org-roam (custom) functions for tag searching
 #+begin_src emacs-lisp
 (defun my/org-roam-filter-by-tag (tag-name)
@@ -1029,7 +1028,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 
 #+RESULTS:
 : <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
-*** exporting
+*** COMMENT exporting
 #+begin_src emacs-lisp :exports code :results verbatim
 (setq
  org-publish-project-alist
@@ -1124,9 +1123,104 @@ stork.register(
    )
  )
 #+end_src
+*** exporting denote
+#+begin_src emacs-lisp :exports code :results verbatim
+(setq
+ org-publish-project-alist
+ `(("denote: org -> html"
+    :base-directory ,(denote-directory)
+    ;; :base-directory ,org-roam-directory
+    ;; :base-directory "~/Pensieve/"
+    :recursive t
+    :publishing-function   org-html-publish-to-html
+    ;;:publishing-directory ,(concat org-roam-directory "website")
+    :publishing-directory ,(concat (denote-directory) "website")
+    :exclude ".*daily/.*org"  ;;; for excluding -daily
+    ;; :publishing-directory "/tmp/asdf"
+    ;;:publishing-directory (concat org-roam-directory "website")
+    ;; :section-numbers nil
+    :section-numbers  org-export-with-section-numbers
+    :with-toc         t
+    :html_link_home  "index.html"
+    ;; :html-preamble "This is just a test"
+    :html-preamble "<div id=\"navbar\"> <ul>
+  <div class=\"stork-wrapper\">
+    <a href=\"/~zgarid/index.html\">Home</a>             &nbsp;
+    <a href=\"..\">Up/Back</a>                           &nbsp;
+    <a href=\"/~zgarid/meta-research.html\">Research</a> &nbsp;
+    <a href=\"/~zgarid/meta-python.html\">Python</a>     &nbsp;
+    <a href=\"/~zgarid/meta-cli.html\">CLI</a>           &nbsp;
+    <a href=\"/~zgarid/meta-org.html\">Org-Mode</a>      &nbsp;
+    <a href=\"/~zgarid/search.html\">Search</a>          &nbsp;
+    <input data-stork=\"federalist\" class=\"stork-input\" />
+    <div data-stork=\"federalist-output\" class=\"stork-output\"></div>
+  </div>
+</ul>
+<hr>
+</div>
+<script src=\"https://files.stork-search.net/releases/v1.6.0/stork.js\"></script>
+<script>
+stork.register(
+    'federalist', 'https://www.ep.sci.hokudai.ac.jp/~zgarid/garid_stork.st'
+)
+</script>
+"
+    ;;
+    ;; 'https://github.com/garid3000/testy/raw/master/garid_stork.st'
+    ;; :html-divs ((preamble "header"  "preamble")
+    ;;             (content   "main"   "content")
+    ;;             (postamble "footer" "postamble"))
 
-#+RESULTS:
-: (("Pensieve org -> html00" :base-directory "~/Pensieve" :publishing-function org-html-publish-to-html :publishing-directory "/tmp/garids_pensieve" :section-numbers nil :with-toc nil) ("Pensieve export imgs" :base-directory "~/Pensieve/od-imgs/" :base-extension "jpg\\|gif\\|png\\|svg" :recursive t :publishing-directory "/tmp/garids_pensieve/od-imgs" :publishing-function org-publish-attachment))
+    )
+   ;;:html_head "<link rel=\"stylesheet\" href=\"/home/garid/org.css\">"
+   ;; not sure why above line doesn't change css of thml output
+   ;; that's why I copied from
+   ;;https://systemcrafters.net/publishing-websites-with-org-mode/building-the-site/
+   ;; above
+
+
+  ;; ("Pensieve: od-imgs change position"
+  ;;  :base-directory ,(concat org-roam-directory "od-imgs/")
+  ;;  :base-extension "jpg\\|gif\\|png\\|svg"
+  ;;  :recursive t
+  ;;  ;;:publishing-directory "/ssh:user@host:~/html/images/"
+  ;;  :publishing-directory ,(concat org-roam-directory "website/od-imgs")
+  ;;  ;; :publishing-directory "/tmp/asdf/img"
+  ;;  :publishing-function org-publish-attachment)
+
+   ;; ("Pensieve: org -> txt"
+   ;;  :base-directory ,org-roam-directory
+   ;;  ;; :base-directory "~/Pensieve/"
+   ;;  :recursive t
+   ;;  :publishing-function org-ascii-export-to-ascii
+   ;;  :publishing-directory ,(concat org-roam-directory "txt_for_stork")
+   ;;  :exclude ".*daily/.*org"  ;;; for excluding -daily
+   ;;  ;; :publishing-directory "/tmp/asdf"
+   ;;  ;;:publishing-directory (concat org-roam-directory "website")
+   ;;  ;; :section-numbers nil
+   ;;  :section-numbers  nil
+   ;;  ;; :with-toc         t
+   ;;  )
+
+   ;; ("Pensieve: org -> txt 2"
+   ;;  :base-directory ,org-roam-directory
+   ;;  ;; :base-directory "~/Pensieve/"
+   ;;  :recursive t
+   ;;  :publishing-function org-ascii-export-to-ascii
+   ;;  :publishing-directory ,(concat org-roam-directory "txt_for_stork")
+   ;;  :exclude ".*daily/.*org"  ;;; for excluding -daily
+   ;;  ;; :publishing-directory "/tmp/asdf"
+   ;;  ;;:publishing-directory (concat org-roam-directory "website")
+   ;;  ;; :section-numbers nil
+   ;;  :section-numbers  nil
+   ;;  :with-toc         nil
+   ;;  ;;:html_link_home  "index.html"
+   ;;  )
+
+   )
+ )
+#+end_src
+
 ** htmlize - source code syntax in html export
 #+begin_src emacs-lisp
 (use-package htmlize
@@ -1193,11 +1287,11 @@ esac
 (use-package exercism)
 #+end_src
 
-** COMMENT org contacts
+** org contacts
 #+begin_src emacs-lisp
 (use-package org-contacts
   :ensure t
-  :after org
+  :after org denote
   :custom (org-contacts-files
            '("~/BrainDump/denote/20240802T185223--contacts__info.org")))
 #+end_src
