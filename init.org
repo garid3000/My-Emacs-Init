@@ -2832,6 +2832,7 @@ I don't use these not much
                                    "\\*lsp-bridge-doc\\*"
                                    "\\*git-gutter:diff\\*"
                                    "\\*Org Select\\*"
+                                   "CAPTURE-inbox.org"
                                    "CAPTURE-20230926T010607--todo__todo.org"
                                    help-mode
                                    compilation-mode))
