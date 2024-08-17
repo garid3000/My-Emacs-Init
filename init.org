@@ -1002,6 +1002,11 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
       (when (not (file-directory-p pub-dir))
        (make-directory pub-dir))))
 #+end_src
+** Latex related
+#+begin_src emacs-lisp
+(use-package auctex :defer t)
+(use-package cdlatex :defer t)
+#+end_src
 ** ox-reveal
 #+begin_src emacs-lisp
 (use-package ox-reveal
