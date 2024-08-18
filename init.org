@@ -431,7 +431,9 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
                    (:endgroup . nil)
                    ("psm" . ?p) ("4bc" . ?4) ("idea" . ?i)
                    ("lit" . ?l) ("yak" . ?y) ("tool" . ?T)
-                   ("tdbt" . ?t) ("rndm" . ?R)))
+                   ("tdbt" . ?t) ("rndm" . ?R)
+                   ("qstn" . ??) ("prjt" . ?P)
+                   ))
 
   :config
   (require 'org-tempo  )
