@@ -2079,6 +2079,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | gS     | git-gutter:stage-hunk         | g-.S.tage hunkk            | -    |        |
 | gs     | git-gutter:popup-hunk         | g-.s. popup hunk           | -    |        |
 | gr     | git-gutter:update-all-windows | g-.r.efresh                | -    |        |
+| gg     | git-gutter-mode               | g-.g.utter-mode            | -    |        |
 | gn     | git-gutter:next-hunk          | g-.n.ext                   | -    |        |
 | gp     | git-gutter:previous-hunk      | g-.n.ext                   | -    |        |
 | gd     | magit-ediff-compare           | ma(g)it-e(d) hunk          | -    |        |
@@ -2608,6 +2609,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "gS" '(git-gutter:stage-hunk :which-key "g-.S.tage hunkk")
   "gs" '(git-gutter:popup-hunk :which-key "g-.s. popup hunk")
   "gr" '(git-gutter:update-all-windows :which-key "g-.r.efresh")
+  "gg" '(git-gutter-mode :which-key "g-.g.utter-mode")
   "gn" '(git-gutter:next-hunk :which-key "g-.n.ext")
   "gp" '(git-gutter:previous-hunk :which-key "g-.n.ext")
   "gd" '(magit-ediff-compare :which-key "ma(g)it-e(d) hunk")
