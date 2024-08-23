@@ -1485,11 +1485,16 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
 ** eglot for the LSPs
 #+begin_src emacs-lisp
 (use-package eglot
-  ;; :config
+  :config
+  (add-to-list 'eglot-server-programs '(nix-ts-mode . ("nil")))
   ;; (setq eldoc-echo-area-use-multiline-p 0)
   ;; (setq eglot-ignored-server-capabilities '(:documentHighlightProvider))
   ;; (add-hook 'eglot-connect-hook (lambda () (eldoc-mode -1)))
   )
+#+end_src
+** nix mode
+#+begin_src emacs-lisp
+(use-package nix-ts-mode)
 #+end_src
 ** consult eglot variable search inside project
 #+begin_src emacs-lisp
