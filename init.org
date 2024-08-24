@@ -729,6 +729,10 @@ When nil, use the default face background."
   (bibtex-dialect               'biblatex                     )
   ;; https://lucidmanager.org/productivity/emacs-bibtex-mode/
   (citar-library-paths           (list (concat (file-name-as-directory denote-directory) "lit/")) )
+
+  (citar-file-open-functions '(("html" . citar-file-open-external)
+                               ("pdf" . citar-file-open-external)
+                               (t . find-file)))
   :hook
   (org-mode   . citar-capf-setup)
   (LaTeX-mode . citar-capf-setup)
