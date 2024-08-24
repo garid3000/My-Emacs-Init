@@ -1777,14 +1777,13 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
 * Writting & Reading
 ** Writting packages
 #+begin_src emacs-lisp
-(use-package selectric-mode
-  :ensure t)
+(use-package selectric-mode :ensure t)
 
-(use-package typewriter-roll-mode
-  :ensure t)
+(use-package typewriter-roll-mode :ensure t)
 
-(use-package writeroom-mode
-  :ensure t)
+(use-package writeroom-mode :ensure t)
+
+(use-package focus :ensure t)
 #+end_src
 
 ** Writting Distraction free
@@ -1793,6 +1792,7 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
   (interactive)
   (writeroom-mode 1)
   (typewriter-roll-mode 1)
+  ;;(evil-insert)
   (turn-off-evil-mode)
   (selectric-mode 1)
   (display-line-numbers-mode -1)
@@ -1800,6 +1800,7 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
   (cua-mode +1)
   (which-key-mode -1)
   (vertico-mode -1)
+  (focus-mode +1)
 
   (cond
    ((member "Iosevka Aile"    (font-family-list)) (set-face-attribute 'default nil :font "Iosevka Aile"    :height 140))
@@ -1819,6 +1820,7 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
   (turn-on-evil-mode)
   (which-key-mode +1)
   (vertico-mode +1)
+  (focus-mode -1)
 
   (cond
    ((member "Iosevka Term SS06" (font-family-list)) (set-face-attribute 'default nil :font "Iosevka Term SS06" :height 120))
