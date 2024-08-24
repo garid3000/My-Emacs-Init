@@ -141,6 +141,7 @@ org-mode
 (comment                      "#+begin_comment" n> r> n "#+end_comment")
 (verse                        "#+begin_verse" n> r> n "#+end_verse")
 (src                          "#+begin_src " q n r n "#+end_src")
+(conf                         "#+begin_src conf" q n r n "#+end_src")
 (gnuplot                      "#+begin_src gnuplot :var data=" (p "table") " :file " (p "plot.png") n r n "#+end_src" :post (org-edit-src-code))
 (elisp                        "#+begin_src emacs-lisp" n r n "#+end_src" :post (org-edit-src-code))
 (inlsrc                       "src_" p "[:exports code]{" q "}")
@@ -164,6 +165,7 @@ org-mode
 (eval                         "eval " :post (gry/choose-from-list-and-insert-it '("never-export" "no" "yes")))
 (exports                      "exports " :post (gry/choose-from-list-and-insert-it '("code" "results" "both" "none")))
 (session                      "session " :post (gry/choose-from-list-and-insert-it '("SessionName")))
+(tangle                       "tangle ~/")
 
 (equation                     "\\begin{equation}" r> n> "\\end{equation}")
 (equationlabel                "\\label{"  r  "}" )
