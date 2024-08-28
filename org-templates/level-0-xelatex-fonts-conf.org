@@ -9,7 +9,8 @@
 #+LATEX_HEADER: \usepackage[CJK]{ucharclasses} 
 #+LATEX_HEADER: \usepackage[margin=0.85in]{geometry}
 #+LATEX_HEADER: \usepackage{bookmark}
-#+LATEX_HEADER: \usepackage{svg}
+#+LATEX_HEADER: \usepackage[inkscapelatex=false]{svg}
+#+LATEX_HEADER: %\usepackage{svg}
 #+LATEX_HEADER: \usepackage{pgf}
 #+LATEX_HEADER: \usepackage{keystroke}       %% keyboard
 #+LATEX_HEADER: \usepackage{float} 
