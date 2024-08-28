@@ -476,6 +476,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 (use-package ob-nim)
 (use-package ob-go)
 (use-package ob-asymptote)
+(use-package ob-nix)
 ;; (use-package ob-tmux
 ;;   ;; Install package automatically (optional)
 ;;   :ensure t
@@ -508,6 +509,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
    (awk        . t) (go         . t)
    (asymptote . t)
    (ditaa     . t)
+   (nix     . t)
    ))
 #+end_src
 
@@ -1762,6 +1764,7 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
   :straight (edraw-mode
              :type git
              :host github
+             :brach "garidslatex"
              :repo "misohena/el-easydraw")
   :config
   ;;(edraw-org-setup-default)
@@ -1776,6 +1779,31 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
   (with-eval-after-load "ox"
     (require 'edraw-org)
     (edraw-org-setup-exporter))
+  :custom
+  ;;(edraw-editor-default-grid-interval 20)
+  (edraw-default-shape-properties '((rect (fill            . #1="#f8f8f8")
+                                          (stroke          . #2="#101010")
+                                          (stroke-width    . 2))
+                                    (ellipse (fill         . #1#)
+                                             (stroke       . #2#)
+                                             (stroke-width . 2))
+                                    (path (fill            . "none")
+                                          (stroke          . #2#)
+                                          (stroke-width    . 2)
+                                          (marker-end      . "arrow")
+
+                                          )
+                                    (text (fill            . #2#)
+                                          ;;(font-size       . 16)
+                                          (font-size       . 20)
+                                          ;;(font-family     . "sans-serif")
+                                          (font-family     . "Linux Libertine")
+                                          (text-anchor     . "middle"))
+                                    (image)))
+  (edraw-default-document-properties '((width . 800)
+                                       (height . 400)
+                                       (background . "#fff")))
+
   )
 #+end_src
 * Writting & Reading
