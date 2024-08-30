@@ -126,12 +126,11 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   :after evil
   :config
   (global-evil-surround-mode)
-  (add-hook 'latex-mode-hook
-            (lambda ()
-               (push '(40  . ("\\left("    . "\\right)"   )) evil-surround-pairs-alist)
-               (push '(123 . ("\\left\\{"  . "\\right\\}" )) evil-surround-pairs-alist)
-               (push '(91  . ("\\left["    . "\\right]"   )) evil-surround-pairs-alist)
-              )))
+  (add-hook 'latex-mode-hook (lambda ()
+                               (push '(40  . ("\\left("    . "\\right)"   )) evil-surround-pairs-alist)
+                               (push '(123 . ("\\left\\{"  . "\\right\\}" )) evil-surround-pairs-alist)
+                               (push '(91  . ("\\left["    . "\\right]"   )) evil-surround-pairs-alist)
+                               )))
 #+end_src
 
 ** evil treesitter based visual selection (not used that much)
@@ -140,12 +139,11 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   :ensure t
   :after evil
   :config
-  (define-key evil-outer-text-objects-map "f" (evil-textobj-tree-sitter-get-textobj "function.outer"))
-  (define-key evil-inner-text-objects-map "f" (evil-textobj-tree-sitter-get-textobj "function.inner"))
-  (define-key evil-inner-text-objects-map "c" (evil-textobj-tree-sitter-get-textobj "class.inner"))
-  (define-key evil-outer-text-objects-map "c" (evil-textobj-tree-sitter-get-textobj "class.inner"))
-  (define-key evil-outer-text-objects-map "a" (evil-textobj-tree-sitter-get-textobj ("conditional.outer" "loop.outer")))
-  )
+  (define-key evil-outer-text-objects-map "f" (evil-textobj-tree-sitter-get-textobj "function.outer" ))
+  (define-key evil-inner-text-objects-map "f" (evil-textobj-tree-sitter-get-textobj "function.inner" ))
+  (define-key evil-inner-text-objects-map "c" (evil-textobj-tree-sitter-get-textobj "class.inner"    ))
+  (define-key evil-outer-text-objects-map "c" (evil-textobj-tree-sitter-get-textobj "class.inner"    ))
+  (define-key evil-outer-text-objects-map "a" (evil-textobj-tree-sitter-get-textobj ("conditional.outer" "loop.outer"))))
 #+end_src
 
 * Theme & Colors
@@ -234,13 +232,15 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 ;; setting line
 (use-package display-line-numbers
   :ensure t
+  :custom
+  (display-line-numbers-type 'relative)
+  (visible-bell              t)
+  ;;(setq display-line-numbers-type 'relative)
+  ;; (setq visible-bell t)
   :config
-  (setq display-line-numbers-type 'relative)
   (global-display-line-numbers-mode -1)
+  (global-hl-line-mode               1)
   )
-
-(global-hl-line-mode 1)
-(setq visible-bell t)
 #+end_src
 
 * Minibuffer completion, selection, suggestion
@@ -249,33 +249,31 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 (use-package vertico
   :ensure t
   :bind (:map vertico-map
-              ("C-j"   . vertico-next        ) ("M-j"   . vertico-next        )
-              ("C-k"   . vertico-previous    ) ("M-k"   . vertico-previous    )
-              ("C-f"   . vertico-exit        ) ("M-f"   . vertico-exit        )
-              ("C-u"   . vertico-scroll-up   ) ("M-u"   . vertico-scroll-up   )
-              ("C-d"   . vertico-scroll-down ) ("M-d"   . vertico-scroll-down )
-              ("M-p"   . vertico-previous    ) ("M-n"   . vertico-next        )
-              ("M-h"   . vertico-exit        )
-              ("M-q" . vertico-quick-insert  ) ("C-q" . vertico-quick-exit    )
-              )
+              ("C-j" . vertico-next          ) ("M-j" . vertico-next        )
+              ("C-k" . vertico-previous      ) ("M-k" . vertico-previous    )
+              ("C-f" . vertico-exit          ) ("M-f" . vertico-exit        )
+              ("C-u" . vertico-scroll-up     ) ("M-u" . vertico-scroll-up   )
+              ("C-d" . vertico-scroll-down   ) ("M-d" . vertico-scroll-down )
+              ("M-p" . vertico-previous      ) ("M-n" . vertico-next        )
+              ("M-h" . vertico-exit          )
+              ("M-q" . vertico-quick-insert  ) ("C-q" . vertico-quick-exit  ))
   :init
-  (require 'vertico-quick )
+  (require 'vertico-quick)
   :custom
-  (vertico-cycle     t    )
-  (vertico-count     15   )
-  (vertico-resize    nil  )
+  (vertico-cycle     t  )
+  (vertico-count     15 )
+  (vertico-resize    nil)
   :config
-  (vertico-mode           )
-  )
+  (vertico-mode))
 #+end_src
 ** marginalia
 #+begin_src emacs-lisp
 (use-package marginalia
   :after vertico
   :ensure t
-  :custom (marginalia-annotators
-           '(marginalia-annotators-heavy
-             marginalia-annotators-light nil))
+  :custom
+  (marginalia-annotators '(marginalia-annotators-heavy
+                           marginalia-annotators-light nil))
   :init (marginalia-mode))
 #+end_src
 ** consult
@@ -285,6 +283,8 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 ;;  :bind (("M-f"  . consult-line))
 #+end_src
 ** consult-org-roam
+I might not need this
+
 #+begin_src emacs-lisp
 (use-package consult-org-roam
    :ensure t
@@ -358,7 +358,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 #+begin_src emacs-lisp
 (use-package savehist
   :ensure t
-  :init (savehist-mode))
+  :config (savehist-mode))
 #+end_src
 * Org
 ** org-mode configuration
@@ -473,10 +473,10 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 
 ** org-babel languages related
 #+begin_src emacs-lisp
-(use-package ob-nim)
-(use-package ob-go)
-(use-package ob-asymptote)
-(use-package ob-nix)
+(use-package ob-nim       )
+(use-package ob-go        )
+(use-package ob-asymptote )
+(use-package ob-nix       )
 ;; (use-package ob-tmux
 ;;   ;; Install package automatically (optional)
 ;;   :ensure t
@@ -1835,6 +1835,7 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
   (focus-mode +1)
 
   (cond
+   ((member "Virgil 3 YOFF"   (font-family-list)) (set-face-attribute 'default nil :font "Virgil 3 YOFF"   :height 140))
    ((member "Iosevka Aile"    (font-family-list)) (set-face-attribute 'default nil :font "Iosevka Aile"    :height 140))
    ((member "Liberation Sans" (font-family-list)) (set-face-attribute 'default nil :font "Liberation Sans" :height 140))
    ((member "Courier New"     (font-family-list)) (set-face-attribute 'default nil :font "Courier New"     :height 140))
