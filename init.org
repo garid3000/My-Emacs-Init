@@ -1835,6 +1835,7 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
   (focus-mode +1)
 
   (cond
+   ((member "xkcd Script"     (font-family-list)) (set-face-attribute 'default nil :font "xkcd Script"     :height 200))
    ((member "Virgil 3 YOFF"   (font-family-list)) (set-face-attribute 'default nil :font "Virgil 3 YOFF"   :height 140))
    ((member "Iosevka Aile"    (font-family-list)) (set-face-attribute 'default nil :font "Iosevka Aile"    :height 140))
    ((member "Liberation Sans" (font-family-list)) (set-face-attribute 'default nil :font "Liberation Sans" :height 140))
