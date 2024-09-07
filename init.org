@@ -1626,7 +1626,7 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
 ;;(load "~/.config/emacs/garid/garids-abbrev-typos.el")	;; garid typos
 #+end_src
 
-** latex mode hookk
+** latex mode hook
 #+begin_src emacs-lisp
 (use-package latex
   :ensure nil
@@ -1758,13 +1758,14 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
           )
       (message "No matching braces found."))))
 #+end_src
-** drawing
+** edraw drawing
 #+begin_src emacs-lisp
 (use-package edraw-mode
   :straight (edraw-mode
              :type git
              :host github
-             :brach "garidslatex"
+             ;;:brach "garidslatex"
+             :brach "master"
              :repo "misohena/el-easydraw")
   :config
   ;;(edraw-org-setup-default)
@@ -1809,13 +1810,10 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
 * Writting & Reading
 ** Writting packages
 #+begin_src emacs-lisp
-(use-package selectric-mode :ensure t)
-
+(use-package selectric-mode       :ensure t)
 (use-package typewriter-roll-mode :ensure t)
-
-(use-package writeroom-mode :ensure t)
-
-(use-package focus :ensure t)
+(use-package writeroom-mode       :ensure t)
+(use-package focus                :ensure t)
 #+end_src
 
 ** Writting Distraction free
@@ -1867,8 +1865,7 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
 (use-package pdf-tools
   :ensure t
   :bind (:map pdf-view-mode-map
-              ("t" . pdf-outline)
-              )
+              ("t" . pdf-outline))
   :mode  ("\\.pdf\\'" . pdf-view-mode)
   :config
   (pdf-tools-install))
@@ -1876,8 +1873,7 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
 
 ** tmr - timer
 #+begin_src emacs-lisp
-(use-package tmr
-  :ensure t)
+(use-package tmr :ensure t)
 #+end_src
 ** spray
 #+begin_src emacs-lisp
@@ -2057,8 +2053,8 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | scl    | (global-command-log-mode) (clm/open-command-log-buffer)                                    | s.c.md-.l.og                   | -    | y      |
 | sw     | whitespace-mode                                                                            | s.w.hitespace                  | -    |        |
 | sg     | :ignore t                                                                                  | s-garid                        | -    |        |
-| sgd    | gry/distraction-free-on                                                                    | sg.d.istaction                 | -    |        |
-| sgf    | garid/focus-change-tag                                                                     | sg.f.ocus change               | -    |        |
+| sgf    | gry/distraction-free-on                                                                    | sg.f.ocus                      | -    |        |
+| sgr    | gry/distraction-free-off                                                                   | sg.r.eset                      | -    |        |
 | O      | :ignore t                                                                                  | (O)pen........................ | -    |        |
 | Oe     | (find-file "~/.config/emacs/init.org")                                                     | O.e.macs confg org             | -    | y      |
 | OE     | (find-file "~/.config/emacs/init.el")                                                      | O.E.macs confg el              | -    | y      |
@@ -2554,8 +2550,8 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "scl" '((lambda () (interactive) (global-command-log-mode) (clm/open-command-log-buffer) ) :which-key "s.c.md-.l.og")
   "sw" '(whitespace-mode :which-key "s.w.hitespace")
   "sg" '(:ignore t :which-key "s-garid")
-  "sgd" '(gry/distraction-free-on :which-key "sg.d.istaction")
-  "sgf" '(garid/focus-change-tag :which-key "sg.f.ocus change")
+  "sgf" '(gry/distraction-free-on :which-key "sg.f.ocus")
+  "sgr" '(gry/distraction-free-off :which-key "sg.r.eset")
   "O" '(:ignore t :which-key "(O)pen........................")
   "Oe" '((lambda () (interactive) (find-file "~/.config/emacs/init.org") ) :which-key "O.e.macs confg org")
   "OE" '((lambda () (interactive) (find-file "~/.config/emacs/init.el") ) :which-key "O.E.macs confg el")
