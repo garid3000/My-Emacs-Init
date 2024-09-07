@@ -906,8 +906,11 @@ When nil, use the default face background."
               ("j" . evil-next-line    )
               ("k" . evil-previous-line)
               )
+  :custom
+  (org-agenda-files '("~/BrainDump/gtd/org-gtd-tasks.org"))
   :config
-  (setq org-agenda-files nil))
+  (add-hook 'org-agenda-finalize-hook (lambda () (org-agenda-write "/tmp/current-agenda-text")))
+  )
 
 ;; (define-key org-agenda-mode-map "j" 'evil-next-line    )
 ;; (define-key org-agenda-mode-map "k" 'evil-previous-line)
@@ -915,8 +918,7 @@ When nil, use the default face background."
 ;;   (interactive)
 ;;   (org-agenda-write "/tmp/current-agenda-text")
 ;;   )
-;; 
-;; (add-hook 'org-agenda-finalize-hook 'garid/write-agenda-to-file)
+;;
 #+end_src
 ** org capturing related
 #+begin_src emacs-lisp :results none
@@ -1791,20 +1793,17 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
                                     (path (fill            . "none")
                                           (stroke          . #2#)
                                           (stroke-width    . 2)
-                                          (marker-end      . "arrow")
-
-                                          )
+                                          (marker-end      . "arrow"))
                                     (text (fill            . #2#)
-                                          ;;(font-size       . 16)
                                           (font-size       . 20)
                                           ;;(font-family     . "sans-serif")
-                                          (font-family     . "Linux Libertine")
+                                          ;;(font-family     . "Linux Libertine")
+                                          (font-family     . "xkcd Script")
                                           (text-anchor     . "middle"))
                                     (image)))
   (edraw-default-document-properties '((width . 800)
                                        (height . 400)
                                        (background . "#fff")))
-
   )
 #+end_src
 * Writting & Reading
