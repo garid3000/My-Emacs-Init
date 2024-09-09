@@ -431,8 +431,8 @@ I might not need this
                    (:endgroup . nil)
                    ("psm" . ?p) ("4bc" . ?4) ("idea" . ?i)
                    ("lit" . ?l) ("yak" . ?y) ("tool" . ?T)
-                   ("tdbt" . ?t) ("rndm" . ?R)
-                   ("qstn" . ??) ("prjt" . ?P)
+                   ("tdbt" . ?t) ("rndm" . ?R) ("meet" . ?m)
+                   ("qstn" . ??) ("prjt" . ?P) ("msg/mail" . ?M)
                    ))
 
   :config
