@@ -1834,7 +1834,7 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
   (cond
    ((member "xkcd Script"     (font-family-list)) (set-face-attribute 'default nil :font "xkcd Script"     :height 200))
    ((member "Virgil 3 YOFF"   (font-family-list)) (set-face-attribute 'default nil :font "Virgil 3 YOFF"   :height 140))
-   ((member "Iosevka Aile"    (font-family-list)) (set-face-attribute 'default nil :font "Iosevka Aile"    :height 140))
+   ((member "Iosevka Aile"    (font-family-list)) (set-face-attribute 'default nil :font "Iosevka Aile"    :height 200))
    ((member "Liberation Sans" (font-family-list)) (set-face-attribute 'default nil :font "Liberation Sans" :height 140))
    ((member "Courier New"     (font-family-list)) (set-face-attribute 'default nil :font "Courier New"     :height 140))
    ((member "Terminus"        (font-family-list)) (set-face-attribute 'default nil :font "Terminus"        :height 140))
@@ -1855,7 +1855,7 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
 
   (cond
    ((member "Iosevka Term SS06" (font-family-list)) (set-face-attribute 'default nil :font "Iosevka Term SS06" :height 120))
-   ((member "Iosevka"           (font-family-list)) (set-face-attribute 'default nil :font "Iosevka"           :height 120))
+   ((member "Iosevka"           (font-family-list)) (set-face-attribute 'default nil :font "Iosevka"           :height 150))
    ))
 #+end_src
 
