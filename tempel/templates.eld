@@ -21,8 +21,7 @@ latex-mode
 (appendix "\\begin{appendix}\n" r> n> "\\end{appendix}")
 (begin "\\begin{" (s env) "}" r> n> "\\end{" (s env) "}")
 (center "\\begin{center}\n" r> n> "\\end{center}")
-(displaymath "\\begin{displaymath}\n" r> n> "\\end{displaymath}")
-(document "\\begin{document}\n" r> n> "\\end{document}")
+(displaymath "\\begin{displaymath}\n" r> n> "\\end{displaymath}") (document "\\begin{document}\n" r> n> "\\end{document}")
 (enumerate "\\begin{enumerate}\n\\item " r> n> "\\end{enumerate}")
 (equation "\\begin{equation}" r> n> "\\end{equation}")
 (flushleft "\\begin{flushleft}" r> n> "\\end{flushleft}")
@@ -174,7 +173,8 @@ org-mode
 (latexdocclass                "#+latex_class: extarticle" r> n> "#+LATEX_CLASS_OPTIONS: [a4paper, 8pt, twocolumn]")
 
 (latexstayhere                "#+attr_latex: :placement [H]")
-
+(auto_tangle                  "#+auto_tangle:  t")
+(shebang                      ":shebang #!/bin/bash")
 
 ;; Local Variables:
 ;; mode: lisp-data
