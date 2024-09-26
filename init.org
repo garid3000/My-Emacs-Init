@@ -510,6 +510,7 @@ I might not need this
    (asymptote . t)
    (ditaa     . t)
    (nix     . t)
+   (lua     . t)
    ))
 #+end_src
 
@@ -1551,6 +1552,12 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
 ** scad
 #+begin_src emacs-lisp
 (use-package scad-mode
+  :ensure t)
+#+end_src
+
+** lua
+#+begin_src emacs-lisp
+(use-package lua-mode
   :ensure t)
 #+end_src
 * Coding convenients
