@@ -376,6 +376,8 @@ I might not need this
   (org-mode . garid-custom/org-mode-hooked-func)
 
   :custom
+  (org-agenda-skip-additional-timestamps-same-entry t)
+  (org-tags-column                   -90)
   (org-ellipsis                      " ▼"   )
   (org-hide-emphasis-markers         t      )
   (org-log-done                      t      )
