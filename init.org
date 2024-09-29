@@ -176,7 +176,8 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   (tooltip-mode    -1)        ; Disable tooltips
   ;; (set-fringe-mode 15)     ; Give some breathing room
   (menu-bar-mode   -1)        ; Disable the menu bar
-  )
+  (setq-default tab-width 4)
+)
 #+end_src
 
 ** Terminal cursor
@@ -376,7 +377,6 @@ I might not need this
   (org-mode . garid-custom/org-mode-hooked-func)
 
   :custom
-  (org-agenda-skip-additional-timestamps-same-entry t)
   (org-tags-column                   -90)
   (org-ellipsis                      " ▼"   )
   (org-hide-emphasis-markers         t      )
@@ -872,7 +872,7 @@ When nil, use the default face background."
   )
 #+end_src
 * Org Time managements
-** org-gtd
+** COMMENT org-gtd
 #+begin_src emacs-lisp
 (use-package org-gtd
   :ensure t
@@ -880,20 +880,20 @@ When nil, use the default face background."
 
   :custom
   (org-gtd-directory    (concat garids-brain-dumping-directory "gtd"))
+  ;; (org-gtd-update-ack "3.0.0")
 
-
-  :bind (:map org-agenda-mode-map ("C-<f8>"   . org-gtd-clarify-agenda-item )
+  :bind (
+         :map org-agenda-mode-map ("C-<f8>"   . org-gtd-clarify-agenda-item )
          :map org-mode-map        ("C-<f8>"   . org-gtd-clarify-item        )
          :map org-gtd-clarify-map ("<f8>"     . org-gtd-organize            ))
   :init
   (setq org-gtd-update-ack "3.0.0")
+  (setq org-agenda-skip-additional-timestamps-same-entry t)
 
   :config
   (org-gtd-mode 1)
-
   )
 #+end_src
-
 ** org-agenda
 #+begin_src emacs-lisp :results none
 ;; (setq org-agenda-files (directory-files-recursively denote-directory "\\.org$"))
@@ -910,7 +910,55 @@ When nil, use the default face background."
               ("k" . evil-previous-line)
               )
   :custom
-  (org-agenda-files '("~/BrainDump/gtd/org-gtd-tasks.org"))
+  ;; (org-agenda-files '("~/BrainDump/gtd/org-gtd-tasks.org"))
+  (org-agenda-files '("~/BrainDump/gtd/main.org"))
+  ;;(org-agenda-files (file-expand-wildcards "~/pim/gtd/main.org"))
+
+  (org-todo-keywords '((sequence "TODO(t)" "WAIT(w)" "PROJ(p)" "NEXT(n)" "|" "DONE(d)" "CNCL(c)")))
+
+  (org-agenda-span 90)
+
+
+  (org-agenda-custom-commands '(("i" "Inbox"                tags-todo "+TODO=\"TODO\""
+                                 ((org-agenda-files (file-expand-wildcards "~/BrainDump/gtd/inbox.org"))))
+                                ("n" "Next actions"         tags-todo "+TODO=\"TODO\"")
+                                ("p" "Projects"             tags-todo "+TODO=\"PROJ\"")
+                                ("w" "Waiting"              tags-todo "+TODO=\"WAIT\"")
+                                ("s" "Someday"              tags-todo "+TODO=\"TODO\"|TODO=\"PROJ\""
+                                 ((org-agenda-files (file-expand-wildcards "~/BrainDump/gtd/someday.org"))))
+                                ("o" "Actions and Projects" tags-todo "+TODO=\"TODO\"|TODO=\"PROJ\"")))
+
+  (org-agenda-prefix-format '((agenda   . "  %-25:c%?-12t% s")
+                              (timeline . "  % s")
+                              (todo     . "  %-12:c")
+                              (tags     . "  %-25:c")
+                              (search   . "  %-12:c")))
+
+  (org-agenda-tags-column -120)
+  (org-tags-column -80)
+
+  (org-agenda-sorting-strategy '((agenda habit-down time-up priority-down category-keep)
+                                 (todo priority-down todo-state-up category-keep)
+                                 (tags priority-down todo-state-up category-keep)
+                                 (search category-keep)))
+
+  ;; M-x org-agenda # to show the stuck projects
+  (org-stuck-projects '("+TODO=\"PROJ\"" ("TODO") nil "") )
+
+  (org-refile-use-outline-path             'file)
+  (org-outline-path-complete-in-steps      'nil)
+  (refile-targets                          (file-expand-wildcards "~/BrainDump/gtd/*.org"))
+  (org-refile-targets '(( refile-targets :todo . "PROJ" )))
+
+  (org-capture-templates '(("i" "Inbox"       entry (file "~/BrainDump/gtd/inbox.org")   "* TODO %^{Brief Description}\nAdded: %U\n%?" :empty-lines 1 :prepend t)
+                           ("n" "Next action" entry (file "~/BrainDump/gtd/main.org")   "** NEXT %^{Brief Description}\nAdded: %U\n%?" :empty-lines 1 :prepend t)
+                           ("w" "Waiting"     entry (file "~/BrainDump/gtd/main.org")   "** WAIT %^{Brief Description}\nAdded: %U\n%?" :empty-lines 1 :prepend t)
+                           ("p" "Project"     entry (file "~/BrainDump/gtd/main.org")    "* PROJ %^{Brief Description}\n:PROPERTIES:\n:CATEGORY: %^{Id}\n:END:\nAdded: %U\n%?" :empty-lines 1 :prepend t)
+                           ("s" "Someday"     entry (file "~/BrainDump/gtd/someday.org") "* TODO %^{Brief Description}\nAdded: %U\n%?" :empty-lines 1 :prepend t)
+                           ))
+
+
+
   :config
   (add-hook 'org-agenda-finalize-hook (lambda () (org-agenda-write "/tmp/current-agenda-text")))
   )
@@ -1320,7 +1368,7 @@ and later sets cursor at that point when you open that file.
 #+begin_src emacs-lisp
 (save-place-mode 1)
 #+end_src
-** Yassnippets
+** COMMENT Yassnippets
 #+begin_src emacs-lisp
 (use-package yasnippet
   :custom
@@ -1493,6 +1541,20 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
   ;; ...
 )
 #+end_src
+** fancy-dabbrev
+#+begin_src emacs-lisp
+(use-package fancy-dabbrev
+  :ensure t
+  :config (global-fancy-dabbrev-mode))
+#+end_src
+
+** harpoon
+#+begin_src emacs-lisp
+(use-package harpoon
+  :ensure t
+)
+#+end_src
+
 ** eglot for the LSPs
 #+begin_src emacs-lisp
 (use-package eglot
@@ -1502,10 +1564,6 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
   ;; (setq eglot-ignored-server-capabilities '(:documentHighlightProvider))
   ;; (add-hook 'eglot-connect-hook (lambda () (eldoc-mode -1)))
   )
-#+end_src
-** nix mode
-#+begin_src emacs-lisp
-(use-package nix-ts-mode)
 #+end_src
 ** consult eglot variable search inside project
 #+begin_src emacs-lisp
@@ -1526,7 +1584,13 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
 #+end_src
 ** hydra
 #+begin_src emacs-lisp
-(use-package hydra)
+(use-package hydra
+  :config
+  (defhydra hydra-org-link-jumper ()
+    "zoom"
+    ("n" org-next-link     "next")
+    ("p" org-previous-link "prev"))
+  )
 #+end_src
 ** Indent bars
 #+begin_src emacs-lisp
@@ -1561,6 +1625,10 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
 #+begin_src emacs-lisp
 (use-package lua-mode
   :ensure t)
+#+end_src
+** nix mode
+#+begin_src emacs-lisp
+(use-package nix-ts-mode)
 #+end_src
 * Coding convenients
 ** rg: ripgrep
@@ -1722,12 +1790,8 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
     (message (concat "Copied URL: " url)))
   )
 #+end_src
-** org next prev
+** COMMENT org next prev
 #+begin_src emacs-lisp
-(defhydra hydra-org-link-jumper ()
-  "zoom"
-  ("n" org-next-link     "next")
-  ("p" org-previous-link "prev"))
 #+end_src
 ** put empty svg file at point
 #+begin_src emacs-lisp
@@ -1940,6 +2004,12 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
 | C-<f8>  | org-gtd-clarify-item                          | gtd org                              |
 | C-<f9>  | org-gtd-process-inbox                         | process inbox                        |
 | <f7>    | org-gtd-engage                                | gtd engage                           |
+| M-1     | harpoon-go-to-1                               | harpoon-go-to-1                      |
+| M-2     | harpoon-go-to-2                               | harpoon-go-to-2                      |
+| M-3     | harpoon-go-to-3                               | harpoon-go-to-3                      |
+| M-4     | harpoon-go-to-4                               | harpoon-go-to-4                      |
+| M-5     | harpoon-go-to-5                               | harpoon-go-to-5                      |
+| M-6     | harpoon-go-to-6                               | harpoon-go-to-6                      |
 
 Note to myself: after changing Table-[[tbl-global-keybindings]], I need to update [[convert-global-keybindings]]
 
@@ -1977,10 +2047,16 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 (global-set-key (kbd "C-<f8>") 'org-gtd-clarify-item)
 (global-set-key (kbd "C-<f9>") 'org-gtd-process-inbox)
 (global-set-key (kbd "<f7>") 'org-gtd-engage)
+(global-set-key (kbd "M-1") 'harpoon-go-to-1)
+(global-set-key (kbd "M-2") 'harpoon-go-to-2)
+(global-set-key (kbd "M-3") 'harpoon-go-to-3)
+(global-set-key (kbd "M-4") 'harpoon-go-to-4)
+(global-set-key (kbd "M-5") 'harpoon-go-to-5)
+(global-set-key (kbd "M-6") 'harpoon-go-to-6)
 #+end_src
 
 #+RESULTS:
-: org-gtd-engage
+: harpoon-go-to-6
 
 ** Sequential keybindings (General.el keybinding config)
 *** Sequential global keybindings
@@ -2088,6 +2164,18 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 #+attr_latex: :placement [H]
 #+caption: bookmark
 #+name: tbl-kbind-bookmarks
+| key(s) | function                 | short description                | mode | lambda |
+|--------+--------------------------+----------------------------------+------+--------|
+| b      | harpoon-quick-menu-hydra | bookmark-harpoon                 | -    |        |
+| B      | :ignore t                | (b)ookmark...................... | -    |        |
+| Ba     | harpoon-add-file         | b-(a)dd-file                     | -    |        |
+| B1     | harpoon-go-to-1          | b1                               | -    |        |
+| B2     | harpoon-go-to-2          | b2                               | -    |        |
+| B3     | harpoon-go-to-3          | b3                               | -    |        |
+| B4     | harpoon-go-to-4          | b4                               | -    |        |
+| B5     | harpoon-go-to-5          | b5                               | -    |        |
+
+***** COMMENT backup
 | key(s) | function         | short description                | mode | lambda |
 |--------+------------------+----------------------------------+------+--------|
 | b      | :ignore t        | (b)ookmark...................... | -    |        |
@@ -2190,7 +2278,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | nij    | denote-journal-extras-link-or-create-entry  | n-i.nsert-journal-link        | -    |        |
 | nt     | denote-template                             | n-t.emplate                   | -    |        |
 | nI     | garid-custom/denote-node-insert-immediate   | n-I.nsert-note                | -    |        |
-
+| ns     | consult-denote-grep                         | n-s. live grep                | -    |        |
 
 **** Yas-snippet
 #+attr_latex: :placement [H]
@@ -2589,6 +2677,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "nij" '(denote-journal-extras-link-or-create-entry :which-key "n-i.nsert-journal-link")
   "nt" '(denote-template :which-key "n-t.emplate")
   "nI" '(garid-custom/denote-node-insert-immediate :which-key "n-I.nsert-note")
+  "ns" '(consult-denote-grep :which-key "n-s. live grep")
   "h" '(:ignore t :which-key "(h)elp..........................")
   "hh" '(describe-symbol :which-key "h-(h)elp symbol (elisp)")
   "hH" '(describe-key :which-key "h-(H)elp keybinding")
@@ -2611,11 +2700,14 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "v" '(:ignore t :which-key "(v)-project...................")
   "vq" '(format-all-buffer :which-key "v-(q)-format-buffer")
   "vr" '(eglot-rename :which-key "v-(r)ename")
-  "b" '(:ignore t :which-key "(b)ookmark......................")
-  "bm" '(consult-bookmark :which-key "b-(m)ark-consult")
-  "bs" '(bookmark-set :which-key "b-(s)et")
-  "bd" '(bookmark-delete :which-key "b-(d)elete")
-  "br" '(bookmark-rename :which-key "b-(r)ename")
+  "b" '(harpoon-quick-menu-hydra :which-key "bookmark-harpoon")
+  "B" '(:ignore t :which-key "(b)ookmark......................")
+  "Ba" '(harpoon-add-file :which-key "b-(a)dd-file")
+  "B1" '(harpoon-go-to-1 :which-key "b1")
+  "B2" '(harpoon-go-to-2 :which-key "b2")
+  "B3" '(harpoon-go-to-3 :which-key "b3")
+  "B4" '(harpoon-go-to-4 :which-key "b4")
+  "B5" '(harpoon-go-to-5 :which-key "b5")
   "c" '(:ignore t :which-key "(c)onsult.......................")
   "co" '(consult-org-heading :which-key "c-(o)rg   == ofh")
   "ci" '(consult-imenu :which-key "c-(i)menu")
