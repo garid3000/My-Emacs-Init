@@ -50,3 +50,5 @@
 /.edraw-custom.eshapes.~undo-tree~
 /.#edraw-custom.eshapes
 /edraw-ui-state.config
+*~
+/session.*

@@ -1,0 +1,234 @@
+* COMMENT citar-org-roam
+#+begin_src emacs-lisp
+(use-package citar-org-roam
+  :after citar org-roam
+  :no-require
+  :custom
+  (citar-org-roam-subdir                      "citar-notes")
+  (citar-org-roam-note-title-template (concat "=${=key=}= - ${title}\n"
+                                              "#+subtitle: Garid's notes on this article\n"
+                                              "#+author: paper authors: ${author}\n"
+                                              "#+filetags: :lit:\n\n"
+                                              "* Ideas\n\n* Notes\n\n"))
+  :config
+  (citar-org-roam-mode))
+
+#+end_src
+
+* COMMENT org-gtd
+#+begin_src emacs-lisp
+(use-package org-gtd
+  :ensure t
+  :after org
+
+  :custom
+  (org-gtd-directory    (concat garids-brain-dumping-directory "gtd"))
+  ;; (org-gtd-update-ack "3.0.0")
+
+  :bind (
+         :map org-agenda-mode-map ("C-<f8>"   . org-gtd-clarify-agenda-item )
+         :map org-mode-map        ("C-<f8>"   . org-gtd-clarify-item        )
+         :map org-gtd-clarify-map ("<f8>"     . org-gtd-organize            ))
+  :init
+  (setq org-gtd-update-ack "3.0.0")
+  (setq org-agenda-skip-additional-timestamps-same-entry t)
+
+  :config
+  (org-gtd-mode 1)
+  )
+#+end_src
+
+** keybindings
+*** COMMENT removed
+| <f9>   | org-gtd-capture                                             | capture                          |      |        |
+| C-<f8> | org-gtd-clarify-item                                        | gtd org                          |      |        |
+| C-<f9> | org-gtd-process-inbox                                       | process inbox                    |      |        |
+| <f7>   | org-gtd-engage                                              | gtd engage                       |      |        |
+| Oa     | (find-file (concat org-gtd-directory "/gtd_archive_2024") ) | O.a.rchive                       | -    | y      |
+| Ot     | (find-file (concat org-gtd-directory "/org-gtd-tasks.org")) | O.t.asks                         | -    | y      |
+| Oi     | (find-file (concat org-gtd-directory "/inbox.org")        ) | O.i.nbox                         | -    | y      |
+| Y      | gry-copy-to-x-clip                                          | (Y)ank to xclip                  | -    |        |
+|--------+-------------------------------------------------------------+----------------------------------+------+--------|
+| key(s) | function                                                    | short description                | mode | lambda |
+|--------+-------------------------------------------------------------+----------------------------------+------+--------|
+| b      | :ignore t                                                   | (b)ookmark...................... | -    |        |
+| bm     | consult-bookmark                                            | b-(m)ark-consult                 | -    |        |
+| bs     | bookmark-set                                                | b-(s)et                          | -    |        |
+| bd     | bookmark-delete                                             | b-(d)elete                       | -    |        |
+| br     | bookmark-rename                                             | b-(r)ename                       | -    |        |
+| hd     | devdocs-lookup                                              | h-(d)evdocs lookup               | -    |        |
+|--------+-------------------------------------------------------------+----------------------------------+------+--------|
+| y      | :ignore t                                                   | (y)assnippet.................    | -    |        |
+| yn     | yas-new-snippet                                             | y-(n)ew                          | -    |        |
+| yt     | yas-describe-tables                                         | y-(t)able description table      | -    |        |
+| yv     | yas-visit-snippet-file                                      | y-(v)isit                        | -    |        |
+| yi     | consult-yasnippet                                           | y-(i)nsert                       | -    |        |
+| ya     | yas-activate-extra-mode                                     | y-(a)ctivate extra mode          | -    |        |
+| yd     | yas-activate-extra-mode                                     | y-(de)activate extra mode        | -    |        |
+|--------+-------------------------------------------------------------+----------------------------------+------+--------|
+| C      | :ignore t                                                   | (C)alc related.................. | -    |        |
+| Ca     | calc                                                        | C-(a) calc                       | -    |        |
+| Ce     | calc-embedded                                               | C-(e) embedded                   | -    |        |
+| Cf     | full-calc                                                   | C-(f) full                       | -    |        |
+
+o     | org-insert-structure-template                               | y-(o)rg templates                | -    |        |
+
+
+
+
+* COMMENT Yassnippets
+#+begin_src emacs-lisp
+(use-package yasnippet
+  :custom
+  (yas/triggers-in-field t) ;; Do I need this?
+  ;; (setq yas-key-syntaxes (append yas-key-syntaxes '(yas-try-key-from-dot)))
+  ;;(yas-snippet-dirs (list (concat user-emacs-directory "snippet" "snippets")))
+  :config
+  (yas-global-mode 1)
+
+  (defcustom yas-new-snippet-default "\
+  # -*- mode: snippet -*-
+  # contributor: Garid Zorigoo <garidzorigoo@gmail.com>
+  # name: $1
+  # key: ${2:${1:$(yas--key-from-desc yas-text)}}
+  # --
+  $0`(yas-escape-text yas-selected-text)`"
+    "Default snippet to use when creating a new snippet.
+  If nil, don't use any snippet."
+    :type 'string)
+  )
+
+(use-package consult-yasnippet)
+#+end_src
+
+* COMMENT devdocs
+#+begin_src emacs-lisp
+(use-package devdocs
+  :config ;; taken initially from  https://alhassy.com/emacs.d/#devdocs
+  (when nil ;; need to toggle nil->t and the first time installign
+    (cl-loop
+     for lang in '("python~3.11" "numpy~1.21" "matplotlib~3.6" "pandas~1"
+                   c "r" "nim" "gnu_make" "bash" "fish~3.6" "qt~6.1")
+     do (devdocs-install (list (cons 'slug (format "%s" lang)))))))
+#+end_src
+
+* COMMENT mu4e
+#+begin_src emacs-lisp
+;; (delete 'mu4e evil-collection-mode-list)
+;; (delete 'mu4e-conversation evil-collection-mode-list)
+
+(require 'mu4e)
+
+;; default
+(setq mu4e-maildir
+      "/home/garid/.local/share/mail/garidzorigoo@gmail.com")
+
+(setq mu4e-get-mail-command "mailsync")
+(setq mu4e-drafts-folder "/[Gmail]/Drafts")
+(setq mu4e-sent-folder   "/[Gmail]/Sent Mail")
+(setq mu4e-trash-folder  "/[Gmail]/Trash")
+
+;; dont save message to Sent msg, GMail/IMAP will take care of this
+(setq mu4e-sent-messages-behavior 'delete)
+
+;; setup some handy shortcuts
+(setq mu4e-maildir-shortcuts
+      '(("/INBOX"             . ?i)
+        ("/[Gmail]/Sent Mail" . ?s)
+        ("/[Gmail]/Trash"     . ?t)))
+
+;; allow for updating mail using 'U' in the main view:
+(setq mu4e-get-mail-command "offlineimap")
+
+;; something about ourselves
+;; I don't use a signature...
+(setq
+ user-mail-address "garidzorigoo@gmail.com"
+ user-full-name    "Garid Z."
+ message-signature "Garid Z."
+ )
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(setq smtpmail-smtp-server "smtp.gmail.com"
+      smtpmail-smtp-service 465
+      smtpmail-stream-type  'ssl)
+(setq message-send-mail-function 'smtpmail-send-it)
+#+end_src
+* COMMENT notmuch
+#+begin_src emacs-lisp
+(use-package notmuch)
+#+end_src
+* COMMENT eww web browser
+#+begin_src emacs-lisp
+(setq browse-url-browser-function 'eww-browse-url               ; Use eww as the default browser
+      shr-use-fonts                nil                          ; No special fonts
+      shr-use-colors               nil                          ; No colours
+      shr-indentation              2                            ; Left-side margin
+      shr-width                    85                           ; Fold text to 85 columns
+      eww-search-prefix "https://lite.duckduckgo.com/lite/?q=") ; Use another engine for searching
+#+end_src
+
+* COMMENT emacs-everywhere
+#+begin_src emacs-lisp
+(use-package emacs-everywhere)
+#+end_src
+
+* COMMENT habitica
+#+begin_src emacs-lisp
+(use-package habitica
+  :ensure t
+  :config
+  (defhydra habitica-hydra-control ()
+    "
+^task^                         ^checklist^                          ^movement^
+^^^^^^^^---------------------------------------------------------------------------------------
+_g_: refresh                   _c a_: checklist add                  _j_: vi.down
+_n_: new task                  _c t_: checklist toggle               _k_: vi.up
+_+_: + task/habit              _c d_: checklist delete               _<tab>_: org cycle
+_-_: - task/habit              _c r_: checklist rename               _h_: vi.left
+_t_: toggle todo state                                               _l_: vi.right
+_d_: deadline set                                                    _C-j_: org-forward-heading-same-level
+_i_: intensity set                                                   _C-k_: org-backard-heading-same-level
+_q_: add a tag to task                                               _M-S-<return>_: habitica-new-task
+_Q_: delete a tag to task
+"
+
+    ("g"            habitica-tasks                      )
+    ("n"            habitica-new-task                   )
+    ("+"            habitica-up-task                    )
+    ("-"            habitica-down-task                  )
+    ("t"            habitica-todo-task                  )
+    ("d"            habitica-set-deadline               )
+    ("i"            habitica-set-difficulty             )
+    ("q"            habitica-add-tag-to-task            )
+    ("Q"            habitica-remove-tag-to-task         )
+
+    ("c a"          habitica-add-item-to-checklist      )
+    ("c t"          habitica-score-checklist-item       )
+    ("c d"          habitica-delete-item-from-checklist )
+    ("c r"          habitica-rename-item-on-checklist   )
+
+    ("j"            next-line                           )
+    ("k"            previous-line                       )
+    ("h"            backward-char                       )
+    ("l"            forward-char                        )
+    ("C-j"          org-forward-heading-same-level      )
+    ("C-k"          org-backward-heading-same-level     )
+    ("M-S-<return>" habitica-new-task                   )
+    ("<tab>"        org-cycle                           )
+    ("/"            org-sparse-tree                     )
+    ("D E L" habitica-delete-task "delete task"         ))
+  )
+#+end_src
+
+* COMMENT buffer move
+#+begin_src emacs-lisp
+(use-package buffer-move)
+#+end_src
+
+* COMMENT ox-hugo 
+#+begin_src emacs-lisp
+(use-package ox-hugo
+  :ensure t 
+  :after ox)
+#+end_src
