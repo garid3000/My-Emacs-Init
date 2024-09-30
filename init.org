@@ -7,7 +7,7 @@
 #+property:     header-args :tangle init.el
 #+setupfile:    ~/.config/emacs/org-templates/level-0-xelatex-fonts-conf.org
 #+options:      toc:t tags:nil  todo:t  tasks:t
-#+HTML_HEAD:    <link rel="stylesheet" type="text/css" href="https://orgmode.org/worg/style/worg.css"/>
+#+html_head:    <link rel="stylesheet" type="text/css" href="https://unpkg.com/chota"/>
 
 
 * From shell you can run make run:
@@ -23,7 +23,7 @@ refresh-packages:
 	emacs --batch --eval "(setq package-archives '((\"melpa\" . \"https://melpa.org/packages/\") (\"elpa\" . \"https://elpa.gnu.org/packages/\") (\"nongnu\" . \"https://elpa.nongnu.org/nongnu/\")))" --eval "(package-refresh-contents)"
 #+end_src
 
-* Package Manager:
+* Package manager:
 ** Package Repositories 
 I'm pulling packages from following 3 places (not sure that I need all three): 
 
@@ -64,7 +64,7 @@ I'm pulling packages from following 3 places (not sure that I need all three):
   (load bootstrap-file nil 'nomessage))
 #+end_src
 
-* Vi Movement and other movement related
+* Vi-movement and it's friends
 ** undo-tree
 undo-tree is emacs's undo & redo helper with built-in tree graph of versions.
 
@@ -146,7 +146,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   (define-key evil-outer-text-objects-map "a" (evil-textobj-tree-sitter-get-textobj ("conditional.outer" "loop.outer"))))
 #+end_src
 
-* Theme & Colors
+* Theme & colors
 ** Fonts
 #+begin_src emacs-lisp
 (when (member "Iosevka" (font-family-list))
@@ -208,48 +208,6 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   (global-display-line-numbers-mode -1)
   (global-hl-line-mode               1)
   )
-#+end_src
-
-** COMMENT Delight
-#+begin_src emacs-lisp
-(use-package delight
-  :ensure t
-  :demand t
-  :config
-  (delight
-   '(
-     ;; ----------  major modes  ----------------------------------
-     (sh-mode               "shl "                              )
-     (org-mode              "org "                              )
-     (python-mode           "pyt "                              )
-     (python-ts-mode        "pyt "                              )
-     (dired-mode            "dir "                              )
-     (help-mode             "hlp "                              )
-     ;; ----------  minor modes  ----------------------------------
-     (dired-omit-mode       "dro "   )   ;;   dired
-     (org-roam-mode         "orm "   )   ;;   org-roam
-     (which-key-mode        "wky "   )   ;;   which-key
-     (git-gutter-mode       "ggt "   )   ;;   git-gutter
-     (org-auto-tangle-mode  "tng "   )   ;;   org-auto-tangle
-     (auto-revert-mode      "arv "   )   ;;   autorevert
-     (org-indent-mode        nil     )   ;;   org-indent
-     (org-num-mode          "onm "   )   ;;   org-indent
-     (org-gtd-mode          "gtd "   )   ;;   org-gtd
-     (org-src-mode          "src "   )   ;;   org
-     (consult-org-roam-mode "crm "   )   ;;   consult-org-roam
-     (yas-minor-mode        "yas "   )   ;;   yasnippet
-     (eldoc-mode            "eld "   )   ;;   eldoc
-     (magit-status-mode     "mgt "   )   ;;   magit
-     (undo-tree-mode        "utr "   )   ;;   undo-tree
-     (lisp-interaction-mode "eli "   )   ;;   elisp-mode
-     (emacs-lisp-mode       "eli "   )   ;;   elisp-mode
-     (command-log-mode      "clm "   )   ;;   command-log-mode
-     (flymake-mode          "flm "   )   ;;   flymake
-     (lsp-bridge-mode       "lsp "   )   ;;   lsp-bridge
-     (org-edna-mode         "edn "   )   ;;   edna
-     (evil-collection-unimpaired-mode "evc " )  ;;  evil-collection
-     (all-the-icons-dired-mode     nil   all-the-icons-dired.el )
-     (visual-line-mode             nil   simple                 ))))
 #+end_src
 
 * Minibuffer completion, selection, suggestion
@@ -384,8 +342,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   (org-mode . garid-custom/org-mode-hooked-func)
 
   :custom
-  (org-tags-column                   -90)
-  (org-ellipsis                      " ▼"   )
+  (org-ellipsis                      " ▼"   )   ;; symbol for folded org heading
   (org-hide-emphasis-markers         t      )
   (org-log-done                      t      )
   (org-image-actual-width            '(800) )
@@ -397,57 +354,58 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   (org-plantuml-jar-path             "/usr/share/java/plantuml/plantuml.jar" )
   ;; this may differ on different machines
   (org-file-apps '((auto-mode                  . emacs                       )
+                   ;; ("\\.html\\'"            . "brave   \"%s\""            )
+                   ;; ("\\.html\\'"            . "thorium-browser   \"%s\""  )
                    ("\\.gif\\'"                . "mpv     \"%s\""            )
                    ("\\.mp4\\'"                . "mpv     \"%s\""            )
                    ("\\.png\\'"                . "sxiv    \"%s\""            )
                    ("\\.svg\\'"                . "inkview \"%s\""            )
                    ("\\.jpeg\\'"               . "sxiv    \"%s\""            )
                    ("\\.jpg\\'"                . "sxiv    \"%s\""            )
-                   ;; ("\\.html\\'"            . "brave   \"%s\""            )
-                   ;; ("\\.html\\'"            . "thorium-browser   \"%s\""  )
                    ("\\.pdf\\'"                . "sioyek  \"%s\""            )
                    ("\\.pdf::\\([0-9]+\\)?\\'" . "sioyek  \"%s\" --page %1"  )
                    ("\\.mkv\\'"                . "mpv     \"%s\""            )
                    ("\\.xopp\\'"               . "xournalpp \"%s\""          )))
 
-
-  (org-todo-keywords      '((sequence
-                             "TODO(t)" "NEXT(n)" "WAIT(w)"
-                             "|"       "DONE(d)" "CNCL(c)")))
+  ;; todo .......................................................................................
+  (org-todo-keywords      '((sequence "TODO(t)" "NEXT(n)" "WAIT(w)" "PRJT(p)"
+                                      "|"       "DONE(d)" "CNCL(c)")))
 
   (org-todo-keyword-faces '(("TODO"  . org-warning )
+                            ("PRJT"  . "tomato"    )
                             ("NEXT"  . "orange"    )
                             ("WAIT"  . "yellow"    )
                             ("DONE"  . "dim gray"  )
                             ("CNCL"  . (:foreground "gray30" :weight bold))))
 
-  ;; latex related
-  (org-latex-src-block-backend          'listings                                             )
-  (org-latex-format-headline-function   'garid-custom/latex-formattig-headings                )
-  (org-latex-active-timestamp-format     "\\textcolor{Brown}{%s}"                             )
-  (org-latex-inactive-timestamp-format   "\\textcolor{Brown}{%s}"                             )
+  ;; latex related ..............................................................................
+  (org-highlight-latex-and-related          '(latex entities native)                              )
+  (org-latex-src-block-backend              'listings                                             )
+  (org-latex-format-headline-function       'garid-custom/latex-formattig-headings                )
+  (org-latex-active-timestamp-format         "\\textcolor{Brown}{%s}"                             )
+  (org-latex-inactive-timestamp-format       "\\textcolor{Brown}{%s}"                             )
   (org-latex-pdf-process
-   '("latexmk -shell-escape -f -xelatex -%latex -interaction=nonstopmode -output-directory=%o %f" )) ;; -output-driver=\"xdvipdfmx -z 0\" 
-   ;;'("latexmk -shell-escape -f -pdf -%latex -interaction=nonstopmode -output-directory=%o %f" ))
-
+   '("latexmk -shell-escape -f -xelatex -%latex -interaction=nonstopmode -output-directory=%o %f" ))
+  ;; -output-driver=\"xdvipdfmx -z 0\"
+  ;;'("latexmk -shell-escape -f -pdf -%latex -interaction=nonstopmode -output-directory=%o %f" ))
   ;; (org-highlight-latex-and-related     '(latex script entities))
   ;; (org-highlight-latex-and-related      nil)
-  (org-highlight-latex-and-related        '(latex entities native))
 
 
-  (org-tag-alist '((:startgroup . nil)
-                   ("@rsch" . ?r) ("@bps" . ?w) ("@home" . ?h)
-                   (:endgroup . nil)
-                   ("psm" . ?p) ("4bc" . ?4) ("idea" . ?i)
-                   ("lit" . ?l) ("yak" . ?y) ("tool" . ?T)
-                   ("tdbt" . ?t) ("rndm" . ?R) ("meet" . ?m)
-                   ("qstn" . ??) ("prjt" . ?P) ("msg/mail" . ?M)
-                   ))
+  (org-tags-column         -90)   ;; how many spaces left padding for tags
+  (org-tag-alist           '((:startgroup . nil)
+                             ("@rsch" . ?r) ("@bps" . ?w) ("@home" . ?h)
+                             (:endgroup . nil)
+                             ("psm" . ?p) ("4bc" . ?4) ("idea" . ?i)
+                             ("lit" . ?l) ("yak" . ?y) ("tool" . ?T)
+                             ("tdbt" . ?t) ("rndm" . ?R) ("meet" . ?m)
+                             ("qstn" . ??) ("prjt" . ?P) ("msg/mail" . ?M)
+                             ))
 
   :config
   (require 'org-tempo  )
   (require 'org-indent )
-  (require 'ox-latex   ) 
+  (require 'ox-latex   )
   (plist-put    org-format-latex-options   :scale 1.7      )    ;; latex equation previewing
   (add-to-list 'org-latex-packages-alist   '("" "listings" ))
   (add-to-list 'org-latex-packages-alist   '("" "color"    ))
@@ -470,13 +428,48 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   (add-to-list 'org-structure-template-alist '("mk"   .  "src makefile :tangle no"))
   (add-to-list 'org-structure-template-alist '("ba"   .  "abstract"))
 
-  (add-to-list 'org-latex-classes
-               '("extarticle" "\\documentclass{extarticle}"
-                 ("\\section{%s}"       . "\\section*{%s}")
-                 ("\\subsection{%s}"    . "\\subsection*{%s}")
-                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-                 ("\\paragraph{%s}"     . "\\paragraph*{%s}")
-                 ("\\subparagraph{%s}"  . "\\subparagraph*{%s}")))
+  (add-to-list 'org-latex-classes '("extarticle" "\\documentclass{extarticle}"
+                                    ("\\section{%s}"       . "\\section*{%s}")
+                                    ("\\subsection{%s}"    . "\\subsection*{%s}")
+                                    ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                                    ("\\paragraph{%s}"     . "\\paragraph*{%s}")
+                                    ("\\subparagraph{%s}"  . "\\subparagraph*{%s}")))
+
+
+  (org-babel-do-load-languages
+   'org-babel-load-languages '((python     . t) (emacs-lisp . t)
+                               (latex      . t) (shell      . t)
+                               (dot        . t) (makefile   . t)
+                               (sqlite     . t) (gnuplot    . t)
+                               (nim        . t) (plantuml   . t)
+                               (maxima     . t) (calc       . t)
+                               (awk        . t) (go         . t)
+                               (asymptote  . t) (ditaa      . t)
+                               (nix        . t) (lua        . t)))
+
+  ;; image backgroud for transparent images
+  (defcustom org-inline-image-background nil
+    "The color used as the default background for inline images. When nil, use the default face background."
+    :group 'org
+    :type '(choice color (const nil)))
+
+  (defun create-image-with-background-color (args)
+    "Specify background color of Org-mode inline image through modify `ARGS'."
+    (let* ((file (car args))
+           (type (cadr args))
+           (data-p (caddr args))
+           (props (cdddr args)))
+      ;; Get this return result style from `create-image'.
+      (append (list file type data-p)
+              (list :background (or org-inline-image-background (face-background 'default)))
+              props)))
+
+  (advice-add 'create-image :filter-args
+              #'create-image-with-background-color)
+
+  (setq org-inline-image-background "white")
+
+
   )
 #+end_src
 
@@ -486,41 +479,6 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 (use-package ob-go        )
 (use-package ob-asymptote )
 (use-package ob-nix       )
-;; (use-package ob-tmux
-;;   ;; Install package automatically (optional)
-;;   :ensure t
-;;   :custom
-;;   (org-babel-default-header-args:tmux
-;;    '((:results  .  "silent"  )
-;;      (:session  .  "default" )
-;;      (:socket   .  nil       )))
-;;   ;; The tmux sessions are prefixed with the following string.
-;;   ;; You can customize this if you like.
-;;   (org-babel-tmux-session-prefix "ob-")
-;;   ;; The terminal that will be used.
-;;   ;; You can also customize the options passed to the terminal.
-;;   ;; The default terminal is "gnome-terminal" with options "--".
-;;   (org-babel-tmux-terminal "st")
-;;   (org-babel-tmux-terminal-opts '("-T" "ob-tmux" "-e"))
-;;   ;; Finally, if your tmux is not in your $PATH for whatever reason, you
-;;   ;; may set the path to the tmux binary as follows:
-;;   (org-babel-tmux-location "/usr/bin/tmux"))
-
-
-(org-babel-do-load-languages
- 'org-babel-load-languages
- '((python     . t) (emacs-lisp . t)
-   (latex      . t) (shell      . t)
-   (dot        . t) (makefile   . t)
-   (sqlite     . t) (gnuplot    . t)
-   (nim        . t) (plantuml   . t)
-   (maxima     . t) (calc       . t)
-   (awk        . t) (go         . t)
-   (asymptote . t)
-   (ditaa     . t)
-   (nix     . t)
-   (lua     . t)
-   ))
 #+end_src
 
 ** org-bullet
@@ -533,40 +491,6 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
            '("Ⅰ" "Ⅱ" "Ⅲ" "Ⅳ" "Ⅴ" "Ⅵ" "Ⅶ")
            ))
 #+end_src
-** Org inline transparent image background                         :customFunc:
-#+begin_src emacs-lisp
-(defcustom org-inline-image-background nil
-  "The color used as the default background for inline images.
-When nil, use the default face background."
-  :group 'org
-  :type '(choice color (const nil)))
-
-(defun create-image-with-background-color (args)
-  "Specify background color of Org-mode inline image through modify `ARGS'."
-  (let* ((file (car args))
-         (type (cadr args))
-         (data-p (caddr args))
-         (props (cdddr args)))
-    ;; Get this return result style from `create-image'.
-    (append (list file type data-p)
-            (list :background (or org-inline-image-background (face-background 'default)))
-            props)))
-
-(advice-add 'create-image :filter-args
-            #'create-image-with-background-color)
-
-(setq org-inline-image-background "white")
-#+end_src
-
-** Org toggle hide/shot hyperlink                                  :customFunc:
-#+begin_src emacs-lisp
-(defun garid-custom/org-toggle-link-n-emphasis ()
-    (interactive)
-    (setq org-hide-emphasis-markers (not org-hide-emphasis-markers))
-    (org-toggle-link-display)
-    (font-lock-update))
-#+end_src
-
 ** Org hooked function                                             :customFunc:
 #+begin_src emacs-lisp
 (defun garid-custom/org-mode-hooked-func ()
@@ -601,12 +525,30 @@ When nil, use the default face background."
 (use-package denote
   :ensure t
   :custom
-  ;; (denote-directory    (expand-file-name "~/Documents/Personal"       ))
   (denote-directory       (concat garids-brain-dumping-directory "denote"))
   (denote-known-keywords  '(  "finance"  "failures"  "philosophy"        ))
   (denote-templates       '( (biblio . "* Abstract\n\n* Review")
                              (plain  . nil)
                              ))
+
+  :config
+  (defun garid-custom/denote-node-insert-immediate(start end)
+    ;; create emtpy denote note on the regions
+    (interactive "r")
+    (let* ((tmp-str-marked              (string-trim (buffer-substring start end) ))
+           (tmp-cur-time-of-this-note  (current-time)))
+      (delete-region start end)
+      (denote tmp-str-marked '("future") nil "tmp"
+              (format-time-string "%Y-%m-%d %H:%M:%S" tmp-cur-time-of-this-note))
+
+      (save-buffer)
+      (kill-buffer)
+
+      (insert (format "[[denote:%s][%s]]"
+                      (format-time-string "%Y%m%dT%H%M%S" tmp-cur-time-of-this-note)
+                      tmp-str-marked
+                      ))
+      ))
 
   )
 #+end_src
@@ -619,10 +561,10 @@ When nil, use the default face background."
   (org-roam-node-display-template (concat "${title:*} "
                                           (propertize "${tags:30}"
                                                       'face 'org-tag)))
-  (org-roam-v2-ack t)
-  ;; (org-roam-directory "~/Pensieve/")
-  (org-roam-directory (concat garids-brain-dumping-directory "roam"))
-  (org-roam-completion-everywhere t)  ;; do I need this?
+
+  (org-roam-v2-ack                                                 t)
+  (org-roam-directory (concat garids-brain-dumping-directory "roam")) ;; (org-roam-directory "~/Pensieve/")
+  (org-roam-completion-everywhere                                  t) ;;  do I need this?
   (org-roam-dailies-capture-templates
    `(("d" "default" entry "* %<%I:%M %p>: %?"
       :if-new (file+head "%<%Y-%m-%d>.org"
@@ -724,8 +666,7 @@ When nil, use the default face background."
 
 ** org-roam-ui
 #+begin_src emacs-lisp
-(use-package org-roam-ui
-  :ensure t)
+(use-package org-roam-ui :ensure t)
 #+end_src
 ** citar
 #+begin_src emacs-lisp
@@ -739,9 +680,7 @@ When nil, use the default face background."
   (org-cite-activate-processor  'citar                        )
   (citar-bibliography            org-cite-global-bibliography )
   (bibtex-dialect               'biblatex                     )
-  ;; https://lucidmanager.org/productivity/emacs-bibtex-mode/
   (citar-library-paths           (list (concat (file-name-as-directory denote-directory) "lit/")) )
-
   (citar-file-open-functions '(("html" . citar-file-open-external)
                                ("pdf" . citar-file-open-external)
                                (t . find-file)))
@@ -758,31 +697,31 @@ When nil, use the default face background."
   :after (:any citar denote)
   :custom
   ;; Package defaults
-  (citar-denote-file-type             'org)
-  (citar-denote-keyword               "bib")
-  (citar-denote-signature             nil)
-  ;;(citar-denote-subdir              nil)  
-  (citar-denote-subdir                "litnotes")  ;; usefull
-  (citar-denote-template              'biblio)     ;; 'biblio is defined at denote
-  (citar-denote-title-format          "author-year-title")
-  (citar-denote-title-format-andstr   "and")
-  (citar-denote-title-format-authors  1)
-  (citar-denote-use-bib-keywords      nil)
+  (citar-denote-file-type             'org                )
+  (citar-denote-keyword               "bib"               )
+  (citar-denote-signature             nil                 )
+  ;;(citar-denote-subdir              nil                 )  
+  (citar-denote-subdir                "litnotes"          )  ;; usefull
+  (citar-denote-template              'biblio             )  ;; 'biblio is defined at denote
+  (citar-denote-title-format          "author-year-title" )
+  (citar-denote-title-format-andstr   "and"               )
+  (citar-denote-title-format-authors  1                   )
+  (citar-denote-use-bib-keywords      nil                 )
   :preface
   (bind-key "C-c w n" #'citar-denote-open-note)
   :init
   (citar-denote-mode)
   ;; Bind all available commands
-  :bind (("C-c w d" . citar-denote-dwim)
-         ("C-c w e" . citar-denote-open-reference-entry)
-         ("C-c w a" . citar-denote-add-citekey)
-         ("C-c w k" . citar-denote-remove-citekey)
-         ("C-c w r" . citar-denote-find-reference)
-         ("C-c w l" . citar-denote-link-reference)
-         ("C-c w f" . citar-denote-find-citation)
-         ("C-c w x" . citar-denote-nocite)
-         ("C-c w y" . citar-denote-cite-nocite)
-         ("C-c w z" . citar-denote-nobib)))
+  :bind (("C-c w d" . citar-denote-dwim                 )
+         ("C-c w e" . citar-denote-open-reference-entry )
+         ("C-c w a" . citar-denote-add-citekey          )
+         ("C-c w k" . citar-denote-remove-citekey       )
+         ("C-c w r" . citar-denote-find-reference       )
+         ("C-c w l" . citar-denote-link-reference       )
+         ("C-c w f" . citar-denote-find-citation        )
+         ("C-c w x" . citar-denote-nocite               )
+         ("C-c w y" . citar-denote-cite-nocite          )
+         ("C-c w z" . citar-denote-nobib                )))
 #+end_src
 ** org-roam (custom) function for inserting node                   :customFunc:
 #+begin_src emacs-lisp
@@ -795,33 +734,7 @@ When nil, use the default face background."
     (apply #'org-roam-node-insert args)
     ))
 #+end_src
-** denote (custom) function for inserting node                     :customFunc:
-#+begin_src emacs-lisp
-(defun garid-custom/denote-node-insert-immediate(start end)
-  ;; create emtpy denote note on the regions
-  (interactive "r")
-  (let* ((tmp-str-marked              (string-trim (buffer-substring start end) ))
-         (tmp-cur-time-of-this-note  (current-time)))
-    (delete-region start end)
-    (denote
-     tmp-str-marked
-     '("future")
-     nil             ;; filetype
-     "tmp"           ;; sub dir
-     (format-time-string "%Y-%m-%d %H:%M:%S" tmp-cur-time-of-this-note) ;; timestampe
-     )
-
-    (save-buffer)
-    (kill-buffer)
-
-    (insert (format "[[denote:%s][%s]]"
-                    (format-time-string "%Y%m%dT%H%M%S" tmp-cur-time-of-this-note)
-                    tmp-str-marked
-                    ))
-    ))
-#+end_src
-
-** org-roam (custom) functions for tag searching
+** org-roam (custom) functions for tag searching                   :customFunc:
 #+begin_src emacs-lisp
 (defun my/org-roam-filter-by-tag (tag-name)
   (lambda (node)
@@ -865,12 +778,6 @@ When nil, use the default face background."
 * Org Time managements
 ** org-agenda
 #+begin_src emacs-lisp :results none
-;; (setq org-agenda-files (directory-files-recursively denote-directory "\\.org$"))
-;; (setq org-agenda-files (directory-files denote-directory t "\\.org$"))
-;; (setq org-agenda-files (directory-files-recursively "/home/garid/gtd" "^[a-z].*\\.org$"))
-;; (setq org-agenda-files (directory-files-recursively "/home/garid/gtd" "^[a-z].*\\.org$"))
-;; (setq org-agenda-files (directory-files-recursively (concat (denote-directory) "gtd") "^[a-z].*\\.org$"))
-
 (use-package org-agenda
   :ensure   nil
 
@@ -879,22 +786,15 @@ When nil, use the default face background."
               ("k" . evil-previous-line)
               )
   :custom
-  ;; (org-agenda-files '("~/BrainDump/gtd/org-gtd-tasks.org"))
   (org-agenda-files '("~/BrainDump/gtd/main.org"))
-  ;;(org-agenda-files (file-expand-wildcards "~/pim/gtd/main.org"))
-
-  (org-todo-keywords '((sequence "TODO(t)" "WAIT(w)" "PROJ(p)" "NEXT(n)" "|" "DONE(d)" "CNCL(c)")))
-
   (org-agenda-span 90)
-
-  (org-agenda-custom-commands '(("i" "Inbox"                tags-todo "+TODO=\"TODO\""
-                                 ((org-agenda-files (file-expand-wildcards "~/BrainDump/gtd/inbox.org"))))
-                                ("n" "Next actions"         tags-todo "+TODO=\"TODO\"")
-                                ("p" "Projects"             tags-todo "+TODO=\"PROJ\"")
-                                ("w" "Waiting"              tags-todo "+TODO=\"WAIT\"")
-                                ("s" "Someday"              tags-todo "+TODO=\"TODO\"|TODO=\"PROJ\""
-                                 ((org-agenda-files (file-expand-wildcards "~/BrainDump/gtd/someday.org"))))
-                                ("o" "Actions and Projects" tags-todo "+TODO=\"TODO\"|TODO=\"PROJ\"")))
+  (org-agenda-custom-commands
+   '(("i" "Inbox"                tags-todo "+TODO=\"TODO\"" ((org-agenda-files (file-expand-wildcards "~/BrainDump/gtd/inbox.org"))))
+     ("n" "Next actions"         tags-todo "+TODO=\"TODO\"")
+     ("p" "Projects"             tags-todo "+TODO=\"PROJ\"")
+     ("w" "Waiting"              tags-todo "+TODO=\"WAIT\"")
+     ("s" "Someday"              tags-todo "+TODO=\"TODO\"|TODO=\"PROJ\"" ((org-agenda-files (file-expand-wildcards "~/BrainDump/gtd/someday.org"))))
+     ("o" "Actions and Projects" tags-todo "+TODO=\"TODO\"|TODO=\"PROJ\"")))
 
   (org-agenda-prefix-format '((agenda   . "  %-25:c%?-12t% s")
                               (timeline . "  % s")
@@ -903,8 +803,6 @@ When nil, use the default face background."
                               (search   . "  %-12:c")))
 
   (org-agenda-tags-column -120)
-  (org-tags-column -80)
-
   (org-agenda-sorting-strategy '((agenda habit-down time-up priority-down category-keep)
                                  (todo priority-down todo-state-up category-keep)
                                  (tags priority-down todo-state-up category-keep)
@@ -918,62 +816,24 @@ When nil, use the default face background."
   (refile-targets                          (file-expand-wildcards "~/BrainDump/gtd/*.org"))
   (org-refile-targets '(( refile-targets :todo . "PROJ" )))
 
-  (org-capture-templates '(("i" "Inbox"       entry (file "~/BrainDump/gtd/inbox.org")   "* TODO %^{Brief Description}\nAdded: %U\n%?" :empty-lines 1 :prepend t)
-                           ("n" "Next action" entry (file "~/BrainDump/gtd/main.org")   "** NEXT %^{Brief Description}\nAdded: %U\n%?" :empty-lines 1 :prepend t)
-                           ("w" "Waiting"     entry (file "~/BrainDump/gtd/main.org")   "** WAIT %^{Brief Description}\nAdded: %U\n%?" :empty-lines 1 :prepend t)
-                           ("p" "Project"     entry (file "~/BrainDump/gtd/main.org")    "* PROJ %^{Brief Description}\n:PROPERTIES:\n:CATEGORY: %^{Id}\n:END:\nAdded: %U\n%?" :empty-lines 1 :prepend t)
-                           ("s" "Someday"     entry (file "~/BrainDump/gtd/someday.org") "* TODO %^{Brief Description}\nAdded: %U\n%?" :empty-lines 1 :prepend t)
-                           ))
-
-
+  (org-capture-templates
+   '(("i" "Inbox"       entry (file "~/BrainDump/gtd/inbox.org"  )  "* TODO %^{Brief Description}\nAdded: %U\n%?" :empty-lines 1 :prepend t)
+     ("n" "Next action" entry (file "~/BrainDump/gtd/main.org"   ) "** NEXT %^{Brief Description}\nAdded: %U\n%?" :empty-lines 1 :prepend t)
+     ("w" "Waiting"     entry (file "~/BrainDump/gtd/main.org"   ) "** WAIT %^{Brief Description}\nAdded: %U\n%?" :empty-lines 1 :prepend t)
+     ("p" "Project"     entry (file "~/BrainDump/gtd/main.org"   )  "* PROJ %^{Brief Description}\n:PROPERTIES:\n:CATEGORY: %^{Id}\n:END:\nAdded: %U\n%?" :empty-lines 1 :prepend t)
+     ("s" "Someday"     entry (file "~/BrainDump/gtd/someday.org")  "* TODO %^{Brief Description}\nAdded: %U\n%?" :empty-lines 1 :prepend t)
+     ))
 
   :config
   (add-hook 'org-agenda-finalize-hook (lambda () (org-agenda-write "/tmp/current-agenda-text")))
   )
-
-;; (define-key org-agenda-mode-map "j" 'evil-next-line    )
-;; (define-key org-agenda-mode-map "k" 'evil-previous-line)
-;; (defun garid/write-agenda-to-file()
-;;   (interactive)
-;;   (org-agenda-write "/tmp/current-agenda-text")
-;;   )
-;;
 #+end_src
 ** casual-agenda
 #+begin_src emacs-lisp
 (use-package casual-agenda
   :ensure t
+  :after org-agenda
 )
-#+end_src
-** org capturing related
-#+begin_src emacs-lisp :results none
-(require 'org-protocol)
-(setq org-agenda-start-with-log-mode t
-      org-default-notes-file (concat (file-name-as-directory denote-directory)
-                                     "20230926T010607--todo__todo.org")
-      ;; org-capture-templates '(("t" "Todo" entry (file+headline org-default-notes-file "Tasks")
-      ;;                          "* TODO %?\n  %i\n  %a")
-
-      ;;                         ("s" "Scheduled Todo" entry (file+headline org-default-notes-file "Scheduled")
-      ;;                          "* TODO %?\n SCHEDULED: %t\n %i\n  %a")
-
-      ;;                         ("r" "random" entry (file+headline org-default-notes-file "Random")
-      ;;                          "* Later %?\n  %i\n  %a")
-
-      ;;                         ("T" "Todo (xclip)" entry (file+headline org-default-notes-file "Tasks")
-      ;;                          "* TODO [[%x]]\n  %i\n  %a")
-
-      ;;                         ("p" "Protocol" entry (file+headline org-default-notes-file      "Inbox")
-      ;;                          "* %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?")
-      ;;                         ("L" "Protocol Link" entry (file+headline org-default-notes-file "Inbox")
-      ;;                          "* %? [[%:link][%:description]] \nCaptured On: %U")
-
-      ;;                         ;;("j" "Journal" entry (file+datetree "~/org/journal.org")
-      ;;                         ;; "* %?\nEntered on %U\n  %i\n  %a")
-
-      ;;                         ("R" "Random (xclip)" entry (file+headline org-default-notes-file "Random")
-      ;;                          "* Later [[%x]]\n  %i\n  %a"))
-      )
 #+end_src
 ** org-timeblock
 #+begin_src emacs-lisp
@@ -986,6 +846,27 @@ When nil, use the default face background."
   (add-hook 'org-agenda-finalize-hook 'org-timeline-insert-timeline :append))
 #+end_src
 * Org Exporting related
+** latex mode hook
+#+begin_src emacs-lisp
+(use-package latex
+  :ensure nil
+  :config
+  ;;(add-hook 'LaTeX-mode-hook (function (lambda() (set-input-method "TeQ-Math"))))
+  (add-hook 'latex-mode-hook (function (lambda() (set-input-method "TeQ-Math")))))
+#+end_src
+
+** Latex related
+#+begin_src emacs-lisp
+(use-package auctex)
+(use-package cdlatex)
+#+end_src
+** TODO XeLaTeX equation preview fix                               :customFunc:
+#+begin_src emacs-lisp
+(with-eval-after-load 'org
+  (setq org-preview-latex-default-process 'imagemagick)
+  (setf (plist-get (cdr (assq 'imagemagick org-preview-latex-process-alist)) :latex-compiler)
+        '("xelatex -interaction nonstopmode -output-directory %o %f")))
+#+end_src
 ** org to latex export heading format (e.g. Todo color)            :customFunc:
 #+begin_src emacs-lisp
 (defun garid-custom/latex-formattig-headings
@@ -994,10 +875,6 @@ When nil, use the default face background."
   See `org-latex-format-headline-function' for details."
   (concat
    (and todo
-        ;; (format "{\\framebox{\\bfseries\\rfamily\\color{%s} %s}} "
-        ;; (format "{\\bfseries\\rfamily\\color{%s} %s} "
-        ;; (format "{\\rfamily\\color{%s} %s} "
-        ;; (format "{\\color{%s} %s} "
         (format "{\\framebox{\\bfseries\\color{%s} %s}} "
                 (pcase todo-type
                   ('todo "olive") ('done "teal")
@@ -1010,13 +887,6 @@ When nil, use the default face background."
                 (mapconcat #'org-latex--protect-text tags ":")))))
 #+end_src
 
-** TODO XeLaTeX equation preview fix                               :customFunc:
-#+begin_src emacs-lisp
-(with-eval-after-load 'org
-  (setq org-preview-latex-default-process 'imagemagick)
-  (setf (plist-get (cdr (assq 'imagemagick org-preview-latex-process-alist)) :latex-compiler)
-        '("xelatex -interaction nonstopmode -output-directory %o %f")))
-#+end_src
 ** TODO export directory                                           :customFunc:
 ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stackexchange]]
 
@@ -1029,11 +899,6 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
       (setq pub-dir (concat org-export-output-directory-prefix (substring extension 1)))
       (when (not (file-directory-p pub-dir))
        (make-directory pub-dir))))
-#+end_src
-** Latex related
-#+begin_src emacs-lisp
-(use-package auctex :defer t)
-(use-package cdlatex :defer t)
 #+end_src
 ** ox-reveal
 #+begin_src emacs-lisp
@@ -1272,9 +1137,7 @@ stork.register(
 #+end_src
 
 ** org-download editing shell script                             :shell_script:
-#+begin_src shell :tangle garid/edit_img.sh
-#!/bin/sh
-
+#+begin_src shell :tangle garid/edit_img.sh :shebang "#!/bin/sh"
 file=$(readlink -f "$1")
 ext="${file##*.}"
 
@@ -1299,8 +1162,8 @@ esac
 (use-package org-auto-tangle
   :ensure t
   :defer  t
-  :hook   (org-mode   .   org-auto-tangle-mode)
-  :custom (org-auto-tangle-default    nil))
+  :hook   (org-mode                .  org-auto-tangle-mode)
+  :custom (org-auto-tangle-default    nil                 ))
 #+end_src
 
 ** org-transclusion
@@ -1311,11 +1174,6 @@ esac
               ("<f12>"   . org-transclusion-add     )
               ("M-<f12>" . org-transclusion-add-all )
               ("<f11>"   . org-transclusion-mode    )))
-#+end_src
-
-** exercism
-#+begin_src emacs-lisp
-(use-package exercism)
 #+end_src
 
 ** org contacts
@@ -1346,7 +1204,7 @@ esac
 (use-package nix-ts-mode :ensure t)
 #+end_src
 * Coding input
-** Tempel - snippets
+** Tempel: snippets
 #+begin_src emacs-lisp
 (use-package tempel
   :ensure t
@@ -1392,8 +1250,7 @@ esac
     (completing-read "Choose: " choices)))
 #+end_src
 
-** Elec-pair
-auto parenthesis closing
+** Elec-pair: auto parenthesis pair
 #+begin_src emacs-lisp
 (use-package elec-pair
   :ensure nil
@@ -1404,16 +1261,6 @@ auto parenthesis closing
 
   :config
   (electric-pair-mode 1))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; ;; enable electric pair                                               ;;
-;; (electric-pair-mode 1)                                                ;;
-;;                                                                       ;;
-;; ;; disables <> (cuz I use < for most of my snippets)                  ;;
-;; (setq electric-pair-inhibit-predicate                                 ;;
-;;       (lambda (c)                                                     ;;
-;;         (if (char-equal c ?\<) t (electric-pair-default-inhibit c)))) ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 #+end_src
 
 * Coding output
@@ -1465,7 +1312,7 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
   )
 #+end_src
 
-** corfu - completion
+** corfu: completion
 #+begin_src emacs-lisp
 ;; from https://github.com/Gavinok/emacs.d/blob/3ccc6e35feb2903442c9f7625fba081d93a2fa36/init.el#L614
 (use-package corfu
@@ -1506,7 +1353,7 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
                         (corfu-mode)))
   )
 #+end_src
-** cape - completion at point e..
+** cape: completion at point extensions
 #+begin_src emacs-lisp
 (use-package cape
   ;; Bind prefix keymap providing all Cape commands under a mnemonic key.
@@ -1518,17 +1365,23 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
   ;;        ("C-c p h" . cape-history)
   ;;        ("C-c p f" . cape-file)
   ;;        ...)
-  ;; :init
+  :init
   ;; Add to the global default value of `completion-at-point-functions' which is
   ;; used by `completion-at-point'.  The order of the functions matters, the
   ;; first function returning a result wins.  Note that the list of buffer-local
   ;; completion functions takes precedence over the global list.
-  ;; (add-hook 'completion-at-point-functions #'cape-dabbrev)
-  ;; (add-hook 'completion-at-point-functions #'cape-file)
+  (add-hook 'completion-at-point-functions #'cape-dabbrev)
+  (add-hook 'completion-at-point-functions #'cape-file)
   ;; (add-hook 'completion-at-point-functions #'cape-elisp-block)
-  ;; (add-hook 'completion-at-point-functions #'cape-history)
-  ;; ...
+  (add-hook 'completion-at-point-functions #'cape-history)
 )
+#+end_src
+
+** fancy-dabbrev
+#+begin_src emacs-lisp
+(use-package fancy-dabbrev
+  :ensure t
+  :config (global-fancy-dabbrev-mode))
 #+end_src
 
 * Coding convenients
@@ -1562,7 +1415,6 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
 (defun replace-in-string (what with in)
   (replace-regexp-in-string (regexp-quote what) with in nil 'literal))
 
-
 (defun gry/org-open-pdf ()
   (interactive)
   (call-process-shell-command
@@ -1588,22 +1440,12 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
 ** My Custom LaTeX writting system (aka TeQ)                       :customFunc:
 #+begin_src emacs-lisp
 (add-to-list 'load-path (expand-file-name "~/.config/emacs/Emacs-TeQ"))
-(register-input-method
- "TeQ-Math" "Emacs-Teq-Latex" 'quail-use-package
- "TeQ-"     "TeQ-Math input"
- "Emacs-TeQ.el")
+(register-input-method "TeQ-Math" "Emacs-Teq-Latex" 'quail-use-package
+                       "TeQ-"     "TeQ-Math input"
+                       "Emacs-TeQ.el")
 (fset 'gry-calc-horizontal-concat
       (kmacro-lambda-form [?v ?t tab ?v ?t ?| ?v ?t] 0 "%d"))
 ;;(load "~/.config/emacs/garid/garids-abbrev-typos.el")	;; garid typos
-#+end_src
-
-** latex mode hook
-#+begin_src emacs-lisp
-(use-package latex
-  :ensure nil
-  :config
-  ;;(add-hook 'LaTeX-mode-hook (function (lambda() (set-input-method "TeQ-Math"))))
-  (add-hook 'latex-mode-hook (function (lambda() (set-input-method "TeQ-Math")))))
 #+end_src
 
 ** Custom Aligner function (with untabify)                         :customFunc:
@@ -1624,20 +1466,6 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
 	(set-input-method "cyrillic-mongolian")
       (if (string= default-input-method "cyrillic-mongolian")
 	  (set-input-method "TeQ-Math")))))
-#+end_src
-** COMMENT copy to xclip without turning on the xclip mode
-#+begin_src emacs-lisp
-(defun gry-copy-to-x-clip()
-  (interactive)
-  (if (and (boundp 'xclip-mode) xclip-mode);; check if the xclip has turned on
-      (clipboard-kill-ring-save ( mark ) ( point ) )
-    (progn
-      (xclip-mode +1)
-      (clipboard-kill-ring-save ( mark ) ( point ) )
-      (xclip-mode -1)
-      )
-    )
-  )
 #+end_src
 ** copy link in org at point                                       :customFunc:
 #+begin_src emacs-lisp
@@ -1719,6 +1547,15 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
 ;;(shell-command (concat user-emacs-directory "garid/open_external_term.sh" " " buffer-file-name)))
 #+end_src
 
+** Org toggle hide/shot hyperlink                                  :customFunc:
+#+begin_src emacs-lisp
+(defun garid-custom/org-toggle-link-n-emphasis ()
+    (interactive)
+    (setq org-hide-emphasis-markers (not org-hide-emphasis-markers))
+    (org-toggle-link-display)
+    (font-lock-update))
+#+end_src
+
 * Writting & Reading
 ** Writting packages
 #+begin_src emacs-lisp
@@ -1728,7 +1565,7 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
 (use-package focus                :ensure t)
 #+end_src
 
-** Writting Distraction free
+** Writting Distraction free                                       :customFunc:
 #+begin_src emacs-lisp
 (defun gry/distraction-free-on ()
   (interactive)
@@ -1772,7 +1609,7 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
    ))
 #+end_src
 
-** PDF tools
+** =PDF-tools=
 #+begin_src emacs-lisp
 (use-package pdf-tools
   :ensure t
@@ -1783,11 +1620,11 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
   (pdf-tools-install))
 #+end_src
 
-** tmr - timer
+** =tmr=: timer may ring
 #+begin_src emacs-lisp
 (use-package tmr :ensure t)
 #+end_src
-** spray
+** =spray=: spraying texts
 #+begin_src emacs-lisp
 (use-package spray
     :ensure t
@@ -1795,7 +1632,7 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
     :hook ((spray-mode . gry/distraction-free-on))
 )
 #+end_src
-** garids working states
+** garids working states                                           :customFunc:
 #+begin_src emacs-lisp
 (setq garids-focus-tag "rsch")
 (setq garids-focus-tag-list '("bps" "hkdn" "rsch" "yak"))
@@ -1807,7 +1644,7 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
   (setq garids-focus-tag (gry/choose-from-list-and-return-it garids-focus-tag-list))
   (message (concat "focus tag changed to " garids-focus-tag)))
 #+end_src
-** edraw drawing
+** =edraw= svg drawing inline in org
 #+begin_src emacs-lisp
 (use-package edraw-mode
   :straight (edraw-mode
@@ -1816,6 +1653,30 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
              ;;:brach "garidslatex"
              :brach "master"
              :repo "misohena/el-easydraw")
+
+
+  :custom
+  (edraw-editor-default-grid-interval 10)
+  (edraw-default-shape-properties '((rect (fill            . #1="#f8f8f8")
+                                          (stroke          . #2="#101010")
+                                          (stroke-width    . 2))
+                                    (ellipse (fill         . #1#)
+                                             (stroke       . #2#)
+                                             (stroke-width . 2))
+                                    (path (fill            . "none")
+                                          (stroke          . #2#)
+                                          (stroke-width    . 2) ;;(marker-end . "arrow")   p > or p <
+                                          )
+                                    (text (fill            . #2#)
+                                          (font-size       . 20)
+                                          ;;(font-family     . "sans-serif")
+                                          ;;(font-family     . "Linux Libertine")
+                                          (font-family     . "xkcd Script")
+                                          (text-anchor     . "middle"))
+                                    (image)))
+  (edraw-default-document-properties '((width .  900)
+                                       (height . 400)
+                                       (background . "#fff")))
   :config
   ;;(edraw-org-setup-default)
 
@@ -1829,43 +1690,21 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
   (with-eval-after-load "ox"
     (require 'edraw-org)
     (edraw-org-setup-exporter))
-  :custom
-  ;;(edraw-editor-default-grid-interval 20)
-  (edraw-default-shape-properties '((rect (fill            . #1="#f8f8f8")
-                                          (stroke          . #2="#101010")
-                                          (stroke-width    . 2))
-                                    (ellipse (fill         . #1#)
-                                             (stroke       . #2#)
-                                             (stroke-width . 2))
-                                    (path (fill            . "none")
-                                          (stroke          . #2#)
-                                          (stroke-width    . 2)
-                                          (marker-end      . "arrow"))
-                                    (text (fill            . #2#)
-                                          (font-size       . 20)
-                                          ;;(font-family     . "sans-serif")
-                                          ;;(font-family     . "Linux Libertine")
-                                          (font-family     . "xkcd Script")
-                                          (text-anchor     . "middle"))
-                                    (image)))
-  (edraw-default-document-properties '((width . 800)
-                                       (height . 400)
-                                       (background . "#fff")))
   )
 #+end_src
 
 * Keybinding
-** which-key
+** =which-key=: keybinding shower
 #+begin_src emacs-lisp
 (use-package which-key
   :ensure t
   :custom
-  (which-key-popup-type            'side-window               )
-  (which-key-side-window-location  'right                     )
-  (which-key-idle-delay             0.5                       )
-  (which-key-idle-secondary-delay   0.01                      )
-  (which-key-side-window-max-width  0.5                       )
-  (which-key-sort-order            'which-key-key-order-alpha )
+  (which-key-popup-type              'side-window               )
+  (which-key-side-window-location    'right                     )
+  (which-key-idle-delay               0.5                       )
+  (which-key-idle-secondary-delay     0.01                      )
+  (which-key-side-window-max-width    0.5                       )
+  (which-key-sort-order              'which-key-key-order-alpha )
   :config (which-key-mode))
 #+end_src
 
@@ -2324,7 +2163,8 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | oip    | org-download-clipboard                | p.aste clipboard              | org  |        |
 | oiP    | org-download-image                    | P.aste from-path              | org  |        |
 | oid    | org-download-delete                   | d.elete file                  | org  |        |
-| oie    | org-download-edit                     | e.dit externally              | org  |        |
+| oie    | edraw-org-edit-regular-file-link      | e.dit edraw                   | org  |        |
+| oiE    | org-download-edit                     | E.dit externally              | org  |        |
 | oir    | org-download-rename-at-point          | r.ename file                  | org  |        |
 | oit    | org-toggle-inline-images              | t.oggle shot/hide image       | org  |        |
 | ois    | :ignore t                             | s.ize........................ | org  |        |
@@ -2672,7 +2512,8 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "oip" '(org-download-clipboard :which-key "p.aste clipboard")
   "oiP" '(org-download-image :which-key "P.aste from-path")
   "oid" '(org-download-delete :which-key "d.elete file")
-  "oie" '(org-download-edit :which-key "e.dit externally")
+  "oie" '(edraw-org-edit-regular-file-link :which-key "e.dit edraw")
+  "oiE" '(org-download-edit :which-key "E.dit externally")
   "oir" '(org-download-rename-at-point :which-key "r.ename file")
   "oit" '(org-toggle-inline-images :which-key "t.oggle shot/hide image")
   "ois" '(:ignore t :which-key "s.ize........................")
@@ -2685,7 +2526,35 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 #+RESULTS:
 
 * System:
-** Save (last) place
+** =dired= - Directory
+#+begin_src emacs-lisp
+(use-package dired
+  :ensure   nil
+  :demand   t
+  :commands (dired dired-jump)
+  :custom   ((dired-listing-switches "-agho --group-directories-first"))
+  :hook     ((dired-mode . denote-dired-mode)
+             (dired-mode . dired-omit-mode  ))
+  :config
+  (evil-collection-define-key 'normal 'dired-mode-map
+    "h"          'dired-single-up-directory
+    "l"          'dired-single-buffer
+    (kbd "C-s")  'dired-omit-mode      ;; same keybinding with my lf config
+    " "          'nil
+    (kbd "N")    'mkdir
+    (kbd "C-n")  'mkdir)
+
+  (when (eq system-type 'berkeley-unix)   ;; change the main ls with gnu ls in bsd
+    (setq insert-directory-program "gls"))
+  )
+#+end_src
+** =dired= - Additionals
+I don't use these not much  
+#+begin_src emacs-lisp
+(use-package dired-single)
+(use-package dired-preview :ensure t)
+#+end_src
+** =saveplace= - Save (last) cursor position
 This mode saves the last cursor point when you close a file,
 and later sets cursor at that point when you open that file.
 
@@ -2693,10 +2562,8 @@ and later sets cursor at that point when you open that file.
 (use-package saveplace
   :ensure nil
   :config (save-place-mode 1))
-
-;; (save-place-mode 1)
 #+end_src
-** Recent files
+** =recentf= - Recent files
 #+begin_src emacs-lisp
 (use-package recentf
   :ensure nil
@@ -2708,9 +2575,7 @@ and later sets cursor at that point when you open that file.
   (recentf-mode 1))
 #+end_src
 ** shell script to open terminal                                 :shell_script:
-#+begin_src bash :tangle garid/open_external_term.sh
-#!/bin/bash
-
+#+begin_src bash :tangle garid/open_external_term.sh :shebang "#!/bin/bash"
 # Open System termianl $TERMINAL at $1:
 # nohup for exitting terminal that executed this script
 # other wise terminal that executed this script just hangs there
@@ -2744,42 +2609,6 @@ fi
 (setq         bidi-inhibit-bpa          t             )
 #+end_src
 
-** fancy - dabbrev
-#+begin_src emacs-lisp
-(use-package fancy-dabbrev
-  :ensure t
-  :config (global-fancy-dabbrev-mode))
-#+end_src
-
-* Dired
-** dired: directory
-#+begin_src emacs-lisp
-(use-package dired
-  :ensure   nil
-  :demand   t
-  :commands (dired dired-jump)
-  :custom   ((dired-listing-switches "-agho --group-directories-first"))
-  :hook     ((dired-mode . denote-dired-mode)
-             (dired-mode . dired-omit-mode  ))
-  :config
-  (evil-collection-define-key 'normal 'dired-mode-map
-    "h"          'dired-single-up-directory
-    "l"          'dired-single-buffer
-    (kbd "C-s")  'dired-omit-mode      ;; same keybinding with my lf config
-    " "          'nil
-    (kbd "N")    'mkdir
-    (kbd "C-n")  'mkdir)
-
-  (when (eq system-type 'berkeley-unix)   ;; change the main ls with gnu ls in bsd
-    (setq insert-directory-program "gls"))
-  )
-#+end_src
-** dired: additionals
-I don't use these not much  
-#+begin_src emacs-lisp
-(use-package dired-single)
-(use-package dired-preview :ensure t)
-#+end_src
 * Misc Packages
 ** crux
 #+begin_src emacs-lisp
@@ -2806,22 +2635,22 @@ I don't use these not much
          ;; ("TAB"   . forward-button     ) ;; mostly for terminal mode
 
          )
-  :custom
-  (popper-reference-buffers '("\\*Messages\\*"
-                              "\\*eldoc\\*"
-                              "\\*eldoc.*\\*" ;;regex
-                              "\\*Outline.*\\*" ;;regex
-                              "\\*xref\\*"
-                              "Output\\*$"
-                              "\\*Async Shell Command\\*"
-                              "\\*devdocs\\*"
-                              "\\*lsp-bridge-doc\\*"
-                              "\\*git-gutter:diff\\*"
-                              "\\*Org Select\\*"
-                              "CAPTURE-inbox.org"
-                              "CAPTURE-20230926T010607--todo__todo.org"
-                              help-mode
-                              compilation-mode))
+  :init
+  (setq popper-reference-buffers '("\\*Messages\\*"
+                                   "\\*eldoc\\*"
+                                   "\\*eldoc.*\\*" ;;regex
+                                   "\\*Outline.*\\*" ;;regex
+                                   "\\*xref\\*"
+                                   "Output\\*$"
+                                   "\\*Async Shell Command\\*"
+                                   "\\*devdocs\\*"
+                                   "\\*lsp-bridge-doc\\*"
+                                   "\\*git-gutter:diff\\*"
+                                   "\\*Org Select\\*"
+                                   "CAPTURE-inbox.org"
+                                   "CAPTURE-20230926T010607--todo__todo.org"
+                                   help-mode
+                                   compilation-mode))
   :config
   (popper-mode      +1)
   (popper-echo-mode +1))
@@ -2857,13 +2686,60 @@ I don't use these not much
   )
 #+end_src
 
+** Delight
+#+begin_src emacs-lisp
+(use-package delight
+  :ensure t
+  :demand t
+  :config
+  (delight
+   '(
+     ;; ----------  major modes  ----------------------------------
+     (sh-mode               "shl "                              )
+     (org-mode              "org "                              )
+     (python-mode           "pyt "                              )
+     (python-ts-mode        "pyt "                              )
+     (dired-mode            "dir "                              )
+     (help-mode             "hlp "                              )
+     ;; ----------  minor modes  ----------------------------------
+     (dired-omit-mode       "dro "   )   ;;   dired
+     (org-roam-mode         "orm "   )   ;;   org-roam
+     (which-key-mode        "wky "   )   ;;   which-key
+     (git-gutter-mode       "ggt "   )   ;;   git-gutter
+     (org-auto-tangle-mode  "tng "   )   ;;   org-auto-tangle
+     (auto-revert-mode      "arv "   )   ;;   autorevert
+     (org-indent-mode        nil     )   ;;   org-indent
+     (org-num-mode          "onm "   )   ;;   org-indent
+     (org-gtd-mode          "gtd "   )   ;;   org-gtd
+     (org-src-mode          "src "   )   ;;   org
+     (consult-org-roam-mode "crm "   )   ;;   consult-org-roam
+     (yas-minor-mode        "yas "   )   ;;   yasnippet
+     (eldoc-mode            "eld "   )   ;;   eldoc
+     (magit-status-mode     "mgt "   )   ;;   magit
+     (undo-tree-mode        "utr "   )   ;;   undo-tree
+     (lisp-interaction-mode "eli "   )   ;;   elisp-mode
+     (emacs-lisp-mode       "eli "   )   ;;   elisp-mode
+     (command-log-mode      "clm "   )   ;;   command-log-mode
+     (flymake-mode          "flm "   )   ;;   flymake
+     (lsp-bridge-mode       "lsp "   )   ;;   lsp-bridge
+     (org-edna-mode         "edn "   )   ;;   edna
+     (evil-collection-unimpaired-mode "evc " )  ;;  evil-collection
+     (all-the-icons-dired-mode     nil   all-the-icons-dired.el )
+     (visual-line-mode             nil   simple                 ))))
+#+end_src
+
+** exercism
+#+begin_src emacs-lisp
+(use-package exercism)
+#+end_src
+
 * Finish Notifier
 #+begin_src emacs-lisp
 (call-process-shell-command "notify-send \"Emacs\" \"Emacs has initialized\" &") 
 #+end_src
 
 * Custom set variable:
-[[https://www.youtube.com/watch?v=tw2-rI2bxSg&t=1s][Initial idea from Systems crafter]], [[https://emacs.stackexchange.com/a/18785/38482][and code structure from this answer on emacs stackexchange]], and need to set ~enble-local-eval~ to ~t~ ()
+[[https://www.youtube.com/watch?v=tw2-rI2bxSg&t=1s][Initial idea from Systems crafter]], [[https://emacs.stackexchange.com/a/18785/38482][and code structure from this answer on emacs stackexchange]], and need to set ~enble-local-eval~ to ~t~.
 
 #+begin_src emacs-lisp
 (add-to-list 'safe-local-variable-values '(dired-omit-files         . "\\`[.]?#\\|\\`[.][.]?\\'\\|\\.html\\'\\|\\.tex\\'"    )) ;; <-- wokr

@@ -38,8 +38,8 @@
   )
 #+end_src
 
-** keybindings
-*** COMMENT removed
+* keybindings
+** COMMENT removed
 | <f9>   | org-gtd-capture                                             | capture                          |      |        |
 | C-<f8> | org-gtd-clarify-item                                        | gtd org                          |      |        |
 | C-<f9> | org-gtd-process-inbox                                       | process inbox                    |      |        |
@@ -72,9 +72,6 @@
 | Cf     | full-calc                                                   | C-(f) full                       | -    |        |
 
 o     | org-insert-structure-template                               | y-(o)rg templates                | -    |        |
-
-
-
 
 * COMMENT Yassnippets
 #+begin_src emacs-lisp
@@ -231,4 +228,51 @@ _Q_: delete a tag to task
 (use-package ox-hugo
   :ensure t 
   :after ox)
+#+end_src
+* COMMENT copy to xclip without turning on the xclip mode
+#+begin_src emacs-lisp
+(defun gry-copy-to-x-clip()
+  (interactive)
+  (if (and (boundp 'xclip-mode) xclip-mode);; check if the xclip has turned on
+      (clipboard-kill-ring-save ( mark ) ( point ) )
+    (progn
+      (xclip-mode +1)
+      (clipboard-kill-ring-save ( mark ) ( point ) )
+      (xclip-mode -1)
+      )
+    )
+  )
+#+end_src
+
+* COMMENT Org inline transparent image background                  :customFunc:
+#+begin_src emacs-lisp
+(defcustom org-inline-image-background nil
+  "The color used as the default background for inline images.
+When nil, use the default face background."
+  :group 'org
+  :type '(choice color (const nil)))
+
+(defun create-image-with-background-color (args)
+  "Specify background color of Org-mode inline image through modify `ARGS'."
+  (let* ((file (car args))
+         (type (cadr args))
+         (data-p (caddr args))
+         (props (cdddr args)))
+    ;; Get this return result style from `create-image'.
+    (append (list file type data-p)
+            (list :background (or org-inline-image-background (face-background 'default)))
+            props)))
+
+(advice-add 'create-image :filter-args
+            #'create-image-with-background-color)
+
+(setq org-inline-image-background "white")
+#+end_src
+
+* COMMENT org capturing related
+#+begin_src emacs-lisp :results none
+(require 'org-protocol)
+(setq org-agenda-start-with-log-mode t
+      org-default-notes-file (concat (file-name-as-directory denote-directory)
+                                     "20230926T010607--todo__todo.org"))
 #+end_src
