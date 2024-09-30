@@ -491,11 +491,12 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
            '("Ⅰ" "Ⅱ" "Ⅲ" "Ⅳ" "Ⅴ" "Ⅵ" "Ⅶ")
            ))
 #+end_src
-** Org hooked function                                             :customFunc:
+** TODO Org hooked function                                                  :customFunc:
 #+begin_src emacs-lisp
 (defun garid-custom/org-mode-hooked-func ()
   (org-indent-mode)
   (org-num-mode)
+  ;; (turn-on-auto-capitalize-mode) added hook in the auto capitalizing mode int he sub section
   ;; (auto-fill-mode 0)
 
   (when buffer-file-name ;; had to check buffer had file. (i.e. sometimes buffer don't have file yet, e.g. org-captures)
@@ -723,7 +724,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
          ("C-c w y" . citar-denote-cite-nocite          )
          ("C-c w z" . citar-denote-nobib                )))
 #+end_src
-** org-roam (custom) function for inserting node                   :customFunc:
+** org-roam (custom) function for inserting node                             :customFunc:
 #+begin_src emacs-lisp
 (defun garid-custom/org-roam-node-insert-immediate (arg &rest args)
   (interactive "P")
@@ -734,7 +735,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
     (apply #'org-roam-node-insert args)
     ))
 #+end_src
-** org-roam (custom) functions for tag searching                   :customFunc:
+** org-roam (custom) functions for tag searching                             :customFunc:
 #+begin_src emacs-lisp
 (defun my/org-roam-filter-by-tag (tag-name)
   (lambda (node)
@@ -860,14 +861,14 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 (use-package auctex)
 (use-package cdlatex)
 #+end_src
-** TODO XeLaTeX equation preview fix                               :customFunc:
+** TODO XeLaTeX equation preview fix                                         :customFunc:
 #+begin_src emacs-lisp
 (with-eval-after-load 'org
   (setq org-preview-latex-default-process 'imagemagick)
   (setf (plist-get (cdr (assq 'imagemagick org-preview-latex-process-alist)) :latex-compiler)
         '("xelatex -interaction nonstopmode -output-directory %o %f")))
 #+end_src
-** org to latex export heading format (e.g. Todo color)            :customFunc:
+** org to latex export heading format (e.g. Todo color)                      :customFunc:
 #+begin_src emacs-lisp
 (defun garid-custom/latex-formattig-headings
     (todo todo-type priority text tags _info)
@@ -887,7 +888,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
                 (mapconcat #'org-latex--protect-text tags ":")))))
 #+end_src
 
-** TODO export directory                                           :customFunc:
+** TODO export directory                                                     :customFunc:
 ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stackexchange]]
 
 #+begin_src emacs-lisp
@@ -1136,7 +1137,7 @@ stork.register(
   (org-download-enable))
 #+end_src
 
-** org-download editing shell script                             :shell_script:
+** org-download editing shell script                                       :shell_script:
 #+begin_src shell :tangle garid/edit_img.sh :shebang "#!/bin/sh"
 file=$(readlink -f "$1")
 ext="${file##*.}"
@@ -1384,6 +1385,21 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
   :config (global-fancy-dabbrev-mode))
 #+end_src
 
+** abbrev
+#+begin_src emacs-lisp
+(use-package abbrev
+  :defer 1
+  :ensure nil
+  ;;:custom
+  ;;(abbrev-file-name (expand-file-name "abbrev_defs" user-emacs-directory))
+  :config
+  (if (file-exists-p abbrev-file-name)
+      (quietly-read-abbrev-file))
+
+  ;;(abbrev-mode 1)
+  (setq-default abbrev-mode t)
+  )
+#+end_src
 * Coding convenients
 ** rg: ripgrep
 #+begin_src emacs-lisp
@@ -1410,7 +1426,7 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
 #+end_src
 
 * Bunch of functions
-** Open PDF/HMTL exported by LaTeX externally                      :customFunc:
+** Open PDF/HMTL exported by LaTeX externally                                :customFunc:
 #+begin_src emacs-lisp
 (defun replace-in-string (what with in)
   (replace-regexp-in-string (regexp-quote what) with in nil 'literal))
@@ -1437,7 +1453,7 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
            )))
 #+end_src
 
-** My Custom LaTeX writting system (aka TeQ)                       :customFunc:
+** My Custom LaTeX writting system (aka TeQ)                                 :customFunc:
 #+begin_src emacs-lisp
 (add-to-list 'load-path (expand-file-name "~/.config/emacs/Emacs-TeQ"))
 (register-input-method "TeQ-Math" "Emacs-Teq-Latex" 'quail-use-package
@@ -1448,7 +1464,7 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
 ;;(load "~/.config/emacs/garid/garids-abbrev-typos.el")	;; garid typos
 #+end_src
 
-** Custom Aligner function (with untabify)                         :customFunc:
+** Custom Aligner function (with untabify)                                   :customFunc:
 #+begin_src emacs-lisp
 (defun garid-custom/align-regexp-and-untabify (beg end)
   (interactive "r")
@@ -1456,7 +1472,7 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
                 (concat "\\(\\s-*\\)" (read-string "Align regexp: ")))
   (untabify beg end))
 #+end_src
-** Toggling between 3 inputs (eng, mon, teq)                       :customFunc:
+** Toggling between 3 inputs (eng, mon, teq)                                 :customFunc:
 #+begin_src emacs-lisp
 (defun garid-custom/toggle-eng-mon-teq-input-methods ()
   (interactive)
@@ -1467,7 +1483,7 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
       (if (string= default-input-method "cyrillic-mongolian")
 	  (set-input-method "TeQ-Math")))))
 #+end_src
-** copy link in org at point                                       :customFunc:
+** copy link in org at point                                                 :customFunc:
 #+begin_src emacs-lisp
 (defun code-from-internet/org-link-open-parent-with-dired-at-point (&optional arg)
   "Extract URL from org-mode link and add it to kill ring." ;;;https://emacs.stackexchange.com/a/60555/38482
@@ -1497,7 +1513,7 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
     (message (concat "Copied URL: " url)))
   )
 #+end_src
-** put empty svg file at point                                     :customFunc:
+** put empty svg file at point                                               :customFunc:
 #+begin_src emacs-lisp
 (defun garid/put-emtpy-svg-img-at-point ()
   (interactive)
@@ -1518,7 +1534,7 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
            (format-time-string "%Y%m%d-%H%M%S.svg"))
    "]]"))
 #+end_src
-** Jumping ref's label in org or latex                             :customFunc:
+** Jumping ref's label in org or latex                                       :customFunc:
 #+begin_src emacs-lisp
 (defun garid/jump-label-def-of-ref-at-point-word ()
   ""
@@ -1537,7 +1553,7 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
           )
       (message "No matching braces found."))))
 #+end_src
-** Custom opening external terminal at current buffer              :customFunc:
+** Custom opening external terminal at current buffer                        :customFunc:
 #+begin_src emacs-lisp
 (defun garid-custom/open-external-term-here ()
   (interactive)
@@ -1547,7 +1563,7 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
 ;;(shell-command (concat user-emacs-directory "garid/open_external_term.sh" " " buffer-file-name)))
 #+end_src
 
-** Org toggle hide/shot hyperlink                                  :customFunc:
+** Org toggle hide/shot hyperlink                                            :customFunc:
 #+begin_src emacs-lisp
 (defun garid-custom/org-toggle-link-n-emphasis ()
     (interactive)
@@ -1565,7 +1581,7 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
 (use-package focus                :ensure t)
 #+end_src
 
-** Writting Distraction free                                       :customFunc:
+** Writting Distraction free                                                 :customFunc:
 #+begin_src emacs-lisp
 (defun gry/distraction-free-on ()
   (interactive)
@@ -1632,7 +1648,7 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
     :hook ((spray-mode . gry/distraction-free-on))
 )
 #+end_src
-** garids working states                                           :customFunc:
+** garids working states                                                     :customFunc:
 #+begin_src emacs-lisp
 (setq garids-focus-tag "rsch")
 (setq garids-focus-tag-list '("bps" "hkdn" "rsch" "yak"))
@@ -1691,6 +1707,18 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
     (require 'edraw-org)
     (edraw-org-setup-exporter))
   )
+#+end_src
+** TODO checking (could be useful)
+#+begin_src emacs-lisp
+(use-package langtool      :ensure t)
+(use-package mw-thesaurus  :ensure t)
+(use-package org-wc        :ensure t)
+#+end_src
+** auto capitalizing
+#+begin_src emacs-lisp
+(load "~/.config/emacs/auto-capitalize.el")
+
+(add-hook 'text-mode-hook 'turn-on-auto-capitalize-mode)
 #+end_src
 
 * Keybinding
@@ -1820,23 +1848,27 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 #+attr_latex: :placement [H]
 #+caption: Convenient commands
 #+name: tbl-kbind-zconvenients
-| key(s) | function                               | short description            | mode | lambda |
-|--------+----------------------------------------+------------------------------+------+--------|
-| z      | :ignore t                              | z.conveniences.............. | -    |        |
-| za     | garid-custom/align-regexp-and-untabify | a.lign                       | -    |        |
-| zr     | replace-regexp                         | r.eplace word in buf         | -    |        |
-| zh     | highlight-symbol-at-point              | h.ighlight on                | -    |        |
-| zH     | unhighlight-regexp                     | H.ighlight off               | -    |        |
-| zs     | :ignore t                              | s.pell...................... | -    |        |
-| zsw    | ispell-word                            | w.ord                        | -    |        |
-| zsr    | ispell-region                          | r.egion                      | -    |        |
-| zsC    | ispell-comments-and-strings            | C.omment-full                | -    |        |
-| zsc    | ispell-comment-or-string-at-point      | c.omment-here                | -    |        |
-| zsb    | ispell-buffer                          | b.uffer                      | -    |        |
-| zsm    | ispell-message                         | m.essage                     | -    |        |
-| zsq    | ispell-kill-ispell                     | q.uit                        | -    |        |
-| zsl    | ispell-change-dictionary               | l.anguage en-mn              | -    |        |
-| ZQ     | kill-emacs                             | kill emacs                   | -    |        |
+| key(s) | function                               | short description                  | mode | lambda |
+|--------+----------------------------------------+------------------------------------+------+--------|
+| z      | :ignore t                              | z.conveniences.................... | -    |        |
+| za     | garid-custom/align-regexp-and-untabify | a.lign                             | -    |        |
+| zr     | replace-regexp                         | r.eplace word in buf               | -    |        |
+| zh     | highlight-symbol-at-point              | h.ighlight on                      | -    |        |
+| zH     | unhighlight-regexp                     | H.ighlight off                     | -    |        |
+|--------+----------------------------------------+------------------------------------+------+--------|
+| zs     | :ignore t                              | s.pell............................ | -    |        |
+| zsw    | ispell-word                            | w.ord                              | -    |        |
+| zsr    | ispell-region                          | r.egion                            | -    |        |
+| zsC    | ispell-comments-and-strings            | C.omment-full                      | -    |        |
+| zsc    | ispell-comment-or-string-at-point      | c.omment-here                      | -    |        |
+| zsb    | ispell-buffer                          | b.uffer                            | -    |        |
+| zsm    | ispell-message                         | m.essage                           | -    |        |
+| zsq    | ispell-kill-ispell                     | q.uit                              | -    |        |
+| zsl    | ispell-change-dictionary               | l.anguage en-mn                    | -    |        |
+| zst    | mw-thesaurus-lookup-at-point           | t.hesaurus current word            | -    |        |
+| zsT    | mw-thesaurus-lookup                    | T.hesaurus                         | -    |        |
+|--------+----------------------------------------+------------------------------------+------+--------|
+| ZQ     | kill-emacs                             | kill emacs                         | -    |        |
 
 **** System
 #+attr_latex: :placement [H]
@@ -2294,12 +2326,12 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "rs" '(consult-org-roam-search :which-key "s.earch")
   "rcf" '(consult-org-roam-forwardlink :which-key "o.wardlink")
   "rcF" '(consult-org-roam-find-file :which-key "rc-Find")
-  "z" '(:ignore t :which-key "z.conveniences..............")
+  "z" '(:ignore t :which-key "z.conveniences....................")
   "za" '(garid-custom/align-regexp-and-untabify :which-key "a.lign")
   "zr" '(replace-regexp :which-key "r.eplace word in buf")
   "zh" '(highlight-symbol-at-point :which-key "h.ighlight on")
   "zH" '(unhighlight-regexp :which-key "H.ighlight off")
-  "zs" '(:ignore t :which-key "s.pell......................")
+  "zs" '(:ignore t :which-key "s.pell............................")
   "zsw" '(ispell-word :which-key "w.ord")
   "zsr" '(ispell-region :which-key "r.egion")
   "zsC" '(ispell-comments-and-strings :which-key "C.omment-full")
@@ -2308,6 +2340,8 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "zsm" '(ispell-message :which-key "m.essage")
   "zsq" '(ispell-kill-ispell :which-key "q.uit")
   "zsl" '(ispell-change-dictionary :which-key "l.anguage en-mn")
+  "zst" '(mw-thesaurus-lookup-at-point :which-key "t.hesaurus current word")
+  "zsT" '(mw-thesaurus-lookup :which-key "T.hesaurus")
   "ZQ" '(kill-emacs :which-key "kill emacs")
   "s" '(:ignore t :which-key "s.ystem.......................")
   "srf" '(recentf-open-files :which-key "r.ecent-f.iles")
@@ -2574,7 +2608,7 @@ and later sets cursor at that point when you open that file.
   :config
   (recentf-mode 1))
 #+end_src
-** shell script to open terminal                                 :shell_script:
+** shell script to open terminal                                           :shell_script:
 #+begin_src bash :tangle garid/open_external_term.sh :shebang "#!/bin/bash"
 # Open System termianl $TERMINAL at $1:
 # nohup for exitting terminal that executed this script
@@ -2628,13 +2662,7 @@ fi
   :ensure t ; or :straight t
   :bind (("C-`"   . popper-toggle      )
          ("M-`"   . popper-cycle       )
-         ("C-M-`" . popper-toggle-type )
-         ;; :map popper-mode-map
-         ;; ("TAB"   . forward-button     ) ;; mostly for terminal mode
-         ;; :map help-mode-map
-         ;; ("TAB"   . forward-button     ) ;; mostly for terminal mode
-
-         )
+         ("C-M-`" . popper-toggle-type ))
   :init
   (setq popper-reference-buffers '("\\*Messages\\*"
                                    "\\*eldoc\\*"
@@ -2647,6 +2675,7 @@ fi
                                    "\\*lsp-bridge-doc\\*"
                                    "\\*git-gutter:diff\\*"
                                    "\\*Org Select\\*"
+                                   "\\* Merriam-Webster Thesaurus \\*"
                                    "CAPTURE-inbox.org"
                                    "CAPTURE-20230926T010607--todo__todo.org"
                                    help-mode
@@ -2654,26 +2683,6 @@ fi
   :config
   (popper-mode      +1)
   (popper-echo-mode +1))
-
-
-;; :init
-;; (setq popper-reference-buffers '("\\*Messages\\*"
-;;                                  "\\*eldoc\\*"
-;;                                  "\\*eldoc.*\\*" ;;regex
-;;                                  "\\*Outline.*\\*" ;;regex
-;;                                  "\\*xref\\*"
-;;                                  "Output\\*$"
-;;                                  "\\*Async Shell Command\\*"
-;;                                  "\\*devdocs\\*"
-;;                                  "\\*lsp-bridge-doc\\*"
-;;                                  "\\*git-gutter:diff\\*"
-;;                                  "\\*Org Select\\*"
-;;                                  "CAPTURE-inbox.org"
-;;                                  "CAPTURE-20230926T010607--todo__todo.org"
-;;                                  help-mode
-;;                                  compilation-mode))
-;; (popper-mode      +1)
-;; (popper-echo-mode +1))
 #+end_src
 ** hydra
 #+begin_src emacs-lisp
