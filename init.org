@@ -65,7 +65,7 @@ I'm pulling packages from following 3 places (not sure that I need all three):
 #+end_src
 
 * Vi-movement and it's friends
-** undo-tree
+** =undo-tree=
 undo-tree is emacs's undo & redo helper with built-in tree graph of versions.
 
 #+begin_src emacs-lisp
@@ -75,10 +75,7 @@ undo-tree is emacs's undo & redo helper with built-in tree graph of versions.
   (global-undo-tree-mode))
 #+end_src
 
-** evil
-[[https://github.com/emacs-evil/evil][Evil]] stands for Extendable-Vi-Layer for Emacs.
-It emulates vi motion inside Emacs. 
-
+** =evil=: vi-movements
 #+begin_src emacs-lisp
 ;; Vim Bindings
 (use-package evil
@@ -106,9 +103,7 @@ It emulates vi motion inside Emacs.
   (evil-define-key 'normal 'prog-mode-map  (kbd "K")   'eldoc) ;; or 'eldoc-box-help-at-point
   (evil-mode 1))
 #+end_src
-** evil-collection
-[[https://github.com/emacs-evil/evil-collection][Evil-collection]] is sets of evil keybindings for various modes in Emacs.
-
+** =evil-collection=: vi-movements everywhere
 #+begin_src emacs-lisp
 (use-package evil-collection
   :ensure t
@@ -117,7 +112,7 @@ It emulates vi motion inside Emacs.
   (setq evil-want-integration t)
   (evil-collection-init))
 #+end_src
-** evil-surround
+** =evil-surround=: easily surround selected region
 I sometimes use. It can wrap (visually) selected region with quotation mark or parenthesis.
 
 #+begin_src emacs-lisp
@@ -133,7 +128,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
                                )))
 #+end_src
 
-** evil treesitter based visual selection (not used that much)
+** =evil-textobj-tree-sitter=: treesitter based visual selection:
 #+begin_src emacs-lisp
 (use-package evil-textobj-tree-sitter
   :ensure t
@@ -187,14 +182,14 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   )
 #+end_src
 
-** Terminal cursor
+** =evil-terminal-cursor-changer=:
 #+begin_src emacs-lisp :results none
 (use-package evil-terminal-cursor-changer
   :ensure t
   :config (evil-terminal-cursor-changer-activate))
 #+end_src
 
-** Display Number & cursor-line highlightnig
+** =display-line-numbers=: displaying number
 #+begin_src emacs-lisp
 ;; setting line
 (use-package display-line-numbers
@@ -211,7 +206,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 #+end_src
 
 * Minibuffer completion, selection, suggestion
-** vertico
+** =vertico=
 #+begin_src emacs-lisp
 (use-package vertico
   :ensure t
@@ -233,7 +228,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   :config
   (vertico-mode))
 #+end_src
-** marginalia
+** =marginalia=
 #+begin_src emacs-lisp
 (use-package marginalia
   :after vertico
@@ -243,37 +238,11 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
                            marginalia-annotators-light nil))
   :init (marginalia-mode))
 #+end_src
-** consult
+** =consult=: consulting
 #+begin_src emacs-lisp
-(use-package consult
-  :ensure t)
-;;  :bind (("M-f"  . consult-line))
+(use-package consult :ensure t)
 #+end_src
-** consult-org-roam
-#+begin_src emacs-lisp
-(use-package consult-org-roam
-   :ensure t
-   :after org-roam
-   :init (require 'consult-org-roam)
-   ;; Activate the minor mode
-   (consult-org-roam-mode 1)
-   :custom
-   (consult-org-roam-grep-func #'consult-ripgrep)
-   (consult-org-roam-buffer-narrow-key ?r)
-   (consult-org-roam-buffer-after-buffers t)
-   :config
-   ;; Eventually suppress previewing for certain functions
-   (consult-customize consult-org-roam-forward-links :preview-key "M-.")
-   :bind
-   ;; Define some convenient keybindings as an addition
-   ("C-c n e" . consult-org-roam-file-find)
-   ("C-c n b" . consult-org-roam-backlinks)
-   ("C-c n B" . consult-org-roam-backlinks-recursive)
-   ("C-c n l" . consult-org-roam-forward-links)
-   ("C-c n r" . consult-org-roam-search)
-   )
-#+end_src
-** orderless
+** =orderless=: orderless completion
 #+begin_src emacs-lisp
 (use-package orderless
   :ensure t
@@ -284,7 +253,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 ;;(completion-styles '(orderless basic))
 ;; (completion-category-overrides
 #+end_src
-** embark
+** =embark=: interacting with completion entries
 #+begin_src emacs-lisp
 (defun garid/embark-org-insert-ref-of-tbl-fig-src-eq (x)
   (interactive "sSearch Term: ")
@@ -320,14 +289,14 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   (setq prefix-help-command #'embark-prefix-help-command))
 #+end_src
 
-** savehist
+** =savehist=:
 #+begin_src emacs-lisp
 (use-package savehist
   :ensure t
   :config (savehist-mode))
 #+end_src
 * Org
-** org-mode configuration
+** =org=: org-mode configuration
 #+caption: org config
 #+name: lst_org
 #+begin_src emacs-lisp :noeval
@@ -342,7 +311,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   (org-mode . garid-custom/org-mode-hooked-func)
 
   :custom
-  (org-ellipsis                      " ▼"   )   ;; symbol for folded org heading
+  (org-ellipsis                      " ▼"   )
   (org-hide-emphasis-markers         t      )
   (org-log-done                      t      )
   (org-image-actual-width            '(800) )
@@ -368,14 +337,15 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
                    ("\\.xopp\\'"               . "xournalpp \"%s\""          )))
 
   ;; todo .......................................................................................
-  (org-todo-keywords      '((sequence "TODO(t)" "NEXT(n)" "WAIT(w)" "PRJT(p)"
+  (org-todo-keywords      '((sequence "TODO(t)" "NEXT(n)" "WAIT(w)" "PRJT(p)" "PRJT(p)" "VAGUE(v)"
                                       "|"       "DONE(d)" "CNCL(c)")))
 
   (org-todo-keyword-faces '(("TODO"  . org-warning )
                             ("PRJT"  . "tomato"    )
                             ("NEXT"  . "orange"    )
-                            ("WAIT"  . "yellow"    )
+                            ("WAIT"  . "gold"    )
                             ("DONE"  . "dim gray"  )
+                            ("VAGUE"  . "medium purple"  )
                             ("CNCL"  . (:foreground "gray30" :weight bold))))
 
   ;; latex related ..............................................................................
@@ -481,7 +451,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 (use-package ob-nix       )
 #+end_src
 
-** org-bullet
+** =org-bullet=: chaning bullets in org file
 #+begin_src emacs-lisp
 (use-package org-bullets
   :ensure t
@@ -521,7 +491,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 (setq garids-brain-dumping-directory "~/BrainDump/")
 #+end_src
 
-** denote
+** =denote=: Prot's simple noting package
 #+begin_src emacs-lisp
 (use-package denote
   :ensure t
@@ -553,7 +523,12 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 
   )
 #+end_src
-** org-roam
+
+** =consult-denote=: consulting with denote
+#+begin_src emacs-lisp
+(use-package consult-denote :ensure t)
+#+end_src
+** =org-roam=: roam
 #+begin_src emacs-lisp
 (use-package org-roam
   ;; :requires org-roam-dailies ??
@@ -665,11 +640,35 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   (org-roam-db-autosync-mode))
 #+end_src
 
-** org-roam-ui
+** =org-roam-ui=: graphing of org-roam in web browser
 #+begin_src emacs-lisp
 (use-package org-roam-ui :ensure t)
 #+end_src
-** citar
+** =consult-org-roam=
+#+begin_src emacs-lisp
+(use-package consult-org-roam
+   :ensure t
+   :after org-roam
+   :init (require 'consult-org-roam)
+   ;; Activate the minor mode
+   (consult-org-roam-mode 1)
+   :custom
+   (consult-org-roam-grep-func #'consult-ripgrep)
+   (consult-org-roam-buffer-narrow-key ?r)
+   (consult-org-roam-buffer-after-buffers t)
+   :config
+   ;; Eventually suppress previewing for certain functions
+   (consult-customize consult-org-roam-forward-links :preview-key "M-.")
+   :bind
+   ;; Define some convenient keybindings as an addition
+   ("C-c n e" . consult-org-roam-file-find)
+   ("C-c n b" . consult-org-roam-backlinks)
+   ("C-c n B" . consult-org-roam-backlinks-recursive)
+   ("C-c n l" . consult-org-roam-forward-links)
+   ("C-c n r" . consult-org-roam-search)
+   )
+#+end_src
+** =citar=: citation
 #+begin_src emacs-lisp
 (use-package citar
   :no-require
@@ -690,7 +689,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   (LaTeX-mode . citar-capf-setup)
   )
 #+end_src
-** citar-denote
+** =citar-denote=: citation in denote
 #+begin_src emacs-lisp
 (use-package citar-denote
   :ensure t
@@ -777,31 +776,30 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   )
 #+end_src
 * Org Time managements
-** org-agenda
+** =org-agenda=: the agenda
 #+begin_src emacs-lisp :results none
 (use-package org-agenda
   :ensure   nil
-
-  :bind (:map org-agenda-mode-map
-              ("j" . evil-next-line    )
-              ("k" . evil-previous-line)
-              )
+  ;; :bind (:map org-agenda-mode-map
+  ;;             ("j" . evil-next-line    )
+  ;;             ("k" . evil-previous-line)
+  ;;             )
   :custom
   (org-agenda-files '("~/BrainDump/gtd/main.org"))
   (org-agenda-span 90)
   (org-agenda-custom-commands
    '(("i" "Inbox"                tags-todo "+TODO=\"TODO\"" ((org-agenda-files (file-expand-wildcards "~/BrainDump/gtd/inbox.org"))))
      ("n" "Next actions"         tags-todo "+TODO=\"TODO\"")
-     ("p" "Projects"             tags-todo "+TODO=\"PROJ\"")
+     ("p" "Projects"             tags-todo "+TODO=\"PRJT\"")
      ("w" "Waiting"              tags-todo "+TODO=\"WAIT\"")
-     ("s" "Someday"              tags-todo "+TODO=\"TODO\"|TODO=\"PROJ\"" ((org-agenda-files (file-expand-wildcards "~/BrainDump/gtd/someday.org"))))
-     ("o" "Actions and Projects" tags-todo "+TODO=\"TODO\"|TODO=\"PROJ\"")))
+     ("s" "Someday"              tags-todo "+TODO=\"TODO\"|TODO=\"PRJT\"" ((org-agenda-files (file-expand-wildcards "~/BrainDump/gtd/someday.org"))))
+     ("o" "Actions and Projects" tags-todo "+TODO=\"TODO\"|TODO=\"PRJT\"")))
 
-  (org-agenda-prefix-format '((agenda   . "  %-25:c%?-12t% s")
-                              (timeline . "  % s")
-                              (todo     . "  %-12:c")
-                              (tags     . "  %-25:c")
-                              (search   . "  %-12:c")))
+  (org-agenda-prefix-format '((agenda   . "  %-25:c%?-12t% s" )
+                              (timeline . "  % s"             )
+                              (todo     . "  %-12:c"          )
+                              (tags     . "  %-25:c"          )
+                              (search   . "  %-12:c"          )))
 
   (org-agenda-tags-column -120)
   (org-agenda-sorting-strategy '((agenda habit-down time-up priority-down category-keep)
@@ -810,44 +808,55 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
                                  (search category-keep)))
 
   ;; M-x org-agenda # to show the stuck projects
-  (org-stuck-projects '("+TODO=\"PROJ\"" ("TODO") nil "") )
+  (org-stuck-projects '("+TODO=\"PRJT\"" ("TODO") nil "") )
 
   (org-refile-use-outline-path             'file)
   (org-outline-path-complete-in-steps      'nil)
-  (refile-targets                          (file-expand-wildcards "~/BrainDump/gtd/*.org"))
-  (org-refile-targets '(( refile-targets :todo . "PROJ" )))
+
+  ;; (refile-targets                          (file-expand-wildcards "~/BrainDump/gtd/*.org"))
+  ;; (org-refile-targets '(( refile-targets :todo . "PRJT" )))
+  (org-refile-targets '(("~/BrainDump/gtd/main.org"      :maxlevel . 3)
+                        ("~/BrainDump/gtd/someday.org"   :level    . 1)
+                        ("~/BrainDump/gtd/reference.org" :maxlevel . 1)))
+
 
   (org-capture-templates
-   '(("i" "Inbox"       entry (file "~/BrainDump/gtd/inbox.org"  )  "* TODO %^{Brief Description}\nAdded: %U\n%?" :empty-lines 1 :prepend t)
-     ("n" "Next action" entry (file "~/BrainDump/gtd/main.org"   ) "** NEXT %^{Brief Description}\nAdded: %U\n%?" :empty-lines 1 :prepend t)
-     ("w" "Waiting"     entry (file "~/BrainDump/gtd/main.org"   ) "** WAIT %^{Brief Description}\nAdded: %U\n%?" :empty-lines 1 :prepend t)
-     ("p" "Project"     entry (file "~/BrainDump/gtd/main.org"   )  "* PROJ %^{Brief Description}\n:PROPERTIES:\n:CATEGORY: %^{Id}\n:END:\nAdded: %U\n%?" :empty-lines 1 :prepend t)
-     ("s" "Someday"     entry (file "~/BrainDump/gtd/someday.org")  "* TODO %^{Brief Description}\nAdded: %U\n%?" :empty-lines 1 :prepend t)
+   '(("i" "Inbox"      entry (file          "~/BrainDump/gtd/inbox.org"           )  "* VAGUE %?\nAdded: %U\n"                                          :empty-lines 1 :prepend t)
+     ("I" "Inbox from" entry (file          "~/BrainDump/gtd/inbox.org"           )  "* VAGUE %?\nAdded: %U\nFrom: %a"                                  :empty-lines 1 :prepend t)
+     ("n" "Next"       entry (file+headline "~/BrainDump/gtd/main.org"    "Single")  "** NEXT  %?\nAdded: %U\n"                                         :empty-lines 1 :prepend t)
+     ("p" "Project"    entry (file+headline "~/BrainDump/gtd/main.org"    "Project")  "* PRJT  %?\n:PROPERTIES:\n:CATEGORY: %^{Id}\n:END:\nAdded: %U\n" :empty-lines 1 :prepend t)
+     ("s" "Someday"    entry (file+headline "~/BrainDump/gtd/someday.org" "Someday")  "* TODO  %?\nAdded: %U\n"                                         :empty-lines 1 :prepend t)
      ))
 
   :config
   (add-hook 'org-agenda-finalize-hook (lambda () (org-agenda-write "/tmp/current-agenda-text")))
   )
 #+end_src
-** casual-agenda
+** =casual-agenda=: casual agenda based on transient
 #+begin_src emacs-lisp
 (use-package casual-agenda
   :ensure t
   :after org-agenda
-)
+  :bind (:map org-agenda-mode-map
+         ("<f7>" . casual-agenda-tmenu)))
 #+end_src
-** org-timeblock
+** =org-timeblock=: agenda to SVG
 #+begin_src emacs-lisp
 (use-package org-timeblock)
 #+end_src
-** org timeline
+** =org-timeline=
 #+begin_src emacs-lisp
 (use-package org-timeline
   :init
   (add-hook 'org-agenda-finalize-hook 'org-timeline-insert-timeline :append))
 #+end_src
 * Org Exporting related
-** latex mode hook
+** =ox-reveal=
+#+begin_src emacs-lisp
+(use-package ox-reveal
+  :ensure t)
+#+end_src
+** =latex=
 #+begin_src emacs-lisp
 (use-package latex
   :ensure nil
@@ -900,11 +909,6 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
       (setq pub-dir (concat org-export-output-directory-prefix (substring extension 1)))
       (when (not (file-directory-p pub-dir))
        (make-directory pub-dir))))
-#+end_src
-** ox-reveal
-#+begin_src emacs-lisp
-(use-package ox-reveal
-  :ensure t)
 #+end_src
 ** TODO Website from org-roam directory
 [[id:e7ee081e-a02b-4ab9-bccc-327a92bf2b09][create website from org-roam]]
@@ -1119,13 +1123,13 @@ stork.register(
  )
 #+end_src
 
-** htmlize - source code syntax in html export
+** =htmlize= - source code syntax in html export
 #+begin_src emacs-lisp
 (use-package htmlize
   :ensure t)
 #+end_src
 * Org Misc:
-** org-download package itself
+** =org-download= package itself
 #+begin_src emacs-lisp
 (use-package org-download
   :ensure t
@@ -1158,7 +1162,7 @@ case "$ext" in
 esac
 #+end_src
 
-** org-auto-tangle
+** =org-auto-tangle=
 #+begin_src emacs-lisp
 (use-package org-auto-tangle
   :ensure t
@@ -1167,7 +1171,7 @@ esac
   :custom (org-auto-tangle-default    nil                 ))
 #+end_src
 
-** org-transclusion
+** =org-transclusion=
 #+begin_src emacs-lisp
 (use-package org-transclusion
   :ensure t
@@ -1177,7 +1181,7 @@ esac
               ("<f11>"   . org-transclusion-mode    )))
 #+end_src
 
-** org contacts
+** =org-contacts=
 #+begin_src emacs-lisp
 (use-package org-contacts
   :ensure t
@@ -1186,26 +1190,26 @@ esac
   (org-contacts-files '("~/BrainDump/denote/20240802T185223--contacts__info.org")))
 #+end_src
 * Programming languages
-** graphviz
+** =graphviz-dot-mode=
 #+begin_src emacs-lisp
 (use-package graphviz-dot-mode :ensure t)
 #+end_src
 
-** scad
+** =scad-mode=
 #+begin_src emacs-lisp
 (use-package scad-mode :ensure t)
 #+end_src
 
-** lua
+** =lua-mode=
 #+begin_src emacs-lisp
 (use-package lua-mode :ensure t)
 #+end_src
-** nix mode
+** =nix-ts-mode=
 #+begin_src emacs-lisp
 (use-package nix-ts-mode :ensure t)
 #+end_src
 * Coding input
-** Tempel: snippets
+** =tempel=: snippet system
 #+begin_src emacs-lisp
 (use-package tempel
   :ensure t
@@ -1251,7 +1255,7 @@ esac
     (completing-read "Choose: " choices)))
 #+end_src
 
-** Elec-pair: auto parenthesis pair
+** =elec-pair=: auto parenthesis pair
 #+begin_src emacs-lisp
 (use-package elec-pair
   :ensure nil
@@ -1272,7 +1276,7 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
       '((bash-mode   . bash-ts-mode)
         (python-mode . python-ts-mode)))
 #+end_src
-** Indent bars
+** =indent-bars=
 #+begin_src emacs-lisp
 (use-package indent-bars
   ;;:load-path "~/code/emacs/indent-bars"
@@ -1290,17 +1294,17 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
   :hook ((python-base-mode yaml-mode) . indent-bars-mode))
 #+end_src
 * Coding lsp & jumping around
-** lsp: eglot
+** =eglot=: lsp
 #+begin_src emacs-lisp
 (use-package eglot
   :config
   (add-to-list 'eglot-server-programs '(nix-ts-mode . ("nil"))))
 #+end_src
-** lsp: consult eglot variable search inside project
+** =consult-eglot=: consulting with lsp 
 #+begin_src emacs-lisp
 (use-package consult-eglot :ensure t)
 #+end_src
-** lsp: eglot-booster
+** =eglot-booster=: faster eglot
 #+begin_src emacs-lisp
 (use-package eglot-booster
   :ensure t
@@ -1313,9 +1317,8 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
   )
 #+end_src
 
-** corfu: completion
+** =corfu=: completion
 #+begin_src emacs-lisp
-;; from https://github.com/Gavinok/emacs.d/blob/3ccc6e35feb2903442c9f7625fba081d93a2fa36/init.el#L614
 (use-package corfu
   ;; Optional customizations
   :ensure t
@@ -1354,7 +1357,7 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
                         (corfu-mode)))
   )
 #+end_src
-** cape: completion at point extensions
+** =cape=: completion at point extensions
 #+begin_src emacs-lisp
 (use-package cape
   ;; Bind prefix keymap providing all Cape commands under a mnemonic key.
@@ -1378,14 +1381,14 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
 )
 #+end_src
 
-** fancy-dabbrev
+** =fancy-dabbrev=
 #+begin_src emacs-lisp
 (use-package fancy-dabbrev
   :ensure t
   :config (global-fancy-dabbrev-mode))
 #+end_src
 
-** abbrev
+** =abbrev=
 #+begin_src emacs-lisp
 (use-package abbrev
   :defer 1
@@ -1401,26 +1404,28 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
   )
 #+end_src
 * Coding convenients
-** rg: ripgrep
+** =rg=: ripgrep in emacs
+Probably requires external =rg= command.
+
 #+begin_src emacs-lisp
-(use-package rg
-  :ensure t)
+(use-package rg :ensure t)
 #+end_src
 
-** magit: git control
+** =magit=: git control
 #+begin_src emacs-lisp
 (use-package magit
   :ensure t)
 #+end_src
 
-** git-gutter: git diff shows on the side
+** =git-gutter=: git diff shows on the side
+Similar to vim-signify.
 #+begin_src emacs-lisp
 (use-package git-gutter
   :ensure t
   :config (global-git-gutter-mode))
 #+end_src
 
-** harpoon
+** =harpoon=
 #+begin_src emacs-lisp
 (use-package harpoon :ensure t)
 #+end_src
@@ -1625,7 +1630,7 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
    ))
 #+end_src
 
-** =PDF-tools=
+** =pdf-tools=: reading pdf in emacs
 #+begin_src emacs-lisp
 (use-package pdf-tools
   :ensure t
@@ -1812,14 +1817,14 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 #+attr_latex: :placement [H]
 #+caption: File and directory related commands
 #+name: tbl-kbinding-file-n-dired
-| key(s) | function                 | short description       | mode | lambda |
-|--------+--------------------------+-------------------------+------+--------|
-| SPC    | execute-extended-command | M-x                     | -    |        |
-| f      | find-file                | f.ind-file              | -    |        |
-| d      | dired-jump               | d.irectory              | -    |        |
-| D      | :ignore t                | D.ired................. | -    |        |
-| Ds     | dired                    | s.imple                 | -    |        |
-| Dp     | dired-preview-mode       | p.review                | -    |        |
+| key(s) | function                   | short description       | mode | lambda |
+|--------+----------------------------+-------------------------+------+--------|
+| =SPC=  | =execute-extended-command= | M-x                     | -    |        |
+| =f=    | =find-file=                | f.ind-file              | -    |        |
+| =d=    | =dired-jump=               | d.irectory              | -    |        |
+| =D=    | =:ignore t=                | D.ired................. | -    |        |
+| =Ds=   | =dired=                    | s.imple                 | -    |        |
+| =Dp=   | =dired-preview-mode=       | p.review                | -    |        |
 
 **** Buffer and operations on buffer
 #+attr_latex: :placement [H]
@@ -1827,382 +1832,378 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 #+name: tbl-kbind-buffer-related
 | key(s) | function                    | short description             | mode | lambda |
 |--------+-----------------------------+-------------------------------+------+--------|
-| l      | consult-buffer              | l.ist-buffer                  | -    |        |
-| L      | :ignore t                   | L.buffer..................... | -    |        |
-| Lr     | revert-buffer-quick         | r.evert (reload)              | -    |        |
-| Le     | eval-buffer                 | e.val                         | -    |        |
-| Li     | ibuffer                     | i.buffer                      | -    |        |
-| Ln     | rename-buffer               | r.ename                       | -    |        |
-| L<     | switch-to-prev-buffer       | <.prev                        | -    |        |
-| L>     | switch-to-next-buffer       | >.next                        | -    |        |
-| Ld     | crux-delete-file-and-buffer | d.elete                       | -    |        |
-| Lc     | clone-indirect-buffer       | c.lone                        | -    |        |
-| Ls     | crux-create-scratch-buffer  | s.cratch-buffer               | -    |        |
-| Lh     | buf-move-left               | h. move left                  | -    |        |
-| Lj     | buf-move-down               | j. move down                  | -    |        |
-| Lk     | buf-move-up                 | k. move up                    | -    |        |
-| Ll     | buf-move-right              | l. move right                 | -    |        |
-| LL     | tear-off-window             | L. tear window to frame       | -    |        |
+| =l=      | =consult-buffer=              | l.ist-buffer                  | -    |        |
+| =L=      | =:ignore t=                   | L.buffer..................... | -    |        |
+| =Lr=     | =revert-buffer-quick=         | r.evert (reload)              | -    |        |
+| =Le=     | =eval-buffer=                 | e.val                         | -    |        |
+| =Li=     | =ibuffer=                     | i.buffer                      | -    |        |
+| =Ln=     | =rename-buffer=               | r.ename                       | -    |        |
+| =L<=     | =switch-to-prev-buffer=       | <.prev                        | -    |        |
+| =L>=     | =switch-to-next-buffer=       | >.next                        | -    |        |
+| =Ld=     | =crux-delete-file-and-buffer= | d.elete                       | -    |        |
+| =Lc=     | =clone-indirect-buffer=       | c.lone                        | -    |        |
+| =Ls=     | =crux-create-scratch-buffer=  | s.cratch-buffer               | -    |        |
+| =Lh=     | =buf-move-left=               | h. move left                  | -    |        |
+| =Lj=     | =buf-move-down=               | j. move down                  | -    |        |
+| =Lk=     | =buf-move-up=                 | k. move up                    | -    |        |
+| =Ll=     | =buf-move-right=              | l. move right                 | -    |        |
+| =LL=     | =tear-off-window=             | L. tear window to frame       | -    |        |
 
 **** Convenient
 #+attr_latex: :placement [H]
 #+caption: Convenient commands
 #+name: tbl-kbind-zconvenients
-| key(s) | function                               | short description                  | mode | lambda |
-|--------+----------------------------------------+------------------------------------+------+--------|
-| z      | :ignore t                              | z.conveniences.................... | -    |        |
-| za     | garid-custom/align-regexp-and-untabify | a.lign                             | -    |        |
-| zr     | replace-regexp                         | r.eplace word in buf               | -    |        |
-| zh     | highlight-symbol-at-point              | h.ighlight on                      | -    |        |
-| zH     | unhighlight-regexp                     | H.ighlight off                     | -    |        |
-|--------+----------------------------------------+------------------------------------+------+--------|
-| zs     | :ignore t                              | s.pell............................ | -    |        |
-| zsw    | ispell-word                            | w.ord                              | -    |        |
-| zsr    | ispell-region                          | r.egion                            | -    |        |
-| zsC    | ispell-comments-and-strings            | C.omment-full                      | -    |        |
-| zsc    | ispell-comment-or-string-at-point      | c.omment-here                      | -    |        |
-| zsb    | ispell-buffer                          | b.uffer                            | -    |        |
-| zsm    | ispell-message                         | m.essage                           | -    |        |
-| zsq    | ispell-kill-ispell                     | q.uit                              | -    |        |
-| zsl    | ispell-change-dictionary               | l.anguage en-mn                    | -    |        |
-| zst    | mw-thesaurus-lookup-at-point           | t.hesaurus current word            | -    |        |
-| zsT    | mw-thesaurus-lookup                    | T.hesaurus                         | -    |        |
-|--------+----------------------------------------+------------------------------------+------+--------|
-| ZQ     | kill-emacs                             | kill emacs                         | -    |        |
+| key(s) | function                                 | short description                  | mode | lambda |
+|--------+------------------------------------------+------------------------------------+------+--------|
+| =z=    | =:ignore t=                              | z.conveniences.................... | -    |        |
+| =za=   | =garid-custom/align-regexp-and-untabify= | a.lign                             | -    |        |
+| =zr=   | =replace-regexp=                         | r.eplace word in buf               | -    |        |
+| =zh=   | =highlight-symbol-at-point=              | h.ighlight on                      | -    |        |
+| =zH=   | =unhighlight-regexp=                     | H.ighlight off                     | -    |        |
+| =zs=   | =:ignore t=                              | s.pell............................ | -    |        |
+| =zsw=  | =ispell-word=                            | w.ord                              | -    |        |
+| =zsr=  | =ispell-region=                          | r.egion                            | -    |        |
+| =zsC=  | =ispell-comments-and-strings=            | C.omment-full                      | -    |        |
+| =zsc=  | =ispell-comment-or-string-at-point=      | c.omment-here                      | -    |        |
+| =zsb=  | =ispell-buffer=                          | b.uffer                            | -    |        |
+| =zsm=  | =ispell-message=                         | m.essage                           | -    |        |
+| =zsq=  | =ispell-kill-ispell=                     | q.uit                              | -    |        |
+| =zsl=  | =ispell-change-dictionary=               | l.anguage en-mn                    | -    |        |
+| =zst=  | =mw-thesaurus-lookup-at-point=           | t.hesaurus current word            | -    |        |
+| =zsT=  | =mw-thesaurus-lookup=                    | T.hesaurus                         | -    |        |
+| =ZQ=   | =kill-emacs=                             | kill emacs                         | -    |        |
 
 **** System
 #+attr_latex: :placement [H]
 #+caption: system commmands
 #+name: tbl-kbind-sys-related
-| key(s) | function                                                                                   | short description              | mode | lambda |
-|--------+--------------------------------------------------------------------------------------------+--------------------------------+------+--------|
-| s      | :ignore t                                                                                  | s.ystem....................... | -    |        |
-| srf    | recentf-open-files                                                                         | r.ecent-f.iles                 | -    |        |
-| sl     | :ignore t                                                                                  | l.ine......................... | -    |        |
-| sl5    | (setq display-line-numbers-width 5)                                                        | 5.digit number                 | -    | y      |
-| sl4    | (setq display-line-numbers-width 4)                                                        | 4.digit number                 | -    | y      |
-| sl3    | (setq display-line-numbers-width 3)                                                        | 3.digit number                 | -    | y      |
-| slm    | scroll-lock-mode                                                                           | m.ode scroll-lock-mode         | -    |        |
-| slv    | global-display-fill-column-indicator-mode                                                  | v.ertical-line                 | -    |        |
-| sln    | display-line-numbers-mode                                                                  | n.umber toggle                 | -    |        |
-| slr    | ruler-mode                                                                                 | r.uler mode                    | -    |        |
-| scl    | (global-command-log-mode) (clm/open-command-log-buffer)                                    | c.md-.l.og                     | -    | y      |
-| sw     | whitespace-mode                                                                            | w.hitespace                    | -    |        |
-| sg     | :ignore t                                                                                  | s-garid                        | -    |        |
-| sgf    | gry/distraction-free-on                                                                    | f.ocus                         | -    |        |
-| sgr    | gry/distraction-free-off                                                                   | r.eset                         | -    |        |
-|--------+--------------------------------------------------------------------------------------------+--------------------------------+------+--------|
-| O      | :ignore t                                                                                  | (O)pen........................ | -    |        |
-| Oe     | (find-file "~/.config/emacs/init.org")                                                     | e.macs init.org                | -    | y      |
-| OE     | (find-file "~/.config/emacs/init.el")                                                      | E.macs init.el                 | -    | y      |
-| Ob     | (find-file (nth 0 org-cite-global-bibliography))                                           | b.ibliography                  | -    | y      |
-| Op     | (find-file "~/BrainDump/bookshelf/")                                                       | p.dfs                          | -    | y      |
-| Oc     | citar-open                                                                                 | c.itaiton                      | -    |        |
-| OO     | (find-file org-default-notes-file)                                                         | O.rg capture                   | -    | y      |
-| Oi     | (find-file "~/BrainDump/gtd/inbox.org")                                                    | i.nbox                         | -    | y      |
-| Om     | (find-file "~/BrainDump/gtd/main.org")                                                     | m.ain                          | -    | y      |
-| Or     | (find-file (concat denote-directory "/phd/20240814T113502--00-garids-phd-index__phd.org")) | r.esearch index                | -    | y      |
-|--------+--------------------------------------------------------------------------------------------+--------------------------------+------+--------|
-| t      | :ignore t                                                                                  | t.erminal..................... | -    |        |
-| te     | eshell                                                                                     | e.shell emacs-shell            | -    |        |
-| tv     | vterm                                                                                      | v.term  vterm                  | -    |        |
-| tx     | garid-custom/open-external-term-here                                                       | x.ternal terminal              | -    |        |
-| tm     | tmr-with-description                                                                       | m. timer                       | -    |        |
-| u      | :ignore                                                                                    | (u)ndo                         | -    |        |
-| ut     | undo-tree-visualize                                                                        | t.ree                          | -    |        |
+| key(s) | function                                                                                     | short description              | mode | lambda |
+|--------+----------------------------------------------------------------------------------------------+--------------------------------+------+--------|
+| =s=    | =:ignore t=                                                                                  | s.ystem....................... | -    |        |
+| =srf=  | =recentf-open-files=                                                                         | r.ecent-f.iles                 | -    |        |
+| =sl=   | =:ignore t=                                                                                  | l.ine......................... | -    |        |
+| =sl5=  | =(setq display-line-numbers-width 5)=                                                        | 5.digit number                 | -    | y      |
+| =sl4=  | =(setq display-line-numbers-width 4)=                                                        | 4.digit number                 | -    | y      |
+| =sl3=  | =(setq display-line-numbers-width 3)=                                                        | 3.digit number                 | -    | y      |
+| =slm=  | =scroll-lock-mode=                                                                           | m.ode scroll-lock-mode         | -    |        |
+| =slv=  | =global-display-fill-column-indicator-mode=                                                  | v.ertical-line                 | -    |        |
+| =sln=  | =display-line-numbers-mode=                                                                  | n.umber toggle                 | -    |        |
+| =slr=  | =ruler-mode=                                                                                 | r.uler mode                    | -    |        |
+| =scl=  | =(global-command-log-mode) (clm/open-command-log-buffer)=                                    | c.md-.l.og                     | -    | y      |
+| =sw=   | =whitespace-mode=                                                                            | w.hitespace                    | -    |        |
+| =sg=   | =:ignore t=                                                                                  | s-garid                        | -    |        |
+| =sgf=  | =gry/distraction-free-on=                                                                    | f.ocus                         | -    |        |
+| =sgr=  | =gry/distraction-free-off=                                                                   | r.eset                         | -    |        |
+| =O=    | =:ignore t=                                                                                  | (O)pen........................ | -    |        |
+| =Oe=   | =(find-file "~/.config/emacs/init.org")=                                                     | e.macs init.org                | -    | y      |
+| =OE=   | =(find-file "~/.config/emacs/init.el")=                                                      | E.macs init.el                 | -    | y      |
+| =Ob=   | =(find-file (nth 0 org-cite-global-bibliography))=                                           | b.ibliography                  | -    | y      |
+| =Op=   | =(find-file "~/BrainDump/bookshelf/")=                                                       | p.dfs                          | -    | y      |
+| =Oc=   | =citar-open=                                                                                 | c.itaiton                      | -    |        |
+| =OO=   | =(find-file org-default-notes-file)=                                                         | O.rg capture                   | -    | y      |
+| =Oi=   | =(find-file "~/BrainDump/gtd/inbox.org")=                                                    | i.nbox                         | -    | y      |
+| =Om=   | =(find-file "~/BrainDump/gtd/main.org")=                                                     | m.ain                          | -    | y      |
+| =Or=   | =(find-file (concat denote-directory "/phd/20240814T113502--00-garids-phd-index__phd.org"))= | r.esearch index                | -    | y      |
+| =t=    | =:ignore t=                                                                                  | t.erminal..................... | -    |        |
+| =te=   | =eshell=                                                                                     | e.shell emacs-shell            | -    |        |
+| =tv=   | =vterm=                                                                                      | v.term  vterm                  | -    |        |
+| =tx=   | =garid-custom/open-external-term-here=                                                       | x.ternal terminal              | -    |        |
+| =tm=   | =tmr-with-description=                                                                       | m. timer                       | -    |        |
+| =u=    | =:ignore=                                                                                    | (u)ndo                         | -    |        |
+| =ut=   | =undo-tree-visualize=                                                                        | t.ree                          | -    |        |
 
 **** Bookmark
 #+attr_latex: :placement [H]
 #+caption: bookmark
 #+name: tbl-kbind-bookmarks
-| key(s) | function                 | short description                | mode | lambda |
-|--------+--------------------------+----------------------------------+------+--------|
-| b      | harpoon-quick-menu-hydra | bookmark-harpoon                 | -    |        |
-| B      | :ignore t                | (b)ookmark...................... | -    |        |
-| Ba     | harpoon-add-file         | b-(a)dd-file                     | -    |        |
-| B1     | harpoon-go-to-1          | b1                               | -    |        |
-| B2     | harpoon-go-to-2          | b2                               | -    |        |
-| B3     | harpoon-go-to-3          | b3                               | -    |        |
-| B4     | harpoon-go-to-4          | b4                               | -    |        |
-| B5     | harpoon-go-to-5          | b5                               | -    |        |
+| key(s) | function                   | short description                | mode | lambda |
+|--------+----------------------------+----------------------------------+------+--------|
+| =b=    | =harpoon-quick-menu-hydra= | bookmark-harpoon                 | -    |        |
+| =B=    | =:ignore t=                | (b)ookmark...................... | -    |        |
+| =Ba=   | =harpoon-add-file=         | b-(a)dd-file                     | -    |        |
+| =B1=   | =harpoon-go-to-1=          | b1                               | -    |        |
+| =B2=   | =harpoon-go-to-2=          | b2                               | -    |        |
+| =B3=   | =harpoon-go-to-3=          | b3                               | -    |        |
+| =B4=   | =harpoon-go-to-4=          | b4                               | -    |        |
+| =B5=   | =harpoon-go-to-5=          | b5                               | -    |        |
 
 **** Help related
 #+attr_latex: :placement [H]
 #+caption: Help for emacs/elisp related
 #+name: tbl-kbind-help
-| key(s) | function                 | short description                | mode | lambda |
-|--------+--------------------------+----------------------------------+------+--------|
-| h      | :ignore t                | h.elp........................... | -    |        |
-| hh     | describe-symbol          | h.elp symbol (elisp)             | -    |        |
-| hH     | describe-key             | H.elp keybinding                 | -    |        |
-| ho     | org-info                 | o.rg info                        | -    |        |
-| hw     | which-key-show-top-level | w.hich key                       | -    |        |
-| hm     | consult-man              | m.an                             | -    |        |
+| key(s) | function                   | short description                | mode | lambda |
+|--------+----------------------------+----------------------------------+------+--------|
+| =h=    | =:ignore t=                | h.elp........................... | -    |        |
+| =hh=   | =describe-symbol=          | h.elp symbol (elisp)             | -    |        |
+| =hH=   | =describe-key=             | H.elp keybinding                 | -    |        |
+| =ho=   | =org-info=                 | o.rg info                        | -    |        |
+| =hw=   | =which-key-show-top-level= | w.hich key                       | -    |        |
+| =hm=   | =consult-man=              | m.an                             | -    |        |
 
 **** Development commands
 #+attr_latex: :placement [H]
 #+caption: misc. development related
 #+name: tbl-kbind-dev
-| key(s) | function                      | short description                | mode | lambda |
-|--------+-------------------------------+----------------------------------+------+--------|
-| mg     | magit-status                  | .m.a.g.it                        | -    |        |
-| <      | recompile                     | recompile                        | -    |        |
-| sco    | corfu-mode                    | s-(c)orfu-(m)ode                 | -    |        |
-| se     | eglot                         | s-(e)glot                        | -    |        |
-| rg     | rg                            | (r)ip-(g)rep                     | -    |        |
-| g      | :ignore t                     | g.it............................ | -    |        |
-| gS     | git-gutter:stage-hunk         | S.tage hunkk                     | -    |        |
-| gs     | git-gutter:popup-hunk         | s.popup hunk                     | -    |        |
-| gr     | git-gutter:update-all-windows | r.efresh                         | -    |        |
-| gg     | git-gutter-mode               | g.utter-mode                     | -    |        |
-| gn     | git-gutter:next-hunk          | n.ext                            | -    |        |
-| gp     | git-gutter:previous-hunk      | n.ext                            | -    |        |
-| gd     | magit-ediff-compare           | ma(g)it-e(d) hunk                | -    |        |
-| P      | :ignore                       | Python (inferior)............... | -    |        |
-| Pr     | python-shell-restart          | R.estart                         | -    |        |
-| PP     | run-python                    | P. run-python                    | -    |        |
-| Pk     | comint-send-eof               | k. kill  (also C-c C-d)          | -    |        |
+| key(s) | function                        | short description                | mode | lambda |
+|--------+---------------------------------+----------------------------------+------+--------|
+| =mg=   | =magit-status=                  | .m.a.g.it                        | -    |        |
+| =<=    | =recompile=                     | recompile                        | -    |        |
+| =sco=  | =corfu-mode=                    | s-(c)orfu-(m)ode                 | -    |        |
+| =se=   | =eglot=                         | s-(e)glot                        | -    |        |
+| =rg=   | =rg=                            | (r)ip-(g)rep                     | -    |        |
+| =g=    | =:ignore t=                     | g.it............................ | -    |        |
+| =gS=   | =git-gutter:stage-hunk=         | S.tage hunkk                     | -    |        |
+| =gs=   | =git-gutter:popup-hunk=         | s.popup hunk                     | -    |        |
+| =gr=   | =git-gutter:update-all-windows= | r.efresh                         | -    |        |
+| =gg=   | =git-gutter-mode=               | g.utter-mode                     | -    |        |
+| =gn=   | =git-gutter:next-hunk=          | n.ext                            | -    |        |
+| =gp=   | =git-gutter:previous-hunk=      | n.ext                            | -    |        |
+| =gd=   | =magit-ediff-compare=           | ma(g)it-e(d) hunk                | -    |        |
+| =P=    | =:ignore=                       | Python (inferior)............... | -    |        |
+| =Pr=   | =python-shell-restart=          | R.estart                         | -    |        |
+| =PP=   | =run-python=                    | P. run-python                    | -    |        |
+| =Pk=   | =comint-send-eof=               | k. kill  (also C-c C-d)          | -    |        |
 
 **** Consult related (picking & choosing stuff)
 #+attr_latex: :placement [H]
 #+caption: consult
 #+name: tbl-global-general-keybindings-consult
-| key(s) | function               | short description               | mode | lambda |
-|--------+------------------------+---------------------------------+------+--------|
-| c      | :ignore t              | c.onsult....................... | -    |        |
-| co     | consult-org-heading    | o.rg   == ofh                   | -    |        |
-| ci     | consult-imenu          | i.menu                          | -    |        |
-| cm     | consult-man            | m.an                            | -    |        |
-| cr     | consult-ripgrep        | r.ipgrep                        | -    |        |
-| cR     | consult-recent-file    | R.ecent files                   | -    |        |
-| cf     | consult-flymake        | f.lymake                        | -    |        |
-| cp     | consult-project-buffer | p.roject                        | -    |        |
-| cd     | consult-dir            | d.ir                            | -    |        |
-| cF     | consult-fd             | F.d   == $find                  | -    |        |
-| F      | consult-fd             | F.d   == $find                  | -    |        |
-| ca     | consult-org-agenda     | a.genda headings                | -    |        |
-| cg     | consult-git-grep       | g.it grep  == ps                | -    |        |
+| key(s) | function                 | short description               | mode | lambda |
+|--------+--------------------------+---------------------------------+------+--------|
+| =c=    | =:ignore t=              | c.onsult....................... | -    |        |
+| =co=   | =consult-org-heading=    | o.rg   == ofh                   | -    |        |
+| =ci=   | =consult-imenu=          | i.menu                          | -    |        |
+| =cm=   | =consult-man=            | m.an                            | -    |        |
+| =cr=   | =consult-ripgrep=        | r.ipgrep                        | -    |        |
+| =cR=   | =consult-recent-file=    | R.ecent files                   | -    |        |
+| =cf=   | =consult-flymake=        | f.lymake                        | -    |        |
+| =cp=   | =consult-project-buffer= | p.roject                        | -    |        |
+| =cd=   | =consult-dir=            | d.ir                            | -    |        |
+| =cF=   | =consult-fd=             | F.d   == $find                  | -    |        |
+| =F=    | =consult-fd=             | F.d   == $find                  | -    |        |
+| =ca=   | =consult-org-agenda=     | a.genda headings                | -    |        |
+| =cg=   | =consult-git-grep=       | g.it grep  == ps                | -    |        |
 
 **** Project related
 #+attr_latex: :placement [H]
 #+caption: Project (more like git-repo)
 #+name: tbl-global-general-keybindings-project
-| key(s) | function               | short description              | mode | lambda |
-|--------+------------------------+--------------------------------+------+--------|
-| p      | :ignore t              | .p.roject..................... | -    |        |
-| pr     | xref-find-references   | r.eferences                    | -    |        |
-| pR     | consult-eglot-symbols  | R.eferences consult            | -    |        |
-| pd     | consult-flymake        | d.iagnostic                    | -    |        |
-| pf     | project-find-file      | f.ind-file                     | -    |        |
-| pz     | project-switch-project | z.ump-to-other-proj            | -    |        |
-| ps     | consult-git-grep       | s.earch git files              | -    |        |
-| pS     | project-find-regexp    | s.earch-in-proj                | -    |        |
-| pk     | project-kill-buffers   | k.ill-buf-proj                 | -    |        |
-| pl     | consult-project-buffer | l.ist-buf-proj                 | -    |        |
-| pv     | consult-imenu          | v.ariables                     | -    |        |
-| v      | :ignore t              | v.ariables.................... | -    |        |
-| vq     | format-all-buffer      | v-(q)-format-buffer            | -    |        |
-| vr     | eglot-rename           | r.ename                        | -    |        |
+| key(s) | function                 | short description              | mode | lambda |
+|--------+--------------------------+--------------------------------+------+--------|
+| =p=    | =:ignore t=              | .p.roject..................... | -    |        |
+| =pr=   | =xref-find-references=   | r.eferences                    | -    |        |
+| =pR=   | =consult-eglot-symbols=  | R.eferences consult            | -    |        |
+| =pd=   | =consult-flymake=        | d.iagnostic                    | -    |        |
+| =pf=   | =project-find-file=      | f.ind-file                     | -    |        |
+| =pz=   | =project-switch-project= | z.ump-to-other-proj            | -    |        |
+| =ps=   | =consult-git-grep=       | s.earch git files              | -    |        |
+| =pS=   | =project-find-regexp=    | s.earch-in-proj                | -    |        |
+| =pk=   | =project-kill-buffers=   | k.ill-buf-proj                 | -    |        |
+| =pl=   | =consult-project-buffer= | l.ist-buf-proj                 | -    |        |
+| =pv=   | =consult-imenu=          | v.ariables                     | -    |        |
+| =v=    | =:ignore t=              | v.ariables.................... | -    |        |
+| =vq=   | =format-all-buffer=      | v-(q)-format-buffer            | -    |        |
+| =vr=   | =eglot-rename=           | r.ename                        | -    |        |
 
 **** Denote related
 #+attr_latex: :placement [H]
 #+caption: Denote
 #+name: tbl-global-general-keybindings-denote
-| key(s) | function                                    | short description             | mode | lambda |
-|--------+---------------------------------------------+-------------------------------+------+--------|
-| n      | :ignore t                                   | n.ote........................ | -    |        |
-| nr     | denote-rename-file                          | r.ename                       | -    |        |
-| nf     | denote-open-or-create                       | f.ind                         | -    |        |
-| nd     | (dired denote-directory)                    | d.ired                        | -    | y      |
-| nj     | denote-journal-extras-new-entry             | j.ournal                      | -    |        |
-| nJ     | denote-journal-extras-new-or-existing-entry | J.ournal-find                 | -    |        |
-| nil    | denote-insert-link                          | i.nsert-link                  | -    |        |
-| nij    | denote-journal-extras-link-or-create-entry  | i.nsert-journal-link          | -    |        |
-| nt     | denote-template                             | t.emplate                     | -    |        |
-| nI     | garid-custom/denote-node-insert-immediate   | I.nsert-note                  | -    |        |
-| ns     | consult-denote-grep                         | s. live grep                  | -    |        |
+| key(s) | function                                      | short description             | mode | lambda |
+|--------+-----------------------------------------------+-------------------------------+------+--------|
+| =n=    | =:ignore t=                                   | n.ote........................ | -    |        |
+| =nr=   | =denote-rename-file=                          | r.ename                       | -    |        |
+| =nf=   | =denote-open-or-create=                       | f.ind                         | -    |        |
+| =nd=   | =(dired denote-directory)=                    | d.ired                        | -    | y      |
+| =nj=   | =denote-journal-extras-new-entry=             | j.ournal                      | -    |        |
+| =nJ=   | =denote-journal-extras-new-or-existing-entry= | J.ournal-find                 | -    |        |
+| =nil=  | =denote-insert-link=                          | i.nsert-link                  | -    |        |
+| =nij=  | =denote-journal-extras-link-or-create-entry=  | i.nsert-journal-link          | -    |        |
+| =nt=   | =denote-template=                             | t.emplate                     | -    |        |
+| =nI=   | =garid-custom/denote-node-insert-immediate=   | I.nsert-note                  | -    |        |
+| =ns=   | =consult-denote-grep=                         | s. live grep                  | -    |        |
 
 **** org related
 #+attr_latex: :placement [H]
 #+caption: Org related stuffs
 #+name: tbl-global-general-keybindings-org-mode-related
-| key(s) | function                                                    | short description                | mode | lambda |
-|--------+-------------------------------------------------------------+----------------------------------+------+--------|
-| o      | :ignore t                                                   | o.rg............................ | -    |        |
-| oo     | org-open-at-point                                           | o.pen                            | org  |        |
-| oO     | garid/jump-label-def-of-ref-at-point-word                   | O.pen ref def                    | org  |        |
-| od     | code-from-internet/org-link-open-parent-with-dired-at-point | d.irectory open                  | org  |        |
-| ,      | org-ctrl-c-ctrl-c                                           | C-c C-c                          | org  |        |
+| key(s) | function                                                      | short description                | mode | lambda |
+|--------+---------------------------------------------------------------+----------------------------------+------+--------|
+| =o=    | =:ignore t=                                                   | o.rg............................ | -    |        |
+| =oo=   | =org-open-at-point=                                           | o.pen                            | org  |        |
+| =oO=   | =garid/jump-label-def-of-ref-at-point-word=                   | O.pen ref def                    | org  |        |
+| =od=   | =code-from-internet/org-link-open-parent-with-dired-at-point= | d.irectory open                  | org  |        |
+| =,=    | =org-ctrl-c-ctrl-c=                                           | C-c C-c                          | org  |        |
 
 **** org table related
 #+attr_latex: :placement [H]
 #+caption: Org related stuffs
 #+name: tbl-global-general-keybindings-org-tbl-related
-| key(s) | function                             | short description             | mode | lambda |
-|--------+--------------------------------------+-------------------------------+------+--------|
-| oT     | :ignore t                            | T.able....................... | -    |        |
-| oTm    | orgtbl-mode                          | m.ode                         | -    |        |
-| oTc    | orgtbl-create-or-convert-from-region | c.reate                       | -    |        |
-| oTT    | org-table-toggle-column-width        | T.oggle-hide-column           | -    |        |
-| oTC    | org-table-toggle-coordinate-overlays | C.oordinate                   | -    |        |
-| oTx    | org-table-export                     | x.port as csv file            | org  |        |
-| oTs    | org-table-sum                        | s.um                          | org  |        |
-| oTi    | :ignore t                            | i.nsert...................... | org  |        |
-| oTic   | org-table-insert-column              | c.olumn                       | org  |        |
-| oTir   | org-table-insert-row                 | r.ow                          | org  |        |
+| key(s) | function                               | short description             | mode | lambda |
+|--------+----------------------------------------+-------------------------------+------+--------|
+| =oT=   | =:ignore t=                            | T.able....................... | -    |        |
+| =oTm=  | =orgtbl-mode=                          | m.ode                         | -    |        |
+| =oTc=  | =orgtbl-create-or-convert-from-region= | c.reate                       | -    |        |
+| =oTT=  | =org-table-toggle-column-width=        | T.oggle-hide-column           | -    |        |
+| =oTC=  | =org-table-toggle-coordinate-overlays= | C.oordinate                   | -    |        |
+| =oTx=  | =org-table-export=                     | x.port as csv file            | org  |        |
+| =oTs=  | =org-table-sum=                        | s.um                          | org  |        |
+| =oTi=  | =:ignore t=                            | i.nsert...................... | org  |        |
+| =oTic= | =org-table-insert-column=              | c.olumn                       | org  |        |
+| =oTir= | =org-table-insert-row=                 | r.ow                          | org  |        |
 
 **** org-roam keybindings
 #+attr_latex: :placement [H]
 #+caption: Org-Roam
 #+name: tbl-global-general-keybindings-org-roam-related
-| key(s) | function                                    | short description                | mode | lambda |
-|--------+---------------------------------------------+----------------------------------+------+--------|
-| r      | :ignore t                                   | r.oam........................... | -    |        |
-| ruim   | org-roam-ui-mode                            | rui-(m)ode ui-in-browser         | -    |        |
-| ruio   | org-roam-ui-open                            | rui-(o)pen ui-in-browser         | -    |        |
-| ruil   | org-roam-node-local                         | rui-(l)ocal ui-in-browser        | -    |        |
-| rf     | my/org-roam-find-node-by-focus-tag          | f.ind focus                      | -    |        |
-| rF     | consult-org-roam-file-find                  | f.ind full find                  | -    |        |
-| rl     | org-roam-buffer-toggle                      | l.toggle                         | -    |        |
-| rL     | org-roam-buffer-display-dedicated           | L.dedicated                      | -    |        |
-| ri     | org-roam-node-insert                        | i.nsert                          | -    |        |
-| rI     | garid-custom/org-roam-node-insert-immediate | I.nsert-immediate                | -    |        |
-| rt     | :ignore t                                   | t.ag............................ | -    |        |
-| rta    | org-roam-tag-add                            | a.dd                             | -    |        |
-| rtr    | org-roam-tag-remove                         | r.emove                          | -    |        |
-| rj     | :ignore t                                   | j.ournal........................ | -    |        |
-| rjc    | org-roam-dailies-capture-today              | c.apture                         | -    |        |
-| rjr    | org-roam-dailies-goto-today                 | t.oday                           | -    |        |
-| rjt    | org-roam-dailies-goto-tomorrow              | T.omorrow                        | -    |        |
-| rjy    | org-roam-dailies-goto-yesterday             | y.esterday                       | -    |        |
-| rjd    | org-roam-dailies-goto-date                  | d.ate  goto date                 | -    |        |
-| rj>    | org-roam-dailies-goto-next-note             | >.next                           | -    |        |
-| rj<    | org-roam-dailies-goto-previous-note         | <.prev                           | -    |        |
-| rd     | (dired org-roam-directory)                  | d.ired                           | -    | y      |
-| rc     | :ignore t                                   | c.onsults....................... | -    |        |
-| rcb    | consult-org-roam-backlinks                  | b.acklink                        | -    |        |
-| rs     | consult-org-roam-search                     | s.earch                          | -    |        |
-| rcf    | consult-org-roam-forwardlink                | o.wardlink                       | -    |        |
-| rcF    | consult-org-roam-find-file                  | rc-Find                          | -    |        |
+| key(s) | function                                      | short description                | mode | lambda |
+|--------+-----------------------------------------------+----------------------------------+------+--------|
+| =r=    | =:ignore t=                                   | r.oam........................... | -    |        |
+| =ruim= | =org-roam-ui-mode=                            | rui-(m)ode ui-in-browser         | -    |        |
+| =ruio= | =org-roam-ui-open=                            | rui-(o)pen ui-in-browser         | -    |        |
+| =ruil= | =org-roam-node-local=                         | rui-(l)ocal ui-in-browser        | -    |        |
+| =rf=   | =my/org-roam-find-node-by-focus-tag=          | f.ind focus                      | -    |        |
+| =rF=   | =consult-org-roam-file-find=                  | f.ind full find                  | -    |        |
+| =rl=   | =org-roam-buffer-toggle=                      | l.toggle                         | -    |        |
+| =rL=   | =org-roam-buffer-display-dedicated=           | L.dedicated                      | -    |        |
+| =ri=   | =org-roam-node-insert=                        | i.nsert                          | -    |        |
+| =rI=   | =garid-custom/org-roam-node-insert-immediate= | I.nsert-immediate                | -    |        |
+| =rt=   | =:ignore t=                                   | t.ag............................ | -    |        |
+| =rta=  | =org-roam-tag-add=                            | a.dd                             | -    |        |
+| =rtr=  | =org-roam-tag-remove=                         | r.emove                          | -    |        |
+| =rj=   | =:ignore t=                                   | j.ournal........................ | -    |        |
+| =rjc=  | =org-roam-dailies-capture-today=              | c.apture                         | -    |        |
+| =rjr=  | =org-roam-dailies-goto-today=                 | t.oday                           | -    |        |
+| =rjt=  | =org-roam-dailies-goto-tomorrow=              | T.omorrow                        | -    |        |
+| =rjy=  | =org-roam-dailies-goto-yesterday=             | y.esterday                       | -    |        |
+| =rjd=  | =org-roam-dailies-goto-date=                  | d.ate  goto date                 | -    |        |
+| =rj>=  | =org-roam-dailies-goto-next-note=             | >.next                           | -    |        |
+| =rj<=  | =org-roam-dailies-goto-previous-note=         | <.prev                           | -    |        |
+| =rd=   | =(dired org-roam-directory)=                  | d.ired                           | -    | y      |
+| =rc=   | =:ignore t=                                   | c.onsults....................... | -    |        |
+| =rcb=  | =consult-org-roam-backlinks=                  | b.acklink                        | -    |        |
+| =rs=   | =consult-org-roam-search=                     | s.earch                          | -    |        |
+| =rcf=  | =consult-org-roam-forwardlink=                | o.wardlink                       | -    |        |
+| =rcF=  | =consult-org-roam-find-file=                  | rc-Find                          | -    |        |
 
 **** (in-org) subtree operations
 #+attr_latex: :placement [H]
 #+caption: in org-file, frequent commands
 #+name: tbl-orgmode-general-keybindings-freq
-| key(s) | function                                | short description             | mode | lambda |
-|--------+-----------------------------------------+-------------------------------+------+--------|
-| os     | :ignore t                               | s.ubtree..................... | org  |        |
-| osy    | org-copy-subtree                        | y.ank (verbatim copy)         | org  |        |
-| osY    | org-id-copy                             | Y.ank (ID)                    | org  |        |
-| osv    | org-mark-element                        | v.isually select element      | org  |        |
-| osm    | org-refile                              | m.ove                         | org  |        |
-| osd    | org-cut-subtree                         | d.elete (aka cut)             | org  |        |
-| ost    | org-toggle-narrow-to-subtree            | t.oggle narrow                | org  |        |
-| osT    | org-set-tags-command                    | t.ags                         | org  |        |
-| osn    | org-num-mode                            | n.um mode                     | org  |        |
-| oss    | org-sort                                | s.ort                         | org  |        |
-| osp    | org-set-property                        | p.roperty                     | org  |        |
-| osI    | org-indent-mode                         | I.ndent mode                  | org  |        |
-| osi    | :ignore t                               | i.nsert heading.............. | org  |        |
-| osia   | org-insert-heading-after-current        | a.fter           C-RET        | org  |        |
-| osiA   | org-insert-todo-heading-respect-content | A.fter    todo C-S-RET        | org  |        |
-| osih   | org-insert-heading                      | h.eading         M-RET        | org  |        |
-| osiH   | org-insert-todo-heading                 | H.eading  todo M-S-RET        | org  |        |
-| osis   | org-insert-subheading                   | s.ubheading                   | org  |        |
-| osiS   | org-insert-todo-subheading              | S.ubheading todo              | org  |        |
+| key(s) | function                                  | short description             | mode | lambda |
+|--------+-------------------------------------------+-------------------------------+------+--------|
+| =os=   | =:ignore t=                               | s.ubtree..................... | org  |        |
+| =osy=  | =org-copy-subtree=                        | y.ank (verbatim copy)         | org  |        |
+| =osY=  | =org-id-copy=                             | Y.ank (ID)                    | org  |        |
+| =osv=  | =org-mark-element=                        | v.isually select element      | org  |        |
+| =osm=  | =org-refile=                              | m.ove                         | org  |        |
+| =osd=  | =org-cut-subtree=                         | d.elete (aka cut)             | org  |        |
+| =ost=  | =org-toggle-narrow-to-subtree=            | t.oggle narrow                | org  |        |
+| =osT=  | =org-set-tags-command=                    | t.ags                         | org  |        |
+| =osn=  | =org-num-mode=                            | n.um mode                     | org  |        |
+| =oss=  | =org-sort=                                | s.ort                         | org  |        |
+| =osp=  | =org-set-property=                        | p.roperty                     | org  |        |
+| =osI=  | =org-indent-mode=                         | I.ndent mode                  | org  |        |
+| =osi=  | =:ignore t=                               | i.nsert heading.............. | org  |        |
+| =osia= | =org-insert-heading-after-current=        | a.fter           C-RET        | org  |        |
+| =osiA= | =org-insert-todo-heading-respect-content= | A.fter    todo C-S-RET        | org  |        |
+| =osih= | =org-insert-heading=                      | h.eading         M-RET        | org  |        |
+| =osiH= | =org-insert-todo-heading=                 | H.eading  todo M-S-RET        | org  |        |
+| =osis= | =org-insert-subheading=                   | s.ubheading                   | org  |        |
+| =osiS= | =org-insert-todo-subheading=              | S.ubheading todo              | org  |        |
 
 **** (in/out org) agenda/calendar/todo related
 #+attr_latex: :placement [H]
 #+caption: agenda-todo-schedule
 #+name: tbl-orgmode-general-keybindings-todo
-| key(s) | function                                        | short description             | mode | lambda |
-|--------+-------------------------------------------------+-------------------------------+------+--------|
-| oc     | org-capture                                     | c.apture                      | -    |        |
-| ot     | :ignore t                                       | t.odo........................ | org  |        |
-| otT    | org-todo                                        | T.odo                         | org  |        |
-| otn    | (org-todo "NEXT" )                              | n.ext                         | org  | y      |
-| ott    | (org-todo "TODO" )                              | t.odo                         | org  | y      |
-| otw    | (org-todo "WAIT" )                              | w.ait                         | org  | y      |
-| otd    | (org-todo "DONE" )                              | d.one                         | org  | y      |
-| otc    | (org-todo "CNCL" )                              | c.ancel                       | org  | y      |
-| otr    | (org-todo "" )                                  | r.emove                       | org  | y      |
-| ota    | (org-archive-subtree-default-with-confirmation) | a.rchive TOOD                 | org  | y      |
-| oa     | :ignore t                                       | a.genda...................... | -    |        |
-| oag    | org-agenda                                      | a.g.enda                      | -    |        |
-| oab    | org-timeblock                                   | a.b.lock                      | -    |        |
-| oas    | org-schedule                                    | a.schedule                    | org  |        |
-| oad    | org-deadline                                    | a.deadline                    | org  |        |
+| key(s) | function                                          | short description             | mode | lambda |
+|--------+---------------------------------------------------+-------------------------------+------+--------|
+| =oc=   | =org-capture=                                     | c.apture                      | -    |        |
+| =ot=   | =:ignore t=                                       | t.odo........................ | org  |        |
+| =otT=  | =org-todo=                                        | T.odo                         | org  |        |
+| =otn=  | =(org-todo "NEXT" )=                              | n.ext                         | org  | y      |
+| =ott=  | =(org-todo "TODO" )=                              | t.odo                         | org  | y      |
+| =otw=  | =(org-todo "WAIT" )=                              | w.ait                         | org  | y      |
+| =otd=  | =(org-todo "DONE" )=                              | d.one                         | org  | y      |
+| =otc=  | =(org-todo "CNCL" )=                              | c.ancel                       | org  | y      |
+| =otr=  | =(org-todo "" )=                                  | r.emove                       | org  | y      |
+| =ota=  | =(org-archive-subtree-default-with-confirmation)= | a.rchive TOOD                 | org  | y      |
+| =oa=   | =:ignore t=                                       | a.genda...................... | -    |        |
+| =oag=  | =org-agenda=                                      | a.g.enda                      | -    |        |
+| =oab=  | =org-timeblock=                                   | a.b.lock                      | -    |        |
+| =oas=  | =org-schedule=                                    | a.schedule                    | org  |        |
+| =oad=  | =org-deadline=                                    | a.deadline                    | org  |        |
 
 **** (in-org) jumping around inside org-file
 #+attr_latex: :placement [H]
 #+caption: jumping or finding stuff in org file
 #+name: tbl-orgmode-general-keybindings-find
-| key(s) | function                        | short description          | mode | lambda |
-|--------+---------------------------------+----------------------------+------+--------|
-| of     | :ignore t                       | f.ind..................... | org  |        |
-| ofh    | (consult-org-heading)           | h.eading                   | org  | y      |
-| ofn    | (consult-line "^#+name"   )     | n.amed table/eq/src        | org  | y      |
-| ofr    | (consult-line "^#+result" )     | r.esult        /src        | org  | y      |
-| ofs    | (consult-line "^#+begin_" )     | s.ource src-block          | org  | y      |
-| ofl    | (consult-line "\\\\label{.*}" ) | l.abel                     | org  | y      |
-| ofr    | (consult-line "\\\\ref{.*}" )   | r.ef                       | org  | y      |
-| j      | org-next-block                  | (j) jump to next src-block | org  |        |
-| k      | org-previous-block              | (k) jump to prev src-block | org  |        |
+| key(s) | function                          | short description          | mode | lambda |
+|--------+-----------------------------------+----------------------------+------+--------|
+| =of=   | =:ignore t=                       | f.ind..................... | org  |        |
+| =ofh=  | =(consult-org-heading)=           | h.eading                   | org  | y      |
+| =ofn=  | =(consult-line "^#+name"   )=     | n.amed table/eq/src        | org  | y      |
+| =ofr=  | =(consult-line "^#+result" )=     | r.esult        /src        | org  | y      |
+| =ofs=  | =(consult-line "^#+begin_" )=     | s.ource src-block          | org  | y      |
+| =ofl=  | =(consult-line "\\\\label{.*}" )= | l.abel                     | org  | y      |
+| =ofr=  | =(consult-line "\\\\ref{.*}" )=   | r.ef                       | org  | y      |
+| =j=    | =org-next-block=                  | (j) jump to next src-block | org  |        |
+| =k=    | =org-previous-block=              | (k) jump to prev src-block | org  |        |
 
 **** (in-org) exporting (latex) related
 #+attr_latex: :placement [H]
 #+caption: exporting org
 #+name: tbl-orgmode-general-keybindings-export
-| key(s) | function                         | short description             | mode | lambda |
-|--------+----------------------------------+-------------------------------+------+--------|
-| ox     | :ignore t                        | x.port....................... | org  |        |
-| oxb    | org-beamer-export-to-pdf         | b.eamer                       | org  |        |
-| oxB    | (org-beamer-export-to-pdf nil t) | B.eamer subtree               | org  | y      |
-| oxp    | org-latex-export-to-pdf          | p.df latex                    | org  |        |
-| oxP    | (org-latex-export-to-pdf nil t)  | P.df latex subtree            | org  | y      |
-| oxr    | org-reveal-export-to-html        | r.eveal js                    | org  |        |
-| oxh    | org-html-export-to-html          | h.tml                         | org  |        |
-| oxH    | (org-html-export-to-html nil t)  | H.tml subtree                 | org  | y      |
-| oxo    | gry/org-open-pdf                 | o)pen exported pdf            | org  |        |
-| oxO    | gry/org-open-html                | O)pen exported html           | org  |        |
-| op     | org-latex-preview                | o-(p)review                   | org  |        |
+| key(s) | function                           | short description             | mode | lambda |
+|--------+------------------------------------+-------------------------------+------+--------|
+| =ox=   | =:ignore t=                        | x.port....................... | org  |        |
+| =oxb=  | =org-beamer-export-to-pdf=         | b.eamer                       | org  |        |
+| =oxB=  | =(org-beamer-export-to-pdf nil t)= | B.eamer subtree               | org  | y      |
+| =oxp=  | =org-latex-export-to-pdf=          | p.df latex                    | org  |        |
+| =oxP=  | =(org-latex-export-to-pdf nil t)=  | P.df latex subtree            | org  | y      |
+| =oxr=  | =org-reveal-export-to-html=        | r.eveal js                    | org  |        |
+| =oxh=  | =org-html-export-to-html=          | h.tml                         | org  |        |
+| =oxH=  | =(org-html-export-to-html nil t)=  | H.tml subtree                 | org  | y      |
+| =oxo=  | =gry/org-open-pdf=                 | o)pen exported pdf            | org  |        |
+| =oxO=  | =gry/org-open-html=                | O)pen exported html           | org  |        |
+| =op=   | =org-latex-preview=                | o-(p)review                   | org  |        |
 
 **** (in org) org link, cite, footnote
 #+attr_latex: :placement [H]
 #+caption: org-link related
 #+name: tbl-orgmode-general-keybindings-link
-| key(s) | function                                | short description             | mode | lambda |
-|--------+-----------------------------------------+-------------------------------+------+--------|
-| ol     | :ignore t                               | l.ink........................ | org  |        |
-| old    | garid-custom/org-toggle-link-n-emphasis | d.escription toggle           | org  |        |
-| oli    | org-insert-link                         | i.nsert                       | org  |        |
-| oln    | hydra-org-link-jumper/body              | n.ext link                    | org  |        |
-| olp    | hydra-org-link-jumper/body              | p.rev link                    | org  |        |
-| olo    | org-open-at-point                       | o.pen (same as SPC o o)       | org  |        |
-| olf    | org-footnote-new                        | f.ootnote new                 | org  |        |
-| olF    | org-footnote-action                     | F.ootnote-action              | org  |        |
-| olc    | org-cite-insert                         | c.itation                     | org  |        |
+| key(s) | function                                  | short description             | mode | lambda |
+|--------+-------------------------------------------+-------------------------------+------+--------|
+| =ol=   | =:ignore t=                               | l.ink........................ | org  |        |
+| =old=  | =garid-custom/org-toggle-link-n-emphasis= | d.escription toggle           | org  |        |
+| =oli=  | =org-insert-link=                         | i.nsert                       | org  |        |
+| =oln=  | =hydra-org-link-jumper/body=              | n.ext link                    | org  |        |
+| =olp=  | =hydra-org-link-jumper/body=              | p.rev link                    | org  |        |
+| =olo=  | =org-open-at-point=                       | o.pen (same as SPC o o)       | org  |        |
+| =olf=  | =org-footnote-new=                        | f.ootnote new                 | org  |        |
+| =olF=  | =org-footnote-action=                     | F.ootnote-action              | org  |        |
+| =olc=  | =org-cite-insert=                         | c.itation                     | org  |        |
 
 **** (in org) org image
 #+attr_latex: :placement [H]
 #+caption: handing images in org-file
 #+name: tbl-orgmode-general-keybindings-img
-| key(s) | function                              | short description             | mode | lambda |
-|--------+---------------------------------------+-------------------------------+------+--------|
-| oi     | :ignore t                             | i.mage....................... | org  |        |
-| oii    | (insert "[[edraw:]]" )                    | i.nline edraw                 | org  | y      |
-| oic    | garid/put-emtpy-svg-img-at-point      | c.reate svg                   | org  |        |
-| oip    | org-download-clipboard                | p.aste clipboard              | org  |        |
-| oiP    | org-download-image                    | P.aste from-path              | org  |        |
-| oid    | org-download-delete                   | d.elete file                  | org  |        |
-| oie    | edraw-org-edit-regular-file-link      | e.dit edraw                   | org  |        |
-| oiE    | org-download-edit                     | E.dit externally              | org  |        |
-| oir    | org-download-rename-at-point          | r.ename file                  | org  |        |
-| oit    | org-toggle-inline-images              | t.oggle shot/hide image       | org  |        |
-| ois    | :ignore t                             | s.ize........................ | org  |        |
-| oisn   | (setq org-image-actual-width '(800))  | n.ormal 800px                 | org  | y      |
-| oisb   | (setq org-image-actual-width '(1500)) | b.ig    1500px                | org  | y      |
-| oiss   | (setq org-image-actual-width '(400))  | s.mall  400px                 | org  | y      |
+| key(s) | function                                | short description             | mode | lambda |
+|--------+-----------------------------------------+-------------------------------+------+--------|
+| =oi=   | =:ignore t=                             | i.mage....................... | org  |        |
+| =oii=  | =(insert "[[edraw:]]" )=                | i.nline edraw                 | org  | y      |
+| =oic=  | =garid/put-emtpy-svg-img-at-point=      | c.reate svg                   | org  |        |
+| =oip=  | =org-download-clipboard=                | p.aste clipboard              | org  |        |
+| =oiP=  | =org-download-image=                    | P.aste from-path              | org  |        |
+| =oid=  | =org-download-delete=                   | d.elete file                  | org  |        |
+| =oie=  | =edraw-org-edit-regular-file-link=      | e.dit edraw                   | org  |        |
+| =oiE=  | =org-download-edit=                     | E.dit externally              | org  |        |
+| =oir=  | =org-download-rename-at-point=          | r.ename file                  | org  |        |
+| =oit=  | =org-toggle-inline-images=              | t.oggle shot/hide image       | org  |        |
+| =ois=  | =:ignore t=                             | s.ize........................ | org  |        |
+| =oisn= | =(setq org-image-actual-width '(800))=  | n.ormal 800px                 | org  | y      |
+| =oisb= | =(setq org-image-actual-width '(1500))= | b.ig    1500px                | org  | y      |
+| =oiss= | =(setq org-image-actual-width '(400))=  | s.mall  400px                 | org  | y      |
 
 *** Converting tables actual keybinding
 **** General.el config
@@ -2259,16 +2260,25 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 
 
 
+(defun remove-equal-from-both-sides (str)
+  "Remove the tilde (~) character from the beginning and end of STR."
+  (if (string-match "\\`=\\(.*?\\)=\\'" str)  ;;
+      ;; \\`~ front
+      ;; \\(.*?\\) capture group
+      ;; ~\\'  end?
+      (match-string 1 str)
+    str))
 
 
 (concat
  "(garids-keybind/for-all-modes\n"
  (mapconcat (lambda (row)
               (format "  \"%s\" '(%s :which-key \"%s\")"
-                      (nth 0 row)
+                      (remove-equal-from-both-sides (nth 0 row))
                       (if (string= (nth 4 row) "y")
-                          (format "(lambda () (interactive) %s )" (nth 1 row)) ;; for anon functions
-                        (nth 1 row))                                           ;; for normal functions
+                          (format "(lambda () (interactive) %s )"
+                                  (remove-equal-from-both-sides (nth 1 row))) ;; for anon functions
+                        (remove-equal-from-both-sides (nth 1 row)))           ;; for normal functions
                       (nth 2 row)))
             tbl_all_kbind "\n"
             )
@@ -2276,10 +2286,11 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
  "(garids-keybind/in-org-mode\n"
  (mapconcat (lambda (row)
               (format "  \"%s\" '(%s :which-key \"%s\")"
-                      (nth 0 row)
+                      (remove-equal-from-both-sides (nth 0 row))
                       (if (string= (nth 4 row) "y")
-                          (format "(lambda () (interactive) %s )" (nth 1 row)) ;; for anon functions
-                        (nth 1 row))                                           ;; for normal functions
+                          (format "(lambda () (interactive) %s )"
+                                  (remove-equal-from-both-sides (nth 1 row))) ;; for anon functions
+                        (remove-equal-from-both-sides (nth 1 row)))           ;; for normal functions
                       (nth 2 row)))
             tbl_org_kbind "\n"
             )
@@ -2557,8 +2568,6 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 )
 #+end_src
 
-#+RESULTS:
-
 * System:
 ** =dired= - Directory
 #+begin_src emacs-lisp
@@ -2644,19 +2653,19 @@ fi
 #+end_src
 
 * Misc Packages
-** crux
+** =crux=
 #+begin_src emacs-lisp
 (use-package crux :ensure t)
 #+end_src
-** command-log-mode
+** =command-log-mode=
 #+begin_src emacs-lisp
 (use-package command-log-mode)
 #+end_src
-** format-all
+** =format-all=
 #+begin_src emacs-lisp
 (use-package format-all)
 #+end_src
-** popper
+** =popper=
 #+begin_src emacs-lisp
 (use-package popper
   :ensure t ; or :straight t
@@ -2684,7 +2693,7 @@ fi
   (popper-mode      +1)
   (popper-echo-mode +1))
 #+end_src
-** hydra
+** =hydra=
 #+begin_src emacs-lisp
 (use-package hydra
   :config
@@ -2695,7 +2704,7 @@ fi
   )
 #+end_src
 
-** Delight
+** =delight=
 #+begin_src emacs-lisp
 (use-package delight
   :ensure t
@@ -2737,7 +2746,7 @@ fi
      (visual-line-mode             nil   simple                 ))))
 #+end_src
 
-** exercism
+** =exercism=
 #+begin_src emacs-lisp
 (use-package exercism)
 #+end_src
