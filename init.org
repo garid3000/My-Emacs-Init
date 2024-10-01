@@ -1745,42 +1745,54 @@ Similar to vim-signify.
 *** Global keybinding table
 #+caption: Global (aka from anywhere) non-sequential keybinding
 #+name: tbl-global-keybindings
-| key     | function                                      | description                          |
-|---------+-----------------------------------------------+--------------------------------------|
-| M-q     | delete-window                                 | delete window                        |
-| M-Q     | kill-current-buffer                           | delete buffer                        |
-| M-J     | other-window                                  | jump to other window                 |
-| M-W     | evil-window-vnew                              | divide window veritically (on right) |
-| M-E     | evil-window-vsplit                            | divide window veritically (on left)  |
-| M-]     | comint-dynamic-complete-filename              | complete file path                   |
-| M-s     | avy-goto-char                                 | jump to character                    |
-| M-S     | avy-goto-char-2                               | jump to character (with 2 char)      |
-| M-f     | consult-line                                  | search line in buffer                |
-| M-y     | consult-yank-from-kill-ring                   | consult yank from kill ring          |
-| C-/     | comment-line                                  | set selected lines comment           |
-| C-\vert | garid-custom/toggle-eng-mon-teq-input-methods | change toggle input (Eng-Mon-Teq)    |
-| M-1     | harpoon-go-to-1                               | harpoon-go-to-1                      |
-| M-2     | harpoon-go-to-2                               | harpoon-go-to-2                      |
-| M-3     | harpoon-go-to-3                               | harpoon-go-to-3                      |
-| M-4     | harpoon-go-to-4                               | harpoon-go-to-4                      |
-| M-5     | harpoon-go-to-5                               | harpoon-go-to-5                      |
-| M-6     | harpoon-go-to-6                               | harpoon-go-to-6                      |
-| <f9>    | harpoon-quick-menu-hydra                      | harpoon                              |
-
+| key       | function                                        | description                          |
+|-----------+-------------------------------------------------+--------------------------------------|
+| =M-q=     | =delete-window=                                 | delete window                        |
+| =M-Q=     | =kill-current-buffer=                           | delete buffer                        |
+| =M-J=     | =other-window=                                  | jump to other window                 |
+| =M-W=     | =evil-window-vnew=                              | divide window veritically (on right) |
+| =M-E=     | =evil-window-vsplit=                            | divide window veritically (on left)  |
+| =M-]=     | =comint-dynamic-complete-filename=              | complete file path                   |
+| =M-s=     | =avy-goto-char=                                 | jump to character                    |
+| =M-S=     | =avy-goto-char-2=                               | jump to character (with 2 char)      |
+| =M-f=     | =consult-line=                                  | search line in buffer                |
+| =M-y=     | =consult-yank-from-kill-ring=                   | consult yank from kill ring          |
+| =C-/=     | =comment-line=                                  | set selected lines comment           |
+| =C-\vert= | =garid-custom/toggle-eng-mon-teq-input-methods= | change toggle input (Eng-Mon-Teq)    |
+| =M-1=     | =harpoon-go-to-1=                               | harpoon-go-to-1                      |
+| =M-2=     | =harpoon-go-to-2=                               | harpoon-go-to-2                      |
+| =M-3=     | =harpoon-go-to-3=                               | harpoon-go-to-3                      |
+| =M-4=     | =harpoon-go-to-4=                               | harpoon-go-to-4                      |
+| =M-5=     | =harpoon-go-to-5=                               | harpoon-go-to-5                      |
+| =M-6=     | =harpoon-go-to-6=                               | harpoon-go-to-6                      |
+| =<f9>=    | =harpoon-quick-menu-hydra=                      | harpoon                              |
 
 Note to myself: after changing Table-[[tbl-global-keybindings]], I need to update [[convert-global-keybindings]]
 *** Convert global keybinding table into elisp
 #+caption: adsf
 #+name: convert-global-keybindings
 #+begin_src elisp :var tab=tbl-global-keybindings :wrap src emacs-lisp :tangle no
+
+(defun remove-equal-from-both-sides (str)
+  "Remove the tilde (~) character from the beginning and end of STR."
+  (if (string-match "\\`=\\(.*?\\)=\\'" str)  ;;
+      ;; \\`~ front
+      ;; \\(.*?\\) capture group
+      ;; ~\\'  end?
+      (match-string 1 str)
+    str))
+
 (concat
  (mapconcat
   (lambda (row)
     (format
      "(global-set-key (kbd \"%s\") '%s)"
      ;; needed to use regexp cuz | (as \vert) used in the table
-     (replace-regexp-in-string (regexp-quote "\\vert") "|" (nth 0 row) nil 'literal)
-     (nth 1 row)
+     (replace-regexp-in-string (regexp-quote "\\vert") "|"
+                               (remove-equal-from-both-sides (nth 0 row))
+                               nil 'literal)
+     (remove-equal-from-both-sides (nth 1 row))
+     ;;(nth 1 row)
      ))
   tab "\n"))
 #+end_src
@@ -2086,55 +2098,49 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | =rcf=  | =consult-org-roam-forwardlink=                | o.wardlink                       | -    |        |
 | =rcF=  | =consult-org-roam-find-file=                  | rc-Find                          | -    |        |
 
-**** (in-org) subtree operations
+**** org-subtree operations
 #+attr_latex: :placement [H]
 #+caption: in org-file, frequent commands
 #+name: tbl-orgmode-general-keybindings-freq
-| key(s) | function                                  | short description             | mode | lambda |
-|--------+-------------------------------------------+-------------------------------+------+--------|
-| =os=   | =:ignore t=                               | s.ubtree..................... | org  |        |
-| =osy=  | =org-copy-subtree=                        | y.ank (verbatim copy)         | org  |        |
-| =osY=  | =org-id-copy=                             | Y.ank (ID)                    | org  |        |
-| =osv=  | =org-mark-element=                        | v.isually select element      | org  |        |
-| =osm=  | =org-refile=                              | m.ove                         | org  |        |
-| =osd=  | =org-cut-subtree=                         | d.elete (aka cut)             | org  |        |
-| =ost=  | =org-toggle-narrow-to-subtree=            | t.oggle narrow                | org  |        |
-| =osT=  | =org-set-tags-command=                    | t.ags                         | org  |        |
-| =osn=  | =org-num-mode=                            | n.um mode                     | org  |        |
-| =oss=  | =org-sort=                                | s.ort                         | org  |        |
-| =osp=  | =org-set-property=                        | p.roperty                     | org  |        |
-| =osI=  | =org-indent-mode=                         | I.ndent mode                  | org  |        |
-| =osi=  | =:ignore t=                               | i.nsert heading.............. | org  |        |
-| =osia= | =org-insert-heading-after-current=        | a.fter           C-RET        | org  |        |
-| =osiA= | =org-insert-todo-heading-respect-content= | A.fter    todo C-S-RET        | org  |        |
-| =osih= | =org-insert-heading=                      | h.eading         M-RET        | org  |        |
-| =osiH= | =org-insert-todo-heading=                 | H.eading  todo M-S-RET        | org  |        |
-| =osis= | =org-insert-subheading=                   | s.ubheading                   | org  |        |
-| =osiS= | =org-insert-todo-subheading=              | S.ubheading todo              | org  |        |
+| key(s) | function                                          | short description             | mode | lambda |
+|--------+---------------------------------------------------+-------------------------------+------+--------|
+| =os=   | =:ignore t=                                       | s.ubtree..................... | org  |        |
+| =osy=  | =org-copy-subtree=                                | y.ank (verbatim copy)         | org  |        |
+| =osa=  | =(org-archive-subtree-default-with-confirmation)= | a.rchive                      | org  | y      |
+| =osY=  | =org-id-copy=                                     | Y.ank (ID)                    | org  |        |
+| =osv=  | =org-mark-element=                                | v.isually select element      | org  |        |
+| =osm=  | =org-refile=                                      | m.ove/refile                  | org  |        |
+| =osd=  | =org-cut-subtree=                                 | d.elete (aka cut)             | org  |        |
+| =ost=  | =org-toggle-narrow-to-subtree=                    | t.oggle narrow                | org  |        |
+| =osT=  | =org-set-tags-command=                            | t.ags                         | org  |        |
+| =osn=  | =org-num-mode=                                    | n.um mode                     | org  |        |
+| =oss=  | =org-sort=                                        | s.ort                         | org  |        |
+| =osp=  | =org-set-property=                                | p.roperty                     | org  |        |
+| =osI=  | =org-indent-mode=                                 | I.ndent mode                  | org  |        |
+|--------+---------------------------------------------------+-------------------------------+------+--------|
+| =osi=  | =:ignore t=                                       | i.nsert heading.............. | org  |        |
+| =osia= | =org-insert-heading-after-current=                | a.fter           C-RET        | org  |        |
+| =osiA= | =org-insert-todo-heading-respect-content=         | A.fter    todo C-S-RET        | org  |        |
+| =osih= | =org-insert-heading=                              | h.eading         M-RET        | org  |        |
+| =osiH= | =org-insert-todo-heading=                         | H.eading  todo M-S-RET        | org  |        |
+| =osis= | =org-insert-subheading=                           | s.ubheading                   | org  |        |
+| =osiS= | =org-insert-todo-subheading=                      | S.ubheading todo              | org  |        |
 
-**** (in/out org) agenda/calendar/todo related
+**** org-agenda/calendar/todo related
 #+attr_latex: :placement [H]
 #+caption: agenda-todo-schedule
 #+name: tbl-orgmode-general-keybindings-todo
-| key(s) | function                                          | short description             | mode | lambda |
-|--------+---------------------------------------------------+-------------------------------+------+--------|
-| =oc=   | =org-capture=                                     | c.apture                      | -    |        |
-| =ot=   | =:ignore t=                                       | t.odo........................ | org  |        |
-| =otT=  | =org-todo=                                        | T.odo                         | org  |        |
-| =otn=  | =(org-todo "NEXT" )=                              | n.ext                         | org  | y      |
-| =ott=  | =(org-todo "TODO" )=                              | t.odo                         | org  | y      |
-| =otw=  | =(org-todo "WAIT" )=                              | w.ait                         | org  | y      |
-| =otd=  | =(org-todo "DONE" )=                              | d.one                         | org  | y      |
-| =otc=  | =(org-todo "CNCL" )=                              | c.ancel                       | org  | y      |
-| =otr=  | =(org-todo "" )=                                  | r.emove                       | org  | y      |
-| =ota=  | =(org-archive-subtree-default-with-confirmation)= | a.rchive TOOD                 | org  | y      |
-| =oa=   | =:ignore t=                                       | a.genda...................... | -    |        |
-| =oag=  | =org-agenda=                                      | a.g.enda                      | -    |        |
-| =oab=  | =org-timeblock=                                   | a.b.lock                      | -    |        |
-| =oas=  | =org-schedule=                                    | a.schedule                    | org  |        |
-| =oad=  | =org-deadline=                                    | a.deadline                    | org  |        |
+| key(s) | function        | short description             | mode | lambda |
+|--------+-----------------+-------------------------------+------+--------|
+| =oc=   | =org-capture=   | c.apture                      | -    |        |
+| =ot=   | =org-todo=      | t.odo                         | org  |        |
+| =oa=   | =:ignore t=     | a.genda...................... | -    |        |
+| =oag=  | =org-agenda=    | a.g.enda                      | -    |        |
+| =oab=  | =org-timeblock= | a.b.lock                      | -    |        |
+| =oas=  | =org-schedule=  | a.schedule                    | org  |        |
+| =oad=  | =org-deadline=  | a.deadline                    | org  |        |
 
-**** (in-org) jumping around inside org-file
+**** org jumping around or finding things
 #+attr_latex: :placement [H]
 #+caption: jumping or finding stuff in org file
 #+name: tbl-orgmode-general-keybindings-find
@@ -2150,7 +2156,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | =j=    | =org-next-block=                  | (j) jump to next src-block | org  |        |
 | =k=    | =org-previous-block=              | (k) jump to prev src-block | org  |        |
 
-**** (in-org) exporting (latex) related
+**** org-export related
 #+attr_latex: :placement [H]
 #+caption: exporting org
 #+name: tbl-orgmode-general-keybindings-export
@@ -2168,7 +2174,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | =oxO=  | =gry/org-open-html=                | O)pen exported html           | org  |        |
 | =op=   | =org-latex-preview=                | o-(p)review                   | org  |        |
 
-**** (in org) org link, cite, footnote
+**** org-link related
 #+attr_latex: :placement [H]
 #+caption: org-link related
 #+name: tbl-orgmode-general-keybindings-link
@@ -2184,14 +2190,14 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | =olF=  | =org-footnote-action=                     | F.ootnote-action              | org  |        |
 | =olc=  | =org-cite-insert=                         | c.itation                     | org  |        |
 
-**** (in org) org image
+**** org-image related
 #+attr_latex: :placement [H]
 #+caption: handing images in org-file
 #+name: tbl-orgmode-general-keybindings-img
 | key(s) | function                                | short description             | mode | lambda |
 |--------+-----------------------------------------+-------------------------------+------+--------|
 | =oi=   | =:ignore t=                             | i.mage....................... | org  |        |
-| =oii=  | =(insert "[[edraw:]]" )=                | i.nline edraw                 | org  | y      |
+| =oii=  | =(insert "[[edraw:]]")=                 | i.nline edraw                 | org  | y      |
 | =oic=  | =garid/put-emtpy-svg-img-at-point=      | c.reate svg                   | org  |        |
 | =oip=  | =org-download-clipboard=                | p.aste clipboard              | org  |        |
 | =oiP=  | =org-download-image=                    | P.aste from-path              | org  |        |
@@ -2494,9 +2500,10 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "oTir" '(org-table-insert-row :which-key "r.ow")
   "os" '(:ignore t :which-key "s.ubtree.....................")
   "osy" '(org-copy-subtree :which-key "y.ank (verbatim copy)")
+  "osa" '((lambda () (interactive) (org-archive-subtree-default-with-confirmation) ) :which-key "a.rchive")
   "osY" '(org-id-copy :which-key "Y.ank (ID)")
   "osv" '(org-mark-element :which-key "v.isually select element")
-  "osm" '(org-refile :which-key "m.ove")
+  "osm" '(org-refile :which-key "m.ove/refile")
   "osd" '(org-cut-subtree :which-key "d.elete (aka cut)")
   "ost" '(org-toggle-narrow-to-subtree :which-key "t.oggle narrow")
   "osT" '(org-set-tags-command :which-key "t.ags")
@@ -2511,15 +2518,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "osiH" '(org-insert-todo-heading :which-key "H.eading  todo M-S-RET")
   "osis" '(org-insert-subheading :which-key "s.ubheading")
   "osiS" '(org-insert-todo-subheading :which-key "S.ubheading todo")
-  "ot" '(:ignore t :which-key "t.odo........................")
-  "otT" '(org-todo :which-key "T.odo")
-  "otn" '((lambda () (interactive) (org-todo "NEXT" ) ) :which-key "n.ext")
-  "ott" '((lambda () (interactive) (org-todo "TODO" ) ) :which-key "t.odo")
-  "otw" '((lambda () (interactive) (org-todo "WAIT" ) ) :which-key "w.ait")
-  "otd" '((lambda () (interactive) (org-todo "DONE" ) ) :which-key "d.one")
-  "otc" '((lambda () (interactive) (org-todo "CNCL" ) ) :which-key "c.ancel")
-  "otr" '((lambda () (interactive) (org-todo "" ) ) :which-key "r.emove")
-  "ota" '((lambda () (interactive) (org-archive-subtree-default-with-confirmation) ) :which-key "a.rchive TOOD")
+  "ot" '(org-todo :which-key "t.odo")
   "oas" '(org-schedule :which-key "a.schedule")
   "oad" '(org-deadline :which-key "a.deadline")
   "of" '(:ignore t :which-key "f.ind.....................")
@@ -2552,7 +2551,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "olF" '(org-footnote-action :which-key "F.ootnote-action")
   "olc" '(org-cite-insert :which-key "c.itation")
   "oi" '(:ignore t :which-key "i.mage.......................")
-  "oii" '((lambda () (interactive) (insert "[[edraw:]]" ) ) :which-key "i.nline edraw")
+  "oii" '((lambda () (interactive) (insert "[[edraw:]]") ) :which-key "i.nline edraw")
   "oic" '(garid/put-emtpy-svg-img-at-point :which-key "c.reate svg")
   "oip" '(org-download-clipboard :which-key "p.aste clipboard")
   "oiP" '(org-download-image :which-key "P.aste from-path")

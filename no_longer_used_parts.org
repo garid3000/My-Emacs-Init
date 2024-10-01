@@ -69,7 +69,16 @@
 | C      | :ignore t                                                   | (C)alc related.................. | -    |        |
 | Ca     | calc                                                        | C-(a) calc                       | -    |        |
 | Ce     | calc-embedded                                               | C-(e) embedded                   | -    |        |
-| Cf     | full-calc                                                   | C-(f) full                       | -    |        |
+| =otn=  | =(org-todo "NEXT" )=                              | n.ext                         | org  | y      |
+| =ott=  | =(org-todo "TODO" )=                              | t.odo                         | org  | y      |
+| =otw=  | =(org-todo "WAIT" )=                              | w.ait                         | org  | y      |
+| =otd=  | =(org-todo "DONE" )=                              | d.one                         | org  | y      |
+| =otc=  | =(org-todo "CNCL" )=                              | c.ancel                       | org  | y      |
+| =otr=  | =(org-todo "" )=                                  | r.emove                       | org  | y      |
+| =otT=  | =org-todo=                                        | T.odo                         | org  |        |
+
+
+ Cf     | full-calc                                                   | C-(f) full                       | -    |        |
 
 o     | org-insert-structure-template                               | y-(o)rg templates                | -    |        |
 
