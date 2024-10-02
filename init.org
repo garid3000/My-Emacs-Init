@@ -485,22 +485,23 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
   (setq org-download-heading-lvl nil)                                                                            ;;
-  (when (= 0                                                  ;; 4. checking substring should be 0 means it's a denote file
-           (string-match-p                                    ;; 3. substring check
-            (regexp-quote (file-truename (denote-directory))) ;; 2.  /home/garid/BrainDump/denote/
-            (file-truename (buffer-file-name))))              ;; 1.  /home/garid/BrainDump/denote/20241002T182854--denote-image-directory__elisp_org.org
-    (setq org-download-image-dir
-          (file-relative-name
-           (concat                                       ;; 8. /home/garid/BrainDump/denote/00-img/20241002T182854/
-            (file-name-as-directory (denote-directory))  ;; 7. /home/garid/BrainDump/denote to /home/garid/BrainDump/denote/
-            "00-img/"                                    ;; 6. "00-img/"
-            (file-name-as-directory                      ;; 5. "20241002T190027/"
-             (car                                        ;; 4. "20241002T190027"
-              (split-string                              ;; 3. ( "20241002T190027"  "denote-getting-id-of-current-file__elisp_org" )
-               (file-name-base                           ;; 2. "20241002T190027--denote-getting-id-of-current-file__elisp_org.org"
-                (buffer-file-name))                      ;; 1. "/home/garid/BrainDump/denote/20241002T190027--denote-getting-id-of-current-file__elisp_org.org"
-               "--"))                                    ;; 3. splitting separator
-             ))))))
+  (when buffer-file-name                                        ;; 0. need to check buffer has file associated with
+    (when (= 0                                                  ;; 4. checking substring should be 0 means it's a denote file
+             (string-match-p                                    ;; 3. substring check
+              (regexp-quote (file-truename (denote-directory))) ;; 2.  /home/garid/BrainDump/denote/
+              (file-truename (buffer-file-name))))              ;; 1.  /home/garid/BrainDump/denote/20241002T182854--denote-image-directory__elisp_org.org
+      (setq org-download-image-dir
+            (file-relative-name
+             (concat                                       ;; 8. /home/garid/BrainDump/denote/00-img/20241002T182854/
+              (file-name-as-directory (denote-directory))  ;; 7. /home/garid/BrainDump/denote to /home/garid/BrainDump/denote/
+              "00-img/"                                    ;; 6. "00-img/"
+              (file-name-as-directory                      ;; 5. "20241002T190027/"
+               (car                                        ;; 4. "20241002T190027"
+                (split-string                              ;; 3. ( "20241002T190027"  "denote-getting-id-of-current-file__elisp_org" )
+                 (file-name-base                           ;; 2. "20241002T190027--denote-getting-id-of-current-file__elisp_org.org"
+                  (buffer-file-name))                      ;; 1. "/home/garid/BrainDump/denote/20241002T190027--denote-getting-id-of-current-file__elisp_org.org"
+                 "--"))                                    ;; 3. splitting separator
+               )))))))
 #+end_src
 
 * Org Zettelkasten like (roam & denote)
