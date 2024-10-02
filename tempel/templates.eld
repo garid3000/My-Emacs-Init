@@ -180,6 +180,7 @@ org-mode
 
 (denote_links                 "#+begin: denote-links :regexp \"" r "\" :excluded-dirs-regexp nil :sort-by-component nil :reverse-sort nil :id-only nil :include-date nil" n> r> n "#+end:")
 
+(gtdclarify                  "- [ ] what-it-is :: " r n  "- [ ] resolution :: "  r n "- [ ] next-step? :: " n> )
 
 ;; Local Variables:
 ;; mode: lisp-data
