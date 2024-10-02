@@ -69,13 +69,13 @@
 | C      | :ignore t                                                   | (C)alc related.................. | -    |        |
 | Ca     | calc                                                        | C-(a) calc                       | -    |        |
 | Ce     | calc-embedded                                               | C-(e) embedded                   | -    |        |
-| =otn=  | =(org-todo "NEXT" )=                              | n.ext                         | org  | y      |
-| =ott=  | =(org-todo "TODO" )=                              | t.odo                         | org  | y      |
-| =otw=  | =(org-todo "WAIT" )=                              | w.ait                         | org  | y      |
-| =otd=  | =(org-todo "DONE" )=                              | d.one                         | org  | y      |
-| =otc=  | =(org-todo "CNCL" )=                              | c.ancel                       | org  | y      |
-| =otr=  | =(org-todo "" )=                                  | r.emove                       | org  | y      |
-| =otT=  | =org-todo=                                        | T.odo                         | org  |        |
+| =otn=    | =(org-todo "NEXT" )=                                          | n.ext                            | org  | y      |
+| =ott=    | =(org-todo "TODO" )=                                          | t.odo                            | org  | y      |
+| =otw=    | =(org-todo "WAIT" )=                                          | w.ait                            | org  | y      |
+| =otd=    | =(org-todo "DONE" )=                                          | d.one                            | org  | y      |
+| =otc=    | =(org-todo "CNCL" )=                                          | c.ancel                          | org  | y      |
+| =otr=    | =(org-todo "" )=                                              | r.emove                          | org  | y      |
+| =otT=    | =org-todo=                                                    | T.odo                            | org  |        |
 
 
  Cf     | full-calc                                                   | C-(f) full                       | -    |        |
@@ -284,4 +284,199 @@ When nil, use the default face background."
 (setq org-agenda-start-with-log-mode t
       org-default-notes-file (concat (file-name-as-directory denote-directory)
                                      "20230926T010607--todo__todo.org"))
+#+end_src
+
+
+* roam related
+** COMMENT =org-roam=: roam
+#+begin_src emacs-lisp
+(use-package org-roam
+  ;; :requires org-roam-dailies ??
+  :ensure t
+  :custom
+  (org-roam-node-display-template (concat "${title:*} "
+                                          (propertize "${tags:30}"
+                                                      'face 'org-tag)))
+
+  (org-roam-v2-ack                                                 t)
+  (org-roam-directory (concat garids-brain-dumping-directory "roam")) ;; (org-roam-directory "~/Pensieve/")
+  (org-roam-completion-everywhere                                  t) ;;  do I need this?
+  (org-roam-dailies-capture-templates
+   `(("d" "default" entry "* %<%I:%M %p>: %?"
+      :if-new (file+head "%<%Y-%m-%d>.org"
+                         ,(concat
+                           "#+filetags: :nohtmlexport:\n"
+                           "#+title: %<%Y-%m-%d>\n"
+                           "#+auto_tangle: nil\n"
+                           "#+startup: show2levels\n"
+                           "#+setupfile: ~/.config/emacs/org-templates/level-0-website-export-template.org"
+                           )))))
+
+  (org-roam-capture-templates
+   `(("d" "Default" plain "* %?"
+      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
+                         ,(concat "#+title: ${title}\n"
+                                  "#+filetags: :notag:\n"
+                                  "#+date: %U\n"
+                                  "#+setupfile: ~/.config/emacs/org-templates/level-0-website-export-template.org"
+                                  ))
+      :unnarrowed t)
+
+     ("r" "Research" plain "* %?"
+      :if-new (file+head "g_research/%<%Y%m%d%H%M%S>-${slug}__rsch.org"
+                         ,(concat "#+title: ${title}\n"
+                                  "#+filetags: :rsch:\n"
+                                  "#+date: %U\n"
+                                  "#+setupfile: ~/.config/emacs/org-templates/level-0-website-export-template.org"
+                                  ))
+      :unnarrowed t)
+
+     ("k" "Kanji" plain "* %?"
+      :if-new (file+head "g_kanji/%<%Y%m%d%H%M%S>-${slug}.org"
+                         ,(concat "#+title: ${title}\n"
+                                  "#+filetags: :kanji:\n"
+                                  "#+author: Garid Zorigoo\n"
+                                  "#+date: %U\n"
+                                  "#+setupfile: ~/.config/emacs/org-templates/level-0-website-export-template.org"
+                                  ))
+      :unnarrowed t)
+
+     ("M" "Math" plain "* %?"
+      :if-new (file+head "g_math/%<%Y%m%d%H%M%S>-${slug}.org"
+                         ,(concat "#+title: ${title}\n"
+                                  "#+filetags: :math:\n"
+                                  "#+author: Garid Zorigoo\n"
+                                  "#+date: %U\n"
+                                  "#+setupfile: ~/.config/emacs/org-templates/level-0-website-export-template.org\n"
+                                  "#+setupfile: ~/.config/emacs/org-templates/level-0-xelatex-fonts-conf.org"
+                                  ))
+      :unnarrowed t)
+
+     ("p" "Programming language" plain "* %?"
+      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
+                         ,(concat "#+title: ${title}\n"
+                                  "#+filetags: :plang:\n"
+                                  "#+author: Garid Zorigoo\n"
+                                  "#+date: %U\n"
+                                  "#+setupfile: ~/.config/emacs/org-templates/level-0-website-export-template.org"
+                                  ))
+      :unnarrowed t)
+
+
+     ("g" "Golang Notes" plain "* %?"
+      :if-new (file+head "g_go/%<%Y%m%d%H%M%S>-${slug}.org"
+                         ,(concat ;;"#+title: ${title}\n"
+                                  "#+filetags: :go:\n"
+                                  ;;"#+author: Garid Zorigoo\n"
+                                  "#+date: %U\n"
+                                  "#+setupfile: ~/.config/emacs/org-templates/level-0-website-export-template.org"
+                                  ))
+      :unnarrowed t)
+
+
+     ("m" "Meta (meaning access nodes)" plain "* %?"
+      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}__meta.org"
+                         ,(concat "#+title: ${title}\n"
+                                  "#+filetags: :meta:\n"
+                                  "#+date: %U\n"
+                                  "#+setupfile: ~/.config/emacs/org-templates/level-0-website-export-template.org"
+                                  ))
+      :unnarrowed t)
+
+
+     ("P" "Project" plain
+      "* Goals\n\n%?* Tasks\n\n** TODO Add initial tasks\n\n* Dates\n\n"
+      :if-new (file+head "g_project/%<%Y%m%d%H%M%S>-${slug}.org"
+                         ,(concat "#+title: ${title}\n"
+                                  "#+filetags: :Project:\n"
+                                  "#+auto_tangle: nil"))
+      :unnarrowed t)
+
+     ))
+
+  :config
+  (require 'org-roam-dailies)
+  (org-roam-setup)
+  (org-roam-db-autosync-mode))
+#+end_src
+
+** COMMENT =org-roam-ui=: graphing of org-roam in web browser
+#+begin_src emacs-lisp
+(use-package org-roam-ui :ensure t)
+#+end_src
+** COMMENT =consult-org-roam=
+#+begin_src emacs-lisp
+(use-package consult-org-roam
+   :ensure t
+   :after org-roam
+   :init (require 'consult-org-roam)
+   ;; Activate the minor mode
+   (consult-org-roam-mode 1)
+   :custom
+   (consult-org-roam-grep-func #'consult-ripgrep)
+   (consult-org-roam-buffer-narrow-key ?r)
+   (consult-org-roam-buffer-after-buffers t)
+   :config
+   ;; Eventually suppress previewing for certain functions
+   (consult-customize consult-org-roam-forward-links :preview-key "M-.")
+   :bind
+   ;; Define some convenient keybindings as an addition
+   ("C-c n e" . consult-org-roam-file-find)
+   ("C-c n b" . consult-org-roam-backlinks)
+   ("C-c n B" . consult-org-roam-backlinks-recursive)
+   ("C-c n l" . consult-org-roam-forward-links)
+   ("C-c n r" . consult-org-roam-search)
+   )
+#+end_src
+** COMMENT org-roam (custom) function for inserting node                             :customFunc:
+#+begin_src emacs-lisp
+(defun garid-custom/org-roam-node-insert-immediate (arg &rest args)
+  (interactive "P")
+  (let ((args (cons arg args))
+        (org-roam-capture-templates
+	 (list (append (car org-roam-capture-templates)
+		       '(:immediate-finish t)))))
+    (apply #'org-roam-node-insert args)
+    ))
+#+end_src
+** COMMENT org-roam (custom) functions for tag searching                             :customFunc:
+#+begin_src emacs-lisp
+(defun my/org-roam-filter-by-tag (tag-name)
+  (lambda (node)
+    (member tag-name (org-roam-node-tags node))))
+
+(defun my/org-roam-exclude-by-tag (tag-name)
+  (lambda (node)
+    (null (member tag-name (org-roam-node-tags node)) )
+    ))
+
+(defun my/org-roam-find-node-exclude-kanji ()
+  (interactive)
+  ;;(org-roam-node-find nil nil (my/org-roam-exclude-by-tag "kanji"))
+  (org-roam-node-find nil nil (lambda (node)
+                                (null (member "kanji" (org-roam-node-tags node)) )
+                                ))
+  )
+
+(defun my/org-roam-find-node-by-focus-tag ()
+  (interactive)
+  ;;(org-roam-node-find nil nil (my/org-roam-exclude-by-tag "kanji"))
+  (org-roam-node-find
+   nil nil (lambda (node)
+             ;;(null (member "kanji" (org-roam-node-tags node)) )
+             (member garids-focus-tag (org-roam-node-tags node)) 
+             ))
+  )
+
+
+(defun my/org-roam-find-node-using-tag ()
+  (interactive)
+  ;;(org-roam-node-find nil nil (my/org-roam-exclude-by-tag "kanji"))
+  (org-roam-node-find
+   nil nil (lambda (node)
+             (member
+                    (completing-read "Select tag to search: " (org-roam-tag-completions) nil t "")
+                    (org-roam-node-tags node)) 
+             ))
+  )
 #+end_src

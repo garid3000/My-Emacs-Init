@@ -319,7 +319,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   (org-src-preserve-indentation      nil    )
   (org-src-fontify-natively          t      )
   (org-edit-src-content-indentation  0      )
-  (org-startup-folded                "fold" )
+  (org-startup-folded             "content" ) ;; fold
   (org-plantuml-jar-path             "/usr/share/java/plantuml/plantuml.jar" )
   ;; this may differ on different machines
   (org-file-apps '((auto-mode                  . emacs                       )
@@ -458,8 +458,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   :after  org
   :hook   (org-mode . org-bullets-mode)
   :custom (org-bullets-bullet-list
-           '("Ⅰ" "Ⅱ" "Ⅲ" "Ⅳ" "Ⅴ" "Ⅵ" "Ⅶ")
-           ))
+           '("Ⅰ" "Ⅱ" "Ⅲ" "Ⅳ" "Ⅴ" "Ⅵ" "Ⅶ")))
 #+end_src
 ** TODO Org hooked function                                                  :customFunc:
 #+begin_src emacs-lisp
@@ -468,22 +467,40 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   (org-num-mode)
   ;; (turn-on-auto-capitalize-mode) added hook in the auto capitalizing mode int he sub section
   ;; (auto-fill-mode 0)
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; (when buffer-file-name ;; had to check buffer had file. (i.e. sometimes buffer don't have file yet, e.g. org-captures) ;;
+  ;;   ;; (message (concat buffer-file-name " -- " (vc-find-root buffer-file-name ".git")))                                 ;;
+  ;;   (if (vc-find-root buffer-file-name ".git") ;; (vc-root-dir)    ;; check if org file is in git directory              ;;
+  ;;       (setq org-download-image-dir                                                                                     ;;
+  ;;             (file-relative-name (concat (file-name-as-directory (vc-find-root buffer-file-name ".git"))                ;;
+  ;;                                         (file-name-as-directory "od-imgs")                                             ;;
+  ;;                                         (file-name-base buffer-file-name))                                             ;;
+  ;;                                 (file-name-directory buffer-file-name))                                                ;;
+  ;;             org-download-heading-lvl nil) ;; nil == orgdownload not mkdir images in each corresponding directory       ;;
+  ;;                                                                                                                        ;;
+  ;;     (setq org-download-image-dir   (concat "./shiod-imgs/" (file-name-base buffer-file-name))                          ;;
+  ;;           org-download-heading-lvl     nil)                                                                            ;;
+  ;;     ) ;; nil == orgdownload not mkdir images in each corresponding directory                                           ;;
+  ;;   )                                                                                                                    ;;
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-  (when buffer-file-name ;; had to check buffer had file. (i.e. sometimes buffer don't have file yet, e.g. org-captures)
-    ;; (message (concat buffer-file-name " -- " (vc-find-root buffer-file-name ".git")))
-    (if (vc-find-root buffer-file-name ".git") ;; (vc-root-dir)    ;; check if org file is in git directory
-        (setq org-download-image-dir
-              (file-relative-name (concat (file-name-as-directory (vc-find-root buffer-file-name ".git"))
-                                          (file-name-as-directory "od-imgs")
-                                          (file-name-base buffer-file-name))
-                                  (file-name-directory buffer-file-name))
-              org-download-heading-lvl nil) ;; nil == orgdownload not mkdir images in each corresponding directory
-
-      (setq org-download-image-dir   (concat "./shiod-imgs/" (file-name-base buffer-file-name))
-            org-download-heading-lvl     nil)
-      ) ;; nil == orgdownload not mkdir images in each corresponding directory
-    )
-  )
+  (setq org-download-heading-lvl nil)                                                                            ;;
+  (when (= 0                                                  ;; 4. checking substring should be 0 means it's a denote file
+           (string-match-p                                    ;; 3. substring check
+            (regexp-quote (file-truename (denote-directory))) ;; 2.  /home/garid/BrainDump/denote/
+            (file-truename (buffer-file-name))))              ;; 1.  /home/garid/BrainDump/denote/20241002T182854--denote-image-directory__elisp_org.org
+    (setq org-download-image-dir
+          (file-relative-name
+           (concat                                       ;; 8. /home/garid/BrainDump/denote/00-img/20241002T182854/
+            (file-name-as-directory (denote-directory))  ;; 7. /home/garid/BrainDump/denote to /home/garid/BrainDump/denote/
+            "00-img/"                                    ;; 6. "00-img/"
+            (file-name-as-directory                      ;; 5. "20241002T190027/"
+             (car                                        ;; 4. "20241002T190027"
+              (split-string                              ;; 3. ( "20241002T190027"  "denote-getting-id-of-current-file__elisp_org" )
+               (file-name-base                           ;; 2. "20241002T190027--denote-getting-id-of-current-file__elisp_org.org"
+                (buffer-file-name))                      ;; 1. "/home/garid/BrainDump/denote/20241002T190027--denote-getting-id-of-current-file__elisp_org.org"
+               "--"))                                    ;; 3. splitting separator
+             ))))))
 #+end_src
 
 * Org Zettelkasten like (roam & denote)
@@ -527,146 +544,6 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 ** =consult-denote=: consulting with denote
 #+begin_src emacs-lisp
 (use-package consult-denote :ensure t)
-#+end_src
-** =org-roam=: roam
-#+begin_src emacs-lisp
-(use-package org-roam
-  ;; :requires org-roam-dailies ??
-  :ensure t
-  :custom
-  (org-roam-node-display-template (concat "${title:*} "
-                                          (propertize "${tags:30}"
-                                                      'face 'org-tag)))
-
-  (org-roam-v2-ack                                                 t)
-  (org-roam-directory (concat garids-brain-dumping-directory "roam")) ;; (org-roam-directory "~/Pensieve/")
-  (org-roam-completion-everywhere                                  t) ;;  do I need this?
-  (org-roam-dailies-capture-templates
-   `(("d" "default" entry "* %<%I:%M %p>: %?"
-      :if-new (file+head "%<%Y-%m-%d>.org"
-                         ,(concat
-                           "#+filetags: :nohtmlexport:\n"
-                           "#+title: %<%Y-%m-%d>\n"
-                           "#+auto_tangle: nil\n"
-                           "#+startup: show2levels\n"
-                           "#+setupfile: ~/.config/emacs/org-templates/level-0-website-export-template.org"
-                           )))))
-
-  (org-roam-capture-templates
-   `(("d" "Default" plain "* %?"
-      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
-                         ,(concat "#+title: ${title}\n"
-                                  "#+filetags: :notag:\n"
-                                  "#+date: %U\n"
-                                  "#+setupfile: ~/.config/emacs/org-templates/level-0-website-export-template.org"
-                                  ))
-      :unnarrowed t)
-
-     ("r" "Research" plain "* %?"
-      :if-new (file+head "g_research/%<%Y%m%d%H%M%S>-${slug}__rsch.org"
-                         ,(concat "#+title: ${title}\n"
-                                  "#+filetags: :rsch:\n"
-                                  "#+date: %U\n"
-                                  "#+setupfile: ~/.config/emacs/org-templates/level-0-website-export-template.org"
-                                  ))
-      :unnarrowed t)
-
-     ("k" "Kanji" plain "* %?"
-      :if-new (file+head "g_kanji/%<%Y%m%d%H%M%S>-${slug}.org"
-                         ,(concat "#+title: ${title}\n"
-                                  "#+filetags: :kanji:\n"
-                                  "#+author: Garid Zorigoo\n"
-                                  "#+date: %U\n"
-                                  "#+setupfile: ~/.config/emacs/org-templates/level-0-website-export-template.org"
-                                  ))
-      :unnarrowed t)
-
-     ("M" "Math" plain "* %?"
-      :if-new (file+head "g_math/%<%Y%m%d%H%M%S>-${slug}.org"
-                         ,(concat "#+title: ${title}\n"
-                                  "#+filetags: :math:\n"
-                                  "#+author: Garid Zorigoo\n"
-                                  "#+date: %U\n"
-                                  "#+setupfile: ~/.config/emacs/org-templates/level-0-website-export-template.org\n"
-                                  "#+setupfile: ~/.config/emacs/org-templates/level-0-xelatex-fonts-conf.org"
-                                  ))
-      :unnarrowed t)
-
-     ("p" "Programming language" plain "* %?"
-      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
-                         ,(concat "#+title: ${title}\n"
-                                  "#+filetags: :plang:\n"
-                                  "#+author: Garid Zorigoo\n"
-                                  "#+date: %U\n"
-                                  "#+setupfile: ~/.config/emacs/org-templates/level-0-website-export-template.org"
-                                  ))
-      :unnarrowed t)
-
-
-     ("g" "Golang Notes" plain "* %?"
-      :if-new (file+head "g_go/%<%Y%m%d%H%M%S>-${slug}.org"
-                         ,(concat ;;"#+title: ${title}\n"
-                                  "#+filetags: :go:\n"
-                                  ;;"#+author: Garid Zorigoo\n"
-                                  "#+date: %U\n"
-                                  "#+setupfile: ~/.config/emacs/org-templates/level-0-website-export-template.org"
-                                  ))
-      :unnarrowed t)
-
-
-     ("m" "Meta (meaning access nodes)" plain "* %?"
-      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}__meta.org"
-                         ,(concat "#+title: ${title}\n"
-                                  "#+filetags: :meta:\n"
-                                  "#+date: %U\n"
-                                  "#+setupfile: ~/.config/emacs/org-templates/level-0-website-export-template.org"
-                                  ))
-      :unnarrowed t)
-
-
-     ("P" "Project" plain
-      "* Goals\n\n%?* Tasks\n\n** TODO Add initial tasks\n\n* Dates\n\n"
-      :if-new (file+head "g_project/%<%Y%m%d%H%M%S>-${slug}.org"
-                         ,(concat "#+title: ${title}\n"
-                                  "#+filetags: :Project:\n"
-                                  "#+auto_tangle: nil"))
-      :unnarrowed t)
-
-     ))
-
-  :config
-  (require 'org-roam-dailies)
-  (org-roam-setup)
-  (org-roam-db-autosync-mode))
-#+end_src
-
-** =org-roam-ui=: graphing of org-roam in web browser
-#+begin_src emacs-lisp
-(use-package org-roam-ui :ensure t)
-#+end_src
-** =consult-org-roam=
-#+begin_src emacs-lisp
-(use-package consult-org-roam
-   :ensure t
-   :after org-roam
-   :init (require 'consult-org-roam)
-   ;; Activate the minor mode
-   (consult-org-roam-mode 1)
-   :custom
-   (consult-org-roam-grep-func #'consult-ripgrep)
-   (consult-org-roam-buffer-narrow-key ?r)
-   (consult-org-roam-buffer-after-buffers t)
-   :config
-   ;; Eventually suppress previewing for certain functions
-   (consult-customize consult-org-roam-forward-links :preview-key "M-.")
-   :bind
-   ;; Define some convenient keybindings as an addition
-   ("C-c n e" . consult-org-roam-file-find)
-   ("C-c n b" . consult-org-roam-backlinks)
-   ("C-c n B" . consult-org-roam-backlinks-recursive)
-   ("C-c n l" . consult-org-roam-forward-links)
-   ("C-c n r" . consult-org-roam-search)
-   )
 #+end_src
 ** =citar=: citation
 #+begin_src emacs-lisp
@@ -723,62 +600,11 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
          ("C-c w y" . citar-denote-cite-nocite          )
          ("C-c w z" . citar-denote-nobib                )))
 #+end_src
-** org-roam (custom) function for inserting node                             :customFunc:
-#+begin_src emacs-lisp
-(defun garid-custom/org-roam-node-insert-immediate (arg &rest args)
-  (interactive "P")
-  (let ((args (cons arg args))
-        (org-roam-capture-templates
-	 (list (append (car org-roam-capture-templates)
-		       '(:immediate-finish t)))))
-    (apply #'org-roam-node-insert args)
-    ))
-#+end_src
-** org-roam (custom) functions for tag searching                             :customFunc:
-#+begin_src emacs-lisp
-(defun my/org-roam-filter-by-tag (tag-name)
-  (lambda (node)
-    (member tag-name (org-roam-node-tags node))))
-
-(defun my/org-roam-exclude-by-tag (tag-name)
-  (lambda (node)
-    (null (member tag-name (org-roam-node-tags node)) )
-    ))
-
-(defun my/org-roam-find-node-exclude-kanji ()
-  (interactive)
-  ;;(org-roam-node-find nil nil (my/org-roam-exclude-by-tag "kanji"))
-  (org-roam-node-find nil nil (lambda (node)
-                                (null (member "kanji" (org-roam-node-tags node)) )
-                                ))
-  )
-
-(defun my/org-roam-find-node-by-focus-tag ()
-  (interactive)
-  ;;(org-roam-node-find nil nil (my/org-roam-exclude-by-tag "kanji"))
-  (org-roam-node-find
-   nil nil (lambda (node)
-             ;;(null (member "kanji" (org-roam-node-tags node)) )
-             (member garids-focus-tag (org-roam-node-tags node)) 
-             ))
-  )
-
-
-(defun my/org-roam-find-node-using-tag ()
-  (interactive)
-  ;;(org-roam-node-find nil nil (my/org-roam-exclude-by-tag "kanji"))
-  (org-roam-node-find
-   nil nil (lambda (node)
-             (member
-                    (completing-read "Select tag to search: " (org-roam-tag-completions) nil t "")
-                    (org-roam-node-tags node)) 
-             ))
-  )
-#+end_src
 * Org Time managements
 ** =org-agenda=: the agenda
 #+begin_src emacs-lisp :results none
 (use-package org-agenda
+  :after   org
   :ensure   nil
   ;; :bind (:map org-agenda-mode-map
   ;;             ("j" . evil-next-line    )
@@ -788,7 +614,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   (org-agenda-files '("~/BrainDump/gtd/main.org"))
   (org-agenda-span 90)
   (org-agenda-custom-commands
-   '(("i" "Inbox"                tags-todo "+TODO=\"TODO\"" ((org-agenda-files (file-expand-wildcards "~/BrainDump/gtd/inbox.org"))))
+   '(("i" "Inbox"                tags-todo "+TODO=\"VAGUE\"" ((org-agenda-files (file-expand-wildcards "~/BrainDump/gtd/inbox.org"))))
      ("n" "Next actions"         tags-todo "+TODO=\"TODO\"")
      ("p" "Projects"             tags-todo "+TODO=\"PRJT\"")
      ("w" "Waiting"              tags-todo "+TODO=\"WAIT\"")
@@ -1291,7 +1117,9 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
 				      list list_comprehension
 				      dictionary dictionary_comprehension
 				      parenthesized_expression subscript)))
-  :hook ((python-base-mode yaml-mode) . indent-bars-mode))
+  ;;:hook ((python-base-mode yaml-mode) . indent-bars-mode)
+  :hook ((python-base-mode yaml-mode) . indent-bars--ts-mode)
+  )
 #+end_src
 * Coding lsp & jumping around
 ** =eglot=: lsp
@@ -1590,17 +1418,17 @@ Similar to vim-signify.
 #+begin_src emacs-lisp
 (defun gry/distraction-free-on ()
   (interactive)
-  (writeroom-mode 1)
-  (typewriter-roll-mode 1)
+  (writeroom-mode             1)
+  (typewriter-roll-mode       1)
   ;;(evil-insert)
   (turn-off-evil-mode)
-  (selectric-mode 1)
-  (display-line-numbers-mode -1)
-  (global-corfu-mode -1)
-  (cua-mode +1)
-  (which-key-mode -1)
-  (vertico-mode -1)
-  (focus-mode +1)
+  (selectric-mode             1)
+  (display-line-numbers-mode  -1)
+  (global-corfu-mode          -1)
+  (cua-mode                   +1)
+  (which-key-mode             -1)
+  (vertico-mode               -1)
+  (focus-mode                 +1)
 
   (cond
    ((member "xkcd Script"     (font-family-list)) (set-face-attribute 'default nil :font "xkcd Script"     :height 200))
@@ -1614,20 +1442,30 @@ Similar to vim-signify.
 
 (defun gry/distraction-free-off ()
   (interactive)
-  (cua-mode -1)
-  (writeroom-mode -1)
-  (typewriter-roll-mode -1)
-  (selectric-mode -1)
-  (global-corfu-mode +1)
+  (cua-mode              -1)
+  (writeroom-mode        -1)
+  (typewriter-roll-mode  -1)
+  (selectric-mode        -1)
+  (global-corfu-mode     +1)
   (turn-on-evil-mode)
-  (which-key-mode +1)
-  (vertico-mode +1)
-  (focus-mode -1)
+  (which-key-mode        +1)
+  (vertico-mode          +1)
+  (focus-mode            -1)
 
   (cond
    ((member "Iosevka Term SS06" (font-family-list)) (set-face-attribute 'default nil :font "Iosevka Term SS06" :height 120))
    ((member "Iosevka"           (font-family-list)) (set-face-attribute 'default nil :font "Iosevka"           :height 150))
    ))
+
+(setq gry-toggle-distraction-free-writing-state t)
+
+(defun gry/toggle-distraction-free-writing ()
+  (interactive)
+  (setq gry-toggle-distraction-free-writing-state
+        (not gry-toggle-distraction-free-writing-state))
+  (if gry-toggle-distraction-free-writing-state
+      (gry/distraction-free-on)
+    (gry/distraction-free-off)))
 #+end_src
 
 ** =pdf-tools=: reading pdf in Emacs
@@ -1745,8 +1583,8 @@ Similar to vim-signify.
 *** Global keybinding table
 #+caption: Global (aka from anywhere) non-sequential keybinding
 #+name: tbl-global-keybindings
-| key     | function                                      | description                         |
-|---------+-----------------------------------------------+-------------------------------------|
+| key       | function                                        | description                         |
+|-----------+-------------------------------------------------+-------------------------------------|
 | =M-q=     | =delete-window=                                 | delete window                       |
 | =M-Q=     | =kill-current-buffer=                           | delete buffer                       |
 | =M-J=     | =other-window=                                  | jump to other window                |
@@ -1766,6 +1604,7 @@ Similar to vim-signify.
 | =M-5=     | =harpoon-go-to-5=                               | harpoon-go-to-5                     |
 | =M-6=     | =harpoon-go-to-6=                               | harpoon-go-to-6                     |
 | =<f9>=    | =harpoon-quick-menu-hydra=                      | harpoon                             |
+| =M-<f9>=  | =gry/toggle-distraction-free-writing=           | toggle distraction free writing     |
 
 Note to myself: after changing Table-[[tbl-global-keybindings]], I need to update [[convert-global-keybindings]]
 *** Convert global keybinding table into elisp
@@ -1818,10 +1657,8 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 (global-set-key (kbd "M-5") 'harpoon-go-to-5)
 (global-set-key (kbd "M-6") 'harpoon-go-to-6)
 (global-set-key (kbd "<f9>") 'harpoon-quick-menu-hydra)
+(global-set-key (kbd "M-<f9>") 'gry/toggle-distraction-free-writing)
 #+end_src
-
-#+RESULTS:
-: harpoon-quick-menu-hydra
 
 ** Sequential keybindings (General.el keybinding configuration)
 *** Sequential global keybindings
@@ -2026,19 +1863,23 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 #+attr_latex: :placement [H]
 #+caption: Denote
 #+name: tbl-global-general-keybindings-denote
-| key(s) | function                                    | short description                  | mode | lambda |
-|--------+---------------------------------------------+------------------------------------+------+--------|
-| =n=      | =:ignore t=                                   | < n > note........................ | -    |        |
-| =nr=     | =denote-rename-file=                          | [ r ] rename                       | -    |        |
-| =nf=     | =denote-open-or-create=                       | [ f ] find                         | -    |        |
-| =nd=     | =(dired denote-directory)=                    | [ d ] dired                        | -    | y      |
-| =nj=     | =denote-journal-extras-new-entry=             | [ j ] journal                      | -    |        |
-| =nJ=     | =denote-journal-extras-new-or-existing-entry= | [ J ] Journal-find                 | -    |        |
-| =nil=    | =denote-insert-link=                          | [ i ] insert-link                  | -    |        |
-| =nij=    | =denote-journal-extras-link-or-create-entry=  | [ i ] insert-journal-link          | -    |        |
-| =nt=     | =denote-template=                             | [ t ] template                     | -    |        |
-| =nI=     | =garid-custom/denote-node-insert-immediate=   | [ I ] Insert-note                  | -    |        |
-| =ns=     | =consult-denote-grep=                         | [ s ] live-grep                    | -    |        |
+| key(s) | function                                      | short description                  | mode | lambda |
+|--------+-----------------------------------------------+------------------------------------+------+--------|
+| =n=    | =:ignore t=                                   | < n > note........................ | -    |        |
+| =nr=   | =denote-rename-file=                          | [ r ] rename                       | -    |        |
+| =nf=   | =denote-open-or-create=                       | [ f ] find                         | -    |        |
+| =nd=   | =(dired denote-directory)=                    | [ d ] dired                        | -    | y      |
+| =nj=   | =denote-journal-extras-new-entry=             | [ j ] journal                      | -    |        |
+| =nJ=   | =denote-journal-extras-new-or-existing-entry= | [ J ] Journal-find                 | -    |        |
+| =nil=  | =denote-insert-link=                          | [ i ] insert-link                  | -    |        |
+| =nij=  | =denote-journal-extras-link-or-create-entry=  | [ i ] insert-journal-link          | -    |        |
+| =nt=   | =denote-template=                             | [ t ] template                     | -    |        |
+| =nI=   | =garid-custom/denote-node-insert-immediate=   | [ I ] Insert-note                  | -    |        |
+| =ns=   | =consult-denote-grep=                         | [ s ] live-grep                    | -    |        |
+| =nF=   | =consult-denote-find=                         | [ F ] consult-denote-find          | -    |        |
+| =nl=   | =:ignore t=                                   | < l > denote link................. | -    |        |
+| =nli=  | =denote-insert-link=                          | [ i ] link insert                  | -    |        |
+| =nlb=  | =denote-backlinks=                            | [ b ] backlink                     | -    |        |
 
 **** org related
 #+attr_latex: :placement [H]
@@ -2069,7 +1910,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | =oTic=   | =org-table-insert-column=              | [ c ] column                       | org  |        |
 | =oTir=   | =org-table-insert-row=                 | [ r ] row                          | org  |        |
 
-**** org-roam keybindings
+**** COMMENT org-roam keybindings
 #+attr_latex: :placement [H]
 #+caption: Org-Roam
 #+name: tbl-global-general-keybindings-org-roam-related
@@ -2245,29 +2086,28 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 :PROPERTIES:
 :header-args:  :var tbl_01=tbl-kbinding-file-n-dired
 :header-args+: :var tbl_02=tbl-global-general-keybindings-org-mode-related
-:header-args+: :var tbl_03=tbl-global-general-keybindings-org-roam-related
-:header-args+: :var tbl_04=tbl-kbind-zconvenients
-:header-args+: :var tbl_05=tbl-kbind-sys-related
-:header-args+: :var tbl_06=tbl-global-general-keybindings-denote
-:header-args+: :var tbl_07=tbl-kbind-help
-:header-args+: :var tbl_08=tbl-global-general-keybindings-project
-:header-args+: :var tbl_09=tbl-kbind-bookmarks
-:header-args+: :var tbl_10=tbl-global-general-keybindings-consult
-:header-args+: :var tbl_11=tbl-kbind-buffer-related
-:header-args+: :var tbl_12=tbl-kbind-dev
-:header-args+: :var tbl_13=tbl-global-general-keybindings-org-tbl-related
-:header-args+: :var tbl_14=tbl-orgmode-general-keybindings-freq
-:header-args+: :var tbl_15=tbl-orgmode-general-keybindings-todo
-:header-args+: :var tbl_16=tbl-orgmode-general-keybindings-find
-:header-args+: :var tbl_17=tbl-orgmode-general-keybindings-export
-:header-args+: :var tbl_18=tbl-orgmode-general-keybindings-link
-:header-args+: :var tbl_19=tbl-orgmode-general-keybindings-img
+:header-args+: :var tbl_03=tbl-kbind-zconvenients
+:header-args+: :var tbl_04=tbl-kbind-sys-related
+:header-args+: :var tbl_05=tbl-global-general-keybindings-denote
+:header-args+: :var tbl_06=tbl-kbind-help
+:header-args+: :var tbl_07=tbl-global-general-keybindings-project
+:header-args+: :var tbl_08=tbl-kbind-bookmarks
+:header-args+: :var tbl_09=tbl-global-general-keybindings-consult
+:header-args+: :var tbl_10=tbl-kbind-buffer-related
+:header-args+: :var tbl_11=tbl-kbind-dev
+:header-args+: :var tbl_12=tbl-global-general-keybindings-org-tbl-related
+:header-args+: :var tbl_13=tbl-orgmode-general-keybindings-freq
+:header-args+: :var tbl_14=tbl-orgmode-general-keybindings-todo
+:header-args+: :var tbl_15=tbl-orgmode-general-keybindings-find
+:header-args+: :var tbl_16=tbl-orgmode-general-keybindings-export
+:header-args+: :var tbl_17=tbl-orgmode-general-keybindings-link
+:header-args+: :var tbl_18=tbl-orgmode-general-keybindings-img
 :END:
 #+caption: converting
 #+name: src_that_converts_key_tables
 #+begin_src elisp :wrap src emacs-lisp :tangle no
 (setq tblall (append tbl_01 tbl_02 tbl_03 tbl_04 tbl_05 tbl_06 tbl_07 tbl_08 tbl_09 tbl_10
-                     tbl_11 tbl_12 tbl_13 tbl_14 tbl_15 tbl_16 tbl_17 tbl_18 tbl_19))
+                     tbl_11 tbl_12 tbl_13 tbl_14 tbl_15 tbl_16 tbl_17 tbl_18))
 
 
 
@@ -2326,33 +2166,6 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "Ds" '(dired :which-key "[ s ]: simple")
   "Dp" '(dired-preview-mode :which-key "[ p ]: preview")
   "o" '(:ignore t :which-key "< o > org............................")
-  "r" '(:ignore t :which-key "< r >.oam...........................")
-  "ruim" '(org-roam-ui-mode :which-key "[ uim ] roam mode ui-in-browser")
-  "ruio" '(org-roam-ui-open :which-key "[ uio ] roam open ui-in-browser")
-  "ruil" '(org-roam-node-local :which-key "[ uil ] roam local ui-in-browser")
-  "rf" '(my/org-roam-find-node-by-focus-tag :which-key "[ f ] find focus")
-  "rF" '(consult-org-roam-file-find :which-key "[ f ] find full find")
-  "rl" '(org-roam-buffer-toggle :which-key "[ l ] toggle")
-  "rL" '(org-roam-buffer-display-dedicated :which-key "[ L ] dedicated")
-  "ri" '(org-roam-node-insert :which-key "[ i ] insert")
-  "rI" '(garid-custom/org-roam-node-insert-immediate :which-key "[ I ] insert-immediate")
-  "rt" '(:ignore t :which-key "< t > tag............................")
-  "rta" '(org-roam-tag-add :which-key "[ a ] add")
-  "rtr" '(org-roam-tag-remove :which-key "[ r ] remove")
-  "rj" '(:ignore t :which-key "< j > journal........................")
-  "rjc" '(org-roam-dailies-capture-today :which-key "[ c ] capture")
-  "rjr" '(org-roam-dailies-goto-today :which-key "[ t ] today")
-  "rjt" '(org-roam-dailies-goto-tomorrow :which-key "[ T ] Tomorrow")
-  "rjy" '(org-roam-dailies-goto-yesterday :which-key "[ y ] yesterday")
-  "rjd" '(org-roam-dailies-goto-date :which-key "[ d ] date  goto date")
-  "rj>" '(org-roam-dailies-goto-next-note :which-key "[ > ] next")
-  "rj<" '(org-roam-dailies-goto-previous-note :which-key "[ < ] prev")
-  "rd" '((lambda () (interactive) (dired org-roam-directory) ) :which-key "[ d ] dired")
-  "rc" '(:ignore t :which-key "< c > consults.......................")
-  "rcb" '(consult-org-roam-backlinks :which-key "[ b ] backlink")
-  "rs" '(consult-org-roam-search :which-key "[ s ] search")
-  "rcf" '(consult-org-roam-forwardlink :which-key "[ o ] wardlink")
-  "rcF" '(consult-org-roam-find-file :which-key "[ r ]c-Find")
   "z" '(:ignore t :which-key "< z > conveniences....................")
   "za" '(garid-custom/align-regexp-and-untabify :which-key "[ a ] align")
   "zr" '(replace-regexp :which-key "[ r ] replace")
@@ -2413,6 +2226,10 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "nt" '(denote-template :which-key "[ t ] template")
   "nI" '(garid-custom/denote-node-insert-immediate :which-key "[ I ] Insert-note")
   "ns" '(consult-denote-grep :which-key "[ s ] live-grep")
+  "nF" '(consult-denote-find :which-key "[ F ] consult-denote-find")
+  "nl" '(:ignore t :which-key "< l > denote link.................")
+  "nli" '(denote-insert-link :which-key "[ i ] link insert")
+  "nlb" '(denote-backlinks :which-key "[ b ] backlink")
   "h" '(:ignore t :which-key "< h > help...........................")
   "hh" '(describe-symbol :which-key "[ h ] help symbol (elisp)")
   "hH" '(describe-key :which-key "[ H ] help keybinding")

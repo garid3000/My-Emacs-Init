@@ -130,6 +130,7 @@ org-mode
 (drawer                       ":" p ":" n r ":end:")
 (begin                        "#+begin_" (s name) n> r> n "#+end_" name)
 (quote                        "#+begin_quote" n> r> n "#+end_quote")
+(abstract                     "#+begin_abstract" n> r> n "#+end_abstract")
 (sidenote                     "#+begin_sidenote" n> r> n "#+end_sidenote")
 (marginnote                   "#+begin_marginnote" n> r> n "#+end_marginnote")
 (example                      "#+begin_example" n> r> n "#+end_example")
@@ -175,6 +176,10 @@ org-mode
 (latexstayhere                "#+attr_latex: :placement [H]")
 (auto_tangle                  "#+auto_tangle:  t")
 (shebang                      ":shebang #!/bin/bash")
+
+
+(denote_links                 "#+begin: denote-links :regexp \"" r "\" :excluded-dirs-regexp nil :sort-by-component nil :reverse-sort nil :id-only nil :include-date nil" n> r> n "#+end:")
+
 
 ;; Local Variables:
 ;; mode: lisp-data
