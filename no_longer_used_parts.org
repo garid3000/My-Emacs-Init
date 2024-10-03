@@ -480,3 +480,15 @@ When nil, use the default face background."
              ))
   )
 #+end_src
+
+
+* COMMENT auto capitalizing
+#+begin_src emacs-lisp
+(load "~/.config/emacs/auto-capitalize.el")
+
+(add-hook 'text-mode-hook 'turn-on-auto-capitalize-mode)
+#+end_src
+
+Now I use the captain mode
+
+
