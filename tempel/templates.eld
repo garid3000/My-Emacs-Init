@@ -164,6 +164,7 @@ org-mode
 (cache                        "cache "
                               :post (gry/choose-from-list-and-insert-it '("yes" "no")))
 (wrap                         "wrap " :post (gry/choose-from-list-and-insert-it '("example" "src python" "src sh" "src bash")))
+(mkdirp                        " " :post (gry/choose-from-list-and-insert-it '("yes" "no")))
 (eval                         "eval " :post (gry/choose-from-list-and-insert-it '("never-export" "no" "yes")))
 (exports                      "exports " :post (gry/choose-from-list-and-insert-it '("code" "results" "both" "none")))
 (session                      "session " :post (gry/choose-from-list-and-insert-it '("SessionName")))
