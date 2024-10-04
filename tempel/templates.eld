@@ -153,12 +153,14 @@ org-mode
 (imgw                         "#+attr_latex: :width 0.9\textwidth" n   "#+attr_html:  :width 100% :height 100%")
 (oxr                          "#+reveal_root: https://cdn.jsdelivr.net/npm/reveal.js" n "#+reveal_init_options: width:1920, height:1080" n "#+reveal_theme: "  :post (gry/choose-from-list-and-insert-it '("black" "white" "league" "beige" "night" "serif" "solarized" "moon" "dracula" "sky" "blood")))
 (oxt                          "#+setupfile: ~/.config/emacs/org-templates/level-0-xelatex-fonts-conf.org")
+(oxh                          "#+setupfile: ~/.config/emacs/org-templates/level-0-html-export-template.org")
 (printbibliograph             "#+print_bibliography:")
 
 (results                      "results " :post (gry/choose-from-list-and-insert-it
                            '( "verbatim" "value" "output" "table" "file xxx :output-dir .../"
                               "list" "scalar" "code" "draw" "html" "latex" "link" "org" "pp")))
-(var                          "#+header: :var outputVar=" :post (insert (concat org-download-image-dir "/filename.svg") ))
+(vardown                      "#+header: :var outputVar=" :post (insert (concat org-download-image-dir "/filename.svg") ))
+(varatta                      "#+header: :var outputVar=(my/org-attach-dir \"" r ".svg\")" )
 (cache                        "cache "
                               :post (gry/choose-from-list-and-insert-it '("yes" "no")))
 (wrap                         "wrap " :post (gry/choose-from-list-and-insert-it '("example" "src python" "src sh" "src bash")))

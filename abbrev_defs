@@ -97,7 +97,6 @@
 
 (define-abbrev-table 'global-abbrev-table
   '(
-    ("garid" "Garid" nil 0)
     ("badma" "Badma" nil 0)
     ("badamgarav" "Badamgarav" nil 0)
     ("abandonned" "abandoned" nil 0)

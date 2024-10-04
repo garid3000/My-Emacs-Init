@@ -1,0 +1,9 @@
+#+author:          Garid Zorigoo
+#+startup:         show2levels
+#+auto_tangle:     nil
+#+html_link_home:  index.html
+#+html_head:       <link rel="stylesheet" type="text/css" href="https://unpkg.com/chota"/>
+#+CREATOR:         Garid Zorigoo
+#+EMAIL:           garidzorigoo@gmail.com
+#+EXCLUDE_TAGS:    noexport
+#+OPTIONS:         tags:nil

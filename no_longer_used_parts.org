@@ -481,7 +481,7 @@ When nil, use the default face background."
   )
 #+end_src
 
-
+()
 * COMMENT auto capitalizing
 #+begin_src emacs-lisp
 (load "~/.config/emacs/auto-capitalize.el")
@@ -492,3 +492,9 @@ When nil, use the default face background."
 Now I use the captain mode
 
 
+* COMMENT =org-timeline=
+#+begin_src emacs-lisp
+(use-package org-timeline
+  :init
+  (add-hook 'org-agenda-finalize-hook 'org-timeline-insert-timeline :append))
+#+end_src

@@ -11,7 +11,7 @@
 
 
 * From shell you can run make run:
-#+begin_src makefile :noeval :tangle Makefile
+#+begin_src makefile :eval no :tangle Makefile
 # make run to extract init.el from init.org from shell
 run:
 	emacs --batch --eval "(require 'org)" --eval '(org-babel-tangle-file "init.org")'
@@ -299,7 +299,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 ** =org=: org-mode configuration
 #+caption: org config
 #+name: lst_org
-#+begin_src emacs-lisp :noeval
+#+begin_src emacs-lisp :eval no
 (use-package org
   ;; :require (org-tempo)
   :bind
@@ -311,7 +311,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   (org-mode . garid-custom/org-mode-hooked-func)
 
   :custom
-  (org-ellipsis                      " ▼"   )
+  (org-ellipsis                      " ▼"  )
   (org-hide-emphasis-markers         t      )
   (org-log-done                      t      )
   (org-image-actual-width            '(800) )
@@ -366,10 +366,12 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   (org-tag-alist           '((:startgroup . nil)
                              ("@rsch" . ?r) ("@bps" . ?w) ("@home" . ?h)
                              (:endgroup . nil)
-                             ("psm" . ?p) ("4bc" . ?4) ("idea" . ?i)
-                             ("lit" . ?l) ("yak" . ?y) ("tool" . ?T)
-                             ("tdbt" . ?t) ("rndm" . ?R) ("meet" . ?m)
-                             ("qstn" . ??) ("prjt" . ?P) ("msg/mail" . ?M)
+                             ("psm"  . ?p) ("4bc"   . ?4) ("idea"     . ?i)
+                             ("lit"  . ?l) ("yak"   . ?y) ("tool"     . ?T)
+                             ("tdbt" . ?t) ("rndm"  . ?R) ("meet"     . ?m)
+                             ("qstn" . ??) ("prjt"  . ?P) ("msg/mail" . ?M)
+                             ("Life" . ?L) ("write" . ?W) ("errand"   . ?e)
+                             ("hkdn" . ?H) ("read" . ?R)
                              ))
 
   :config
@@ -439,10 +441,39 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 
   (setq org-inline-image-background "white")
 
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  (defun my/org-attach-dir-calculator (id)
+    "id"
+    (and (< 9 (length id))
+         (buffer-file-name)
+         (format "%s/header_%s"
+                 (car                     ;; 4. "20241002T190027"
+                  (split-string           ;; 3. ( "20241002T190027"  "denote-getting-id-of-current-file__elisp_org" )
+                   (file-name-base        ;; 2. "20241002T190027--denote-getting-id-of-current-file__elisp_org.org"
+                    (buffer-file-name))   ;; 1. "/home/garid/BrainDump/denote/20241002T190027--denote-getting-id-of-current-file__elisp_org.org"
+                   "--"))
+                 id)))
+
+
+  (defun my/org-attach-dir (input-fname)
+    ""
+    (concat
+     "data/"
+     (file-name-as-directory
+      (my/org-attach-dir-calculator (org-id-get-create)))
+     input-fname))
+
+  (setq org-id-method 'ts)
+  (setq org-attach-id-to-path-function-list
+        '(my/org-attach-dir-calculator
+          org-attach-id-ts-folder-format
+          org-attach-id-uuid-folder-format))
+  ;;
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
   )
 #+end_src
-
 ** org-babel languages related
 #+begin_src emacs-lisp
 (use-package ob-nim       )
@@ -460,7 +491,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   :custom (org-bullets-bullet-list
            '("Ⅰ" "Ⅱ" "Ⅲ" "Ⅳ" "Ⅴ" "Ⅵ" "Ⅶ")))
 #+end_src
-** TODO Org hooked function                                                  :customFunc:
+** TODO Org hooked function                                                   :customFunc:
 #+begin_src emacs-lisp
 (defun garid-custom/org-mode-hooked-func ()
   (org-indent-mode)
@@ -657,6 +688,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 
   :config
   (add-hook 'org-agenda-finalize-hook (lambda () (org-agenda-write "/tmp/current-agenda-text")))
+  (add-hook 'org-capture-mode-hook 'evil-insert-state)
   )
 #+end_src
 ** =casual-agenda=: casual agenda based on transient
@@ -670,12 +702,6 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 ** =org-timeblock=: agenda to SVG
 #+begin_src emacs-lisp
 (use-package org-timeblock)
-#+end_src
-** =org-timeline=
-#+begin_src emacs-lisp
-(use-package org-timeline
-  :init
-  (add-hook 'org-agenda-finalize-hook 'org-timeline-insert-timeline :append))
 #+end_src
 * Org Exporting related
 ** =ox-reveal=
@@ -697,14 +723,14 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 (use-package auctex)
 (use-package cdlatex)
 #+end_src
-** TODO XeLaTeX equation preview fix                                         :customFunc:
+** TODO XeLaTeX equation preview fix                                          :customFunc:
 #+begin_src emacs-lisp
 (with-eval-after-load 'org
   (setq org-preview-latex-default-process 'imagemagick)
   (setf (plist-get (cdr (assq 'imagemagick org-preview-latex-process-alist)) :latex-compiler)
         '("xelatex -interaction nonstopmode -output-directory %o %f")))
 #+end_src
-** org to latex export heading format (e.g. Todo color)                      :customFunc:
+** org to latex export heading format (e.g. Todo color)                       :customFunc:
 #+begin_src emacs-lisp
 (defun garid-custom/latex-formattig-headings
     (todo todo-type priority text tags _info)
@@ -724,7 +750,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
                 (mapconcat #'org-latex--protect-text tags ":")))))
 #+end_src
 
-** TODO export directory                                                     :customFunc:
+** TODO export directory                                                      :customFunc:
 ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stackexchange]]
 
 #+begin_src emacs-lisp
@@ -737,7 +763,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
       (when (not (file-directory-p pub-dir))
        (make-directory pub-dir))))
 #+end_src
-** TODO Website from org-roam directory
+** TODO COMMENT Website from org-roam directory
 [[id:e7ee081e-a02b-4ab9-bccc-327a92bf2b09][create website from org-roam]]
 *** COMMENT prep
 #+begin_src emacs-lisp
@@ -968,7 +994,7 @@ stork.register(
   (org-download-enable))
 #+end_src
 
-** org-download editing shell script                                       :shell_script:
+** org-download editing shell script                                        :shell_script:
 #+begin_src shell :tangle garid/edit_img.sh :shebang "#!/bin/sh"
 file=$(readlink -f "$1")
 ext="${file##*.}"
@@ -1017,6 +1043,22 @@ esac
   (org-contacts-files '("~/BrainDump/denote/20240802T185223--contacts__info.org")))
 #+end_src
 * Programming languages
+** =python=
+#+begin_src emacs-lisp
+(use-package python
+  :ensure nil
+  :config
+  (defun garid/nix-shel-python-path-reload ()
+    ""
+    (interactive)
+    (if (file-exists-p "/tmp/current-nix-shell-python-path")
+        (progn
+          (setq python-shell-exec-path
+                (list (string-trim (f-read "/tmp/current-nix-shell-python-path"))))
+          (message "python-path: updated to %s" (car python-shell-exec-path)))
+
+      (message "/tmp/current-nix-shell-python-path doesn't exist."))))
+#+end_src
 ** =graphviz-dot-mode=
 #+begin_src emacs-lisp
 (use-package graphviz-dot-mode :ensure t)
@@ -1260,7 +1302,7 @@ Similar to vim-signify.
 #+end_src
 
 * Bunch of functions
-** Open PDF/HMTL exported by LaTeX externally                                :customFunc:
+** Open PDF/HMTL exported by LaTeX externally                                 :customFunc:
 #+begin_src emacs-lisp
 (defun replace-in-string (what with in)
   (replace-regexp-in-string (regexp-quote what) with in nil 'literal))
@@ -1287,7 +1329,7 @@ Similar to vim-signify.
            )))
 #+end_src
 
-** My Custom LaTeX writing system (aka TeQ)                                 :customFunc:
+** My Custom LaTeX writing system (aka TeQ)                                   :customFunc:
 #+begin_src emacs-lisp
 (add-to-list 'load-path (expand-file-name "~/.config/emacs/Emacs-TeQ"))
 (register-input-method "TeQ-Math" "Emacs-Teq-Latex" 'quail-use-package
@@ -1298,7 +1340,7 @@ Similar to vim-signify.
 ;;(load "~/.config/emacs/garid/garids-abbrev-typos.el")	;; garid typos
 #+end_src
 
-** Custom Aligner function (with untabify)                                   :customFunc:
+** Custom Aligner function (with untabify)                                    :customFunc:
 #+begin_src emacs-lisp
 (defun garid-custom/align-regexp-and-untabify (beg end)
   (interactive "r")
@@ -1306,7 +1348,7 @@ Similar to vim-signify.
                 (concat "\\(\\s-*\\)" (read-string "Align regexp: ")))
   (untabify beg end))
 #+end_src
-** Toggling between 3 inputs (eng, mon, teq)                                 :customFunc:
+** Toggling between 3 inputs (eng, mon, teq)                                  :customFunc:
 #+begin_src emacs-lisp
 (defun garid-custom/toggle-eng-mon-teq-input-methods ()
   (interactive)
@@ -1317,7 +1359,7 @@ Similar to vim-signify.
       (if (string= default-input-method "cyrillic-mongolian")
 	  (set-input-method "TeQ-Math")))))
 #+end_src
-** copy link in org at point                                                 :customFunc:
+** copy link in org at point                                                  :customFunc:
 #+begin_src emacs-lisp
 (defun code-from-internet/org-link-open-parent-with-dired-at-point (&optional arg)
   "Extract URL from org-mode link and add it to kill ring." ;;;https://emacs.stackexchange.com/a/60555/38482
@@ -1347,7 +1389,7 @@ Similar to vim-signify.
     (message (concat "Copied URL: " url)))
   )
 #+end_src
-** put empty svg file at point                                               :customFunc:
+** put empty svg file at point                                                :customFunc:
 #+begin_src emacs-lisp
 (defun garid/put-emtpy-svg-img-at-point ()
   (interactive)
@@ -1368,7 +1410,7 @@ Similar to vim-signify.
            (format-time-string "%Y%m%d-%H%M%S.svg"))
    "]]"))
 #+end_src
-** Jumping ref's label in org or latex                                       :customFunc:
+** Jumping ref's label in org or latex                                        :customFunc:
 #+begin_src emacs-lisp
 (defun garid/jump-label-def-of-ref-at-point-word ()
   ""
@@ -1387,7 +1429,7 @@ Similar to vim-signify.
           )
       (message "No matching braces found."))))
 #+end_src
-** Custom opening external terminal at current buffer                        :customFunc:
+** Custom opening external terminal at current buffer                         :customFunc:
 #+begin_src emacs-lisp
 (defun garid-custom/open-external-term-here ()
   (interactive)
@@ -1397,13 +1439,25 @@ Similar to vim-signify.
 ;;(shell-command (concat user-emacs-directory "garid/open_external_term.sh" " " buffer-file-name)))
 #+end_src
 
-** Org toggle hide/shot hyperlink                                            :customFunc:
+** Org toggle hide/shot hyperlink                                             :customFunc:
 #+begin_src emacs-lisp
 (defun garid-custom/org-toggle-link-n-emphasis ()
-    (interactive)
-    (setq org-hide-emphasis-markers (not org-hide-emphasis-markers))
-    (org-toggle-link-display)
-    (font-lock-update))
+  (interactive)
+  (setq org-hide-emphasis-markers (not org-hide-emphasis-markers))
+  (setq org-link-descriptive           org-hide-emphasis-markers) ;;(org-toggle-link-display) more in below
+  (org-restart-font-lock)
+  (font-lock-update))
+#+end_src
+
+** Org toggle hide/shot display images                                        :customFunc:
+#+begin_src emacs-lisp
+(defun garid-custom/org-toggle-display-images-n-edraw ()
+  (interactive)
+  (org-toggle-inline-images)
+  (if org-inline-image-overlays
+      (edraw-org-link-image-mode +1)
+    (edraw-org-link-image-mode -1)
+    ))
 #+end_src
 
 * Writing & Reading
@@ -1415,7 +1469,7 @@ Similar to vim-signify.
 (use-package focus                :ensure t)
 #+end_src
 
-** Writing Distraction free                                                 :customFunc:
+** Writing Distraction free                                                   :customFunc:
 #+begin_src emacs-lisp
 (defun gry/distraction-free-on ()
   (interactive)
@@ -1492,7 +1546,7 @@ Similar to vim-signify.
     :hook ((spray-mode . gry/distraction-free-on))
 )
 #+end_src
-** garids working states                                                     :customFunc:
+** garids working states                                                      :customFunc:
 #+begin_src emacs-lisp
 (setq garids-focus-tag "rsch")
 (setq garids-focus-tag-list '("bps" "hkdn" "rsch" "yak"))
@@ -1871,7 +1925,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | =pf=     | =project-find-file=      | [ f ] find-file                     | -    |        |
 | =pz=     | =project-switch-project= | [ z ] jump-to-other-proj            | -    |        |
 | =ps=     | =consult-git-grep=       | [ s ] search git files              | -    |        |
-| =pS=     | =project-find-regexp=    | [ s ] search-in-proj                | -    |        |
+| =pS=     | =project-find-regexp=    | [ S ] search-in-proj                | -    |        |
 | =pk=     | =project-kill-buffers=   | [ k ] kill-buf-proj                 | -    |        |
 | =pl=     | =consult-project-buffer= | [ l ] list-buf-proj                 | -    |        |
 | =pv=     | =consult-imenu=          | [ v ] variables                     | -    |        |
@@ -1899,7 +1953,11 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | =nF=   | =consult-denote-find=                         | [ F ] consult-denote-find          | -    |        |
 | =nl=   | =:ignore t=                                   | < l > denote link................. | -    |        |
 | =nli=  | =denote-insert-link=                          | [ i ] link insert                  | -    |        |
-| =nlb=  | =denote-backlinks=                            | [ b ] backlink                     | -    |        |
+| =nlb=  | =denote-find-backlink=                        | [ b ] find-backlink                | -    |        |
+| =nlf=  | =denote-find-link=                            | [ f ] find-forward-link            | -    |        |
+| =nlB=  | =denote-backlinks=                            | [ B ] backlink                     | -    |        |
+| =nlF=  | =denote-link=                                 | [ F ] forward-link                 | -    |        |
+| =nla=  | =denote-add-links=                            | [ a ] add-links regex              | -    |        |
 
 **** org related
 #+attr_latex: :placement [H]
@@ -1929,43 +1987,6 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | =oTi=    | =:ignore t=                            | [ i ] insert...................... | org  |        |
 | =oTic=   | =org-table-insert-column=              | [ c ] column                       | org  |        |
 | =oTir=   | =org-table-insert-row=                 | [ r ] row                          | org  |        |
-
-**** COMMENT org-roam keybindings
-#+attr_latex: :placement [H]
-#+caption: Org-Roam
-#+name: tbl-global-general-keybindings-org-roam-related
-| key(s) | function                                    | short description                     | mode | lambda |
-|--------+---------------------------------------------+---------------------------------------+------+--------|
-| =r=      | =:ignore t=                                   | < r >.oam...........................  | -    |        |
-| =ruim=   | =org-roam-ui-mode=                            | [ uim ] roam mode ui-in-browser       | -    |        |
-| =ruio=   | =org-roam-ui-open=                            | [ uio ] roam open ui-in-browser       | -    |        |
-| =ruil=   | =org-roam-node-local=                         | [ uil ] roam local ui-in-browser      | -    |        |
-| =rf=     | =my/org-roam-find-node-by-focus-tag=          | [ f ] find focus                      | -    |        |
-| =rF=     | =consult-org-roam-file-find=                  | [ f ] find full find                  | -    |        |
-| =rl=     | =org-roam-buffer-toggle=                      | [ l ] toggle                          | -    |        |
-| =rL=     | =org-roam-buffer-display-dedicated=           | [ L ] dedicated                       | -    |        |
-| =ri=     | =org-roam-node-insert=                        | [ i ] insert                          | -    |        |
-| =rI=     | =garid-custom/org-roam-node-insert-immediate= | [ I ] insert-immediate                | -    |        |
-|--------+---------------------------------------------+---------------------------------------+------+--------|
-| =rt=     | =:ignore t=                                   | < t > tag............................ | -    |        |
-| =rta=    | =org-roam-tag-add=                            | [ a ] add                             | -    |        |
-| =rtr=    | =org-roam-tag-remove=                         | [ r ] remove                          | -    |        |
-|--------+---------------------------------------------+---------------------------------------+------+--------|
-| =rj=     | =:ignore t=                                   | < j > journal........................ | -    |        |
-| =rjc=    | =org-roam-dailies-capture-today=              | [ c ] capture                         | -    |        |
-| =rjr=    | =org-roam-dailies-goto-today=                 | [ t ] today                           | -    |        |
-| =rjt=    | =org-roam-dailies-goto-tomorrow=              | [ T ] Tomorrow                        | -    |        |
-| =rjy=    | =org-roam-dailies-goto-yesterday=             | [ y ] yesterday                       | -    |        |
-| =rjd=    | =org-roam-dailies-goto-date=                  | [ d ] date  goto date                 | -    |        |
-| =rj>=    | =org-roam-dailies-goto-next-note=             | [ > ] next                            | -    |        |
-| =rj<=    | =org-roam-dailies-goto-previous-note=         | [ < ] prev                            | -    |        |
-| =rd=     | =(dired org-roam-directory)=                  | [ d ] dired                           | -    | y      |
-|--------+---------------------------------------------+---------------------------------------+------+--------|
-| =rc=     | =:ignore t=                                   | < c > consults....................... | -    |        |
-| =rcb=    | =consult-org-roam-backlinks=                  | [ b ] backlink                        | -    |        |
-| =rs=     | =consult-org-roam-search=                     | [ s ] search                          | -    |        |
-| =rcf=    | =consult-org-roam-forwardlink=                | [ o ] wardlink                        | -    |        |
-| =rcF=    | =consult-org-roam-find-file=                  | [ r ]c-Find                           | -    |        |
 
 **** org-subtree operations
 #+attr_latex: :placement [H]
@@ -2059,28 +2080,66 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | =olf=    | =org-footnote-new=                        | [ f ] footnote-new                 | org  |        |
 | =olF=    | =org-footnote-action=                     | [ F ] Footnote-action              | org  |        |
 | =olc=    | =org-cite-insert=                         | [ c ] citation                     | org  |        |
+| =oll=    | =org-lint=                                | [ l ] lint                         | org  |        |
 
 **** org-image related
 #+attr_latex: :placement [H]
 #+caption: handing images in org-file
 #+name: tbl-orgmode-general-keybindings-img
-| key(s) | function                              | short description                  | mode | lambda |
-|--------+---------------------------------------+------------------------------------+------+--------|
-| =oi=     | =:ignore t=                             | < i > image....................... | org  |        |
-| =oii=    | =(insert "[[edraw:]]")=                 | [ i ] inline edraw                 | org  | y      |
-| =oic=    | =garid/put-emtpy-svg-img-at-point=      | [ c ] create svg                   | org  |        |
-| =oip=    | =org-download-clipboard=                | [ p ] paste clipboard              | org  |        |
-| =oiP=    | =org-download-image=                    | [ P ] Paste from-path              | org  |        |
-| =oid=    | =org-download-delete=                   | [ d ] delete file                  | org  |        |
-| =oie=    | =edraw-org-edit-regular-file-link=      | [ e ] edit edraw                   | org  |        |
-| =oiE=    | =org-download-edit=                     | [ E ] Edit externally              | org  |        |
-| =oir=    | =org-download-rename-at-point=          | [ r ] rename file                  | org  |        |
-| =oit=    | =org-toggle-inline-images=              | [ t ] toggle shot/hide image       | org  |        |
-|--------+---------------------------------------+------------------------------------+------+--------|
-| =ois=    | =:ignore t=                             | < s > size........................ | org  |        |
-| =oisn=   | =(setq org-image-actual-width '(800))=  | [ n ] normal 800px                 | org  | y      |
-| =oisb=   | =(setq org-image-actual-width '(1500))= | [ b ] big    1500px                | org  | y      |
-| =oiss=   | =(setq org-image-actual-width '(400))=  | [ s ] small  400px                 | org  | y      |
+| key(s) | function                                         | short description                  | mode | lambda |
+|--------+--------------------------------------------------+------------------------------------+------+--------|
+| =oi=   | =:ignore t=                                      | < i > image....................... | org  |        |
+| =oii=  | =(insert "[[edraw:]]")=                          | [ i ] inline edraw                 | org  | y      |
+| =oic=  | =garid/put-emtpy-svg-img-at-point=               | [ c ] create svg                   | org  |        |
+| =oip=  | =org-download-clipboard=                         | [ p ] paste clipboard              | org  |        |
+| =oiP=  | =org-download-image=                             | [ P ] Paste from-path              | org  |        |
+| =oid=  | =org-download-delete=                            | [ d ] delete file                  | org  |        |
+| =oie=  | =edraw-org-edit-regular-file-link=               | [ e ] edit edraw                   | org  |        |
+| =oiE=  | =org-download-edit=                              | [ E ] Edit externally              | org  |        |
+| =oir=  | =org-download-rename-at-point=                   | [ r ] rename file                  | org  |        |
+| =oit=  | =garid-custom/org-toggle-display-images-n-edraw= | [ t ] toggle shot/hide image       | org  |        |
+|--------+--------------------------------------------------+------------------------------------+------+--------|
+| =ois=  | =:ignore t=                                      | < s > size........................ | org  |        |
+| =oisn= | =(setq org-image-actual-width '(800))=           | [ n ] normal 800px                 | org  | y      |
+| =oisb= | =(setq org-image-actual-width '(1500))=          | [ b ] big    1500px                | org  | y      |
+| =oiss= | =(setq org-image-actual-width '(400))=           | [ s ] small  400px                 | org  | y      |
+
+**** COMMENT org-roam keybindings
+#+attr_latex: :placement [H]
+#+caption: Org-Roam
+#+name: tbl-global-general-keybindings-org-roam-related
+| key(s) | function                                    | short description                     | mode | lambda |
+|--------+---------------------------------------------+---------------------------------------+------+--------|
+| =r=      | =:ignore t=                                   | < r >.oam...........................  | -    |        |
+| =ruim=   | =org-roam-ui-mode=                            | [ uim ] roam mode ui-in-browser       | -    |        |
+| =ruio=   | =org-roam-ui-open=                            | [ uio ] roam open ui-in-browser       | -    |        |
+| =ruil=   | =org-roam-node-local=                         | [ uil ] roam local ui-in-browser      | -    |        |
+| =rf=     | =my/org-roam-find-node-by-focus-tag=          | [ f ] find focus                      | -    |        |
+| =rF=     | =consult-org-roam-file-find=                  | [ f ] find full find                  | -    |        |
+| =rl=     | =org-roam-buffer-toggle=                      | [ l ] toggle                          | -    |        |
+| =rL=     | =org-roam-buffer-display-dedicated=           | [ L ] dedicated                       | -    |        |
+| =ri=     | =org-roam-node-insert=                        | [ i ] insert                          | -    |        |
+| =rI=     | =garid-custom/org-roam-node-insert-immediate= | [ I ] insert-immediate                | -    |        |
+|--------+---------------------------------------------+---------------------------------------+------+--------|
+| =rt=     | =:ignore t=                                   | < t > tag............................ | -    |        |
+| =rta=    | =org-roam-tag-add=                            | [ a ] add                             | -    |        |
+| =rtr=    | =org-roam-tag-remove=                         | [ r ] remove                          | -    |        |
+|--------+---------------------------------------------+---------------------------------------+------+--------|
+| =rj=     | =:ignore t=                                   | < j > journal........................ | -    |        |
+| =rjc=    | =org-roam-dailies-capture-today=              | [ c ] capture                         | -    |        |
+| =rjr=    | =org-roam-dailies-goto-today=                 | [ t ] today                           | -    |        |
+| =rjt=    | =org-roam-dailies-goto-tomorrow=              | [ T ] Tomorrow                        | -    |        |
+| =rjy=    | =org-roam-dailies-goto-yesterday=             | [ y ] yesterday                       | -    |        |
+| =rjd=    | =org-roam-dailies-goto-date=                  | [ d ] date  goto date                 | -    |        |
+| =rj>=    | =org-roam-dailies-goto-next-note=             | [ > ] next                            | -    |        |
+| =rj<=    | =org-roam-dailies-goto-previous-note=         | [ < ] prev                            | -    |        |
+| =rd=     | =(dired org-roam-directory)=                  | [ d ] dired                           | -    | y      |
+|--------+---------------------------------------------+---------------------------------------+------+--------|
+| =rc=     | =:ignore t=                                   | < c > consults....................... | -    |        |
+| =rcb=    | =consult-org-roam-backlinks=                  | [ b ] backlink                        | -    |        |
+| =rs=     | =consult-org-roam-search=                     | [ s ] search                          | -    |        |
+| =rcf=    | =consult-org-roam-forwardlink=                | [ o ] wardlink                        | -    |        |
+| =rcF=    | =consult-org-roam-find-file=                  | [ r ]c-Find                           | -    |        |
 
 *** Converting tables actual keybinding
 **** General.el config
@@ -2249,7 +2308,11 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "nF" '(consult-denote-find :which-key "[ F ] consult-denote-find")
   "nl" '(:ignore t :which-key "< l > denote link.................")
   "nli" '(denote-insert-link :which-key "[ i ] link insert")
-  "nlb" '(denote-backlinks :which-key "[ b ] backlink")
+  "nlb" '(denote-find-backlink :which-key "[ b ] find-backlink")
+  "nlf" '(denote-find-link :which-key "[ f ] find-forward-link")
+  "nlB" '(denote-backlinks :which-key "[ B ] backlink")
+  "nlF" '(denote-link :which-key "[ F ] forward-link")
+  "nla" '(denote-add-links :which-key "[ a ] add-links regex")
   "h" '(:ignore t :which-key "< h > help...........................")
   "hh" '(describe-symbol :which-key "[ h ] help symbol (elisp)")
   "hH" '(describe-key :which-key "[ H ] help keybinding")
@@ -2263,7 +2326,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "pf" '(project-find-file :which-key "[ f ] find-file")
   "pz" '(project-switch-project :which-key "[ z ] jump-to-other-proj")
   "ps" '(consult-git-grep :which-key "[ s ] search git files")
-  "pS" '(project-find-regexp :which-key "[ s ] search-in-proj")
+  "pS" '(project-find-regexp :which-key "[ S ] search-in-proj")
   "pk" '(project-kill-buffers :which-key "[ k ] kill-buf-proj")
   "pl" '(consult-project-buffer :which-key "[ l ] list-buf-proj")
   "pv" '(consult-imenu :which-key "[ v ] variables")
@@ -2397,6 +2460,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "olf" '(org-footnote-new :which-key "[ f ] footnote-new")
   "olF" '(org-footnote-action :which-key "[ F ] Footnote-action")
   "olc" '(org-cite-insert :which-key "[ c ] citation")
+  "oll" '(org-lint :which-key "[ l ] lint")
   "oi" '(:ignore t :which-key "< i > image.......................")
   "oii" '((lambda () (interactive) (insert "[[edraw:]]") ) :which-key "[ i ] inline edraw")
   "oic" '(garid/put-emtpy-svg-img-at-point :which-key "[ c ] create svg")
@@ -2406,7 +2470,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "oie" '(edraw-org-edit-regular-file-link :which-key "[ e ] edit edraw")
   "oiE" '(org-download-edit :which-key "[ E ] Edit externally")
   "oir" '(org-download-rename-at-point :which-key "[ r ] rename file")
-  "oit" '(org-toggle-inline-images :which-key "[ t ] toggle shot/hide image")
+  "oit" '(garid-custom/org-toggle-display-images-n-edraw :which-key "[ t ] toggle shot/hide image")
   "ois" '(:ignore t :which-key "< s > size........................")
   "oisn" '((lambda () (interactive) (setq org-image-actual-width '(800)) ) :which-key "[ n ] normal 800px")
   "oisb" '((lambda () (interactive) (setq org-image-actual-width '(1500)) ) :which-key "[ b ] big    1500px")
@@ -2463,7 +2527,7 @@ and later sets cursor at that point when you open that file.
   :config
   (recentf-mode 1))
 #+end_src
-** shell script to open terminal                                           :shell_script:
+** shell script to open terminal                                            :shell_script:
 #+begin_src bash :tangle garid/open_external_term.sh :shebang "#!/bin/bash"
 # Open System termianl $TERMINAL at $1:
 # nohup for exitting terminal that executed this script
@@ -2530,6 +2594,7 @@ fi
                                    "\\*lsp-bridge-doc\\*"
                                    "\\*git-gutter:diff\\*"
                                    "\\*Org Select\\*"
+                                   "\\*Org Lint\\*"
                                    "\\* Merriam-Webster Thesaurus \\*"
                                    "CAPTURE-inbox.org"
                                    "CAPTURE-20230926T010607--todo__todo.org"
