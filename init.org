@@ -633,10 +633,17 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
          ("C-c w z" . citar-denote-nobib                )))
 #+end_src
 * Org Time managements
+** calendar
+#+begin_src emacs-lisp
+(use-package calendar
+  :ensure nil
+  :custom
+  (calendar-week-start-day 1))
+#+end_src
 ** =org-agenda=: the agenda
 #+begin_src emacs-lisp :results none
 (use-package org-agenda
-  :after   org
+  :after   org ;; should I write after calendar?
   :ensure   nil
   ;; :bind (:map org-agenda-mode-map
   ;;             ("j" . evil-next-line    )
