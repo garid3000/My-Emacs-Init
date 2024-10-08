@@ -545,11 +545,11 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 (use-package denote
   :ensure t
   :custom
+  (denote-excluded-files-regexp "export_.*")
   (denote-directory       (concat garids-brain-dumping-directory "denote"))
   (denote-known-keywords  '(  "finance"  "failures"  "philosophy"        ))
-  (denote-templates       '( (biblio . "* Abstract\n\n* Review")
-                             (plain  . nil)
-                             ))
+  (denote-templates       '((biblio . "* Abstract\n\n* Review")
+                            (plain  . nil)))
 
   :config
   (defun garid-custom/denote-node-insert-immediate(start end)
@@ -1079,6 +1079,11 @@ esac
 ** =lua-mode=
 #+begin_src emacs-lisp
 (use-package lua-mode :ensure t)
+#+end_src
+
+** =json-mode=
+#+begin_src emacs-lisp
+(use-package json-mode :ensure t)
 #+end_src
 ** =nix-ts-mode=
 #+begin_src emacs-lisp
@@ -1618,7 +1623,9 @@ Similar to vim-signify.
 ;; (use-package langtool   :ensure t) it required external jar / java  someday i will try
 (use-package mw-thesaurus  :ensure t)
 (use-package org-wc        :ensure t)
+;; (use-package jinx          :ensure t)
 #+end_src
+
 ** =captain=
 #+begin_src emacs-lisp
 (use-package captain
@@ -1874,6 +1881,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | =ho=     | =org-info=                 | [ o ] org-info                        | -    |        |
 | =hw=     | =which-key-show-top-level= | [ w ] which-key                       | -    |        |
 | =hm=     | =consult-man=              | [ m ] man                             | -    |        |
+| =hi=     | =Info-goto-node=           | [ i ] read docs                       | -    |        |
 
 **** Development commands
 #+attr_latex: :placement [H]
@@ -2326,6 +2334,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "ho" '(org-info :which-key "[ o ] org-info")
   "hw" '(which-key-show-top-level :which-key "[ w ] which-key")
   "hm" '(consult-man :which-key "[ m ] man")
+  "hi" '(Info-goto-node :which-key "[ i ] read docs")
   "p" '(:ignore t :which-key "< p > project.....................")
   "pr" '(xref-find-references :which-key "[ r ] references")
   "pR" '(consult-eglot-symbols :which-key "[ R ] references consult")
