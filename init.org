@@ -1637,8 +1637,19 @@ Similar to vim-signify.
               (setq captain-predicate
                     (lambda () (not (org-in-src-block-p))))))
 
+
+  (add-hook 'latex-mode-hook (lambda () (captain-mode -1)))
   (global-captain-mode t)
   )
+
+
+
+;; (lambda ()
+;;   (setq captain-predicate (lambda ()
+;;                             (not (string-match " *\\\\item"
+;;                                                (buffer-substring-no-properties
+;;                                                 (line-beginning-position)
+;;                                                 (line-end-position)))))))
 #+end_src
 * Keybinding
 ** =which-key=: keybinding shower

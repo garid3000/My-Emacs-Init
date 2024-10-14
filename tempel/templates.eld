@@ -170,6 +170,7 @@ org-mode
 (session                      "session " :post (gry/choose-from-list-and-insert-it '("SessionName")))
 (tangle                       "tangle ~/")
 
+(eqin                         "\\[" r> "\\]")
 (equation                     "\\begin{equation}" r> n> "\\end{equation}")
 (equationlabel                "\\label{"  r  "}" )
 (equationref                  "\\ref{"    r  "}" )
@@ -184,6 +185,7 @@ org-mode
 (denote_links                 "#+begin: denote-links :regexp \"" r "\" :excluded-dirs-regexp nil :sort-by-component nil :reverse-sort nil :id-only nil :include-date nil" n> r> n "#+end:")
 
 (gtdclarify                  "- [ ] what-it-is :: " r n  "- [ ] resolution :: "  r n "- [ ] next-step? :: " n> )
+(frac "\\frac{" p "}{" q "}")
 
 ;; Local Variables:
 ;; mode: lisp-data
