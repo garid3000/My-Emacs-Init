@@ -340,7 +340,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
                    ("\\.xopp\\'"               . "xournalpp \"%s\""          )))
 
   ;; todo .......................................................................................
-  (org-todo-keywords      '((sequence "TODO(t)" "NEXT(n)" "WAIT(w)" "PRJT(p)" "PRJT(p)" "VAGUE(v)"
+  (org-todo-keywords      '((sequence "TODO(t)" "NEXT(n)" "WAIT(w)" "PRJT(p)" "VAGUE(v)"
                                       "|"       "DONE(d)" "CNCL(c)")))
 
   (org-todo-keyword-faces '(("TODO"  . org-warning )
@@ -449,7 +449,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
     "id"
     (and (< 9 (length id))
          (buffer-file-name)
-         (format "%s/header_%s"
+         (format "%s/subtree_id_%s"
                  (car                     ;; 4. "20241002T190027"
                   (split-string           ;; 3. ( "20241002T190027"  "denote-getting-id-of-current-file__elisp_org" )
                    (file-name-base        ;; 2. "20241002T190027--denote-getting-id-of-current-file__elisp_org.org"
@@ -2690,5 +2690,20 @@ fi
 [[https://www.youtube.com/watch?v=tw2-rI2bxSg&t=1s][Initial idea from Systems crafter]], [[https://emacs.stackexchange.com/a/18785/38482][and code structure from this answer on emacs stackexchange]], and need to set ~enble-local-eval~ to ~t~.
 
 #+begin_src emacs-lisp
-(add-to-list 'safe-local-variable-values '(dired-omit-files         . "\\`[.]?#\\|\\`[.][.]?\\'\\|\\.html\\'\\|\\.tex\\'"    )) ;; <-- wokr
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(safe-local-variable-values
+   '((eval setq org-download-image-dir
+           (file-relative-name
+            (concat "./data/"
+                    (file-name-as-directory
+                     (car
+                      (split-string
+                       (file-name-base
+                        (buffer-file-name))
+                       "--"))))))
+     (dired-omit-files . "\\`[.]?#\\|\\`[.][.]?\\'\\|\\.html\\'\\|\\.tex\\'")))) ;
 #+end_src
