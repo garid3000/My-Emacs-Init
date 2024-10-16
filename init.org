@@ -2034,16 +2034,18 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 #+attr_latex: :placement [H]
 #+caption: agenda-todo-schedule
 #+name: tbl-orgmode-general-keybindings-todo
-| key(s) | function      | short description                  | mode | lambda |
-|--------+---------------+------------------------------------+------+--------|
-| =oc=     | =org-capture=   | [ c ] capture                      | -    |        |
-| =ot=     | =org-todo=      | [ t ] todo                         | org  |        |
-|--------+---------------+------------------------------------+------+--------|
-| =oa=     | =:ignore t=     | < a > agenda...................... | -    |        |
-| =oag=    | =org-agenda=    | [ g ] ag.enda                      | -    |        |
-| =oab=    | =org-timeblock= | [ b ] block                        | -    |        |
-| =oas=    | =org-schedule=  | [ a ] schedule                     | org  |        |
-| =oad=    | =org-deadline=  | [ a ] deadline                     | org  |        |
+| key(s) | function        | short description                  | mode | lambda |
+|--------+-----------------+------------------------------------+------+--------|
+| =oc=   | =org-capture=   | [ c ] capture                      | -    |        |
+| =ot=   | =org-todo=      | [ t ] todo                         | org  |        |
+|--------+-----------------+------------------------------------+------+--------|
+| =oa=   | =:ignore t=     | < a > agenda...................... | -    |        |
+| =oag=  | =org-agenda=    | [ g ] ag.enda                      | -    |        |
+| =oab=  | =org-timeblock= | [ b ] block                        | -    |        |
+| =oas=  | =org-schedule=  | [ a ] schedule                     | org  |        |
+| =oad=  | =org-deadline=  | [ a ] deadline                     | org  |        |
+| =oac=  | =org-clock-in=  | clock in                           | org  |        |
+| =oaC=  | =org-clock-out= | clock in                           | org  |        |
 
 **** org jumping around or finding things
 #+attr_latex: :placement [H]
@@ -2446,6 +2448,8 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "ot" '(org-todo :which-key "[ t ] todo")
   "oas" '(org-schedule :which-key "[ a ] schedule")
   "oad" '(org-deadline :which-key "[ a ] deadline")
+  "oac" '(org-clock-in :which-key "clock in")
+  "oaC" '(org-clock-out :which-key "clock in")
   "of" '(:ignore t :which-key "< f > find.....................")
   "ofh" '((lambda () (interactive) (consult-org-heading) ) :which-key "[ h ] heading")
   "ofn" '((lambda () (interactive) (consult-line "^#+name"   ) ) :which-key "[ n ] named table/eq/src")
