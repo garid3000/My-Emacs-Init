@@ -310,8 +310,8 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
         ("C-S-j" . org-next-visible-heading     )
         ("C-S-k" . org-previous-visible-heading ))
 
-  :hook
-  (org-mode . garid-custom/org-mode-hooked-func)
+  ;; :hook
+  ;; (org-mode . garid-custom/org-mode-hooked-func)
 
   :custom
   (org-ellipsis                      " ▼"  )
@@ -474,7 +474,10 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   ;;
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
+  ;; setting latex preview
+  (setq org-preview-latex-default-process 'imagemagick)
+  (setf (plist-get (cdr (assq 'imagemagick org-preview-latex-process-alist)) :latex-compiler)
+        '("xelatex -interaction nonstopmode -output-directory %o %f"))
   )
 #+end_src
 ** org-babel languages related
@@ -494,33 +497,6 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   :custom (org-bullets-bullet-list
            '("Ⅰ" "Ⅱ" "Ⅲ" "Ⅳ" "Ⅴ" "Ⅵ" "Ⅶ")))
 #+end_src
-** TODO Org hooked function                                                   :customFunc:
-#+begin_src emacs-lisp
-(defun garid-custom/org-mode-hooked-func ()
-  ;; (org-indent-mode)
-  ;; (org-num-mode)
-  (setq org-download-heading-lvl nil)                                                                            ;;
-  ;;(message (denote-directory))
-  ;; (when buffer-file-name                                        ;; 0. need to check buffer has file associated with
-  ;;   (when (= 0                                                  ;; 4. checking substring should be 0 means it's a denote file
-  ;;            (string-match-p                                    ;; 3. substring check
-  ;;             (regexp-quote (file-truename (denote-directory))) ;; 2.  /home/garid/BrainDump/denote/
-  ;;             (file-truename (buffer-file-name))))              ;; 1.  /home/garid/BrainDump/denote/20241002T182854--denote-image-directory__elisp_org.org
-  ;;     (setq org-download-image-dir
-  ;;           (file-relative-name
-  ;;            (concat                                       ;; 8. /home/garid/BrainDump/denote/00-img/20241002T182854/
-  ;;             (file-name-as-directory (denote-directory))  ;; 7. /home/garid/BrainDump/denote to /home/garid/BrainDump/denote/
-  ;;             "00-img/"                                    ;; 6. "00-img/"
-  ;;             (file-name-as-directory                      ;; 5. "20241002T190027/"
-  ;;              (car                                        ;; 4. "20241002T190027"
-  ;;               (split-string                              ;; 3. ( "20241002T190027"  "denote-getting-id-of-current-file__elisp_org" )
-  ;;                (file-name-base                           ;; 2. "20241002T190027--denote-getting-id-of-current-file__elisp_org.org"
-  ;;                 (buffer-file-name))                      ;; 1. "/home/garid/BrainDump/denote/20241002T190027--denote-getting-id-of-current-file__elisp_org.org"
-  ;;                "--"))                                    ;; 3. splitting separator
-  ;;              ))))))
-  )
-#+end_src
-
 * Org Zettelkasten like (roam & denote)
 #+begin_src emacs-lisp
 (setq garids-brain-dumping-directory "~/BrainDump/")
@@ -718,13 +694,6 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 (use-package auctex)
 (use-package cdlatex)
 #+end_src
-** TODO XeLaTeX equation preview fix                                          :customFunc:
-#+begin_src emacs-lisp
-(with-eval-after-load 'org
-  (setq org-preview-latex-default-process 'imagemagick)
-  (setf (plist-get (cdr (assq 'imagemagick org-preview-latex-process-alist)) :latex-compiler)
-        '("xelatex -interaction nonstopmode -output-directory %o %f")))
-#+end_src
 ** org to latex export heading format (e.g. Todo color)                       :customFunc:
 #+begin_src emacs-lisp
 (defun garid-custom/latex-formattig-headings
@@ -745,18 +714,25 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
                 (mapconcat #'org-latex--protect-text tags ":")))))
 #+end_src
 
-** TODO export directory                                                      :customFunc:
+** export directory                                                           :customFunc:
 ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stackexchange]]
 
 #+begin_src emacs-lisp
-(defvar org-export-output-directory-prefix "export_" "prefix of directory used for org-mode export")
+(use-package ox
+  :ensure nil
+  :config
+  (defvar org-export-output-directory-prefix "export_" "prefix of directory used for org-mode export")
 
-(defadvice org-export-output-file-name (before org-add-export-dir activate)
-  "Modifies org-export to place exported files in a different directory"
-  (when (not pub-dir)
+  (defadvice org-export-output-file-name (before org-add-export-dir activate)
+    "Modifies org-export to place exported files in a different directory"
+    (when (not pub-dir)
       (setq pub-dir (concat org-export-output-directory-prefix (substring extension 1)))
       (when (not (file-directory-p pub-dir))
-       (make-directory pub-dir))))
+        (progn
+          (make-directory pub-dir)
+          (make-symbolic-link "../data" (concat (file-name-as-directory pub-dir) "data")))
+        )))
+  )
 #+end_src
 ** TODO COMMENT Website from org-roam directory
 [[id:e7ee081e-a02b-4ab9-bccc-327a92bf2b09][create website from org-roam]]
@@ -974,7 +950,10 @@ stork.register(
 ** =htmlize= - source code syntax in html export
 #+begin_src emacs-lisp
 (use-package htmlize
-  :ensure t)
+  :ensure t
+  :config
+  (add-hook 'htmlize-before-hook (lambda () (indent-bars-mode -1))))
+
 #+end_src
 * Org Misc:
 ** =org-download= package itself
@@ -984,7 +963,9 @@ stork.register(
   :custom
   (org-download-display-inline-images  nil)
   (org-download-edit-cmd (concat user-emacs-directory "garid/edit_img.sh %s"))
+  (org-download-heading-lvl nil)                                                                            ;;
   ;;:hook ((org-mode . my-org-download-set-dir))
+
   :config
   (org-download-enable))
 #+end_src
@@ -1160,8 +1141,8 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
 				      list list_comprehension
 				      dictionary dictionary_comprehension
 				      parenthesized_expression subscript)))
-  ;;:hook ((python-base-mode yaml-mode) . indent-bars-mode)
-  :hook ((python-base-mode yaml-mode) . indent-bars--ts-mode)
+  :hook ((python-base-mode yaml-mode) . indent-bars-mode)
+  ;;:hook ((python-base-mode yaml-mode) . indent-bars--ts-mode)
   )
 #+end_src
 * Coding lsp & jumping around
@@ -1678,9 +1659,8 @@ Similar to vim-signify.
 | =M-W=     | =evil-window-vnew=                              | divide window vertically (on right) |
 | =M-E=     | =evil-window-vsplit=                            | divide window vertically (on left)  |
 | =M-]=     | =comint-dynamic-complete-filename=              | complete file path                  |
-| =M-s=     | =avy-goto-char=                                 | jump to character                   |
-| =M-S=     | =avy-goto-char-2=                               | jump to character (with 2 char)     |
 | =M-f=     | =consult-line=                                  | search line in buffer               |
+| =M-F=     | =zoom-window-zoom=                              | zoom window mode                    |
 | =M-y=     | =consult-yank-from-kill-ring=                   | consult yank from kill ring         |
 | =C-/=     | =comment-line=                                  | set selected lines comment          |
 | =C-\vert= | =garid-custom/toggle-eng-mon-teq-input-methods= | change toggle input (Eng-Mon-Teq)   |
@@ -1731,9 +1711,8 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 (global-set-key (kbd "M-W") 'evil-window-vnew)
 (global-set-key (kbd "M-E") 'evil-window-vsplit)
 (global-set-key (kbd "M-]") 'comint-dynamic-complete-filename)
-(global-set-key (kbd "M-s") 'avy-goto-char)
-(global-set-key (kbd "M-S") 'avy-goto-char-2)
 (global-set-key (kbd "M-f") 'consult-line)
+(global-set-key (kbd "M-F") 'zoom-window-zoom)
 (global-set-key (kbd "M-y") 'consult-yank-from-kill-ring)
 (global-set-key (kbd "C-/") 'comment-line)
 (global-set-key (kbd "C-|") 'garid-custom/toggle-eng-mon-teq-input-methods)
@@ -2679,6 +2658,10 @@ fi
 ** =exercism=
 #+begin_src emacs-lisp
 (use-package exercism)
+#+end_src
+** =zoom-window=
+#+begin_src emacs-lisp
+(use-package zoom-window)
 #+end_src
 
 * Finish Notifier

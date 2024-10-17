@@ -39,7 +39,11 @@ latex-mode
 (trivlist "\\begin{trivlist}\n" r> n> "\\end{trivlist}")
 (verbatim "\\begin{verbatim}\n" r> n> "\\end{verbatim}")
 (verbatimm "\\begin{verbatim*}\n" r> n> "\\end{verbatim*}")
-
+(matrixp    "\\begin{pmatrix}" n>
+            r " & " r " & " r " & " r n>
+            r " & " r " & " r " & " r n>
+            r " & " r " & " r " & " r n>
+            "\\end{pmatrix}")
 
 lisp-mode emacs-lisp-mode ;; Specify multiple modes
 
@@ -170,8 +174,10 @@ org-mode
 (session                      "session " :post (gry/choose-from-list-and-insert-it '("SessionName")))
 (tangle                       "tangle ~/")
 
-(eqin                         "\\[" r> "\\]")
+(eqin1                        "\\(" r> "\\)")
+(eqin2                        "\\[" r> "\\]")
 (equation                     "\\begin{equation}" r> n> "\\end{equation}")
+(equationaligned              "\\begin{equation}" n> "\\begin{aligned}" r> n> "\\end{aligned}" n> "\\end{equation}")
 (equationlabel                "\\label{"  r  "}" )
 (equationref                  "\\ref{"    r  "}" )
 
