@@ -286,7 +286,6 @@ When nil, use the default face background."
                                      "20230926T010607--todo__todo.org"))
 #+end_src
 
-
 * roam related
 ** COMMENT =org-roam=: roam
 #+begin_src emacs-lisp
@@ -491,7 +490,6 @@ When nil, use the default face background."
 
 Now I use the captain mode
 
-
 * COMMENT =org-timeline=
 #+begin_src emacs-lisp
 (use-package org-timeline
@@ -499,8 +497,7 @@ Now I use the captain mode
   (add-hook 'org-agenda-finalize-hook 'org-timeline-insert-timeline :append))
 #+end_src
 
-
-* TODO COMMENT XeLaTeX equation preview fix                                   :customFunc:
+* COMMENT XeLaTeX equation preview fix                                                :customFunc:
 #+begin_src emacs-lisp
 ;; (with-eval-after-load 'org
 ;;   (setq org-preview-latex-default-process 'imagemagick)
@@ -509,7 +506,7 @@ Now I use the captain mode
 ;;   )
 #+end_src
 
-** TODO COMMENT Org hooked function                                           :customFunc:
+* COMMENT Org hooked function                                                         :customFunc:
 #+begin_src emacs-lisp
 ;; (defun garid-custom/org-mode-hooked-func ()
 ;;   ;; (org-indent-mode)
@@ -536,3 +533,121 @@ Now I use the captain mode
 ;;   )
 #+end_src
 
+* COMMENT exporting
+#+begin_src emacs-lisp :exports code :results verbatim
+(setq
+ org-publish-project-alist
+ `(("Pensieve: org -> html"
+    :base-directory ,org-roam-directory
+    ;; :base-directory "~/Pensieve/"
+    :recursive t
+    :publishing-function org-html-publish-to-html
+    :publishing-directory ,(concat org-roam-directory "website")
+    :exclude ".*daily/.*org"  ;;; for excluding -daily
+    ;; :publishing-directory "/tmp/asdf"
+    ;;:publishing-directory (concat org-roam-directory "website")
+    ;; :section-numbers nil
+    :section-numbers  org-export-with-section-numbers
+    :with-toc         t
+    :html_link_home  "index.html"
+    ;; :html-preamble "This is just a test"
+    :html-preamble "<div id=\"navbar\"> <ul>
+  <div class=\"stork-wrapper\">
+    <a href=\"/~zgarid/index.html\">Home</a>             &nbsp;
+    <a href=\"..\">Up/Back</a>                           &nbsp;
+    <a href=\"/~zgarid/meta-research.html\">Research</a> &nbsp;
+    <a href=\"/~zgarid/meta-python.html\">Python</a>     &nbsp;
+    <a href=\"/~zgarid/meta-cli.html\">CLI</a>           &nbsp;
+    <a href=\"/~zgarid/meta-org.html\">Org-Mode</a>      &nbsp;
+    <a href=\"/~zgarid/search.html\">Search</a>          &nbsp;
+    <input data-stork=\"federalist\" class=\"stork-input\" />
+    <div data-stork=\"federalist-output\" class=\"stork-output\"></div>
+  </div>
+</ul>
+<hr>
+</div>
+<script src=\"https://files.stork-search.net/releases/v1.6.0/stork.js\"></script>
+<script>
+stork.register(
+    'federalist', 'https://www.ep.sci.hokudai.ac.jp/~zgarid/garid_stork.st'
+)
+</script>
+"
+    ;; 
+    ;; 'https://github.com/garid3000/testy/raw/master/garid_stork.st'
+    ;; :html-divs ((preamble "header"  "preamble")
+    ;;             (content   "main"   "content")
+    ;;             (postamble "footer" "postamble"))
+
+    )
+   ;;:html_head "<link rel=\"stylesheet\" href=\"/home/garid/org.css\">"
+   ;; not sure why above line doesn't change css of thml output
+   ;; that's why I copied from
+   ;;https://systemcrafters.net/publishing-websites-with-org-mode/building-the-site/
+   ;; above
+
+
+   ("Pensieve: od-imgs change position"
+    :base-directory ,(concat org-roam-directory "od-imgs/")
+    :base-extension "jpg\\|gif\\|png\\|svg"
+    :recursive t
+    ;;:publishing-directory "/ssh:user@host:~/html/images/"
+    :publishing-directory ,(concat org-roam-directory "website/od-imgs")
+    ;; :publishing-directory "/tmp/asdf/img"
+    :publishing-function org-publish-attachment)
+
+   ;; ("Pensieve: org -> txt"
+   ;;  :base-directory ,org-roam-directory
+   ;;  ;; :base-directory "~/Pensieve/"
+   ;;  :recursive t
+   ;;  :publishing-function org-ascii-export-to-ascii
+   ;;  :publishing-directory ,(concat org-roam-directory "txt_for_stork")
+   ;;  :exclude ".*daily/.*org"  ;;; for excluding -daily
+   ;;  ;; :publishing-directory "/tmp/asdf"
+   ;;  ;;:publishing-directory (concat org-roam-directory "website")
+   ;;  ;; :section-numbers nil
+   ;;  :section-numbers  nil
+   ;;  ;; :with-toc         t
+   ;;  )
+
+   ;; ("Pensieve: org -> txt 2"
+   ;;  :base-directory ,org-roam-directory
+   ;;  ;; :base-directory "~/Pensieve/"
+   ;;  :recursive t
+   ;;  :publishing-function org-ascii-export-to-ascii
+   ;;  :publishing-directory ,(concat org-roam-directory "txt_for_stork")
+   ;;  :exclude ".*daily/.*org"  ;;; for excluding -daily
+   ;;  ;; :publishing-directory "/tmp/asdf"
+   ;;  ;;:publishing-directory (concat org-roam-directory "website")
+   ;;  ;; :section-numbers nil
+   ;;  :section-numbers  nil
+   ;;  :with-toc         nil
+   ;;  ;;:html_link_home  "index.html"
+   ;;  )
+
+   )
+ )
+#+end_src
+
+* COMMENT Website from org-roam directory
+[[id:e7ee081e-a02b-4ab9-bccc-327a92bf2b09][create website from org-roam]]
+#+begin_src emacs-lisp
+;; (setq org-html-validation-link            nil ;; Don't show validation link
+;;       org-html-head-include-scripts       nil ;; Use our own scripts
+;;       org-html-head-include-default-style nil ;; Use our own styles
+;;       ;;org-html-head "<link rel=\"stylesheet\" href=\"https://cdn.simplecss.org/simple.min.css\" />"
+;;       org-html-head "<link rel=\"stylesheet\" type=\"text/css\" href=\"https://orgmode.org/worg/style/worg.css\"/>"
+;;       )
+#** TODO COMMENT garids working states                                                 :customFunc:
+#+begin_src emacs-lisp
+(setq garids-focus-tag "rsch")
+(setq garids-focus-tag-list '("bps" "hkdn" "rsch" "yak"))
+;; (setq garids-focus-tag (gry/choose-from-list-and-return-it garids-focus-tag-list))
+
+(defun garid/focus-change-tag ()
+  "this changes the tag of my work focus"
+  (interactive)
+  (setq garids-focus-tag (gry/choose-from-list-and-return-it garids-focus-tag-list))
+  (message (concat "focus tag changed to " garids-focus-tag)))
+#+end_src
++end_src

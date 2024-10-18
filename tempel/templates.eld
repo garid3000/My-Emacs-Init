@@ -126,6 +126,26 @@ python-mode
 (fn "def " p "(" p ") -> None:" r> "return")
 (mt "def " p "(self, " p ") -> None:" n> n> "return")
 
+graphviz-dot-mode
+(digraph "digraph {\n" r> n> "}")
+(subgraph "subgraph cluster_name {\n" r> "    label=\"some label\"" n> "}")
+(node "node [fontname=\"Iosevka SS06\", fontsize=18, shape=box];")
+(edge "edge [fontname=\"Arial\", fontsize=10];")
+(fontname "fontname=\"Liberation Serif\"")
+(fontsize "fontsize=14")
+(rankdir "rankdir=LR")
+(label "label=\"" r> n> "\"")
+(shape "shape=" :post (gry/choose-from-list-and-insert-it '("box" "polygon" "ellipse" "oval" "circle" "point" "egg" "triangle" "plaintext" "plain" "diamond" "trapezium" "parallelogram" "house" "pentagon" "hexagon" "septagon" "octagon" "doublecircle" "doubleoctagon" "tripleoctagon" "invtriangle" "invtrapezium" "invhouse" "rect" "square" "start" "none" "underline" "cylinder" "note" "tab" "folder" "box3d" "component" "prometer" "cds" "rarrow" "larrow" "rpromoter" "lpromoter" "signature" "insulator")))
+
+(arrowhead "arrowhead=" :post (gry/choose-from-list-and-insert-it '("box" "crow" "curve" "diamond" "dot" "icurve" "inv" "none" "normal" "tee" "vee")))
+(arrowtail "arrowtail=" :post (gry/choose-from-list-and-insert-it '("box" "crow" "curve" "diamond" "dot" "icurve" "inv" "none" "normal" "tee" "vee")))
+
+(color     "color="     :post (gry/choose-from-list-and-insert-it '("gray" "red" "blue" "yellow" "green" "aliceblue" "black" "blueviolet" "brown" "cadetblue" "coral" "darkblue" "darkcyan" "1" "2" "3" "4" "5" "6" "7" "8" "9")))
+(fillcolor "fillcolor=" :post (gry/choose-from-list-and-insert-it '("gray" "red" "blue" "yellow" "green" "aliceblue" "black" "blueviolet" "brown" "cadetblue" "coral" "darkblue" "darkcyan" "1" "2" "3" "4" "5" "6" "7" "8" "9")))
+(fontcolor "fontcolor=" :post (gry/choose-from-list-and-insert-it '("gray" "red" "blue" "yellow" "green" "aliceblue" "black" "blueviolet" "brown" "cadetblue" "coral" "darkblue" "darkcyan" "1" "2" "3" "4" "5" "6" "7" "8" "9")))
+
+
+(dir "dir=both")
 
 org-mode
 
@@ -161,8 +181,8 @@ org-mode
 (printbibliograph             "#+print_bibliography:")
 
 (results                      "results " :post (gry/choose-from-list-and-insert-it
-                           '( "verbatim" "value" "output" "table" "file xxx :output-dir .../"
-                              "list" "scalar" "code" "draw" "html" "latex" "link" "org" "pp")))
+                                                '( "verbatim" "value" "output" "table" "file xxx :output-dir .../"
+                                                   "list" "scalar" "code" "draw" "html" "latex" "link" "org" "pp")))
 (vardown                      "#+header: :var outputVar=" :post (insert (concat org-download-image-dir "/filename.svg") ))
 (varatta                      "#+header: :var outputVar=(my/org-attach-dir \"" r ".svg\")" )
 (cache                        "cache "
