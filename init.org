@@ -1202,7 +1202,6 @@ Similar to vim-signify.
                        "Emacs-TeQ.el")
 (fset 'gry-calc-horizontal-concat
       (kmacro-lambda-form [?v ?t tab ?v ?t ?| ?v ?t] 0 "%d"))
-;;(load "~/.config/emacs/garid/garids-abbrev-typos.el")	;; garid typos
 #+end_src
 
 ** Custom Aligner function (with untabify)                                    :customFunc:
