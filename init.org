@@ -70,6 +70,7 @@ undo-tree is Emacs's undo & redo helper with built-in tree graph of versions.
 
 #+begin_src emacs-lisp
 (use-package undo-tree
+  :delight " udt"
   :ensure t
   :config
   (global-undo-tree-mode))
@@ -80,12 +81,12 @@ undo-tree is Emacs's undo & redo helper with built-in tree graph of versions.
 ;; Vim Bindings
 (use-package evil
   :ensure t
-  :bind (;; ("<escape>" . keyboard-escape-quit  )  commented on nov21
-         ;; ("M-j"      . evil-scroll-line-down )  C-e
-         ;; ("M-k"      . evil-scroll-line-up   )  C-y
-         ;; ("M-d"      . evil-scroll-page-down )  G
-         ;; ("M-u"      . evil-scroll-page-up   )  g g
-         )
+  ;; :bind (;; ("<escape>" . keyboard-escape-quit  )  commented on nov21
+  ;;        ;; ("M-j"      . evil-scroll-line-down )  C-e
+  ;;        ;; ("M-k"      . evil-scroll-line-up   )  C-y
+  ;;        ;; ("M-d"      . evil-scroll-page-down )  G
+  ;;        ;; ("M-u"      . evil-scroll-page-up   )  g g
+  ;;        )
   :custom
   (evil-want-keybinding     nil)
   (evil-undo-system         'undo-tree)
@@ -98,8 +99,8 @@ undo-tree is Emacs's undo & redo helper with built-in tree graph of versions.
   (scroll-conservatively 9999)
 
   :config
-  (evil-define-key 'normal  org-mode-map   (kbd "TAB") #'org-cycle) ;; for org-cycle (tab) working for terminal
-  (evil-define-key 'normal 'prog-mode-map  (kbd "K")   'eldoc) ;; or 'eldoc-box-help-at-point
+  ;;(evil-define-key 'normal  org-mode-map   (kbd "TAB") #'org-cycle) ;; for org-cycle (tab) working for terminal
+  (evil-define-key 'normal 'prog-mode-map  (kbd "K")   'eldoc)      ;; or 'eldoc-box-help-at-point
   (evil-mode 1))
 #+end_src
 ** =evil-collection=: vi-movements everywhere
@@ -124,6 +125,12 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
                                (push '(40  . ("\\left("    . "\\right)"   )) evil-surround-pairs-alist)
                                (push '(123 . ("\\left\\{"  . "\\right\\}" )) evil-surround-pairs-alist)
                                (push '(91  . ("\\left["    . "\\right]"   )) evil-surround-pairs-alist)
+                               (push '(47  . ("\\frac{"    . "}{ }"       )) evil-surround-pairs-alist)
+                               (push '(63  . ("\\frac{ }{" . " }"         )) evil-surround-pairs-alist)
+                               (push '(94  . ("{"          . "}^{ }"      )) evil-surround-pairs-alist)
+                               (push '(98  . ("\\boxed{"   . "}"          )) evil-surround-pairs-alist)
+                               (push '(95  . ("\\underbrace{"   . "}_{ }" )) evil-surround-pairs-alist)
+                               (push '(45  . ("\\overbrace{"    . "}_{ }" )) evil-surround-pairs-alist)
                                )))
 #+end_src
 
@@ -179,6 +186,11 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
     (let ((indent-tabs-mode nil)) ad-do-it))
   (ad-activate 'align-regexp)
   )
+#+end_src
+** =delight=
+#+begin_src emacs-lisp
+(use-package delight
+  :ensure t)
 #+end_src
 
 ** =evil-terminal-cursor-changer=:
@@ -303,6 +315,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 #+name: lst_org
 #+begin_src emacs-lisp :eval no
 (use-package org
+  :delight " org"
   :bind (:map
          org-mode-map
          ("C-S-j" . org-next-visible-heading     )
@@ -861,8 +874,10 @@ esac
 (use-package org-auto-tangle
   :ensure t
   :defer  t
-  :hook   (org-mode                .  org-auto-tangle-mode)
-  :custom (org-auto-tangle-default    nil                 ))
+  :delight " oat"
+  :custom (org-auto-tangle-default    nil)
+  :hook (org-mode . org-auto-tangle-mode)
+  )
 #+end_src
 
 ** =org-transclusion=
@@ -1097,16 +1112,10 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
 )
 #+end_src
 
-** =fancy-dabbrev=
-#+begin_src emacs-lisp
-(use-package fancy-dabbrev
-  :ensure t
-  :config (global-fancy-dabbrev-mode))
-#+end_src
-
 ** =abbrev=
 #+begin_src emacs-lisp
 (use-package abbrev
+  :delight " abb"
   :defer 1
   :ensure nil
   ;;:custom
@@ -1119,6 +1128,14 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
   (setq-default abbrev-mode t)
   )
 #+end_src
+** =fancy-dabbrev=
+#+begin_src emacs-lisp
+(use-package fancy-dabbrev
+  :delight " fda"
+  :ensure t
+  :config (global-fancy-dabbrev-mode))
+#+end_src
+
 * Coding convenient
 ** =rg=: ripgrep in Emacs
 Probably requires external =rg= command.
@@ -1138,6 +1155,7 @@ Probably requires external =rg= command.
 Similar to vim-signify.
 #+begin_src emacs-lisp
 (use-package git-gutter
+  :delight  " git"
   :ensure t
   :config (global-git-gutter-mode))
 #+end_src
@@ -1452,6 +1470,7 @@ Similar to vim-signify.
 ** =captain=
 #+begin_src emacs-lisp
 (use-package captain
+  :delight " cap"
   :custom
   (sentence-end-double-space nil)
 
@@ -1477,10 +1496,12 @@ Similar to vim-signify.
   (global-captain-mode t)
   )
 #+end_src
+
 * Keybinding
 ** =which-key=: keybinding shower
 #+begin_src emacs-lisp
 (use-package which-key
+  :delight
   :ensure t
   :custom
   (which-key-popup-type              'side-window               )
@@ -2422,48 +2443,6 @@ fi
   )
 #+end_src
 
-** =delight=
-#+begin_src emacs-lisp
-(use-package delight
-  :ensure t
-  :demand t
-  :config
-  (delight
-   '(
-     ;; ----------  major modes  ----------------------------------
-     (sh-mode               "shl "                              )
-     (org-mode              "org "                              )
-     (python-mode           "pyt "                              )
-     (python-ts-mode        "pyt "                              )
-     (dired-mode            "dir "                              )
-     (help-mode             "hlp "                              )
-     ;; ----------  minor modes  ----------------------------------
-     (dired-omit-mode       "dro "   )   ;;   dired
-     (org-roam-mode         "orm "   )   ;;   org-roam
-     (which-key-mode        "wky "   )   ;;   which-key
-     (git-gutter-mode       "ggt "   )   ;;   git-gutter
-     (org-auto-tangle-mode  "tng "   )   ;;   org-auto-tangle
-     (auto-revert-mode      "arv "   )   ;;   autorevert
-     (org-indent-mode        nil     )   ;;   org-indent
-     (org-num-mode          "onm "   )   ;;   org-indent
-     (org-gtd-mode          "gtd "   )   ;;   org-gtd
-     (org-src-mode          "src "   )   ;;   org
-     (consult-org-roam-mode "crm "   )   ;;   consult-org-roam
-     (yas-minor-mode        "yas "   )   ;;   yasnippet
-     (eldoc-mode            "eld "   )   ;;   eldoc
-     (magit-status-mode     "mgt "   )   ;;   magit
-     (undo-tree-mode        "utr "   )   ;;   undo-tree
-     (lisp-interaction-mode "eli "   )   ;;   elisp-mode
-     (emacs-lisp-mode       "eli "   )   ;;   elisp-mode
-     (command-log-mode      "clm "   )   ;;   command-log-mode
-     (flymake-mode          "flm "   )   ;;   flymake
-     (lsp-bridge-mode       "lsp "   )   ;;   lsp-bridge
-     (org-edna-mode         "edn "   )   ;;   edna
-     (evil-collection-unimpaired-mode "evc " )  ;;  evil-collection
-     (all-the-icons-dired-mode     nil   all-the-icons-dired.el )
-     (visual-line-mode             nil   simple                 ))))
-#+end_src
-
 ** =exercism=
 #+begin_src emacs-lisp
 (use-package exercism)
@@ -2475,6 +2454,17 @@ fi
   (zoom-window-mode-line-color "dark slate gray")
   )
 #+end_src
+** =auto-revert-mode=
+#+begin_src emacs-lisp
+(use-package emacs
+  :ensure nil
+  :delight
+  (auto-fill-function " arev")
+  (auto-revert-mode)
+  )
+#+end_src
+
+#+RESULTS:
 
 * Custom set variable:
 [[https://www.youtube.com/watch?v=tw2-rI2bxSg&t=1s][Initial idea from Systems crafter]], [[https://emacs.stackexchange.com/a/18785/38482][and code structure from this answer on emacs stackexchange]], and need to set ~enble-local-eval~ to ~t~.
