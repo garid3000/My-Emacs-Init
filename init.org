@@ -119,19 +119,32 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 (use-package evil-surround
   :ensure t
   :after evil
+  :hook
+  (latex-mode . (lambda ()  ;; adds to latex-mode-hook
+                  (push '(40  . ("\\left("       . "\\right)"  )) evil-surround-pairs-alist)
+                  (push '(123 . ("\\left\\{"     . "\\right\\}")) evil-surround-pairs-alist)
+                  (push '(91  . ("\\left["       . "\\right]"  )) evil-surround-pairs-alist)
+                  (push '(47  . ("\\frac{"       . "}{ }"      )) evil-surround-pairs-alist)
+                  (push '(63  . ("\\frac{ }{"    . " }"        )) evil-surround-pairs-alist)
+                  (push '(94  . ("{"             . "}^{ }"     )) evil-surround-pairs-alist)
+                  (push '(98  . ("\\boxed{"      . "}"         )) evil-surround-pairs-alist)
+                  (push '(95  . ("\\underbrace{" . "}_{ }"     )) evil-surround-pairs-alist)
+                  (push '(45  . ("\\overbrace{"  . "}_{ }"     )) evil-surround-pairs-alist)))
+
   :config
   (global-evil-surround-mode)
-  (add-hook 'latex-mode-hook (lambda ()
-                               (push '(40  . ("\\left("    . "\\right)"   )) evil-surround-pairs-alist)
-                               (push '(123 . ("\\left\\{"  . "\\right\\}" )) evil-surround-pairs-alist)
-                               (push '(91  . ("\\left["    . "\\right]"   )) evil-surround-pairs-alist)
-                               (push '(47  . ("\\frac{"    . "}{ }"       )) evil-surround-pairs-alist)
-                               (push '(63  . ("\\frac{ }{" . " }"         )) evil-surround-pairs-alist)
-                               (push '(94  . ("{"          . "}^{ }"      )) evil-surround-pairs-alist)
-                               (push '(98  . ("\\boxed{"   . "}"          )) evil-surround-pairs-alist)
-                               (push '(95  . ("\\underbrace{"   . "}_{ }" )) evil-surround-pairs-alist)
-                               (push '(45  . ("\\overbrace{"    . "}_{ }" )) evil-surround-pairs-alist)
-                               )))
+  ;; (add-hook 'latex-mode-hook (lambda ()
+  ;;                              (push '(40  . ("\\left("    . "\\right)"   )) evil-surround-pairs-alist)
+  ;;                              (push '(123 . ("\\left\\{"  . "\\right\\}" )) evil-surround-pairs-alist)
+  ;;                              (push '(91  . ("\\left["    . "\\right]"   )) evil-surround-pairs-alist)
+  ;;                              (push '(47  . ("\\frac{"    . "}{ }"       )) evil-surround-pairs-alist)
+  ;;                              (push '(63  . ("\\frac{ }{" . " }"         )) evil-surround-pairs-alist)
+  ;;                              (push '(94  . ("{"          . "}^{ }"      )) evil-surround-pairs-alist)
+  ;;                              (push '(98  . ("\\boxed{"   . "}"          )) evil-surround-pairs-alist)
+  ;;                              (push '(95  . ("\\underbrace{"   . "}_{ }" )) evil-surround-pairs-alist)
+  ;;                              (push '(45  . ("\\overbrace{"    . "}_{ }" )) evil-surround-pairs-alist)
+  ;;                              ))
+  )
 #+end_src
 
 ** =evil-textobj-tree-sitter=: tree-sitter based visual selection:
@@ -316,6 +329,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 #+begin_src emacs-lisp :eval no
 (use-package org
   :delight " org"
+  :demand
   :bind (:map
          org-mode-map
          ("C-S-j" . org-next-visible-heading     )
@@ -450,6 +464,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 ** =org-attach=
 #+begin_src emacs-lisp
 (use-package org-attach
+  :after org
   :ensure nil
   :custom
   (org-id-method                       'ts)
@@ -490,13 +505,14 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 #+begin_src emacs-lisp
 (use-package ob-plantuml
   :ensure nil
+  :after org
   :custom
   (org-plantuml-jar-path        "/usr/share/java/plantuml/plantuml.jar" )
   )
-(use-package ob-nim       )
-(use-package ob-go        )
-(use-package ob-asymptote )
-(use-package ob-nix       )
+(use-package ob-nim       :after org)
+(use-package ob-go        :after org)
+(use-package ob-asymptote :after org)
+(use-package ob-nix       :after org)
 #+end_src
 
 ** =org-bullet=: changing bullets in org file
@@ -553,6 +569,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 ** =citar=: citation
 #+begin_src emacs-lisp
 (use-package citar
+  :after org
   :no-require
   :custom
   (org-cite-global-bibliography (list (concat (file-name-as-directory denote-directory)
@@ -683,12 +700,13 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 #+end_src
 ** =org-timeblock=: agenda to SVG
 #+begin_src emacs-lisp
-(use-package org-timeblock)
+(use-package org-timeblock :after org)
 #+end_src
 * Org Exporting related
 ** =ox-reveal=
 #+begin_src emacs-lisp
 (use-package ox-reveal
+  :after org
   :ensure t)
 #+end_src
 ** =latex=
@@ -711,6 +729,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 #+begin_src emacs-lisp
 (use-package ox
   :ensure nil
+  :after org
   :config
   (defvar org-export-output-directory-prefix "export_" "prefix of directory used for org-mode export")
 
@@ -730,6 +749,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 #+begin_src emacs-lisp
 (use-package ox-latex
   :ensure nil
+  :after org
   :custom
   (org-latex-src-block-backend              'listings                                             )
   (org-latex-format-headline-function       'garid-custom/latex-formattig-headings                )
@@ -773,6 +793,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 #+begin_src emacs-lisp
 (use-package ox-html
   :ensure nil
+  :after org
   :custom
   ;; (org-html-validation-link              nil) ;; Don't show validation link
   ;; (org-html-head-include-scripts         nil) ;; Use our own scripts
@@ -787,6 +808,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 #+begin_src emacs-lisp :exports code :results verbatim
 (use-package ox-publish
   :ensure nil
+  :after org
   :custom
   (org-publish-project-alist `(("denote: org -> html"
                                 :base-directory ,(denote-directory)
@@ -838,6 +860,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 #+begin_src emacs-lisp
 (use-package org-download
   :ensure t
+  :after org
   :custom
   (org-download-display-inline-images  nil)
   (org-download-edit-cmd (concat user-emacs-directory "garid/edit_img.sh %s"))
@@ -874,6 +897,7 @@ esac
 (use-package org-auto-tangle
   :ensure t
   :defer  t
+  :after org
   :delight " oat"
   :custom (org-auto-tangle-default    nil)
   :hook (org-mode . org-auto-tangle-mode)
@@ -884,6 +908,7 @@ esac
 #+begin_src emacs-lisp
 (use-package org-transclusion
   :ensure t
+  :after org
   :bind (:map org-mode-map
               ("<f12>"   . org-transclusion-add     )
               ("M-<f12>" . org-transclusion-add-all )
@@ -894,7 +919,7 @@ esac
 #+begin_src emacs-lisp
 (use-package org-contacts
   :ensure t
-  :after org denote
+  :after (org denote)
   :custom
   (org-contacts-files '("~/BrainDump/denote/20240802T185223--contacts__info.org")))
 #+end_src
@@ -1462,14 +1487,15 @@ Similar to vim-signify.
 #+begin_src emacs-lisp
 ;; (use-package langtool   :ensure t) it required external jar / java  someday i will try
 ;; (use-package jinx          :ensure t)
-(use-package mw-thesaurus  :ensure t)
-(use-package org-wc        :ensure t)
+(use-package mw-thesaurus  :ensure t :after org)
+(use-package org-wc        :ensure t :after org)
 #+end_src
 
 ** =captain=
 #+begin_src emacs-lisp
 (use-package captain
   :delight " cap"
+  :after org
   :custom
   (sentence-end-double-space nil)
 
@@ -2453,17 +2479,12 @@ fi
   (zoom-window-mode-line-color "dark slate gray")
   )
 #+end_src
-** =auto-revert-mode=
+** COMMENT =auto-revert-mode=
 #+begin_src emacs-lisp
-(use-package emacs
+(use-package autorevert
   :ensure nil
-  :delight
-  (auto-fill-function " arev")
-  (auto-revert-mode)
-  )
+  :delight " arev")
 #+end_src
-
-#+RESULTS:
 
 * Custom set variable:
 [[https://www.youtube.com/watch?v=tw2-rI2bxSg&t=1s][Initial idea from Systems crafter]], [[https://emacs.stackexchange.com/a/18785/38482][and code structure from this answer on emacs stackexchange]], and need to set ~enble-local-eval~ to ~t~.
