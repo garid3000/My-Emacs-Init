@@ -328,8 +328,8 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 #+name: lst_org
 #+begin_src emacs-lisp :eval no
 (use-package org
-  :delight " org"
   :demand
+  :delight " org"
   :bind (:map
          org-mode-map
          ("C-S-j" . org-next-visible-heading     )
@@ -338,10 +338,10 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   ;; :hook (org-mode . garid-custom/org-mode-hooked-func)
   :custom
   ;; theme/styling ...............................................................................
-  (org-ellipsis                      " ▼"   )
+  (org-ellipsis                     " ▼"   )
   (org-hide-emphasis-markers         t      )
   (org-image-actual-width            '(800) )
-  (org-startup-folded           "show2levels" ) ;; fold
+  (org-startup-folded         "show2levels" ) ;; fold
   (org-src-fontify-natively          t      )
   (org-highlight-latex-and-related          '(latex entities native)       )
 
@@ -428,8 +428,14 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
                                (maxima     . t) (calc       . t)
                                (awk        . t) (go         . t)
                                (asymptote  . t) (ditaa      . t)
-                               (nix        . t) (lua        . t)))
+                               (nix        . t) (lua        . t)
+                               ;; (asymptote  . t)
+                               ))
 
+  (font-lock-add-keywords 'org-mode
+                          '(("\\(\\(?:\\\\\\(?:label\\|ref\\|eqref\\)\\)\\){\\(.+?\\)}"
+                             (1 font-lock-keyword-face)
+                             (2 font-lock-constant-face))))
   ;; image backgroud for transparent images
   (defcustom org-inline-image-background nil
     "The color used as the default background for inline images. When nil, use the default face background."
@@ -503,11 +509,19 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 
 ** org-babel languages related
 #+begin_src emacs-lisp
+;;(use-package plantuml-mode
+;;  :custom
+;;  (plantuml-executable-path "plantuml")
+;;  (plantuml-default-exec-mode 'executable))
+
+
 (use-package ob-plantuml
   :ensure nil
-  :after org
-  :custom
-  (org-plantuml-jar-path        "/usr/share/java/plantuml/plantuml.jar" )
+  :after (org)
+  :config
+  ;;(org-plantuml-jar-path        "/home/garid/.config/emacs/plantuml.jar" )
+  (setq org-plantuml-executable-path "plantuml")
+  (setq org-plantuml-exec-mode 'plantuml)
   )
 (use-package ob-nim       :after org)
 (use-package ob-go        :after org)
@@ -2485,7 +2499,23 @@ fi
   :ensure nil
   :delight " arev")
 #+end_src
+** test karthinks consult reftex                                                    :test:
+#+begin_src emacs-lisp
+(use-package consult-reftex
+  :straight (consult-reftex
+             :type git
+             :host github
+             :branch "master"
+             :repo "karthink/consult-reftex"))
 
+
+(use-package reftex-xref
+  :straight (reftex-xref
+             :type git
+             :host github
+             :branch "master"
+             :repo "karthink/reftex-xref"))
+#+end_src
 * Custom set variable:
 [[https://www.youtube.com/watch?v=tw2-rI2bxSg&t=1s][Initial idea from Systems crafter]], [[https://emacs.stackexchange.com/a/18785/38482][and code structure from this answer on emacs stackexchange]], and need to set ~enble-local-eval~ to ~t~.
 
