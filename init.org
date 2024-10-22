@@ -571,7 +571,15 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 
 ** =consult-denote=: consulting with denote
 #+begin_src emacs-lisp
-(use-package consult-denote :ensure t)
+(use-package consult-denote
+  :ensure t
+  ;; :custom
+  ;; (consult-denote-silo-source '("/home/garid/BrainDump/denote"
+  ;;                               "/home/garid/BrainDump/silo-linguistic"
+  ;;                               "/home/garid/BrainDump/silo-research"
+  ;;                               "/home/garid/BrainDump/silo-work"))
+  :config
+  (consult-denote-mode 1))
 #+end_src
 ** =citar=: citation
 #+begin_src emacs-lisp
