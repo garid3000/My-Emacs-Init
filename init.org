@@ -129,21 +129,17 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
                   (push '(94  . ("{"             . "}^{ }"     )) evil-surround-pairs-alist)
                   (push '(98  . ("\\boxed{"      . "}"         )) evil-surround-pairs-alist)
                   (push '(95  . ("\\underbrace{" . "}_{ }"     )) evil-surround-pairs-alist)
-                  (push '(45  . ("\\overbrace{"  . "}_{ }"     )) evil-surround-pairs-alist)))
+                  (push '(45  . ("\\overbrace{"  . "}_{ }"     )) evil-surround-pairs-alist)
+                  ))
 
+  (org-mode . (lambda ()
+                (push '(83  . ("#+begin_src"      . "#+end_src"     )) evil-surround-pairs-alist)
+                (push '(69  . ("#+begin_example"  . "#+end_example" )) evil-surround-pairs-alist)
+                (push '(101 . ("\\("              . "\\)"           )) evil-surround-pairs-alist)
+                (push '(100 . (":drawername:"     . ":end:"         )) evil-surround-pairs-alist)
+                ))
   :config
   (global-evil-surround-mode)
-  ;; (add-hook 'latex-mode-hook (lambda ()
-  ;;                              (push '(40  . ("\\left("    . "\\right)"   )) evil-surround-pairs-alist)
-  ;;                              (push '(123 . ("\\left\\{"  . "\\right\\}" )) evil-surround-pairs-alist)
-  ;;                              (push '(91  . ("\\left["    . "\\right]"   )) evil-surround-pairs-alist)
-  ;;                              (push '(47  . ("\\frac{"    . "}{ }"       )) evil-surround-pairs-alist)
-  ;;                              (push '(63  . ("\\frac{ }{" . " }"         )) evil-surround-pairs-alist)
-  ;;                              (push '(94  . ("{"          . "}^{ }"      )) evil-surround-pairs-alist)
-  ;;                              (push '(98  . ("\\boxed{"   . "}"          )) evil-surround-pairs-alist)
-  ;;                              (push '(95  . ("\\underbrace{"   . "}_{ }" )) evil-surround-pairs-alist)
-  ;;                              (push '(45  . ("\\overbrace{"    . "}_{ }" )) evil-surround-pairs-alist)
-  ;;                              ))
   )
 #+end_src
 
@@ -1556,27 +1552,27 @@ Similar to vim-signify.
 *** Global keybinding table
 #+caption: Global (aka from anywhere) non-sequential keybinding
 #+name: tbl-global-keybindings
-| key     | function                                      | description                         |
-|---------+-----------------------------------------------+-------------------------------------|
-| =M-q=     | =delete-window=                                 | delete window                       |
-| =M-Q=     | =kill-current-buffer=                           | delete buffer                       |
-| =M-J=     | =other-window=                                  | jump to other window                |
-| =M-W=     | =evil-window-vnew=                              | divide window vertically (on right) |
-| =M-E=     | =evil-window-vsplit=                            | divide window vertically (on left)  |
-| =M-]=     | =comint-dynamic-complete-filename=              | complete file path                  |
-| =M-f=     | =consult-line=                                  | search line in buffer               |
-| =M-F=     | =zoom-window-zoom=                              | zoom window mode                    |
-| =M-y=     | =consult-yank-from-kill-ring=                   | consult yank from kill ring         |
-| =C-/=     | =comment-line=                                  | set selected lines comment          |
-| =C-\vert= | =garid-custom/toggle-eng-mon-teq-input-methods= | change toggle input (Eng-Mon-Teq)   |
-| =M-1=     | =harpoon-go-to-1=                               | harpoon-go-to-1                     |
-| =M-2=     | =harpoon-go-to-2=                               | harpoon-go-to-2                     |
-| =M-3=     | =harpoon-go-to-3=                               | harpoon-go-to-3                     |
-| =M-4=     | =harpoon-go-to-4=                               | harpoon-go-to-4                     |
-| =M-5=     | =harpoon-go-to-5=                               | harpoon-go-to-5                     |
-| =M-6=     | =harpoon-go-to-6=                               | harpoon-go-to-6                     |
-| =<f9>=    | =harpoon-quick-menu-hydra=                      | harpoon                             |
-| =M-<f9>=  | =gry/toggle-distraction-free-writing=           | toggle distraction free writing     |
+| key     | function                                      | description                         | state                 |
+|---------+-----------------------------------------------+-------------------------------------+-----------------------|
+| =M-q=     | =delete-window=                                 | delete window                       | =evil-normal-state-map= |
+| =M-Q=     | =kill-current-buffer=                           | delete buffer                       | =evil-normal-state-map= |
+| =M-J=     | =other-window=                                  | jump to other window                | =evil-normal-state-map= |
+| =M-W=     | =evil-window-vnew=                              | divide window vertically (on right) | =evil-normal-state-map= |
+| =M-E=     | =evil-window-vsplit=                            | divide window vertically (on left)  | =evil-normal-state-map= |
+| =M-]=     | =comint-dynamic-complete-filename=              | complete file path                  | =evil-normal-state-map= |
+| =M-f=     | =consult-line=                                  | search line in buffer               | =evil-normal-state-map= |
+| =M-F=     | =zoom-window-zoom=                              | zoom window mode                    | =evil-normal-state-map= |
+| =M-y=     | =consult-yank-from-kill-ring=                   | consult yank from kill ring         | =evil-normal-state-map= |
+| =C-/=     | =comment-line=                                  | set selected lines comment          | =evil-normal-state-map= |
+| =C-\vert= | =garid-custom/toggle-eng-mon-teq-input-methods= | change toggle input (Eng-Mon-Teq)   | =evil-normal-state-map= |
+| =M-1=     | =harpoon-go-to-1=                               | harpoon-go-to-1                     | =evil-normal-state-map= |
+| =M-2=     | =harpoon-go-to-2=                               | harpoon-go-to-2                     | =evil-normal-state-map= |
+| =M-3=     | =harpoon-go-to-3=                               | harpoon-go-to-3                     | =evil-normal-state-map= |
+| =M-4=     | =harpoon-go-to-4=                               | harpoon-go-to-4                     | =evil-normal-state-map= |
+| =M-5=     | =harpoon-go-to-5=                               | harpoon-go-to-5                     | =evil-normal-state-map= |
+| =M-6=     | =harpoon-go-to-6=                               | harpoon-go-to-6                     | =evil-normal-state-map= |
+| =<f9>=    | =harpoon-quick-menu-hydra=                      | harpoon                             | =evil-normal-state-map= |
+| =M-<f9>=  | =gry/toggle-distraction-free-writing=           | toggle distraction free writing     | =evil-normal-state-map= |
 
 Note to myself: after changing Table-[[tbl-global-keybindings]], I need to update [[convert-global-keybindings]]
 *** Convert global keybinding table into elisp
@@ -1607,7 +1603,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
      ))
   tab "\n"))
 #+end_src
-
+*** The result
 #+RESULTS: convert-global-keybindings
 #+begin_src emacs-lisp
 (global-set-key (kbd "M-q") 'delete-window)
