@@ -534,18 +534,15 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   :custom (org-bullets-bullet-list
            '("Ⅰ" "Ⅱ" "Ⅲ" "Ⅳ" "Ⅴ" "Ⅵ" "Ⅶ")))
 #+end_src
-* Org Zettelkasten like (roam & denote)
-#+begin_src emacs-lisp
-(setq garids-brain-dumping-directory "~/BrainDump/")
-#+end_src
-
+* Org zettelkasten notes
 ** =denote=: Prot's simple noting package
 #+begin_src emacs-lisp
 (use-package denote
   :ensure t
   :custom
-  (denote-excluded-files-regexp "export_.*")
-  (denote-directory       (concat garids-brain-dumping-directory "denote"))
+  ;;(denote-excluded-files-regexp       "export_.*")
+  (denote-excluded-directories-regexp  "^export_.*\\|^website.*")
+  (denote-directory       "~/BrainDump/denote")
   (denote-known-keywords  '(  "finance"  "failures"  "philosophy"        ))
   (denote-templates       '((biblio . "* Abstract\n\n* Review")
                             (plain  . nil)))
