@@ -10,6 +10,24 @@
 #+html_head:    <link rel="stylesheet" type="text/css" href="https://unpkg.com/chota"/>
 
 
+#+begin_export html
+<style>
+  body.dark {
+    --bg-color: #000;
+    --bg-secondary-color: #131316;
+    --font-color: #f5f5f5;
+    --color-grey: #ccc;
+    --color-darkGrey: #777;
+  }
+</style>
+<script>
+  if (window.matchMedia &&
+      window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    document.body.classList.add('dark');
+  }
+</script>
+#+end_export
+
 * From shell you can run make run:
 #+begin_src makefile :eval no :tangle Makefile
 # make run to extract init.el from init.org from shell
