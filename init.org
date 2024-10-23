@@ -249,11 +249,11 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 (use-package vertico
   :ensure t
   :bind (:map vertico-map
-              ("C-j" . vertico-next          ) ("M-j" . vertico-next        )
-              ("C-k" . vertico-previous      ) ("M-k" . vertico-previous    )
-              ("C-f" . vertico-exit          ) ("M-f" . vertico-exit        )
-              ("C-u" . vertico-scroll-up     ) ("M-u" . vertico-scroll-up   )
-              ("C-d" . vertico-scroll-down   ) ("M-d" . vertico-scroll-down )
+              ;; ("C-j" . vertico-next          ) ("M-j" . vertico-next        )
+              ;; ("C-k" . vertico-previous      ) ("M-k" . vertico-previous    )
+              ;; ("C-f" . vertico-exit          ) ("M-f" . vertico-exit        )
+              ;; ("C-u" . vertico-scroll-up     ) ("M-u" . vertico-scroll-up   )
+              ;; ("C-d" . vertico-scroll-down   ) ("M-d" . vertico-scroll-down )
               ("M-p" . vertico-previous      ) ("M-n" . vertico-next        )
               ("M-h" . vertico-exit          )
               ("M-q" . vertico-quick-insert  ) ("C-q" . vertico-quick-exit  ))
@@ -293,25 +293,6 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 #+end_src
 ** =embark=: interacting with completion entries
 #+begin_src emacs-lisp
-(defun garid/embark-org-insert-ref-of-tbl-fig-src-eq (x)
-  (interactive "sSearch Term: ")
-  (insert
-   (format "[[%s]]"
-           (nth 1 (split-string
-                   (replace-regexp-in-string "[^[:alnum:-]]" "" x)
-                   ;;(replace-regexp-in-string "[^[:alnum:]_-\\: #+]" "" x)
-                   )))))
-
-(defun garid/embark-org-insert-ref-to-label-inside-eq (input-string)
-  (interactive "sSearch Term: ")
-  (insert
-   (format "\\ref{%s}"
-           (if (string-match "\\\\label{\\([^}]+\\)}" input-string)
-               (match-string 1 input-string)
-             nil
-             ))))
-
-
 (use-package embark
   :ensure t
   :bind (("C-."    . embark-act                                     )
@@ -324,7 +305,26 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
          ("e"      . garid/embark-org-insert-ref-to-label-inside-eq ))
 
   :init
-  (setq prefix-help-command #'embark-prefix-help-command))
+  (setq prefix-help-command #'embark-prefix-help-command)
+  :config
+
+  (defun garid/embark-org-insert-ref-of-tbl-fig-src-eq (x)
+    (interactive "sSearch Term: ")
+    (insert
+     (format "[[%s]]"
+             (nth 1 (split-string
+                     (replace-regexp-in-string "[^[:alnum:-]]" "" x)
+                     )))))
+
+  (defun garid/embark-org-insert-ref-to-label-inside-eq (input-string)
+    (interactive "sSearch Term: ")
+    (insert
+     (format "\\ref{%s}"
+             (if (string-match "\\\\label{\\([^}]+\\)}" input-string)
+                 (match-string 1 input-string)
+               nil
+               ))))
+  )
 #+end_src
 
 ** =savehist=:
