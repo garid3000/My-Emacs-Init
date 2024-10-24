@@ -105,8 +105,10 @@ undo-tree is Emacs's undo & redo helper with built-in tree graph of versions.
   ;;        ;; ("M-d"      . evil-scroll-page-down )  G
   ;;        ;; ("M-u"      . evil-scroll-page-up   )  g g
   ;;        )
+  :init
+  (setq evil-want-keybinding     nil) ;;; should I put it in :init?
+
   :custom
-  (evil-want-keybinding     nil)
   (evil-undo-system         'undo-tree)
   (evil-want-C-i-jump       t)
   ;; evil-want-C-i-jump     nil       ;; test I may need jumpy back and forth
@@ -234,7 +236,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   :ensure t
   :custom
   (display-line-numbers-type 'relative)
-  (visible-bell              t)
+  (visible-bell              nil) ;; too much distracting
   ;;(setq display-line-numbers-type 'relative)
   ;; (setq visible-bell t)
   :config
