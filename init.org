@@ -64,9 +64,6 @@ I'm pulling packages from following 3 places (not sure that I need all three):
 #+end_src
 
 ** Straight.el initialization
-:PROPERTIES:
-:ID:       2bc28375-3cf3-4784-8a34-ecb1a2b0c24a
-:END:
 #+begin_src emacs-lisp
 (defvar bootstrap-version)
 (let ((bootstrap-file
@@ -337,9 +334,6 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 #+end_src
 * Org
 ** =org=: org-mode configuration
-:PROPERTIES:
-:ID:       20241013T000803.808543
-:END:
 #+caption: org config
 #+name: lst_org
 #+begin_src emacs-lisp :eval no
