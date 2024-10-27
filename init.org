@@ -233,7 +233,8 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   :ensure t
   :custom
   (display-line-numbers-type 'relative)
-  (visible-bell              nil) ;; too much distracting
+  (visible-bell               nil) ;; too much distracting
+  (ring-bell-function        'ignore)
   ;;(setq display-line-numbers-type 'relative)
   ;; (setq visible-bell t)
   :config
