@@ -722,11 +722,12 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 #+end_src
 ** =casual-agenda=: casual agenda based on transient
 #+begin_src emacs-lisp
-(use-package casual-agenda
+(use-package casual-suite
   :ensure t
   :after org-agenda
   :bind (:map org-agenda-mode-map
-         ("<f7>" . casual-agenda-tmenu)))
+         ("<f7>" . casual-agenda-tmenu))
+  )
 #+end_src
 ** =org-timeblock=: agenda to SVG
 #+begin_src emacs-lisp
