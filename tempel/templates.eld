@@ -182,7 +182,7 @@ org-mode
 
 (results                      "results " :post (gry/choose-from-list-and-insert-it
                                                 '( "verbatim" "value" "output" "table" "file xxx :output-dir .../"
-                                                   "list" "scalar" "code" "draw" "html" "latex" "link" "org" "pp")))
+                                                   "list" "scalar" "code" "drawer" "html" "latex" "link" "org" "pp")))
 (vardown                      "#+header: :var outputVar=" :post (insert (concat org-download-image-dir "/filename.svg") ))
 (varatta                      "#+header: :var outputVar=(my/org-attach-dir \"" r ".svg\")" )
 (cache                        "cache "

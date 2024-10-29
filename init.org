@@ -540,6 +540,42 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 (use-package ob-nix       :after org)
 #+end_src
 
+** COMMENT sagemath
+#+begin_src emacs-lisp
+(org-babel-do-load-languages
+   'org-babel-load-languages '((python     . t) (emacs-lisp . t)
+                               (latex      . t) (shell      . t)
+                               (dot        . t) (makefile   . t)
+                               (sqlite     . t) (gnuplot    . t)
+                               (nim        . t) (plantuml   . t)
+                               (maxima     . t) (calc       . t)
+                               (awk        . t) (go         . t)
+                               (asymptote  . t) (ditaa      . t)
+                               (nix        . t) (lua        . t)
+                               (sagemath  . t)))
+
+
+;; Ob-sagemath supports only evaluating with a session.
+(setq org-babel-default-header-args:sage '((:session . t)
+                                           (:results . "output")))
+
+;; C-c c for asynchronous evaluating (only for SageMath code blocks).
+(with-eval-after-load "org"
+  (define-key org-mode-map (kbd "C-c c") 'ob-sagemath-execute-async))
+
+;; Do not confirm before evaluation
+(setq org-confirm-babel-evaluate nil)
+
+;; Do not evaluate code blocks when exporting.
+(setq org-export-babel-evaluate nil)
+
+;; Show images when opening a file.
+(setq org-startup-with-inline-images t)
+
+;; Show images after evaluating code blocks.
+(add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
+#+end_src
+
 ** =org-bullet=: changing bullets in org file
 #+begin_src emacs-lisp
 (use-package org-bullets
