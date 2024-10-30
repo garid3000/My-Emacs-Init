@@ -480,7 +480,24 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
         '("xelatex -interaction nonstopmode -output-directory %o %f"))
   )
 #+end_src
+** =org-num=: org number zero padding
+[[https://emacs.stackexchange.com/q/80800/38482][From this answer]]
 
+#+begin_src emacs-lisp
+(use-package org-num
+  :ensure nil
+  :after org
+  :config
+  (setq org-num-format-function
+        (lambda (numbering)
+          (concat (number-to-string (car numbering))               ;; takes 0-th of seq of numbers
+                  "."                                              ;; 
+                  (mapconcat (lambda (x) (format "%02d" x))        ;; 0 pad
+                             (cdr numbering)                       ;; [ 1:... ] of seq of numbers
+                             ".")                                  ;; sep
+                  " ")))                                           ;; put space
+  )
+#+end_src
 ** =org-attach=
 #+begin_src emacs-lisp
 (use-package org-attach
