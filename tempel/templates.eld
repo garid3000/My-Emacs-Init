@@ -185,11 +185,10 @@ org-mode
                                                    "list" "scalar" "code" "drawer" "html" "latex" "link" "org" "pp")))
 (vardown                      "#+header: :var outputVar=" :post (insert (concat org-download-image-dir "/filename.svg") ))
 (varatta                      "#+header: :var outputVar=(my/org-attach-dir \"" r ".svg\")" )
-(cache                        "cache "
-                              :post (gry/choose-from-list-and-insert-it '("yes" "no")))
-(wrap                         "wrap " :post (gry/choose-from-list-and-insert-it '("example" "src python" "src sh" "src bash")))
-(mkdirp                       "mkdirp " :post (gry/choose-from-list-and-insert-it '("yes" "no")))
-(eval                         "eval " :post (gry/choose-from-list-and-insert-it '("never-export" "no" "yes")))
+(cache                        "cache "   :post (gry/choose-from-list-and-insert-it '("yes" "no")))
+(wrap                         "wrap "    :post (gry/choose-from-list-and-insert-it '("example" "src python" "src sh" "src bash")))
+(mkdirp                       "mkdirp "  :post (gry/choose-from-list-and-insert-it '("yes" "no")))
+(eval                         "eval "    :post (gry/choose-from-list-and-insert-it '("never-export" "no" "yes")))
 (exports                      "exports " :post (gry/choose-from-list-and-insert-it '("code" "results" "both" "none")))
 (session                      "session " :post (gry/choose-from-list-and-insert-it '("SessionName")))
 (tangle                       "tangle ~/")
@@ -211,7 +210,7 @@ org-mode
 (denote_links                 "#+begin: denote-links :regexp \"" r "\" :excluded-dirs-regexp nil :sort-by-component nil :reverse-sort nil :id-only nil :include-date nil" n> r> n "#+end:")
 
 (gtdclarify                  "- [ ] what-it-is :: " r n  "- [ ] resolution :: "  r n "- [ ] next-step? :: " n> )
-(frac "\\frac{" p "}{" q "}")
+(frac                        "\\frac{" p "}{" q "}")
 
 ;; Local Variables:
 ;; mode: lisp-data
