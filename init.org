@@ -596,7 +596,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   (setq org-startup-with-inline-images t)
 
   ;; Show images after evaluating code blocks.
-  (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
+  ;;(add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
   )
 #+end_src
 
