@@ -137,7 +137,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   :ensure t
   :after evil
   :hook
-  (latex-mode . (lambda ()  ;; adds to latex-mode-hook
+  (LaTeX-mode . (lambda ()  ;; adds to latex-mode-hook
                   (push '(40  . ("\\left("       . "\\right)"  )) evil-surround-pairs-alist)
                   (push '(123 . ("\\left\\{"     . "\\right\\}")) evil-surround-pairs-alist)
                   (push '(91  . ("\\left["       . "\\right]"  )) evil-surround-pairs-alist)
@@ -804,9 +804,10 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 #+begin_src emacs-lisp
 (use-package latex
   :ensure nil
-  :config
+  ;; :config
   ;;(add-hook 'LaTeX-mode-hook (function (lambda() (set-input-method "TeQ-Math"))))
-  (add-hook 'latex-mode-hook (function (lambda() (set-input-method "TeQ-Math")))))
+  ;;(add-hook 'latex-mode-hook (function (lambda() (set-input-method "TeQ-Math"))))
+  )
 #+end_src
 
 ** Latex related
