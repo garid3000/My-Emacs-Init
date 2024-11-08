@@ -896,6 +896,17 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 
 ** =ox-publish=
 #+begin_src emacs-lisp :exports code :results verbatim
+;;(defun garid/ox-phd-publish-symbolic ()
+;;  (make-symbolic-link "~/BrainDump/denote/phd/data" "~/BrainDump/denote/phd/website/data"))
+;;
+;; AuthType Basic
+;; AuthName The-T-Directory
+;; AuthUserFile /home/zgarid/.users
+;; <Limit GET POST >
+;; require user zgarid
+;; </Limit>
+
+
 (use-package ox-publish
   :ensure nil
   :after org
@@ -940,37 +951,26 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
                                 :publishing-function   org-html-publish-to-html
                                 :publishing-directory "~/BrainDump/denote/phd/website"
                                 :exclude ".*daily/.*org"  ;;; for excluding -daily
-                                ;; :section-numbers nil
+                                ;;:completion-function garid/ox-phd-publish-symbolic
                                 :section-numbers  org-export-with-section-numbers
                                 :with-toc         t
                                 :html_link_home  "index.html"
-                                ;;                                 :html-preamble "<div id=\"navbar\"> <ul>
-                                ;;   <div class=\"stork-wrapper\">
-                                ;;     <a href=\"/~zgarid/index.html\">Home</a>             &nbsp;
-                                ;;     <a href=\"..\">Up/Back</a>                           &nbsp;
-                                ;;     <a href=\"/~zgarid/meta-research.html\">Research</a> &nbsp;
-                                ;;     <a href=\"/~zgarid/meta-python.html\">Python</a>     &nbsp;
-                                ;;     <a href=\"/~zgarid/meta-cli.html\">CLI</a>           &nbsp;
-                                ;;     <a href=\"/~zgarid/meta-org.html\">Org-Mode</a>      &nbsp;
-                                ;;     <a href=\"/~zgarid/search.html\">Search</a>          &nbsp;
-                                ;;     <input data-stork=\"federalist\" class=\"stork-input\" />
-                                ;;     <div data-stork=\"federalist-output\" class=\"stork-output\"></div>
-                                ;;   </div>
-                                ;; </ul>
-                                ;; <hr>
-                                ;; </div>
-                                ;; <script src=\"https://files.stork-search.net/releases/v1.6.0/stork.js\"></script>
-                                ;; <script>
-                                ;; stork.register(
-                                ;;     'federalist', 'https://www.ep.sci.hokudai.ac.jp/~zgarid/garid_stork.st'
-                                ;; )
-                                ;; </script>
-                                ;; "
-                                )
-
-                               )
-                             )
-  )
+                                :html-preamble "<style>
+                                body.dark {
+                                    --bg-color: #000;
+                                    --bg-secondary-color: #131316;
+                                    --font-color: #f5f5f5;
+                                    --color-grey: #ccc;
+                                    --color-darkGrey: #777;
+                                }
+                                </style>
+                                <script>
+                                if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                                    document.body.classList.add('dark');
+                                }
+                                </script>
+                               "
+                                ))))
 #+end_src
 
 ** =htmlize= - source code syntax in html export
