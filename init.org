@@ -9,7 +9,6 @@
 #+options:      toc:t tags:nil  todo:t  tasks:t
 #+html_head:    <link rel="stylesheet" type="text/css" href="https://unpkg.com/chota"/>
 
-
 #+begin_export html
 <style>
   body.dark {
@@ -21,8 +20,7 @@
   }
 </style>
 <script>
-  if (window.matchMedia &&
-      window.matchMedia('(prefers-color-scheme: dark)').matches) {
+  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
     document.body.classList.add('dark');
   }
 </script>
@@ -79,7 +77,7 @@ I'm pulling packages from following 3 places (not sure that I need all three):
   (load bootstrap-file nil 'nomessage))
 #+end_src
 
-* Vi-movement and it's friends
+* Vi-movement and its friends
 ** =undo-tree=
 undo-tree is Emacs's undo & redo helper with built-in tree graph of versions.
 
@@ -610,7 +608,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
            '("Ⅰ" "Ⅱ" "Ⅲ" "Ⅳ" "Ⅴ" "Ⅵ" "Ⅶ")))
 #+end_src
 * Org zettelkasten notes
-** =denote=: Prot's simple noting package
+** =denote=: Note taking package
 #+begin_src emacs-lisp
 (use-package denote
   :ensure t
@@ -935,7 +933,42 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
                                 ;; )
                                 ;; </script>
                                 ;; "
-                                ))
+                                )
+                               ("phd"
+                                :base-directory "~/BrainDump/denote/phd/"
+                                :recursive t
+                                :publishing-function   org-html-publish-to-html
+                                :publishing-directory "~/BrainDump/denote/phd/website"
+                                :exclude ".*daily/.*org"  ;;; for excluding -daily
+                                ;; :section-numbers nil
+                                :section-numbers  org-export-with-section-numbers
+                                :with-toc         t
+                                :html_link_home  "index.html"
+                                ;;                                 :html-preamble "<div id=\"navbar\"> <ul>
+                                ;;   <div class=\"stork-wrapper\">
+                                ;;     <a href=\"/~zgarid/index.html\">Home</a>             &nbsp;
+                                ;;     <a href=\"..\">Up/Back</a>                           &nbsp;
+                                ;;     <a href=\"/~zgarid/meta-research.html\">Research</a> &nbsp;
+                                ;;     <a href=\"/~zgarid/meta-python.html\">Python</a>     &nbsp;
+                                ;;     <a href=\"/~zgarid/meta-cli.html\">CLI</a>           &nbsp;
+                                ;;     <a href=\"/~zgarid/meta-org.html\">Org-Mode</a>      &nbsp;
+                                ;;     <a href=\"/~zgarid/search.html\">Search</a>          &nbsp;
+                                ;;     <input data-stork=\"federalist\" class=\"stork-input\" />
+                                ;;     <div data-stork=\"federalist-output\" class=\"stork-output\"></div>
+                                ;;   </div>
+                                ;; </ul>
+                                ;; <hr>
+                                ;; </div>
+                                ;; <script src=\"https://files.stork-search.net/releases/v1.6.0/stork.js\"></script>
+                                ;; <script>
+                                ;; stork.register(
+                                ;;     'federalist', 'https://www.ep.sci.hokudai.ac.jp/~zgarid/garid_stork.st'
+                                ;; )
+                                ;; </script>
+                                ;; "
+                                )
+
+                               )
                              )
   )
 #+end_src
@@ -1391,7 +1424,7 @@ Similar to vim-signify.
            (format-time-string "%Y%m%d-%H%M%S.svg"))
    "]]"))
 #+end_src
-** Jumping ref's label in org or latex                                        :customFunc:
+** Jumping ref-label in org or latex                                          :customFunc:
 #+begin_src emacs-lisp
 (defun garid/jump-label-def-of-ref-at-point-word ()
   ""
@@ -2541,12 +2574,13 @@ fi
                                    "\\*git-gutter:diff\\*"
                                    "\\*Org Select\\*"
                                    "\\*Org Lint\\*"
+                                   "\\*git-gutter:.*\\*"
                                    "\\* Merriam-Webster Thesaurus \\*"
                                    "CAPTURE-inbox.org"
                                    "CAPTURE-20230926T010607--todo__todo.org"
                                    help-mode
                                    compilation-mode))
-  :config
+  ;;:config
   (popper-mode      +1)
   (popper-echo-mode +1))
 #+end_src
@@ -2571,12 +2605,6 @@ fi
   :custom
   (zoom-window-mode-line-color "dark slate gray")
   )
-#+end_src
-** COMMENT =auto-revert-mode=
-#+begin_src emacs-lisp
-(use-package autorevert
-  :ensure nil
-  :delight " arev")
 #+end_src
 ** test karthinks consult reftex                                                    :test:
 #+begin_src emacs-lisp
