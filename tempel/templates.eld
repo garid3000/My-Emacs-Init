@@ -174,7 +174,7 @@ org-mode
 (shell                        "#+begin_src sh :eval no-export :results verbatim :exports both" n "#!/bin/sh" n r n  "#+end_src" :post (org-edit-src-code))
 
 (startup                      "#+startup: " :post (gry/choose-from-list-and-insert-it '("overview" "content" "showall" "showeverything" "show2levels"  "show3levels"  "show4levels"  "show5levels")))
-(imgw                         "#+attr_latex: :width 0.9\textwidth" n   "#+attr_html:  :width 100% :height 100%")
+(imgw                         "#+attr_latex: :width 0.9\\textwidth" n   "#+attr_html:  :width 100% :height 100%")
 (oxr                          "#+reveal_root: https://cdn.jsdelivr.net/npm/reveal.js" n "#+reveal_init_options: width:1920, height:1080" n "#+reveal_theme: "  :post (gry/choose-from-list-and-insert-it '("black" "white" "league" "beige" "night" "serif" "solarized" "moon" "dracula" "sky" "blood")))
 (oxt                          "#+setupfile: ~/.config/emacs/org-templates/level-0-xelatex-fonts-conf.org")
 (oxh                          "#+setupfile: ~/.config/emacs/org-templates/level-0-html-export-template.org")
