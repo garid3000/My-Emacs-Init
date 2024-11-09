@@ -562,6 +562,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 #+begin_src emacs-lisp
 (use-package ob-sagemath
   :ensure t
+  :after org
   :config
   (org-babel-do-load-languages
    'org-babel-load-languages '((python     . t) (emacs-lisp . t)
@@ -581,17 +582,17 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
                                              (:results . "output")))
 
   ;; C-c c for asynchronous evaluating (only for SageMath code blocks).
-  (with-eval-after-load "org"
-    (define-key org-mode-map (kbd "C-c c") 'ob-sagemath-execute-async))
+  ;;(with-eval-after-load "org"
+  ;;  (define-key org-mode-map (kbd "C-c c") 'ob-sagemath-execute-async))
   ;; 
   ;; Do not confirm before evaluation
-  (setq org-confirm-babel-evaluate nil)
+  ;;(setq org-confirm-babel-evaluate nil)
 
   ;; Do not evaluate code blocks when exporting.
-  (setq org-export-babel-evaluate nil)
+  ;;(setq org-export-babel-evaluate nil)
 
   ;; Show images when opening a file.
-  (setq org-startup-with-inline-images t)
+  ;;(setq org-startup-with-inline-images t)
 
   ;; Show images after evaluating code blocks.
   ;;(add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
