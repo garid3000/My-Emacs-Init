@@ -1613,7 +1613,8 @@ Similar to vim-signify.
 #+begin_src emacs-lisp
 (use-package selectric-mode       :ensure t)
 (use-package typewriter-roll-mode :ensure t)
-(use-package writeroom-mode       :ensure t)
+;;(use-package writeroom-mode       :ensure t)
+(use-package darkroom             :ensure t)
 (use-package focus                :ensure t)
 #+end_src
 
@@ -1621,21 +1622,21 @@ Similar to vim-signify.
 #+begin_src emacs-lisp
 (defun gry/distraction-free-on ()
   (interactive)
-  (writeroom-mode             1)
-  (typewriter-roll-mode       1)
+  (darkroom-mode             +1)
+  (typewriter-roll-mode      +1)
   ;;(evil-insert)
   ;;(turn-off-evil-mode)
-  ;;(selectric-mode             1)
+  ;;(selectric-mode            1)
   (display-line-numbers-mode  -1)
-  (global-corfu-mode          -1)
-  (cua-mode                   +1)
+  ;; (global-corfu-mode       -1)
+  ;; (cua-mode                +1)
   (which-key-mode             -1)
   (vertico-mode               -1)
   (focus-mode                 +1)
 
   (cond
-   ((member "xkcd Script"     (font-family-list)) (set-face-attribute 'default nil :font "xkcd Script"     :height 200))
-   ((member "Virgil 3 YOFF"   (font-family-list)) (set-face-attribute 'default nil :font "Virgil 3 YOFF"   :height 140))
+   ;;((member "xkcd Script"     (font-family-list)) (set-face-attribute 'default nil :font "xkcd Script"     :height 200))
+   ((member "Iosevka Comfy Duo"   (font-family-list)) (set-face-attribute 'default nil :font "Iosevka Comfy Duo"   :height 130))
    ((member "Iosevka Aile"    (font-family-list)) (set-face-attribute 'default nil :font "Iosevka Aile"    :height 200))
    ((member "Liberation Sans" (font-family-list)) (set-face-attribute 'default nil :font "Liberation Sans" :height 140))
    ((member "Courier New"     (font-family-list)) (set-face-attribute 'default nil :font "Courier New"     :height 140))
@@ -1645,10 +1646,9 @@ Similar to vim-signify.
 
 (defun gry/distraction-free-off ()
   (interactive)
-  (cua-mode              -1)
-  (writeroom-mode        -1)
+  (darkroom-mode         -1)
   (typewriter-roll-mode  -1)
-  (selectric-mode        -1)
+  ;; (selectric-mode     -1)
   (global-corfu-mode     +1)
   ;;(turn-on-evil-mode)
   (which-key-mode        +1)
@@ -1656,6 +1656,7 @@ Similar to vim-signify.
   (focus-mode            -1)
 
   (cond
+   ;;((member "Iosevka Comfy"   (font-family-list)) (set-face-attribute 'default nil :font "Iosevka Comfy"   :height 140))
    ((member "Iosevka Term SS06" (font-family-list)) (set-face-attribute 'default nil :font "Iosevka Term SS06" :height 120))
    ((member "Iosevka"           (font-family-list)) (set-face-attribute 'default nil :font "Iosevka"           :height 150))
    ))
