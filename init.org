@@ -569,6 +569,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 #+begin_src emacs-lisp
 (use-package ob-sagemath
   :ensure t
+  :after org
   :config
   (org-babel-do-load-languages
    'org-babel-load-languages '((python     . t) (emacs-lisp . t)
@@ -588,17 +589,17 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
                                              (:results . "output")))
 
   ;; C-c c for asynchronous evaluating (only for SageMath code blocks).
-  (with-eval-after-load "org"
-    (define-key org-mode-map (kbd "C-c c") 'ob-sagemath-execute-async))
+  ;;(with-eval-after-load "org"
+  ;;  (define-key org-mode-map (kbd "C-c c") 'ob-sagemath-execute-async))
   ;; 
   ;; Do not confirm before evaluation
-  (setq org-confirm-babel-evaluate nil)
+  ;;(setq org-confirm-babel-evaluate nil)
 
   ;; Do not evaluate code blocks when exporting.
-  (setq org-export-babel-evaluate nil)
+  ;;(setq org-export-babel-evaluate nil)
 
   ;; Show images when opening a file.
-  (setq org-startup-with-inline-images t)
+  ;;(setq org-startup-with-inline-images t)
 
   ;; Show images after evaluating code blocks.
   ;;(add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
@@ -621,7 +622,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   :ensure t
   :custom
   ;;(denote-excluded-files-regexp       "export_.*")
-  (denote-excluded-directories-regexp  "^export_.*\\|^website.*")
+  (denote-excluded-directories-regexp  ".*export_.*\\|.*website.*")
   (denote-directory       "~/BrainDump/denote")
   (denote-known-keywords  '(  "finance"  "failures"  "philosophy"        ))
   (denote-templates       '((biblio . "* Abstract\n\n* Review")
@@ -799,27 +800,6 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 (use-package org-timeblock :after org)
 #+end_src
 * Org Exporting related
-** =ox-reveal=
-#+begin_src emacs-lisp
-(use-package ox-reveal
-  :after org
-  :ensure t)
-#+end_src
-** =latex=
-#+begin_src emacs-lisp
-(use-package latex
-  :ensure nil
-  ;; :config
-  ;;(add-hook 'LaTeX-mode-hook (function (lambda() (set-input-method "TeQ-Math"))))
-  ;;(add-hook 'latex-mode-hook (function (lambda() (set-input-method "TeQ-Math"))))
-  )
-#+end_src
-
-** Latex related
-#+begin_src emacs-lisp
-(use-package auctex)
-(use-package cdlatex)
-#+end_src
 ** =ox=
 ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stackexchange]]
 
@@ -842,6 +822,21 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   )
 #+end_src
 
+** =latex=
+#+begin_src emacs-lisp
+(use-package latex
+  :ensure nil
+  ;; :config
+  ;;(add-hook 'LaTeX-mode-hook (function (lambda() (set-input-method "TeQ-Math"))))
+  ;;(add-hook 'latex-mode-hook (function (lambda() (set-input-method "TeQ-Math"))))
+  )
+#+end_src
+
+** Latex related
+#+begin_src emacs-lisp
+(use-package auctex)
+(use-package cdlatex)
+#+end_src
 ** =ox-latex= 
 #+begin_src emacs-lisp
 (use-package ox-latex
@@ -902,10 +897,9 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 #+end_src
 
 ** =ox-publish=
-#+begin_src emacs-lisp :exports code :results verbatim
-;;(defun garid/ox-phd-publish-symbolic ()
-;;  (make-symbolic-link "~/BrainDump/denote/phd/data" "~/BrainDump/denote/phd/website/data"))
-;;
+
+*** Helper publisher function
+#+begin_src emacs-lisp
 (defun garid/publish-to-epnet-via-rsync (tmp)
   ""
   (interactive)
@@ -923,11 +917,96 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
    "rsync --recursive --delete  --copy-links --verbose ~/BrainDump/denote/phd/website/ zgarid@www.ep.sci.hokudai.ac.jp:public_html/phd"
    )
 
-
   (call-process-shell-command "notify-send \"ox-phd-publish\" \"Published-on-epnet\"")
+  )
+#+end_src
+
+*** Helper to create stork db
+I publish first from org to md in the local dir. Then using that local dir to create stork db.
+
+#+begin_src emacs-lisp
+(defun garid/get-title-of-denote-filepath-trimmed-org (x)
+  (string-trim
+   (string-trim-left
+    (denote-retrieve-front-matter-title-line x 'org)
+    (regexp-quote "#+title:"))))
+
+
+(defun garid/get-md-converted-path-from-org-path (path)
+  ""
+  (replace-regexp-in-string
+   (regexp-quote ".org")                    ;; replace the extension
+   ".md"
+   (replace-regexp-in-string
+    (regexp-quote "/home/garid/BrainDump/denote/phd/") ;; replace the dir
+    "/home/garid/BrainDump/denote/phd/website-md/"
+    path nil 'literal)
+   nil 'literal))
+
+(defun garid/get-html-url-from-org-path (path)
+  ""
+  (replace-regexp-in-string
+   (regexp-quote ".org")                    ;; replace the extension
+   ".html"
+   (replace-regexp-in-string
+    (regexp-quote "/home/garid/BrainDump/denote/phd/") ;; replace the dir
+    ""
+    path nil 'literal)
+   nil 'literal))
+
+(defun garid/prepare-stork-toml ()
+  ""
+  (concat
+   ;; pre header
+   "[input]\n"
+   ;;"base_directory = \"/home/garid/BrainDump/denote/phd/website-md/\"\n"
+   "base_directory = \"\"\n"
+   "url_prefix = \"https://www.ep.sci.hokudai.ac.jp/~zgarid/phd/\"\n"
+   "files = [\n"
+
+   ;; main contents
+   (mapconcat
+    (lambda (x)
+      (format
+       "{path=\"%s\", url = \"%s\", title = \"%s\"},\n"
+       (garid/get-md-converted-path-from-org-path      x)
+       (garid/get-html-url-from-org-path               x)
+       (garid/get-title-of-denote-filepath-trimmed-org x)
+       )
+      )
+
+    (directory-files-recursively "/home/garid/BrainDump/denote/phd/"           ;; 0.list of files
+                                 ".*.org$")
+    )
+
+   ;; ending
+   "]\n"))
+
+(defun garid/re-create-stork-db-from-md-exports (x) ;; completion-function requires arguemtns, so a x arguemtns that won't used
+  (interactive)
+  (f-write (garid/prepare-stork-toml)
+           'utf-8
+           "/tmp/stork-from-emacs.toml")
+
+  (call-process-shell-command "notify-send \"stork\" \"toml created /tmp/stork-from-emacs.toml\"")
+  (call-process-shell-command "stork build --input /tmp/stork-from-emacs.toml --output /home/garid/BrainDump/denote/phd/website/stork-db.st")
+  (call-process-shell-command "notify-send \"stork\" \"stork-db.st re-created\n/home/garid/BrainDump/denote/phd/website/stork-db.st\"")
   )
 
 
+
+#+end_src
+
+*** Helper to create better navbar
+#+begin_src emacs-lisp
+(garid/get-html-url-from-org-path (denote-get-path-by-id "20240814T122254"))
+#+end_src
+
+#+RESULTS:
+: 20240814T122254--70-acknowledgements__future.html
+
+*** Actual conf
+#+begin_src emacs-lisp :exports code :results verbatim
 (use-package ox-publish
   :ensure nil
   :after org
@@ -966,7 +1045,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
       ;; </script>
       ;; "
       )
-     ("phd-epnet"
+     ("phd-website"
       :base-directory ,(concat (denote-directory) "phd")
       :recursive t
       :publishing-function   org-html-publish-to-html
@@ -976,21 +1055,57 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
       :section-numbers     org-export-with-section-numbers
       :with-toc         t
       :html_link_home  "index.html"
-      ;; :html-preamble "<style>
-      ;; body.dark {
-      ;;     --bg-color: #000;
-      ;;     --bg-secondary-color: #131316;
-      ;;     --font-color: #f5f5f5;
-      ;;     --color-grey: #ccc;
-      ;;     --color-darkGrey: #777;
-      ;; }
-      ;; </style>
-      ;; <script>
-      ;; if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      ;;     document.body.classList.add('dark');
-      ;; }
-      ;; </script>"
-      ))))
+      :html-preamble ,(concat
+                       "<div id=\"navbar\"> <ul>"
+                       "<div class=\"stork-wrapper\">"
+                       "<a href=\"/~zgarid/phd/" (garid/get-html-url-from-org-path (denote-get-path-by-id "20241109T014358")) "\"> Info </a> &nbsp;"
+                       "<a href=\"/~zgarid/phd/" (garid/get-html-url-from-org-path (denote-get-path-by-id "20240814T113502")) "\"> Home </a> &nbsp;"
+                       "<a href=\"/~zgarid/phd/" (garid/get-html-url-from-org-path (denote-get-path-by-id "20241109T130751")) "\"> 1.Introduction </a> &nbsp;"
+                       "<a href=\"/~zgarid/phd/" (garid/get-html-url-from-org-path (denote-get-path-by-id "20241109T133612")) "\"> 2.Developments </a> &nbsp;"
+                       "<a href=\"/~zgarid/phd/" (garid/get-html-url-from-org-path (denote-get-path-by-id "20241109T133644")) "\"> 3.Methods </a> &nbsp;"
+                       "<a href=\"/~zgarid/phd/" (garid/get-html-url-from-org-path (denote-get-path-by-id "20241109T133718")) "\"> 4.Results </a> &nbsp;"
+                       "<a href=\"/~zgarid/phd/" (garid/get-html-url-from-org-path (denote-get-path-by-id "20241109T133803")) "\"> 5.Discussion </a> &nbsp;"
+                       "<a href=\"/~zgarid/search.html\">Search</a>          &nbsp;"
+                       "<input data-stork=\"federalist\" class=\"stork-input\" />"
+                       "<div data-stork=\"federalist-output\" class=\"stork-output\"></div>"
+                       "</div>"
+                       "</ul>"
+                       "<hr>"
+                       "</div>"
+                       "<script src=\"https://files.stork-search.net/releases/v1.6.0/stork.js\"></script>"
+                       "<script>"
+                       "stork.register('federalist', 'https://www.ep.sci.hokudai.ac.jp/~zgarid/phd/stork-db.st')"
+                       "</script>"
+                       "<link"
+                       "  rel=\"stylesheet\""
+                       "  href=\"https://files.stork-search.net/releases/v1.6.0/basic.css\""
+                       "/>"
+                       )
+      )
+
+     ("phd-2-md"
+      :base-directory ,(concat (denote-directory) "phd")
+      :recursive t
+      :publishing-function  org-md-publish-to-md
+      :publishing-directory ,(concat (denote-directory) "phd" "/website-md")
+      :exclude ".*daily/.*org"
+      :section-numbers     org-export-with-section-numbers
+      :completion-function garid/re-create-stork-db-from-md-exports
+      )
+
+
+     ;; good but doesn't expot caption
+     ;; ("phd-2-text"
+     ;;  :base-directory ,(concat (denote-directory) "phd")
+     ;;  :recursive t
+     ;;  :publishing-function  org-ascii-publish-to-ascii
+     ;;  :publishing-directory ,(concat (denote-directory) "phd" "/website-text")
+     ;;  :exclude ".*daily/.*org"
+     ;;  :section-numbers     org-export-with-section-numbers
+     ;;  )
+
+
+     )))
 #+end_src
 
 ** =htmlize= - source code syntax in html export
@@ -999,6 +1114,12 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   :ensure t
   :config
   (add-hook 'htmlize-before-hook (lambda () (indent-bars-mode -1))))
+#+end_src
+** =ox-reveal=
+#+begin_src emacs-lisp
+(use-package ox-reveal
+  :after org
+  :ensure t)
 #+end_src
 * Org Misc:
 ** =org-download= package itself
@@ -1499,7 +1620,8 @@ Similar to vim-signify.
 #+begin_src emacs-lisp
 (use-package selectric-mode       :ensure t)
 (use-package typewriter-roll-mode :ensure t)
-(use-package writeroom-mode       :ensure t)
+;;(use-package writeroom-mode       :ensure t)
+(use-package darkroom             :ensure t)
 (use-package focus                :ensure t)
 #+end_src
 
@@ -1507,21 +1629,21 @@ Similar to vim-signify.
 #+begin_src emacs-lisp
 (defun gry/distraction-free-on ()
   (interactive)
-  (writeroom-mode             1)
-  (typewriter-roll-mode       1)
+  (darkroom-mode             +1)
+  (typewriter-roll-mode      +1)
   ;;(evil-insert)
   ;;(turn-off-evil-mode)
-  ;;(selectric-mode             1)
+  ;;(selectric-mode            1)
   (display-line-numbers-mode  -1)
-  (global-corfu-mode          -1)
-  (cua-mode                   +1)
+  ;; (global-corfu-mode       -1)
+  ;; (cua-mode                +1)
   (which-key-mode             -1)
   (vertico-mode               -1)
   (focus-mode                 +1)
 
   (cond
-   ((member "xkcd Script"     (font-family-list)) (set-face-attribute 'default nil :font "xkcd Script"     :height 200))
-   ((member "Virgil 3 YOFF"   (font-family-list)) (set-face-attribute 'default nil :font "Virgil 3 YOFF"   :height 140))
+   ;;((member "xkcd Script"     (font-family-list)) (set-face-attribute 'default nil :font "xkcd Script"     :height 200))
+   ((member "Iosevka Comfy Duo"   (font-family-list)) (set-face-attribute 'default nil :font "Iosevka Comfy Duo"   :height 130))
    ((member "Iosevka Aile"    (font-family-list)) (set-face-attribute 'default nil :font "Iosevka Aile"    :height 200))
    ((member "Liberation Sans" (font-family-list)) (set-face-attribute 'default nil :font "Liberation Sans" :height 140))
    ((member "Courier New"     (font-family-list)) (set-face-attribute 'default nil :font "Courier New"     :height 140))
@@ -1531,10 +1653,9 @@ Similar to vim-signify.
 
 (defun gry/distraction-free-off ()
   (interactive)
-  (cua-mode              -1)
-  (writeroom-mode        -1)
+  (darkroom-mode         -1)
   (typewriter-roll-mode  -1)
-  (selectric-mode        -1)
+  ;; (selectric-mode     -1)
   (global-corfu-mode     +1)
   ;;(turn-on-evil-mode)
   (which-key-mode        +1)
@@ -1542,6 +1663,7 @@ Similar to vim-signify.
   (focus-mode            -1)
 
   (cond
+   ;;((member "Iosevka Comfy"   (font-family-list)) (set-face-attribute 'default nil :font "Iosevka Comfy"   :height 140))
    ((member "Iosevka Term SS06" (font-family-list)) (set-face-attribute 'default nil :font "Iosevka Term SS06" :height 120))
    ((member "Iosevka"           (font-family-list)) (set-face-attribute 'default nil :font "Iosevka"           :height 150))
    ))

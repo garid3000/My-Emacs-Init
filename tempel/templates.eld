@@ -459,6 +459,8 @@ org-mode
 (gtdclarify                  "- [ ] what-it-is :: " r n  "- [ ] resolution :: "  r n "- [ ] next-step? :: " n> )
 (frac                        "\\frac{" p "}{" q "}")
 
+(include                     "#+INCLUDE: \"\" :only-contents t")
+
 ;; Local Variables:
 ;; mode: lisp-data
 ;; outline-regexp: "[a-z]"
