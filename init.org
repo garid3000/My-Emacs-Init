@@ -543,6 +543,13 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 ;;  (plantuml-executable-path "plantuml")
 ;;  (plantuml-default-exec-mode 'executable))
 
+;; ------------------------------------------------------------------------------------------
+;;(font-lock-add-keywords 'plantuml-mode
+;;                        '(
+;;                          ("\\<\\(and\\|is\\|as\\|after\\|on\\)\\>" . font-lock-keyword-face)
+;;                          ("\\<\\(starts\\|lasts\\)\\>" . font-lock-type-face)
+;;                          ))
+
 
 (use-package ob-plantuml
   :ensure nil
@@ -1599,8 +1606,8 @@ Similar to vim-signify.
                                     (text (fill            . #2#)
                                           (font-size       . 20)
                                           ;;(font-family     . "sans-serif")
-                                          ;;(font-family     . "Linux Libertine")
-                                          (font-family     . "xkcd Script")
+                                          (font-family     . "Linux Libertine")
+                                          ;;(font-family     . "xkcd Script")
                                           (text-anchor     . "middle"))
                                     (image)))
   (edraw-default-document-properties '((width .  900)
