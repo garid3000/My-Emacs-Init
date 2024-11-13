@@ -539,33 +539,33 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 ** org-babel languages related
 #+begin_src emacs-lisp
 (use-package plantuml-mode
-  :custom
-  (plantuml-executable-path "plantuml")
-  (plantuml-default-exec-mode 'executable)
+  ;; :custom
+  ;; (plantuml-executable-path "plantuml")
+  ;; (plantuml-default-exec-mode 'executable)
 
-  :config
-  (font-lock-add-keywords
-   'plantuml-mode
-   '(
-     ;; gantts relaeted
-     ("\\<\\(days\\|weeks\\)\\>" .                      font-lock-keyword-face) ;; duration
-     ("\\<\\(starts\\|ends\\|lasts\\)\\>" .             font-lock-keyword-face) ;; verbs - duration
-     ("\\<\\(at\\|after\\|on\\|from\\|to\\|end\\)\\>" . font-lock-keyword-face) ;; prepositions
-     ("\\<\\(then\\)\\>" .                              font-lock-keyword-face) ;; short nickname
-     ("\\<\\(as\\)\\>" .                                font-lock-keyword-face) ;; short nickname
-     ("\\<\\(is\\)\\>" .                                font-lock-keyword-face) ;; is
-     ("\\<\\(completed\\|complete\\)\\>" .              font-lock-keyword-face) ;; completion
-     ("\\<\\(colored\\|in\\)\\>" .                      font-lock-keyword-face) ;; coloring
-     ("\\<\\(happen)\\>" .                              font-lock-keyword-face) ;; verbs - milestone
-     ("\\<\\(links)\\>" .                               font-lock-keyword-face) ;; verbs - milestone
-     ("\\<\\(closed\\|open)\\>" .                       font-lock-keyword-face) ;; closed or open
-     ))
+  ;;:config
+  ;;(font-lock-add-keywords
+  ;; 'plantuml-mode
+  ;; '(
+  ;;   ;; gantts relaeted
+  ;;   ("\\<\\(days\\|weeks\\)\\>" .                      font-lock-keyword-face) ;; duration
+  ;;   ("\\<\\(starts\\|ends\\|lasts\\)\\>" .             font-lock-keyword-face) ;; verbs - duration
+  ;;   ("\\<\\(at\\|after\\|on\\|from\\|to\\|end\\)\\>" . font-lock-keyword-face) ;; prepositions
+  ;;   ("\\<\\(then\\)\\>" .                              font-lock-keyword-face) ;; short nickname
+  ;;   ("\\<\\(as\\)\\>" .                                font-lock-keyword-face) ;; short nickname
+  ;;   ("\\<\\(is\\)\\>" .                                font-lock-keyword-face) ;; is
+  ;;   ("\\<\\(completed\\|complete\\)\\>" .              font-lock-keyword-face) ;; completion
+  ;;   ("\\<\\(colored\\|in\\)\\>" .                      font-lock-keyword-face) ;; coloring
+  ;;   ("\\<\\(happen)\\>" .                              font-lock-keyword-face) ;; verbs - milestone
+  ;;   ("\\<\\(links)\\>" .                               font-lock-keyword-face) ;; verbs - milestone
+  ;;   ("\\<\\(closed\\|open)\\>" .                       font-lock-keyword-face) ;; closed or open
+  ;;   ))
   )
 
 
 (use-package ob-plantuml
   :ensure nil
-  :after (org)
+  :after (org plantuml-mode)
   :config
   ;;(org-plantuml-jar-path        "/home/garid/.config/emacs/plantuml.jar" )
   (setq org-plantuml-executable-path "plantuml")
