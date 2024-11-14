@@ -1629,11 +1629,29 @@ Similar to vim-signify.
 
 ** Org structure in the denote dire
 #+begin_src emacs-lisp
-(defun garid/org-ql-function-on-each-heading ()
+(defun garid/org-ql-function-on-each-heading (INCLUDE_PROGRESS)
   ""
-  (format "%s %s"
+  (format "%s_ %s %s"
           (make-string (+ 1 (nth 0 (org-heading-components)) ) ?*) ;; recreate the *
           (nth 4 (org-heading-components))
+          (if (and INCLUDE_PROGRESS (seq-find
+                                     (lambda (elt) (string= "PROGRESS" (car elt) ))
+                                     (org-entry-properties)))
+              (let ((tmp-progress (string-to-number
+                                   (cdr (car (seq-filter (lambda (elt) (string= "PROGRESS" (car elt) )) (org-entry-properties)))))
+                                  ))
+
+                ;;(format "<font:monospaced>[<back:black>☐☐☐☐☐</back><back:lightgray>☐☐☐☐☐</back> 10%]</font>")
+                (format "\\n<font:monospaced>[<back:black>%s</back><back:lightgray>%s</back> %d%s]</font>"
+                        (make-string (/ tmp-progress 10) ?☐)
+                        (make-string (- 10 (/ tmp-progress 10) ) ?☐)
+                        tmp-progress
+                        "%"
+                        ) ;;(format "| shit %d" (+ tmp-progress 1))
+                )
+
+            ""
+            )
           )
   ;;(org-heading-components)
   ;;(nth 0 (org-heading-components)) ;; depth - int
@@ -1647,17 +1665,24 @@ Similar to vim-signify.
 
 (defun garid/org-ql-plantuml-body-prepper-on-current-buffer ()
   (concat
-   "@startwbs\n"
-   "* "
-   (org-get-title) ;;(buffer-name)
+   ;;"@startwbs\n"
+   "@startmindmap\n"
+   "* Thesis"
+   ;;(org-get-title) ;;(buffer-name)
+   ;;(org-get-title) ;;(buffer-name)
    "\n"
    (mapconcat 'identity
               (org-ql-select
                 (current-buffer) ;; BUFFERS-OR-FILES, i.e. Can be path of file
                 '(level 1 3) ;; QUERY 1-to-3 inclusive
-                :action 'garid/org-ql-function-on-each-heading)
+                ;;:action 'garid/org-ql-function-on-each-heading
+                :action (lambda ()
+                          (garid/org-ql-function-on-each-heading t)
+                          )
+                )
               "\n")
-   "\n@endwbs\n"
+   ;;"\n@endwbs\n"
+   "\n@endmindmap\n"
    )
   )
 
