@@ -1627,6 +1627,68 @@ Similar to vim-signify.
     ))
 #+end_src
 
+** Org structure in the denote dire
+#+begin_src emacs-lisp
+(defun garid/org-ql-function-on-each-heading ()
+  ""
+  (format "%s %s"
+          (make-string (+ 1 (nth 0 (org-heading-components)) ) ?*) ;; recreate the *
+          (nth 4 (org-heading-components))
+          )
+  ;;(org-heading-components)
+  ;;(nth 0 (org-heading-components)) ;; depth - int
+  ;;(nth 4 (org-heading-components)) ;; title - str
+
+  ;;(seq-find
+  ;;  (lambda (elt) (string= "PROGRESS" (car elt) ))
+  ;;  (org-entry-properties))
+
+  )
+
+(defun garid/org-ql-plantuml-body-prepper-on-current-buffer ()
+  (concat
+   "@startwbs\n"
+   "* "
+   (org-get-title) ;;(buffer-name)
+   "\n"
+   (mapconcat 'identity
+              (org-ql-select
+                (current-buffer) ;; BUFFERS-OR-FILES, i.e. Can be path of file
+                '(level 1 3) ;; QUERY 1-to-3 inclusive
+                :action 'garid/org-ql-function-on-each-heading)
+              "\n")
+   "\n@endwbs\n"
+   )
+  )
+
+;;(garid/org-ql-plantuml-body-prepper-on-current-buffer)
+(defun garid/create-plantuml-using-temp-file (outFname)
+  ""
+  (let ((tmp-basename (concat "/tmp/" (file-name-base outFname) ".puml"))
+        (tmp-extension (file-name-extension outFname))
+        (tmp-outputdir (concat (file-name-directory buffer-file-name) (my/org-attach-dir "")))
+        )
+
+    (f-write (garid/org-ql-plantuml-body-prepper-on-current-buffer)
+             'utf-8
+             tmp-basename)
+
+    (message (format "plantuml %s %s -o %s "
+                     (concat "-t" tmp-extension)
+                     tmp-basename
+                     tmp-outputdir))
+
+    (call-process-shell-command (format "plantuml %s %s -o %s "
+                                        (concat "-t" tmp-extension)
+                                        tmp-basename
+                                        tmp-outputdir
+                                        ));;outDir
+
+    (my/org-attach-dir outFname)
+    )
+  )
+#+end_src
+
 * Writing & Reading
 ** Writing packages
 #+begin_src emacs-lisp

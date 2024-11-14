@@ -460,6 +460,11 @@ org-mode
 (frac                        "\\frac{" p "}{" q "}")
 
 (include                     "#+INCLUDE: \"\" :only-contents t")
+(structure
+ "#+begin_src emacs-lisp :results file" r n
+ "(garid/create-plantuml-using-temp-file \"structure.svg\")" r n
+ "#+end_src"
+ )
 
 ;; Local Variables:
 ;; mode: lisp-data
