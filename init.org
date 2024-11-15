@@ -1888,6 +1888,13 @@ Similar to vim-signify.
   )
 #+end_src
 
+** annotate
+#+begin_src emacs-lisp
+(use-package annotate
+  :ensure t)
+#+end_src
+
+
 * Keybinding
 ** =which-key=: keybinding shower
 #+begin_src emacs-lisp
