@@ -627,6 +627,11 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   :custom (org-bullets-bullet-list
            '("Ⅰ" "Ⅱ" "Ⅲ" "Ⅳ" "Ⅴ" "Ⅵ" "Ⅶ")))
 #+end_src
+
+** org-tidy
+#+begin_src emacs-lisp
+(use-package org-tidy :ensure t)
+#+end_src
 * Org zettelkasten notes
 ** =denote=: Note taking package
 #+begin_src emacs-lisp
@@ -2252,29 +2257,29 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 #+attr_latex: :placement [H]
 #+caption: in org-file, frequent commands
 #+name: tbl-orgmode-general-keybindings-freq
-| key(s) | function                                        | short description            | mode | lambda |
-|--------+-------------------------------------------------+------------------------------+------+--------|
-| =os=     | =:ignore t=                                       | subtree..................... | org  |        |
-| =osy=    | =org-copy-subtree=                                | yank (verbatim copy)         | org  |        |
-| =osa=    | =(org-archive-subtree-default-with-confirmation)= | archive                      | org  | y      |
-| =osY=    | =org-id-copy=                                     | yank (ID)                    | org  |        |
-| =osv=    | =org-mark-element=                                | visually select element      | org  |        |
-| =osm=    | =org-refile=                                      | move/refile                  | org  |        |
-| =osd=    | =org-cut-subtree=                                 | delete (aka cut)             | org  |        |
-| =ost=    | =org-toggle-narrow-to-subtree=                    | toggle narrow                | org  |        |
-| =osT=    | =org-set-tags-command=                            | tags                         | org  |        |
-| =osn=    | =org-num-mode=                                    | num-mode                     | org  |        |
-| =oss=    | =org-sort=                                        | sort                         | org  |        |
-| =osp=    | =org-set-property=                                | property                     | org  |        |
-| =osI=    | =org-indent-mode=                                 | indent-mode                  | org  |        |
-|--------+-------------------------------------------------+------------------------------+------+--------|
-| =osi=    | =:ignore t=                                       | insert heading.............. | org  |        |
-| =osia=   | =org-insert-heading-after-current=                | after                  C-RET | org  |        |
-| =osih=   | =org-insert-heading=                              | heading                M-RET | org  |        |
-| =osis=   | =org-insert-subheading=                           | subheading                   | org  |        |
-| =osiH=   | =org-insert-todo-heading=                         | heading         todo M-S-RET | org  |        |
-| =osiA=   | =org-insert-todo-heading-respect-content=         | After           todo C-S-RET | org  |        |
-| =osiS=   | =org-insert-todo-subheading=                      | subheading      todo         | org  |        |
+| key(s) | function                                          | short description            | mode | lambda |
+|--------+---------------------------------------------------+------------------------------+------+--------|
+| =os=   | =:ignore t=                                       | subtree..................... | org  |        |
+| =osy=  | =org-copy-subtree=                                | yank (verbatim copy)         | org  |        |
+| =osa=  | =(org-archive-subtree-default-with-confirmation)= | archive                      | org  | y      |
+| =osY=  | =org-id-copy=                                     | yank (ID)                    | org  |        |
+| =osv=  | =org-mark-element=                                | visually select element      | org  |        |
+| =osm=  | =org-refile=                                      | move/refile                  | org  |        |
+| =osd=  | =org-cut-subtree=                                 | delete (aka cut)             | org  |        |
+| =ost=  | =org-toggle-narrow-to-subtree=                    | toggle narrow                | org  |        |
+| =osT=  | =org-tidy-mode=                                   | tidy-mode                    | org  |        |
+| =osn=  | =org-num-mode=                                    | num-mode                     | org  |        |
+| =oss=  | =org-sort=                                        | sort                         | org  |        |
+| =osp=  | =org-set-property=                                | property                     | org  |        |
+| =osI=  | =org-indent-mode=                                 | indent-mode                  | org  |        |
+|--------+---------------------------------------------------+------------------------------+------+--------|
+| =osi=  | =:ignore t=                                       | insert heading.............. | org  |        |
+| =osia= | =org-insert-heading-after-current=                | after                  C-RET | org  |        |
+| =osih= | =org-insert-heading=                              | heading                M-RET | org  |        |
+| =osis= | =org-insert-subheading=                           | subheading                   | org  |        |
+| =osiH= | =org-insert-todo-heading=                         | heading         todo M-S-RET | org  |        |
+| =osiA= | =org-insert-todo-heading-respect-content=         | After           todo C-S-RET | org  |        |
+| =osiS= | =org-insert-todo-subheading=                      | subheading      todo         | org  |        |
 
 **** org-agenda/calendar/todo related
 #+attr_latex: :placement [H]
@@ -2642,7 +2647,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "osm" '(org-refile :which-key "move/refile")
   "osd" '(org-cut-subtree :which-key "delete (aka cut)")
   "ost" '(org-toggle-narrow-to-subtree :which-key "toggle narrow")
-  "osT" '(org-set-tags-command :which-key "tags")
+  "osT" '(org-tidy-mode :which-key "tidy-mode")
   "osn" '(org-num-mode :which-key "num-mode")
   "oss" '(org-sort :which-key "sort")
   "osp" '(org-set-property :which-key "property")
