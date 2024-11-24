@@ -7,7 +7,7 @@
 #+LATEX_HEADER: \usepackage[dvipsnames]{xcolor}
 #+LATEX_HEADER: \usepackage{fontspec}
 #+LATEX_HEADER: \usepackage[CJK]{ucharclasses} 
-#+LATEX_HEADER: \usepackage[margin=0.85in]{geometry}
+#+LATEX_HEADER: \usepackage[margin=1.01in]{geometry}
 #+LATEX_HEADER: \usepackage{bookmark}
 #+LATEX_HEADER: \usepackage[inkscapelatex=false]{svg}
 #+LATEX_HEADER: %\usepackage{svg}
@@ -17,6 +17,11 @@
 #+LATEX_HEADER: \usepackage{listings} 
 #+LATEX_HEADER: %%\usepackage[subsection]{placeins} %% let float stay in sections
 #+LATEX_HEADER: %%\usepackage{flafter} 
+
+#+LATEX_HEADER: %\usepackage{sectsty}   % this gives wraning that it changed \underbar, also this might be bad for unicode-math
+#+LATEX_HEADER: %\usepackage{titlecaps} 
+
+#+LATEX_HEADER: %\usepackage{glossaries}  manually doing the symbols
 
 #+LATEX_HEADER: \usepackage{pmboxdraw}        %% box drawing set
 #+LATEX_HEADER: \usepackage{newunicodechar}
@@ -84,15 +89,15 @@
 #+LATEX_HEADER: \lstdefinelanguage{text}{       % new makefile -> shell language
 #+LATEX_HEADER: }                                % it from from https://tex.stackexchange.com/a/317276/292504 
 
-#+LATEX_HEADER: \lstdefinelanguage{Lisp}{        % new Lip language
-#+LATEX_HEADER:     % alsodigit = {-},           
-#+LATEX_HEADER:     otherkeywords = {use\-package, \:hook, \:custom, \:map, \:bind, \:config, \:ensure, \:after, add\-to\-list, defcustom, defun, lambda, interactive},           
-#+LATEX_HEADER:     comment=[l]{;},
-#+LATEX_HEADER:     commentstyle=\color{Gray}\ttfamily,
-#+LATEX_HEADER:     stringstyle=\color{ForestGreen}\ttfamily,
-#+LATEX_HEADER:     morestring=[b]",
-#+LATEX_HEADER:     keywords = {setq, require}
-#+LATEX_HEADER: }                                % it from from https://tex.stackexchange.com/a/317276/292504 
+#+LATEX_HEADER: %\lstdefinelanguage{Lisp}{        % new Lip language
+#+LATEX_HEADER: %    % alsodigit = {-},           
+#+LATEX_HEADER: %    otherkeywords = {use\-package, \:hook, \:custom, \:map, \:bind, \:config, \:ensure, \:after, add\-to\-list, defcustom, defun, lambda, interactive},           
+#+LATEX_HEADER: %    comment=[l]{;},
+#+LATEX_HEADER: %    commentstyle=\color{Gray}\ttfamily,
+#+LATEX_HEADER: %    stringstyle=\color{ForestGreen}\ttfamily,
+#+LATEX_HEADER: %    morestring=[b]",
+#+LATEX_HEADER: %    keywords = {setq, require}
+#+LATEX_HEADER: %}                                % it from from https://tex.stackexchange.com/a/317276/292504 
 
 
 #+LATEX_HEADER: \lstdefinelanguage{plantuml}{        % new Lip language
