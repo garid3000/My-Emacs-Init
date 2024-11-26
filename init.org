@@ -339,7 +339,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 (use-package org
   :straight (org
              :type git
-             :brach "master"
+             :brach "main"
              :repo "https://code.orgmode.org/bzg/org-mode.git";;            :repo "misohena/el-easydraw"
             )
   ;;:demand
