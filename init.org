@@ -346,8 +346,9 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 
   ;; :hook (org-mode . garid-custom/org-mode-hooked-func)
   :custom
+  (org-src-window-setup         'other-frame) ;; for new window (better for the the tiling window manager
   ;; theme/styling ...............................................................................
-  (org-ellipsis                     " ▼"   )
+  (org-ellipsis                     " ▼"    )
   (org-hide-emphasis-markers         t      )
   (org-image-actual-width            '(800) )
   (org-startup-folded         "show2levels" ) ;; fold
@@ -788,9 +789,10 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 
   ;; (refile-targets                          (file-expand-wildcards "~/BrainDump/gtd/*.org"))
   ;; (org-refile-targets '(( refile-targets :todo . "PRJT" )))
-  (org-refile-targets '(("~/BrainDump/gtd/main.org"      :maxlevel . 3)
-                        ("~/BrainDump/gtd/someday.org"   :level    . 1)
-                        ("~/BrainDump/gtd/reference.org" :maxlevel . 1)))
+  (org-refile-targets '( (nil :maxlevel . 6) ;; aka the current file
+                         ("~/BrainDump/gtd/main.org"      :maxlevel . 3)
+                         ("~/BrainDump/gtd/someday.org"   :level    . 1)
+                         ("~/BrainDump/gtd/reference.org" :maxlevel . 1)))
 
 
   (org-capture-templates
@@ -1605,6 +1607,17 @@ Similar to vim-signify.
           )
       (message "No matching braces found."))))
 #+end_src
+** Org toggle hide/shot hyperlink                                             :customFunc:
+#+begin_src emacs-lisp
+(defun garid-custom/org-toggle-link-n-emphasis ()
+  (interactive)
+  (setq org-hide-emphasis-markers (not org-hide-emphasis-markers))
+  (setq org-link-descriptive           org-hide-emphasis-markers) ;;(org-toggle-link-display) more in below
+  (org-link-descriptive-ensure) ;; strange isseu need to check later
+  (org-restart-font-lock)
+  (font-lock-update))
+#+end_src
+
 ** Custom opening external terminal at current buffer                         :customFunc:
 #+begin_src emacs-lisp
 (defun garid-custom/open-external-term-here ()
@@ -1613,16 +1626,6 @@ Similar to vim-signify.
    (concat
     user-emacs-directory "garid/open_external_term.sh" " " buffer-file-name)))
 ;;(shell-command (concat user-emacs-directory "garid/open_external_term.sh" " " buffer-file-name)))
-#+end_src
-
-** Org toggle hide/shot hyperlink                                             :customFunc:
-#+begin_src emacs-lisp
-(defun garid-custom/org-toggle-link-n-emphasis ()
-  (interactive)
-  (setq org-hide-emphasis-markers (not org-hide-emphasis-markers))
-  (setq org-link-descriptive           org-hide-emphasis-markers) ;;(org-toggle-link-display) more in below
-  (org-restart-font-lock)
-  (font-lock-update))
 #+end_src
 
 ** Org toggle hide/shot display images                                        :customFunc:
@@ -1750,7 +1753,7 @@ Similar to vim-signify.
   (focus-mode                 +1)
 
   (cond
-   ;;((member "xkcd Script"     (font-family-list)) (set-face-attribute 'default nil :font "xkcd Script"     :height 200))
+   ((member "xkcd Script"     (font-family-list)) (set-face-attribute 'default nil :font "xkcd Script"     :height 160))
    ((member "Iosevka Comfy Duo"   (font-family-list)) (set-face-attribute 'default nil :font "Iosevka Comfy Duo"   :height 130))
    ((member "Iosevka Aile"    (font-family-list)) (set-face-attribute 'default nil :font "Iosevka Aile"    :height 200))
    ((member "Liberation Sans" (font-family-list)) (set-face-attribute 'default nil :font "Liberation Sans" :height 140))
