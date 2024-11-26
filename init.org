@@ -40,8 +40,8 @@ refresh-packages:
 #+end_src
 
 * Package manager:
-** Package Repositories 
-I'm pulling packages from following 3 places (not sure that I need all three): 
+** Package Repositories
+I'm pulling packages from following 3 places (not sure that I need all three):
 
 1. [[https://melpa.org/packages/]]
 2. [[https://elpa.gnu.org/packages/]]
@@ -75,6 +75,8 @@ I'm pulling packages from following 3 places (not sure that I need all three):
       (goto-char (point-max))
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
+
+(straight-use-package 'org)
 #+end_src
 
 * Vi-movement and its friends
@@ -337,12 +339,12 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 #+name: lst_org
 #+begin_src emacs-lisp :eval no
 (use-package org
-  :straight (org
-             :type git
-             :brach "main"
-             :repo "https://code.orgmode.org/bzg/org-mode.git";;            :repo "misohena/el-easydraw"
-            )
-  ;;:demand
+  ;;:straight (org
+  ;;           :type git
+  ;;           :brach "main"
+  ;;           :repo "https://code.orgmode.org/bzg/org-mode.git";;            :repo "misohena/el-easydraw"
+  ;;          )
+  :demand
   :delight " org"
   :bind (:map
          org-mode-map
@@ -495,7 +497,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   (setq org-num-format-function
         (lambda (numbering)
           (concat (number-to-string (car numbering))               ;; takes 0-th of seq of numbers
-                  "."                                              ;; 
+                  "."                                              ;;
                   (mapconcat (lambda (x) (format "%02d" x))        ;; 0 pad
                              (cdr numbering)                       ;; [ 1:... ] of seq of numbers
                              ".")                                  ;; sep
@@ -609,7 +611,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   ;; C-c c for asynchronous evaluating (only for SageMath code blocks).
   ;;(with-eval-after-load "org"
   ;;  (define-key org-mode-map (kbd "C-c c") 'ob-sagemath-execute-async))
-  ;; 
+  ;;
   ;; Do not confirm before evaluation
   ;;(setq org-confirm-babel-evaluate nil)
 
@@ -718,7 +720,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   (citar-denote-file-type             'org                )
   (citar-denote-keyword               "bib"               )
   (citar-denote-signature             nil                 )
-  ;;(citar-denote-subdir              nil                 )  
+  ;;(citar-denote-subdir              nil                 )
   (citar-denote-subdir                "litnotes"          )  ;; usefull
   (citar-denote-template              'biblio             )  ;; 'biblio is defined at denote
   (citar-denote-title-format          "author-year-title" )
@@ -864,7 +866,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 (use-package auctex)
 (use-package cdlatex)
 #+end_src
-** =ox-latex= 
+** =ox-latex=
 #+begin_src emacs-lisp
 (use-package ox-latex
   :ensure nil
@@ -1350,7 +1352,7 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
   :config
   (add-to-list 'eglot-server-programs '(nix-ts-mode . ("nil"))))
 #+end_src
-** =consult-eglot=: consulting with lsp 
+** =consult-eglot=: consulting with lsp
 #+begin_src emacs-lisp
 (use-package consult-eglot :ensure t)
 #+end_src
@@ -1831,6 +1833,7 @@ Similar to vim-signify.
              :repo "misohena/el-easydraw")
 
 
+  :after (org ox ox-latex ox-html)
   :custom
   (edraw-editor-default-grid-interval 10)
   (edraw-default-shape-properties '((rect (fill            . #1="#f8f8f8")
@@ -1858,7 +1861,8 @@ Similar to vim-signify.
 
   (with-eval-after-load 'org
     (require 'edraw-org)
-    (edraw-org-setup-default))
+    (edraw-org-setup-default)
+    )
   ;; When using the org-export-in-background option (when using the
   ;; asynchronous export function), the following settings are
   ;; required. This is because Emacs started in a separate process does
@@ -2748,7 +2752,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   )
 #+end_src
 ** =dired= - Additionals
-I don't use these not much  
+I don't use these not much
 #+begin_src emacs-lisp
 (use-package dired-preview :ensure t)
 #+end_src
@@ -2779,7 +2783,7 @@ and later sets cursor at that point when you open that file.
 # other wise terminal that executed this script just hangs there
 
 # if $1 is directory; -> cd to this dir
-if [[ -d $1 ]]; then             
+if [[ -d $1 ]]; then
 	notify-send "Emacs external terminal" "Emacs is openning external terminal\n at: $1"
 	cd "$1" || return 1
 	nohup "$TERMINAL" > /dev/null &
@@ -2913,6 +2917,6 @@ fi
 #+end_src
 * Finish Notifier
 #+begin_src emacs-lisp
-(call-process-shell-command "notify-send \"Emacs\" \"Emacs has initialized\" &") 
+(call-process-shell-command "notify-send \"Emacs\" \"Emacs has initialized\" &")
 #+end_src
 
