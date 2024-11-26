@@ -337,7 +337,12 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 #+name: lst_org
 #+begin_src emacs-lisp :eval no
 (use-package org
-  :demand
+  :straight (org
+             :type git
+             :brach "master"
+             :repo "https://code.orgmode.org/bzg/org-mode.git";;            :repo "misohena/el-easydraw"
+            )
+  ;;:demand
   :delight " org"
   :bind (:map
          org-mode-map
