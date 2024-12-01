@@ -196,7 +196,8 @@
 #+LATEX_HEADER: %\setmainfont{CMU Serif}
 #+LATEX_HEADER: \setmainfont{Linux Libertine O}
 #+LATEX_HEADER: \setmathfont{Libertinus Math}
-#+LATEX_HEADER: \setmonofont{Iosevka Term SS06}
+#+LATEX_HEADER: %\setmonofont{Iosevka Term SS06}
+#+LATEX_HEADER: \setmonofont[Scale=MatchLowercase]{Iosevka Fixed Slab}
 #+LATEX_HEADER: \urlstyle{same}
 
 #+LATEX_HEADER: \newfontfamily\myregularfont{CMU Serif}

@@ -339,11 +339,11 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 #+name: lst_org
 #+begin_src emacs-lisp :eval no
 (use-package org
-  ;;:straight (org
-  ;;           :type git
-  ;;           :brach "main"
-  ;;           :repo "https://code.orgmode.org/bzg/org-mode.git";;            :repo "misohena/el-easydraw"
-  ;;          )
+  :straight (org
+             :type git
+             :brach "release_9.6.30"
+             :repo "https://git.savannah.gnu.org/git/emacs/org-mode.git";;            :repo "misohena/el-easydraw"
+            )
   :demand
   :delight " org"
   :bind (:map
@@ -1748,6 +1748,7 @@ Similar to vim-signify.
 (defun gry/distraction-free-on ()
   (interactive)
   ;;(turn-off-evil-mode)
+  (global-set-key (kbd "M-f") 'forward-word) ;; this is kind a stupid, just use the evil settings int he future
   (evil-mode -1)
   (darkroom-mode             +1)
   (typewriter-roll-mode      +1)
@@ -1761,10 +1762,11 @@ Similar to vim-signify.
   (focus-mode                 +1)
 
   (cond
-   ;;((member "xkcd Script"     (font-family-list)) (set-face-attribute 'default nil :font "xkcd Script"     :height 160))
+   ;((member "xkcd Script"     (font-family-list)) (set-face-attribute 'default nil :font "xkcd Script"     :height 160))
    ;;((member "Iosevka Comfy Duo"   (font-family-list)) (set-face-attribute 'default nil :font "Iosevka Comfy Duo"   :height 130))
    ;;((member "Iosevka Aile"    (font-family-list)) (set-face-attribute 'default nil :font "Iosevka Aile"    :height 200))
-   ((member "Liberation Sans" (font-family-list)) (set-face-attribute 'default nil :font "Liberation Sans" :height 80))
+   ((member "Libre Baskerville" (font-family-list)) (set-face-attribute 'default nil :font "Libre Baskerville" :height 120))
+   ((member "Liberation Sans" (font-family-list)) (set-face-attribute 'default nil :font "Liberation Sans" :height 120))
    ((member "Courier New"     (font-family-list)) (set-face-attribute 'default nil :font "Courier New"     :height 140))
    ((member "Terminus"        (font-family-list)) (set-face-attribute 'default nil :font "Terminus"        :height 140))
    ((member "M+ 1p medium"    (font-family-list)) (set-face-attribute 'default nil :font "M+ 1p medium"    :height 140))
@@ -1772,6 +1774,8 @@ Similar to vim-signify.
 
 (defun gry/distraction-free-off ()
   (interactive)
+
+  (global-set-key (kbd "M-f") 'consult-line) ;; this is kind a stupid, just use the evil settings int he future
   (darkroom-mode         -1)
   (evil-mode +1)
   (typewriter-roll-mode  -1)
@@ -1798,6 +1802,9 @@ Similar to vim-signify.
       (gry/distraction-free-on)
     (gry/distraction-free-off)))
 #+end_src
+
+#+RESULTS:
+: gry/toggle-distraction-free-writing
 
 ** =pdf-tools=: reading pdf in Emacs
 #+begin_src emacs-lisp
