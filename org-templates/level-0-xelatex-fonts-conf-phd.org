@@ -1,6 +1,16 @@
 #+LATEX_COMPILER: xelatex
 
-#+LATEX_HEADER: %% \special{dvipdfmx:config z 0}   %% from # https://tex.stackexchange.com/a/483040/292504, but wasn't significant improvement
+#+latex_class:         article
+#+latex_class_options: [11pt, a4paper]
+#+latex_header: \setlength{\parindent}{0pt}            % no-indent
+#+latex_header: \usepackage{setspace}                  % 1.5 line-spaceing
+#+latex_header: \onehalfspacing                        % 1.5 line-spaceing
+#+latex_header: \usepackage{etoolbox}                  % for the page-breaking in the section (aka 1st level)
+#+latex_header: \pretocmd{\section}{\clearpage}{}{}
+#+latex_header: \pagenumbering{roman}                  % beginning page is roman
+#+latex_header: \usepackage[authoryear,round]{natbib}
+#+latex_header: \usepackage[section]{placeins}
+
 
 #+LATEX_HEADER: \usepackage{color}
 #+LATEX_HEADER: \usepackage{cancel}
@@ -10,17 +20,14 @@
 #+LATEX_HEADER: \usepackage[margin=1.01in]{geometry}
 #+LATEX_HEADER: \usepackage{bookmark}
 #+LATEX_HEADER: \usepackage[inkscapelatex=false]{svg}
-#+LATEX_HEADER: %\usepackage{svg}
 #+LATEX_HEADER: \usepackage{pgf}
 #+LATEX_HEADER: \usepackage{keystroke}       %% keyboard
 #+LATEX_HEADER: \usepackage{float} 
 #+LATEX_HEADER: \usepackage{listings} 
-#+LATEX_HEADER: %%\usepackage[subsection]{placeins} %% let float stay in sections
-#+LATEX_HEADER: %%\usepackage{flafter} 
 
+#+LATEX_HEADER: %\usepackage{svg}
 #+LATEX_HEADER: %\usepackage{sectsty}   % this gives wraning that it changed \underbar, also this might be bad for unicode-math
 #+LATEX_HEADER: %\usepackage{titlecaps} 
-
 #+LATEX_HEADER: %\usepackage{glossaries}  manually doing the symbols
 
 #+LATEX_HEADER: \usepackage{pmboxdraw}        %% box drawing set
@@ -89,17 +96,6 @@
 #+LATEX_HEADER: \lstdefinelanguage{text}{       % new makefile -> shell language
 #+LATEX_HEADER: }                                % it from from https://tex.stackexchange.com/a/317276/292504 
 
-#+LATEX_HEADER: %\lstdefinelanguage{Lisp}{        % new Lip language
-#+LATEX_HEADER: %    % alsodigit = {-},           
-#+LATEX_HEADER: %    otherkeywords = {use\-package, \:hook, \:custom, \:map, \:bind, \:config, \:ensure, \:after, add\-to\-list, defcustom, defun, lambda, interactive},           
-#+LATEX_HEADER: %    comment=[l]{;},
-#+LATEX_HEADER: %    commentstyle=\color{Gray}\ttfamily,
-#+LATEX_HEADER: %    stringstyle=\color{ForestGreen}\ttfamily,
-#+LATEX_HEADER: %    morestring=[b]",
-#+LATEX_HEADER: %    keywords = {setq, require}
-#+LATEX_HEADER: %}                                % it from from https://tex.stackexchange.com/a/317276/292504 
-
-
 #+LATEX_HEADER: \lstdefinelanguage{plantuml}{        % new Lip language
 #+LATEX_HEADER:     keywords = {as}
 #+LATEX_HEADER: }                                % it from from https://tex.stackexchange.com/a/317276/292504 
@@ -161,31 +157,6 @@
 #+LATEX_HEADER: }
 #+LATEX_HEADER: 
 #+LATEX_HEADER: \lstset{style=mystyle}
-
-#+LATEX_HEADER: %\lstset{
-#+LATEX_HEADER: %  %keywordstyle=\color{blue},
-#+LATEX_HEADER: %  %commentstyle=\color{red},
-#+LATEX_HEADER: %  %stringstyle=\color{cyan},
-#+LATEX_HEADER: %  stringstyle=\color{RedViolet}, %custommauve
-#+LATEX_HEADER: %  keywordstyle=\color{RoyalPurple},
-#+LATEX_HEADER: %  commentstyle=\color{OliveGreen},
-#+LATEX_HEADER: %  %basicstyle=\ttfamily\footnotesize,
-#+LATEX_HEADER: %  basicstyle=\ttfamily\scriptsize,
-#+LATEX_HEADER: %  breaklines=true,             %firstnumber=1000,
-#+LATEX_HEADER: %  keepspaces=true,                 
-#+LATEX_HEADER: %  numbers=left,                    
-#+LATEX_HEADER: %  numbersep=5pt,                   
-#+LATEX_HEADER: %  numberstyle=\tiny\color{customgray},    
-#+LATEX_HEADER: %  showspaces=false,                
-#+LATEX_HEADER: %  showstringspaces=false,       %showtabs=true,                  
-#+LATEX_HEADER: %  stepnumber=1,                    
-#+LATEX_HEADER: %}
-
-
-
-
-
-
 
 #+LATEX_HEADER:  \usepackage[
 #+LATEX_HEADER:      math-style=ISO,
