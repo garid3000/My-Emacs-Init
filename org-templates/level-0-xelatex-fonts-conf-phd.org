@@ -183,3 +183,6 @@
 #+LATEX_HEADER:     citecolor={blue!50!black},
 #+LATEX_HEADER:     urlcolor={blue!80!black}
 #+LATEX_HEADER: }
+
+
+#+latex_header: \usepackage[parfill]{parskip}
