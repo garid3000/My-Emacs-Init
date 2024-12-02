@@ -486,7 +486,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
         '("xelatex -interaction nonstopmode -output-directory %o %f"))
   )
 #+end_src
-** =org-num=: org number zero padding
+** COMMENT =org-num=: org number zero padding
 [[https://emacs.stackexchange.com/q/80800/38482][From this answer]]
 
 #+begin_src emacs-lisp
