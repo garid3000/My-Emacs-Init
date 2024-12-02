@@ -763,7 +763,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   :custom
   (org-agenda-files '(
                       "~/BrainDump/gtd/main.org"
-                      "~/BrainDump/denote/phd/20241114T160402--development-of-novel-methodology-for-measuring-hemispherical-direction-reflection-factor-hdrf-in-vegetation-fields-via-utilizing-a-gimbal-motorized-spectrometer__phd_thesis.org"
+                      ;;"~/BrainDump/denote/phd/20241114T160402--development-of-novel-methodology-for-measuring-hemispherical-direction-reflection-factor-hdrf-in-vegetation-fields-via-utilizing-a-gimbal-motorized-spectrometer__phd_thesis.org"
                       ))
   (org-agenda-span 90)
   (org-agenda-custom-commands
