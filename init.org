@@ -898,6 +898,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
                                               "#+subtitle: ${=type=}: ${title}\n"
                                               "#+author:   author(s): ${author}\n"
                                               "#+filetags: :paper:\n\n"
+                                              "[cite:@${=key=}]\n\n"
                                               "* Notes\n\n"
                                               ))
   :config
