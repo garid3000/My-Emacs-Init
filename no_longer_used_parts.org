@@ -4,11 +4,11 @@
   :after citar org-roam
   :no-require
   :custom
-  (citar-org-roam-subdir                      "citar-notes")
+  (citar-org-roam-subdir                      "g_papers")
   (citar-org-roam-note-title-template (concat "=${=key=}= - ${title}\n"
-                                              "#+subtitle: Garid's notes on this article\n"
+                                              ;;"#+subtitle: Garid's notes on this article\n"
                                               "#+author: paper authors: ${author}\n"
-                                              "#+filetags: :lit:\n\n"
+                                              "#+filetags: :paper:\n\n"
                                               "* Ideas\n\n* Notes\n\n"))
   :config
   (citar-org-roam-mode))

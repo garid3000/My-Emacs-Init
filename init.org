@@ -709,40 +709,202 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   (LaTeX-mode . citar-capf-setup)
   )
 #+end_src
-** =citar-denote=: citation in denote
+** COMMENT =citar-denote=: citation in denote
 #+begin_src emacs-lisp
-(use-package citar-denote
-  :ensure t
-  :demand t ;; Ensure minor mode loads
-  :after (:any citar denote)
-  :custom
-  ;; Package defaults
-  (citar-denote-file-type             'org                )
-  (citar-denote-keyword               "bib"               )
-  (citar-denote-signature             nil                 )
-  ;;(citar-denote-subdir              nil                 )
-  (citar-denote-subdir                "litnotes"          )  ;; usefull
-  (citar-denote-template              'biblio             )  ;; 'biblio is defined at denote
-  (citar-denote-title-format          "author-year-title" )
-  (citar-denote-title-format-andstr   "and"               )
-  (citar-denote-title-format-authors  1                   )
-  (citar-denote-use-bib-keywords      nil                 )
-  :preface
-  (bind-key "C-c w n" #'citar-denote-open-note)
-  :init
-  (citar-denote-mode)
-  ;; Bind all available commands
-  :bind (("C-c w d" . citar-denote-dwim                 )
-         ("C-c w e" . citar-denote-open-reference-entry )
-         ("C-c w a" . citar-denote-add-citekey          )
-         ("C-c w k" . citar-denote-remove-citekey       )
-         ("C-c w r" . citar-denote-find-reference       )
-         ("C-c w l" . citar-denote-link-reference       )
-         ("C-c w f" . citar-denote-find-citation        )
-         ("C-c w x" . citar-denote-nocite               )
-         ("C-c w y" . citar-denote-cite-nocite          )
-         ("C-c w z" . citar-denote-nobib                )))
+;;(use-package citar-denote
+;;  :ensure t
+;;  :demand t ;; Ensure minor mode loads
+;;  :after (:any citar denote)
+;;  :custom
+;;  ;; Package defaults
+;;  (citar-denote-file-type             'org                )
+;;  (citar-denote-keyword               "bib"               )
+;;  (citar-denote-signature             nil                 )
+;;  ;;(citar-denote-subdir              nil                 )
+;;  (citar-denote-subdir                "litnotes"          )  ;; usefull
+;;  (citar-denote-template              'biblio             )  ;; 'biblio is defined at denote
+;;  (citar-denote-title-format          "author-year-title" )
+;;  (citar-denote-title-format-andstr   "and"               )
+;;  (citar-denote-title-format-authors  1                   )
+;;  (citar-denote-use-bib-keywords      nil                 )
+;;  :preface
+;;  (bind-key "C-c w n" #'citar-denote-open-note)
+;;  :init
+;;  (citar-denote-mode)
+;;  ;; Bind all available commands
+;;  :bind (("C-c w d" . citar-denote-dwim                 )
+;;         ("C-c w e" . citar-denote-open-reference-entry )
+;;         ("C-c w a" . citar-denote-add-citekey          )
+;;         ("C-c w k" . citar-denote-remove-citekey       )
+;;         ("C-c w r" . citar-denote-find-reference       )
+;;         ("C-c w l" . citar-denote-link-reference       )
+;;         ("C-c w f" . citar-denote-find-citation        )
+;;         ("C-c w x" . citar-denote-nocite               )
+;;         ("C-c w y" . citar-denote-cite-nocite          )
+;;         ("C-c w z" . citar-denote-nobib                )))
 #+end_src
+** =org-roam=
+#+begin_src emacs-lisp
+(use-package org-roam
+  ;; :requires org-roam-dailies ??
+  :ensure t
+  :custom
+  (org-roam-node-display-template (concat "${title:*} "
+                                          (propertize "${tags:30}"
+                                                      'face 'org-tag)))
+
+  (org-roam-v2-ack                   t                 )
+  (org-roam-directory                "~/BrainDump/roam") ;; (org-roam-directory "~/Pensieve/")
+  (org-roam-db-location              "~/BrainDump/roam/0000_database.db" )
+
+  (org-roam-completion-everywhere    nil               ) ;;  do I need this?
+  (org-roam-dailies-capture-templates
+   `(("d" "default" entry "* %<%I:%M %p>: %?"
+      :if-new (file+head "%<%Y-%m-%d>.org"
+                         ,(concat
+                           "#+filetags: :nohtmlexport:\n"
+                           "#+title: %<%Y-%m-%d>\n"
+                           "#+auto_tangle: nil\n"
+                           "#+startup: show2levels\n"
+                           "#+setupfile: ~/.config/emacs/org-templates/level-0-website-export-template.org"
+                           )))))
+
+  (org-roam-capture-templates
+   `(("d" "Default" plain "* %?"
+      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
+                         ,(concat "#+title: ${title}\n"
+                                  "#+filetags: :notag:\n"
+                                  "#+date: %U\n"
+                                  "#+setupfile: ~/.config/emacs/org-templates/level-0-website-export-template.org"
+                                  ))
+      :unnarrowed t)
+
+     ("r" "Research" plain "* %?"
+      :if-new (file+head "g_research/%<%Y%m%d%H%M%S>-${slug}__rsch.org"
+                         ,(concat "#+title: ${title}\n"
+                                  "#+filetags: :rsch:\n"
+                                  "#+date: %U\n"
+                                  "#+setupfile: ~/.config/emacs/org-templates/level-0-website-export-template.org"
+                                  ))
+      :unnarrowed t)
+
+     ("k" "Kanji" plain "* %?"
+      :if-new (file+head "g_kanji/%<%Y%m%d%H%M%S>-${slug}.org"
+                         ,(concat "#+title: ${title}\n"
+                                  "#+filetags: :kanji:\n"
+                                  "#+author: Garid Zorigoo\n"
+                                  "#+date: %U\n"
+                                  "#+setupfile: ~/.config/emacs/org-templates/level-0-website-export-template.org"
+                                  ))
+      :unnarrowed t)
+
+     ("M" "Math" plain "* %?"
+      :if-new (file+head "g_math/%<%Y%m%d%H%M%S>-${slug}.org"
+                         ,(concat "#+title: ${title}\n"
+                                  "#+filetags: :math:\n"
+                                  "#+author: Garid Zorigoo\n"
+                                  "#+date: %U\n"
+                                  "#+setupfile: ~/.config/emacs/org-templates/level-0-website-export-template.org\n"
+                                  "#+setupfile: ~/.config/emacs/org-templates/level-0-xelatex-fonts-conf.org"
+                                  ))
+      :unnarrowed t)
+
+     ("p" "Programming language" plain "* %?"
+      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
+                         ,(concat "#+title: ${title}\n"
+                                  "#+filetags: :plang:\n"
+                                  "#+author: Garid Zorigoo\n"
+                                  "#+date: %U\n"
+                                  "#+setupfile: ~/.config/emacs/org-templates/level-0-website-export-template.org"
+                                  ))
+      :unnarrowed t)
+
+
+     ("g" "Golang Notes" plain "* %?"
+      :if-new (file+head "g_go/%<%Y%m%d%H%M%S>-${slug}.org"
+                         ,(concat ;;"#+title: ${title}\n"
+                                  "#+filetags: :go:\n"
+                                  ;;"#+author: Garid Zorigoo\n"
+                                  "#+date: %U\n"
+                                  "#+setupfile: ~/.config/emacs/org-templates/level-0-website-export-template.org"
+                                  ))
+      :unnarrowed t)
+
+
+     ("m" "Meta (meaning access nodes)" plain "* %?"
+      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}__meta.org"
+                         ,(concat "#+title: ${title}\n"
+                                  "#+filetags: :meta:\n"
+                                  "#+date: %U\n"
+                                  "#+setupfile: ~/.config/emacs/org-templates/level-0-website-export-template.org"
+                                  ))
+      :unnarrowed t)
+
+
+     ("P" "Project" plain
+      "* Goals\n\n%?* Tasks\n\n** TODO Add initial tasks\n\n* Dates\n\n"
+      :if-new (file+head "g_project/%<%Y%m%d%H%M%S>-${slug}.org"
+                         ,(concat "#+title: ${title}\n"
+                                  "#+filetags: :Project:\n"
+                                  "#+auto_tangle: nil"))
+      :unnarrowed t)
+     ))
+
+  :config
+  ;;(require 'org-roam-dailies)
+  (org-roam-setup)
+  (org-roam-db-autosync-mode)
+  )
+#+end_src
+
+** =org-roam-ui=: graphing of org-roam in web browser
+#+begin_src emacs-lisp
+(use-package org-roam-ui :ensure t)
+#+end_src
+
+** =consult-org-roam=
+#+begin_src emacs-lisp
+(use-package consult-org-roam
+   :ensure t
+   :after org-roam
+   :init (require 'consult-org-roam)
+   ;; Activate the minor mode
+   (consult-org-roam-mode 1)
+   :custom
+   (consult-org-roam-grep-func #'consult-ripgrep)
+   (consult-org-roam-buffer-narrow-key ?r)
+   (consult-org-roam-buffer-after-buffers t)
+   :config
+   ;; Eventually suppress previewing for certain functions
+   (consult-customize consult-org-roam-forward-links :preview-key "M-.")
+   :bind
+   ;; Define some convenient keybindings as an addition
+   ("C-c n e" . consult-org-roam-file-find)
+   ("C-c n b" . consult-org-roam-backlinks)
+   ("C-c n B" . consult-org-roam-backlinks-recursive)
+   ("C-c n l" . consult-org-roam-forward-links)
+   ("C-c n r" . consult-org-roam-search)
+   )
+#+end_src
+
+** =citar-org-roam=
+#+begin_src emacs-lisp
+(use-package citar-org-roam
+  :after citar org-roam
+  :no-require
+  :custom
+  (citar-org-roam-subdir                      "g_papers")
+  (citar-org-roam-note-title-template (concat "${=key=}\n"
+                                              "#+subtitle: ${=type=}: ${title}\n"
+                                              "#+author:   author(s): ${author}\n"
+                                              "#+filetags: :paper:\n\n"
+                                              "* Notes\n\n"
+                                              ))
+  :config
+  (citar-org-roam-mode))
+
+#+end_src
+
 * Org Time managements
 ** =calendar=
 #+begin_src emacs-lisp
@@ -1620,7 +1782,7 @@ Similar to vim-signify.
   (interactive)
   (setq org-hide-emphasis-markers (not org-hide-emphasis-markers))
   (setq org-link-descriptive           org-hide-emphasis-markers) ;;(org-toggle-link-display) more in below
-  (org-link-descriptive-ensure) ;; strange isseu need to check later
+  ;;(org-link-descriptive-ensure) ;; strange isseu need to check later
   (org-restart-font-lock)
   (font-lock-update))
 #+end_src
