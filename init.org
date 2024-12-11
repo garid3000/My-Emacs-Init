@@ -766,7 +766,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
                            "#+title: %<%Y-%m-%d>\n"
                            "#+auto_tangle: nil\n"
                            "#+startup: show2levels\n"
-                           "#+setupfile: ~/.config/emacs/org-templates/level-0-website-export-template.org"
+                           "#+setupfile: ~/.config/emacs/org-templates/level-0-html-export-template.org\n"
                            )))))
 
   (org-roam-capture-templates
@@ -775,7 +775,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
                          ,(concat "#+title: ${title}\n"
                                   "#+filetags: :notag:\n"
                                   "#+date: %U\n"
-                                  "#+setupfile: ~/.config/emacs/org-templates/level-0-website-export-template.org"
+                                  "#+setupfile: ~/.config/emacs/org-templates/level-0-html-export-template.org\n"
                                   ))
       :unnarrowed t)
 
@@ -784,7 +784,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
                          ,(concat "#+title: ${title}\n"
                                   "#+filetags: :rsch:\n"
                                   "#+date: %U\n"
-                                  "#+setupfile: ~/.config/emacs/org-templates/level-0-website-export-template.org"
+                                  "#+setupfile: ~/.config/emacs/org-templates/level-0-html-export-template.org\n"
                                   ))
       :unnarrowed t)
 
@@ -794,7 +794,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
                                   "#+filetags: :kanji:\n"
                                   "#+author: Garid Zorigoo\n"
                                   "#+date: %U\n"
-                                  "#+setupfile: ~/.config/emacs/org-templates/level-0-website-export-template.org"
+                                  "#+setupfile: ~/.config/emacs/org-templates/level-0-html-export-template.org\n"
                                   ))
       :unnarrowed t)
 
@@ -804,7 +804,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
                                   "#+filetags: :math:\n"
                                   "#+author: Garid Zorigoo\n"
                                   "#+date: %U\n"
-                                  "#+setupfile: ~/.config/emacs/org-templates/level-0-website-export-template.org\n"
+                                  "#+setupfile: ~/.config/emacs/org-templates/level-0-html-export-template.org\n"
                                   "#+setupfile: ~/.config/emacs/org-templates/level-0-xelatex-fonts-conf.org"
                                   ))
       :unnarrowed t)
@@ -815,7 +815,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
                                   "#+filetags: :plang:\n"
                                   "#+author: Garid Zorigoo\n"
                                   "#+date: %U\n"
-                                  "#+setupfile: ~/.config/emacs/org-templates/level-0-website-export-template.org"
+                                  "#+setupfile: ~/.config/emacs/org-templates/level-0-html-export-template.org\n"
                                   ))
       :unnarrowed t)
 
@@ -826,7 +826,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
                                   "#+filetags: :go:\n"
                                   ;;"#+author: Garid Zorigoo\n"
                                   "#+date: %U\n"
-                                  "#+setupfile: ~/.config/emacs/org-templates/level-0-website-export-template.org"
+                                  "#+setupfile: ~/.config/emacs/org-templates/level-0-html-export-template.org\n"
                                   ))
       :unnarrowed t)
 
@@ -836,7 +836,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
                          ,(concat "#+title: ${title}\n"
                                   "#+filetags: :meta:\n"
                                   "#+date: %U\n"
-                                  "#+setupfile: ~/.config/emacs/org-templates/level-0-website-export-template.org"
+                                  "#+setupfile: ~/.config/emacs/org-templates/level-0-html-export-template.org\n"
                                   ))
       :unnarrowed t)
 
