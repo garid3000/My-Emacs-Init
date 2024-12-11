@@ -2410,6 +2410,24 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | =nlF=    | =denote-link=                                 | forward-link                 | -    |        |
 | =nla=    | =denote-add-links=                            | add-links regex              | -    |        |
 
+**** Roam related
+#+attr_latex: :placement [H]
+#+caption: Roam
+#+name: tbl-global-general-keybindings-roam
+| key(s) | function                               | short description                    | mode | lambda |
+|--------+----------------------------------------+--------------------------------------+------+--------|
+| =r=    | =:ignore t=                            | roam........................         | -    |        |
+| =rs=   | =consult-org-roam-search=              | consult-org-roam-search              | -    |        |
+| =rf=   | =consult-org-roam-file-find=           | consult-org-roam-file-find           | -    |        |
+| =rlb=  | =consult-org-roam-backlinks=           | consult-org-roam-backlinks           | -    |        |
+| =rlf=  | =consult-org-roam-forward-links=       | consult-org-roam-forward-links       | -    |        |
+| =rlB=  | =consult-org-roam-backlinks-recursive= | consult-org-roam-backlinks-recursive | -    |        |
+| =rli=  | =org-roam-node-insert=                 | org-roam-node-insert                 | -    |        |
+| =rui=  | =org-roam-ui-open=                     | org-roam-ui-open                     | -    |        |
+| =rta=  | =org-roam-tag-add=                     | org-roam-tag-add                     | -    |        |
+| =rtr=  | =org-roam-tag-remove=                  | org-roam-tag-remove                  | -    |        |
+| =rbt=  | =org-roam-buffer-toggle=               | org-roam-buffer-toggle               | -    |        |
+
 **** org related
 #+attr_latex: :placement [H]
 #+caption: Org related stuffs
@@ -2597,12 +2615,13 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 :header-args+: :var tbl_16=tbl-orgmode-general-keybindings-export
 :header-args+: :var tbl_17=tbl-orgmode-general-keybindings-link
 :header-args+: :var tbl_18=tbl-orgmode-general-keybindings-img
+:header-args+: :var tbl_19=tbl-global-general-keybindings-roam
 :END:
 #+caption: converting
 #+name: src_that_converts_key_tables
 #+begin_src elisp :wrap src emacs-lisp :tangle no
 (setq tblall (append tbl_01 tbl_02 tbl_03 tbl_04 tbl_05 tbl_06 tbl_07 tbl_08 tbl_09 tbl_10
-                     tbl_11 tbl_12 tbl_13 tbl_14 tbl_15 tbl_16 tbl_17 tbl_18))
+                     tbl_11 tbl_12 tbl_13 tbl_14 tbl_15 tbl_16 tbl_17 tbl_18 tbl_19))
 
 
 
@@ -2813,6 +2832,17 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "oa" '(:ignore t :which-key "agenda......................")
   "oag" '(org-agenda :which-key "agenda")
   "oab" '(org-timeblock :which-key "block")
+  "r" '(:ignore t :which-key "roam........................")
+  "rs" '(consult-org-roam-search :which-key "consult-org-roam-search")
+  "rf" '(consult-org-roam-file-find :which-key "consult-org-roam-file-find")
+  "rlb" '(consult-org-roam-backlinks :which-key "consult-org-roam-backlinks")
+  "rlf" '(consult-org-roam-forward-links :which-key "consult-org-roam-forward-links")
+  "rlB" '(consult-org-roam-backlinks-recursive :which-key "consult-org-roam-backlinks-recursive")
+  "rli" '(org-roam-node-insert :which-key "org-roam-node-insert")
+  "rui" '(org-roam-ui-open :which-key "org-roam-ui-open")
+  "rta" '(org-roam-tag-add :which-key "org-roam-tag-add")
+  "rtr" '(org-roam-tag-remove :which-key "org-roam-tag-remove")
+  "rbt" '(org-roam-buffer-toggle :which-key "org-roam-buffer-toggle")
 )
 
 (garids-keybind/in-org-mode
