@@ -341,7 +341,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 (use-package org
   :straight (org
              :type git
-             :brach "release_9.6.30"
+             ;;:brach "release_9.6.30"
              :repo "https://git.savannah.gnu.org/git/emacs/org-mode.git";;            :repo "misohena/el-easydraw"
             )
   :demand
@@ -353,7 +353,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 
   ;; :hook (org-mode . garid-custom/org-mode-hooked-func)
   :custom
-  (org-src-window-setup         'other-frame) ;; for new window (better for the the tiling window manager
+  ;;(org-src-window-setup         'other-frame) ;; for new window (better for the the tiling window manager
   ;; theme/styling ...............................................................................
   (org-ellipsis                     " ▼"    )
   (org-hide-emphasis-markers         t      )
@@ -750,7 +750,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   :ensure t
   :custom
   (org-roam-node-display-template (concat "${title:*} "
-                                          (propertize "${tags:30}"
+                                          (propertize "${tags:25}"
                                                       'face 'org-tag)))
 
   (org-roam-v2-ack                   t                 )
@@ -2087,7 +2087,6 @@ Similar to vim-signify.
 (use-package annotate
   :ensure t)
 #+end_src
-
 
 * Keybinding
 ** =which-key=: keybinding shower
