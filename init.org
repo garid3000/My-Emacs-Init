@@ -893,7 +893,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   :after citar org-roam
   :no-require
   :custom
-  (citar-org-roam-subdir                      "g_papers")
+  (citar-org-roam-subdir                      "g_paper")
   (citar-org-roam-note-title-template (concat "${=key=}\n"
                                               "#+subtitle: ${=type=}: ${title}\n"
                                               "#+author:   author(s): ${author}\n"
