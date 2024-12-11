@@ -906,6 +906,10 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 
 #+end_src
 
+** =org-node= helper with org-id
+#+begin_src emacs-lisp
+(use-package org-node)
+#+end_src
 * Org Time managements
 ** =calendar=
 #+begin_src emacs-lisp
