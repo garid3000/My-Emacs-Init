@@ -754,109 +754,70 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
                                                       'face 'org-tag)))
 
   (org-roam-v2-ack                   t                 )
-  (org-roam-directory                "~/BrainDump/roam") ;; (org-roam-directory "~/Pensieve/")
-  (org-roam-db-location              "~/BrainDump/roam/0000_database.db" )
+  (org-roam-directory                "~/BrainDump/roam_research")
+  (org-roam-db-location              "~/BrainDump/roam_research/0000_database.db")
 
   (org-roam-completion-everywhere    nil               ) ;;  do I need this?
   (org-roam-dailies-capture-templates
    `(("d" "default" entry "* %<%I:%M %p>: %?"
-      :if-new (file+head "%<%Y-%m-%d>.org"
-                         ,(concat
-                           "#+filetags: :nohtmlexport:\n"
-                           "#+title: %<%Y-%m-%d>\n"
-                           "#+auto_tangle: nil\n"
-                           "#+startup: show2levels\n"
-                           "#+setupfile: ~/.config/emacs/org-templates/level-0-html-export-template.org\n"
-                           )))))
+      :if-new (file+head "g_journal/%<%Y%m%dT%H%M%S>--${slug}.org"
+                         ,(concat ":PROPERTIES:\n"
+                                  ":ID: %<%Y%m%dT%H%M%S>\n"
+                                  ":END:\n"
+                                  "#+title: %<%Y-%m-%d>\n"
+                                  "#+auto_tangle: nil\n"
+                                  "#+startup: show2levels\n"
+                                  "#+filetags: :nohtmlexport:\n"
+                                  "#+setupfile: ~/.config/emacs/org-templates/level-0-html-export-template.org\n")))
+     ))
 
   (org-roam-capture-templates
    `(("d" "Default" plain "* %?"
-      :if-new (file+head  "${id}--${slug}.org"
-                          ;;"%<%Y%m%dT%H%M%S>--${slug}.org"
-                          ;;,(concat (car (split-string "${id}.sdf" "{")) "--" "${slug}.org")
-                          ,(concat "#+title: ${title}\n"
-                                   "#+filetags: :notag:\n"
-                                   "#+date: %U\n"
-                                   "#+setupfile: ~/.config/emacs/org-templates/level-0-html-export-template.org\n"
-                                   ))
+      :if-new (file+head "%<%Y%m%dT%H%M%S>--${slug}.org"
+                         ,(concat ":PROPERTIES:\n"
+                                  ":ID: %<%Y%m%dT%H%M%S>\n"
+                                  ":END:\n"
+                                  "#+title:    ${title}\n"
+                                  "#+filetags: :notag:\n"
+                                  "#+date:     %U\n"
+                                  "#+setupfile: ~/.config/emacs/org-templates/level-0-html-export-template.org\n"))
       :unnarrowed t)
-
      ("r" "Research" plain "* %?"
       :if-new (file+head "g_research/%<%Y%m%dT%H%M%S>--${slug}__rsch.org"
-                         ,(concat "#+title: ${title}\n"
+                         ,(concat ":PROPERTIES:\n"
+                                  ":ID: %<%Y%m%dT%H%M%S>\n"
+                                  ":END:\n"
+                                  "#+title:    ${title}\n"
                                   "#+filetags: :rsch:\n"
-                                  "#+date: %U\n"
+                                  "#+date:     %U\n"
                                   "#+setupfile: ~/.config/emacs/org-templates/level-0-html-export-template.org\n"
                                   ))
       :unnarrowed t)
 
      ("k" "Kanji" plain "* %?"
       :if-new (file+head "g_kanji/%<%Y%m%dT%H%M%S>--${slug}.org"
-                         ,(concat "#+title: ${title}\n"
+                         ,(concat ":PROPERTIES:\n"
+                                  ":ID: %<%Y%m%dT%H%M%S>\n"
+                                  ":END:\n"
+                                  "#+title:     ${title}\n"
                                   "#+filetags: :kanji:\n"
-                                  "#+author: Garid Zorigoo\n"
-                                  "#+date: %U\n"
+                                  "#+date:      %U\n"
                                   "#+setupfile: ~/.config/emacs/org-templates/level-0-html-export-template.org\n"
                                   ))
-      :unnarrowed t)
-
-     ("M" "Math" plain "* %?"
-      :if-new (file+head "g_math/%<%Y%m%dT%H%M%S>--${slug}.org"
-                         ,(concat "#+title: ${title}\n"
-                                  "#+filetags: :math:\n"
-                                  "#+author: Garid Zorigoo\n"
-                                  "#+date: %U\n"
-                                  "#+setupfile: ~/.config/emacs/org-templates/level-0-html-export-template.org\n"
-                                  "#+setupfile: ~/.config/emacs/org-templates/level-0-xelatex-fonts-conf.org"
-                                  ))
-      :unnarrowed t)
-
-     ("p" "Programming language" plain "* %?"
-      :if-new (file+head "%<%Y%m%dT%H%M%S>--${slug}.org"
-                         ,(concat "#+title: ${title}\n"
-                                  "#+filetags: :plang:\n"
-                                  "#+author: Garid Zorigoo\n"
-                                  "#+date: %U\n"
-                                  "#+setupfile: ~/.config/emacs/org-templates/level-0-html-export-template.org\n"
-                                  ))
-      :unnarrowed t)
-
-
-     ("g" "Golang Notes" plain "* %?"
-      :if-new (file+head "g_go/%<%Y%m%dT%H%M%S>--${slug}.org"
-                         ,(concat ;;"#+title: ${title}\n"
-                           "#+filetags: :go:\n"
-                           ;;"#+author: Garid Zorigoo\n"
-                           "#+date: %U\n"
-                           "#+setupfile: ~/.config/emacs/org-templates/level-0-html-export-template.org\n"
-                           ))
-      :unnarrowed t)
-
-
-     ("m" "Meta (meaning access nodes)" plain "* %?"
-      :if-new (file+head "%<%Y%m%dT%H%M%S>--${slug}__meta.org"
-                         ,(concat "#+title: ${title}\n"
-                                  "#+filetags: :meta:\n"
-                                  "#+date: %U\n"
-                                  "#+setupfile: ~/.config/emacs/org-templates/level-0-html-export-template.org\n"
-                                  ))
-      :unnarrowed t)
-
-
-     ("P" "Project" plain
-      "* Goals\n\n%?* Tasks\n\n** TODO Add initial tasks\n\n* Dates\n\n"
-      :if-new (file+head "g_project/%<%Y%m%dT%H%M%S>--${slug}.org"
-                         ,(concat "#+title: ${title}\n"
-                                  "#+filetags: :Project:\n"
-                                  "#+auto_tangle: nil"))
       :unnarrowed t)
      ))
 
   :config
-  ;;(require 'org-roam-dailies)
   ;;(org-roam-setup)
   ;;(org-roam-db-autosync-mode)
-  (org-roam-db-autosync-enable)
+  (org-roam-db-autosync-enable) ;;(require 'org-roam-dailies)
+
+
+  ;; Change the slug (aka filename to be same format as from denote)
+  ;; https://github.com/org-roam/org-roam/pull/1544#issuecomment-2211801343
+  (cl-defmethod org-roam-node-slug :around ((node org-roam-node))
+    (string-replace "_" "-" (cl-call-next-method)))
+
   )
 #+end_src
 
@@ -922,14 +883,14 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   (setq org-roam-directory
         (completing-read "Choose: "
                          (mapcar
-                          (lambda (xx) (concat "/home/garid/BrainDump/" xx)) ;; re-apply root dir
+                          (lambda (xx) (f-join "/home/garid/BrainDump/" xx)) ;; re-apply root dir
                           (seq-filter                                               
                            (lambda (x) (string-match "roam.*" x))         ;; filter only starting with roam
                            (directory-files "/home/garid/BrainDump/")))   ;; list sub dirs
                          ))
 
   (setq org-roam-db-location
-        (concat org-roam-directory "0000_database.db" ))
+        (f-join org-roam-directory "0000_database.db" ))
 
   (message "Now org-roam-directory = %s" org-roam-directory)
   (if (string= "yes"
@@ -3144,10 +3105,11 @@ fi
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(safe-local-variable-values
-   '((org-roam-db-location . "/home/garid/BrainDump/roam/0000_database.db")
-     (org-roam-directory . "/home/garid/BrainDump/roam/")
-     (org-roam-db-location . "/home/garid/BrainDump/roam_old/0000_database.db")
-     (org-roam-directory . "/home/garid/BrainDump/roam_old/")
+   '(
+     ;;(org-roam-db-location . "/home/garid/BrainDump/roam/0000_database.db")
+     ;;(org-roam-directory . "/home/garid/BrainDump/roam/")
+     ;;(org-roam-db-location . "/home/garid/BrainDump/roam_old/0000_database.db")
+     ;;(org-roam-directory . "/home/garid/BrainDump/roam_old/")
      (eval setq org-download-image-dir
            (file-relative-name
             (concat "./data/"
