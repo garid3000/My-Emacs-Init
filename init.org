@@ -916,8 +916,8 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 
 ** Different roam-notes                                                       :customFunc:
 #+name: table-roam
-| m | /home/garid/BrainDump/roam/     | research |
-| n | /home/garid/BrainDump/roam_old/ | old      |
+| m | =/home/garid/BrainDump/roam/=     | research |
+| n | =/home/garid/BrainDump/roam_old/= | old      |
 
 #+name: generate-hydra-body-for-choosing-roam-directory
 #+header: :var listroam=table-roam
@@ -929,8 +929,8 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
     `(
       ,(nth 0 each_roam_dir)
       (progn
-        (setq org-roam-directory    ,(nth 1 each_roam_dir)
-              org-roam-db-location  ,(concat (nth 1 each_roam_dir) "0000_database.db"))
+        (setq org-roam-directory    ,(remove-equal-from-both-sides (nth 1 each_roam_dir))
+              org-roam-db-location  ,(concat (remove-equal-from-both-sides (nth 1 each_roam_dir)) "0000_database.db"))
         (message "Now org-roam-directory = %s" org-roam-directory)
         )
       ,(nth 2 each_roam_dir))
@@ -1943,6 +1943,18 @@ Similar to vim-signify.
   )
 #+end_src
 
+** Remove equal sign from both sides in string
+#+begin_src emacs-lisp
+(defun remove-equal-from-both-sides (str)
+  "Remove the tilde (~) character from the beginning and end of STR."
+  (if (string-match "\\`=\\(.*?\\)=\\'" str)  ;;
+      ;; \\`~ front
+      ;; \\(.*?\\) capture group
+      ;; ~\\'  end?
+      (match-string 1 str)
+    str))
+#+end_src
+
 * Writing & Reading
 ** Writing packages
 #+begin_src emacs-lisp
@@ -2182,16 +2194,6 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 #+caption: adsf
 #+name: convert-global-keybindings
 #+begin_src elisp :var tab=tbl-global-keybindings :wrap src emacs-lisp :tangle no
-
-(defun remove-equal-from-both-sides (str)
-  "Remove the tilde (~) character from the beginning and end of STR."
-  (if (string-match "\\`=\\(.*?\\)=\\'" str)  ;;
-      ;; \\`~ front
-      ;; \\(.*?\\) capture group
-      ;; ~\\'  end?
-      (match-string 1 str)
-    str))
-
 (concat
  (mapconcat
   (lambda (row)
