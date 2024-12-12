@@ -919,38 +919,26 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 | r | =/home/garid/BrainDump/roam_research/= | research |
 | o | =/home/garid/BrainDump/roam_old/=      | old      |
 
-#+name: generate-hydra-body-for-choosing-roam-directory
-#+header: :var listroam=table-roam
-#+begin_src emacs-lisp :results code :wrap src emacs-lisp :tangle no
-(append
- `(defhydra garid/hydra-choose-roam-directory ())
- (mapcar
-  (lambda (each_roam_dir)
-    `(
-      ,(nth 0 each_roam_dir)
-      (progn
-        (setq org-roam-directory    ,(remove-equal-from-both-sides (nth 1 each_roam_dir))
-              org-roam-db-location  ,(concat (remove-equal-from-both-sides (nth 1 each_roam_dir)) "0000_database.db"))
-        (message "Now org-roam-directory = %s" org-roam-directory)
-        )
-      ,(nth 2 each_roam_dir))
-    )
-  listroam))
-#+end_src
+#+begin_src emacs-lisp 
+(defun garid/choose-roam-directory ()
+  ""
+  (interactive)
+  (setq org-roam-directory
+        (completing-read "Choose: "
+                         '(
+                           "/home/garid/BrainDump/roam_research/"
+                           "/home/garid/BrainDump/roam_old/"
+                           )))
+  (setq org-roam-db-location
+        (concat org-roam-directory "0000_database.db" ))
 
-#+RESULTS: generate-hydra-body-for-choosing-roam-directory
-#+begin_src emacs-lisp
-(defhydra garid/hydra-choose-roam-directory nil
-  ("r"
-   (progn
-     (setq org-roam-directory "/home/garid/BrainDump/roam_research/" org-roam-db-location "/home/garid/BrainDump/roam_research/0000_database.db")
-     (message "Now org-roam-directory = %s" org-roam-directory))
-   "research")
-  ("o"
-   (progn
-     (setq org-roam-directory "/home/garid/BrainDump/roam_old/" org-roam-db-location "/home/garid/BrainDump/roam_old/0000_database.db")
-     (message "Now org-roam-directory = %s" org-roam-directory))
-   "old"))
+  (message "Now org-roam-directory = %s" org-roam-directory)
+  (if (string= "yes"
+               (completing-read "Update DB: " '("no" "yes"))
+               )
+      (org-roam-db-sync)
+      )
+  )
 #+end_src
 
 * Org Time managements
@@ -2466,7 +2454,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 |--------+------------------------------------------------------------------+--------------------------------------+------+--------|
 | =r=    | =:ignore t=                                                      | roam........................         | -    |        |
 | =rr=   | =(message "Current org-roam-directory = %s" org-roam-directory)= | show directory                       | -    | y      |
-| =rc=   | =garid/hydra-choose-roam-directory/body=                         | roam chande directory                | -    |        |
+| =rc=   | =garid/choose-roam-directory=                                    | roam chande directory                | -    |        |
 | =rd=   | =(dired org-roam-directory)=                                     | dired                                | -    | y      |
 | =rs=   | =consult-org-roam-search=                                        | consult-org-roam-search              | -    |        |
 | =rf=   | =consult-org-roam-file-find=                                     | consult-org-roam-file-find           | -    |        |
@@ -2885,7 +2873,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "oab" '(org-timeblock :which-key "block")
   "r" '(:ignore t :which-key "roam........................")
   "rr" '((lambda () (interactive) (message "Current org-roam-directory = %s" org-roam-directory) ) :which-key "show directory")
-  "rc" '(garid/hydra-choose-roam-directory/body :which-key "roam chande directory")
+  "rc" '(garid/choose-roam-directory :which-key "roam chande directory")
   "rd" '((lambda () (interactive) (dired org-roam-directory) ) :which-key "dired")
   "rs" '(consult-org-roam-search :which-key "consult-org-roam-search")
   "rf" '(consult-org-roam-file-find :which-key "consult-org-roam-file-find")
