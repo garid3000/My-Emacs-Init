@@ -2462,22 +2462,22 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 #+attr_latex: :placement [H]
 #+caption: Roam
 #+name: tbl-global-general-keybindings-roam
-| key(s) | function                                                       | short description                    | mode | lambda |
-|--------+----------------------------------------------------------------+--------------------------------------+------+--------|
-| =r=    | =:ignore t=                                                    | roam........................         | -    |        |
-| =rr=   | =(message "Current org-roam-directory %s" org-roam-directory)= | show directory                       | -    | y      |
-| =rc=   | =garid/hydra-choose-roam-directory/body=                       | roam chande directory                | -    |        |
-| =rd=   | =(dired org-roam-directory)=                                   | dired                                | -    | y      |
-| =rs=   | =consult-org-roam-search=                                      | consult-org-roam-search              | -    |        |
-| =rf=   | =consult-org-roam-file-find=                                   | consult-org-roam-file-find           | -    |        |
-| =rlb=  | =consult-org-roam-backlinks=                                   | consult-org-roam-backlinks           | -    |        |
-| =rlf=  | =consult-org-roam-forward-links=                               | consult-org-roam-forward-links       | -    |        |
-| =rlB=  | =consult-org-roam-backlinks-recursive=                         | consult-org-roam-backlinks-recursive | -    |        |
-| =rli=  | =org-roam-node-insert=                                         | org-roam-node-insert                 | -    |        |
-| =rui=  | =org-roam-ui-open=                                             | org-roam-ui-open                     | -    |        |
-| =rta=  | =org-roam-tag-add=                                             | org-roam-tag-add                     | -    |        |
-| =rtr=  | =org-roam-tag-remove=                                          | org-roam-tag-remove                  | -    |        |
-| =rbt=  | =org-roam-buffer-toggle=                                       | org-roam-buffer-toggle               | -    |        |
+| key(s) | function                                                         | short description                    | mode | lambda |
+|--------+------------------------------------------------------------------+--------------------------------------+------+--------|
+| =r=    | =:ignore t=                                                      | roam........................         | -    |        |
+| =rr=   | =(message "Current org-roam-directory = %s" org-roam-directory)= | show directory                       | -    | y      |
+| =rc=   | =garid/hydra-choose-roam-directory/body=                         | roam chande directory                | -    |        |
+| =rd=   | =(dired org-roam-directory)=                                     | dired                                | -    | y      |
+| =rs=   | =consult-org-roam-search=                                        | consult-org-roam-search              | -    |        |
+| =rf=   | =consult-org-roam-file-find=                                     | consult-org-roam-file-find           | -    |        |
+| =rlb=  | =consult-org-roam-backlinks=                                     | consult-org-roam-backlinks           | -    |        |
+| =rlf=  | =consult-org-roam-forward-links=                                 | consult-org-roam-forward-links       | -    |        |
+| =rlB=  | =consult-org-roam-backlinks-recursive=                           | consult-org-roam-backlinks-recursive | -    |        |
+| =rli=  | =org-roam-node-insert=                                           | org-roam-node-insert                 | -    |        |
+| =rui=  | =org-roam-ui-open=                                               | org-roam-ui-open                     | -    |        |
+| =rta=  | =org-roam-tag-add=                                               | org-roam-tag-add                     | -    |        |
+| =rtr=  | =org-roam-tag-remove=                                            | org-roam-tag-remove                  | -    |        |
+| =rbt=  | =org-roam-buffer-toggle=                                         | org-roam-buffer-toggle               | -    |        |
 
 **** org related
 #+attr_latex: :placement [H]
@@ -2884,7 +2884,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "oag" '(org-agenda :which-key "agenda")
   "oab" '(org-timeblock :which-key "block")
   "r" '(:ignore t :which-key "roam........................")
-  "rr" '((lambda () (interactive) (message "Current org-roam-directory %s" org-roam-directory) ) :which-key "show directory")
+  "rr" '((lambda () (interactive) (message "Current org-roam-directory = %s" org-roam-directory) ) :which-key "show directory")
   "rc" '(garid/hydra-choose-roam-directory/body :which-key "roam chande directory")
   "rd" '((lambda () (interactive) (dired org-roam-directory) ) :which-key "dired")
   "rs" '(consult-org-roam-search :which-key "consult-org-roam-search")
