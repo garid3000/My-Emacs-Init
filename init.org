@@ -914,31 +914,28 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 (use-package org-node)
 #+end_src
 
-** Different roam-notes                                                       :customFunc:
-#+name: table-roam
-| r | =/home/garid/BrainDump/roam_research/= | research |
-| o | =/home/garid/BrainDump/roam_old/=      | old      |
-
+** Choosing roam directory                                                    :customFunc:
 #+begin_src emacs-lisp 
 (defun garid/choose-roam-directory ()
   ""
   (interactive)
   (setq org-roam-directory
         (completing-read "Choose: "
-                         '(
-                           "/home/garid/BrainDump/roam_research/"
-                           "/home/garid/BrainDump/roam_old/"
-                           )))
+                         (mapcar
+                          (lambda (xx) (concat "/home/garid/BrainDump/" xx)) ;; re-apply root dir
+                          (seq-filter                                               
+                           (lambda (x) (string-match "roam.*" x))         ;; filter only starting with roam
+                           (directory-files "/home/garid/BrainDump/")))   ;; list sub dirs
+                         ))
+
   (setq org-roam-db-location
         (concat org-roam-directory "0000_database.db" ))
 
   (message "Now org-roam-directory = %s" org-roam-directory)
   (if (string= "yes"
-               (completing-read "Update DB: " '("no" "yes"))
-               )
+               (completing-read "Update DB: " '("no" "yes")))
       (org-roam-db-sync)
-      )
-  )
+    ))
 #+end_src
 
 * Org Time managements
