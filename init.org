@@ -916,8 +916,8 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 
 ** Different roam-notes                                                       :customFunc:
 #+name: table-roam
-| m | =/home/garid/BrainDump/roam/=     | research |
-| n | =/home/garid/BrainDump/roam_old/= | old      |
+| r | =/home/garid/BrainDump/roam_research/= | research |
+| o | =/home/garid/BrainDump/roam_old/=      | old      |
 
 #+name: generate-hydra-body-for-choosing-roam-directory
 #+header: :var listroam=table-roam
@@ -941,12 +941,12 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 #+RESULTS: generate-hydra-body-for-choosing-roam-directory
 #+begin_src emacs-lisp
 (defhydra garid/hydra-choose-roam-directory nil
-  ("m"
+  ("r"
    (progn
-     (setq org-roam-directory "/home/garid/BrainDump/roam/" org-roam-db-location "/home/garid/BrainDump/roam/0000_database.db")
+     (setq org-roam-directory "/home/garid/BrainDump/roam_research/" org-roam-db-location "/home/garid/BrainDump/roam_research/0000_database.db")
      (message "Now org-roam-directory = %s" org-roam-directory))
    "research")
-  ("n"
+  ("o"
    (progn
      (setq org-roam-directory "/home/garid/BrainDump/roam_old/" org-roam-db-location "/home/garid/BrainDump/roam_old/0000_database.db")
      (message "Now org-roam-directory = %s" org-roam-directory))
