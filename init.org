@@ -913,6 +913,46 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 #+begin_src emacs-lisp
 (use-package org-node)
 #+end_src
+
+** Different roam-notes                                                       :customFunc:
+#+name: table-roam
+| m | /home/garid/BrainDump/roam/     | research |
+| n | /home/garid/BrainDump/roam_old/ | old      |
+
+#+name: generate-hydra-body-for-choosing-roam-directory
+#+header: :var listroam=table-roam
+#+begin_src emacs-lisp :results code :wrap src emacs-lisp :tangle no
+(append
+ `(defhydra garid/hydra-choose-roam-directory ())
+ (mapcar
+  (lambda (each_roam_dir)
+    `(
+      ,(nth 0 each_roam_dir)
+      (progn
+        (setq org-roam-directory    ,(nth 1 each_roam_dir)
+              org-roam-db-location  ,(concat (nth 1 each_roam_dir) "0000_database.db"))
+        (message "Now org-roam-directory = %s" org-roam-directory)
+        )
+      ,(nth 2 each_roam_dir))
+    )
+  listroam))
+#+end_src
+
+#+RESULTS: generate-hydra-body-for-choosing-roam-directory
+#+begin_src emacs-lisp
+(defhydra garid/hydra-choose-roam-directory nil
+  ("m"
+   (progn
+     (setq org-roam-directory "/home/garid/BrainDump/roam/" org-roam-db-location "/home/garid/BrainDump/roam/0000_database.db")
+     (message "Now org-roam-directory = %s" org-roam-directory))
+   "research")
+  ("n"
+   (progn
+     (setq org-roam-directory "/home/garid/BrainDump/roam_old/" org-roam-db-location "/home/garid/BrainDump/roam_old/0000_database.db")
+     (message "Now org-roam-directory = %s" org-roam-directory))
+   "old"))
+#+end_src
+
 * Org Time managements
 ** =calendar=
 #+begin_src emacs-lisp
@@ -2420,20 +2460,22 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 #+attr_latex: :placement [H]
 #+caption: Roam
 #+name: tbl-global-general-keybindings-roam
-| key(s) | function                               | short description                    | mode | lambda |
-|--------+----------------------------------------+--------------------------------------+------+--------|
-| =r=    | =:ignore t=                            | roam........................         | -    |        |
-| =rd=   | =(dired org-roam-directory)=           | dired                                | -    | y      |
-| =rs=   | =consult-org-roam-search=              | consult-org-roam-search              | -    |        |
-| =rf=   | =consult-org-roam-file-find=           | consult-org-roam-file-find           | -    |        |
-| =rlb=  | =consult-org-roam-backlinks=           | consult-org-roam-backlinks           | -    |        |
-| =rlf=  | =consult-org-roam-forward-links=       | consult-org-roam-forward-links       | -    |        |
-| =rlB=  | =consult-org-roam-backlinks-recursive= | consult-org-roam-backlinks-recursive | -    |        |
-| =rli=  | =org-roam-node-insert=                 | org-roam-node-insert                 | -    |        |
-| =rui=  | =org-roam-ui-open=                     | org-roam-ui-open                     | -    |        |
-| =rta=  | =org-roam-tag-add=                     | org-roam-tag-add                     | -    |        |
-| =rtr=  | =org-roam-tag-remove=                  | org-roam-tag-remove                  | -    |        |
-| =rbt=  | =org-roam-buffer-toggle=               | org-roam-buffer-toggle               | -    |        |
+| key(s) | function                                                       | short description                    | mode | lambda |
+|--------+----------------------------------------------------------------+--------------------------------------+------+--------|
+| =r=    | =:ignore t=                                                    | roam........................         | -    |        |
+| =rr=   | =(message "Current org-roam-directory %s" org-roam-directory)= | show directory                       | -    | y      |
+| =rc=   | =garid/hydra-choose-roam-directory/body=                       | roam chande directory                | -    |        |
+| =rd=   | =(dired org-roam-directory)=                                   | dired                                | -    | y      |
+| =rs=   | =consult-org-roam-search=                                      | consult-org-roam-search              | -    |        |
+| =rf=   | =consult-org-roam-file-find=                                   | consult-org-roam-file-find           | -    |        |
+| =rlb=  | =consult-org-roam-backlinks=                                   | consult-org-roam-backlinks           | -    |        |
+| =rlf=  | =consult-org-roam-forward-links=                               | consult-org-roam-forward-links       | -    |        |
+| =rlB=  | =consult-org-roam-backlinks-recursive=                         | consult-org-roam-backlinks-recursive | -    |        |
+| =rli=  | =org-roam-node-insert=                                         | org-roam-node-insert                 | -    |        |
+| =rui=  | =org-roam-ui-open=                                             | org-roam-ui-open                     | -    |        |
+| =rta=  | =org-roam-tag-add=                                             | org-roam-tag-add                     | -    |        |
+| =rtr=  | =org-roam-tag-remove=                                          | org-roam-tag-remove                  | -    |        |
+| =rbt=  | =org-roam-buffer-toggle=                                       | org-roam-buffer-toggle               | -    |        |
 
 **** org related
 #+attr_latex: :placement [H]
@@ -2840,6 +2882,8 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "oag" '(org-agenda :which-key "agenda")
   "oab" '(org-timeblock :which-key "block")
   "r" '(:ignore t :which-key "roam........................")
+  "rr" '((lambda () (interactive) (message "Current org-roam-directory %s" org-roam-directory) ) :which-key "show directory")
+  "rc" '(garid/hydra-choose-roam-directory/body :which-key "roam chande directory")
   "rd" '((lambda () (interactive) (dired org-roam-directory) ) :which-key "dired")
   "rs" '(consult-org-roam-search :which-key "consult-org-roam-search")
   "rf" '(consult-org-roam-file-find :which-key "consult-org-roam-file-find")
