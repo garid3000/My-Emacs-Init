@@ -771,16 +771,18 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 
   (org-roam-capture-templates
    `(("d" "Default" plain "* %?"
-      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
-                         ,(concat "#+title: ${title}\n"
-                                  "#+filetags: :notag:\n"
-                                  "#+date: %U\n"
-                                  "#+setupfile: ~/.config/emacs/org-templates/level-0-html-export-template.org\n"
-                                  ))
+      :if-new (file+head  "${id}--${slug}.org"
+                          ;;"%<%Y%m%dT%H%M%S>--${slug}.org"
+                          ;;,(concat (car (split-string "${id}.sdf" "{")) "--" "${slug}.org")
+                          ,(concat "#+title: ${title}\n"
+                                   "#+filetags: :notag:\n"
+                                   "#+date: %U\n"
+                                   "#+setupfile: ~/.config/emacs/org-templates/level-0-html-export-template.org\n"
+                                   ))
       :unnarrowed t)
 
      ("r" "Research" plain "* %?"
-      :if-new (file+head "g_research/%<%Y%m%d%H%M%S>-${slug}__rsch.org"
+      :if-new (file+head "g_research/%<%Y%m%dT%H%M%S>--${slug}__rsch.org"
                          ,(concat "#+title: ${title}\n"
                                   "#+filetags: :rsch:\n"
                                   "#+date: %U\n"
@@ -789,7 +791,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
       :unnarrowed t)
 
      ("k" "Kanji" plain "* %?"
-      :if-new (file+head "g_kanji/%<%Y%m%d%H%M%S>-${slug}.org"
+      :if-new (file+head "g_kanji/%<%Y%m%dT%H%M%S>--${slug}.org"
                          ,(concat "#+title: ${title}\n"
                                   "#+filetags: :kanji:\n"
                                   "#+author: Garid Zorigoo\n"
@@ -799,7 +801,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
       :unnarrowed t)
 
      ("M" "Math" plain "* %?"
-      :if-new (file+head "g_math/%<%Y%m%d%H%M%S>-${slug}.org"
+      :if-new (file+head "g_math/%<%Y%m%dT%H%M%S>--${slug}.org"
                          ,(concat "#+title: ${title}\n"
                                   "#+filetags: :math:\n"
                                   "#+author: Garid Zorigoo\n"
@@ -810,7 +812,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
       :unnarrowed t)
 
      ("p" "Programming language" plain "* %?"
-      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
+      :if-new (file+head "%<%Y%m%dT%H%M%S>--${slug}.org"
                          ,(concat "#+title: ${title}\n"
                                   "#+filetags: :plang:\n"
                                   "#+author: Garid Zorigoo\n"
@@ -821,18 +823,18 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 
 
      ("g" "Golang Notes" plain "* %?"
-      :if-new (file+head "g_go/%<%Y%m%d%H%M%S>-${slug}.org"
+      :if-new (file+head "g_go/%<%Y%m%dT%H%M%S>--${slug}.org"
                          ,(concat ;;"#+title: ${title}\n"
-                                  "#+filetags: :go:\n"
-                                  ;;"#+author: Garid Zorigoo\n"
-                                  "#+date: %U\n"
-                                  "#+setupfile: ~/.config/emacs/org-templates/level-0-html-export-template.org\n"
-                                  ))
+                           "#+filetags: :go:\n"
+                           ;;"#+author: Garid Zorigoo\n"
+                           "#+date: %U\n"
+                           "#+setupfile: ~/.config/emacs/org-templates/level-0-html-export-template.org\n"
+                           ))
       :unnarrowed t)
 
 
      ("m" "Meta (meaning access nodes)" plain "* %?"
-      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}__meta.org"
+      :if-new (file+head "%<%Y%m%dT%H%M%S>--${slug}__meta.org"
                          ,(concat "#+title: ${title}\n"
                                   "#+filetags: :meta:\n"
                                   "#+date: %U\n"
@@ -843,7 +845,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 
      ("P" "Project" plain
       "* Goals\n\n%?* Tasks\n\n** TODO Add initial tasks\n\n* Dates\n\n"
-      :if-new (file+head "g_project/%<%Y%m%d%H%M%S>-${slug}.org"
+      :if-new (file+head "g_project/%<%Y%m%dT%H%M%S>--${slug}.org"
                          ,(concat "#+title: ${title}\n"
                                   "#+filetags: :Project:\n"
                                   "#+auto_tangle: nil"))
@@ -852,8 +854,9 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 
   :config
   ;;(require 'org-roam-dailies)
-  (org-roam-setup)
-  (org-roam-db-autosync-mode)
+  ;;(org-roam-setup)
+  ;;(org-roam-db-autosync-mode)
+  (org-roam-db-autosync-enable)
   )
 #+end_src
 
@@ -1930,7 +1933,7 @@ Similar to vim-signify.
 
   (cond
    ;((member "xkcd Script"     (font-family-list)) (set-face-attribute 'default nil :font "xkcd Script"     :height 160))
-   ;;((member "Iosevka Comfy Duo"   (font-family-list)) (set-face-attribute 'default nil :font "Iosevka Comfy Duo"   :height 130))
+   ((member "Iosevka Comfy Duo"   (font-family-list)) (set-face-attribute 'default nil :font "Iosevka Comfy Duo"   :height 120))
    ;;((member "Iosevka Aile"    (font-family-list)) (set-face-attribute 'default nil :font "Iosevka Aile"    :height 200))
    ((member "Libre Baskerville" (font-family-list)) (set-face-attribute 'default nil :font "Libre Baskerville" :height 120))
    ((member "Liberation Sans" (font-family-list)) (set-face-attribute 'default nil :font "Liberation Sans" :height 120))
@@ -3110,7 +3113,11 @@ fi
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(safe-local-variable-values
-   '((eval setq org-download-image-dir
+   '((org-roam-db-location . "/home/garid/BrainDump/roam/0000_database.db")
+     (org-roam-directory . "/home/garid/BrainDump/roam/")
+     (org-roam-db-location . "/home/garid/BrainDump/roam_old/0000_database.db")
+     (org-roam-directory . "/home/garid/BrainDump/roam_old/")
+     (eval setq org-download-image-dir
            (file-relative-name
             (concat "./data/"
                     (file-name-as-directory
