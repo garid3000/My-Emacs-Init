@@ -3105,21 +3105,21 @@ fi
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(safe-local-variable-values
-   '(
-     ;;(org-roam-db-location . "/home/garid/BrainDump/roam/0000_database.db")
-     ;;(org-roam-directory . "/home/garid/BrainDump/roam/")
-     ;;(org-roam-db-location . "/home/garid/BrainDump/roam_old/0000_database.db")
-     ;;(org-roam-directory . "/home/garid/BrainDump/roam_old/")
-     (eval setq org-download-image-dir
-           (file-relative-name
-            (concat "./data/"
-                    (file-name-as-directory
-                     (car
-                      (split-string
-                       (file-name-base
-                        (buffer-file-name))
-                       "--"))))))
-     (dired-omit-files . "\\`[.]?#\\|\\`[.][.]?\\'\\|\\.html\\'\\|\\.tex\\'")))) ;
+                                        '((eval setq org-download-image-dir
+                                                (file-relative-name
+                                                 (concat "./data/"
+                                                         (file-name-as-directory
+                                                          (org-id-get 1)))))
+                                          (eval setq org-download-image-dir
+                                                (file-relative-name
+                                                 (concat "./data/"
+                                                         (file-name-as-directory
+                                                          (car
+                                                           (split-string
+                                                            (file-name-base
+                                                             (buffer-file-name))
+                                                            "--"))))))
+                                          (dired-omit-files . "\\`[.]?#\\|\\`[.][.]?\\'\\|\\.html\\'\\|\\.tex\\'"))))
 #+end_src
 * Finish Notifier
 #+begin_src emacs-lisp
