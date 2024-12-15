@@ -749,8 +749,8 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   ;; :requires org-roam-dailies ??
   :ensure t
   :custom
-  (org-roam-node-display-template (concat "${title:*} "
-                                          (propertize "${tags:25}"
+  (org-roam-node-display-template (concat "${title:100} "
+                                          (propertize "${tags:50}"
                                                       'face 'org-tag)))
 
   (org-roam-v2-ack                   t                 )
