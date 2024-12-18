@@ -341,7 +341,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 (use-package org
   :straight (org
              :type git
-             :brach "release_9.6.30"
+             ;;:brach "release_9.6.30"
              :repo "https://git.savannah.gnu.org/git/emacs/org-mode.git";;            :repo "misohena/el-easydraw"
             )
   :demand
@@ -353,7 +353,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 
   ;; :hook (org-mode . garid-custom/org-mode-hooked-func)
   :custom
-  (org-src-window-setup         'other-frame) ;; for new window (better for the the tiling window manager
+  ;;(org-src-window-setup         'other-frame) ;; for new window (better for the the tiling window manager
   ;; theme/styling ...............................................................................
   (org-ellipsis                     " ▼"    )
   (org-hide-emphasis-markers         t      )
@@ -709,40 +709,196 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   (LaTeX-mode . citar-capf-setup)
   )
 #+end_src
-** =citar-denote=: citation in denote
+** COMMENT =citar-denote=: citation in denote
 #+begin_src emacs-lisp
-(use-package citar-denote
-  :ensure t
-  :demand t ;; Ensure minor mode loads
-  :after (:any citar denote)
-  :custom
-  ;; Package defaults
-  (citar-denote-file-type             'org                )
-  (citar-denote-keyword               "bib"               )
-  (citar-denote-signature             nil                 )
-  ;;(citar-denote-subdir              nil                 )
-  (citar-denote-subdir                "litnotes"          )  ;; usefull
-  (citar-denote-template              'biblio             )  ;; 'biblio is defined at denote
-  (citar-denote-title-format          "author-year-title" )
-  (citar-denote-title-format-andstr   "and"               )
-  (citar-denote-title-format-authors  1                   )
-  (citar-denote-use-bib-keywords      nil                 )
-  :preface
-  (bind-key "C-c w n" #'citar-denote-open-note)
-  :init
-  (citar-denote-mode)
-  ;; Bind all available commands
-  :bind (("C-c w d" . citar-denote-dwim                 )
-         ("C-c w e" . citar-denote-open-reference-entry )
-         ("C-c w a" . citar-denote-add-citekey          )
-         ("C-c w k" . citar-denote-remove-citekey       )
-         ("C-c w r" . citar-denote-find-reference       )
-         ("C-c w l" . citar-denote-link-reference       )
-         ("C-c w f" . citar-denote-find-citation        )
-         ("C-c w x" . citar-denote-nocite               )
-         ("C-c w y" . citar-denote-cite-nocite          )
-         ("C-c w z" . citar-denote-nobib                )))
+;;(use-package citar-denote
+;;  :ensure t
+;;  :demand t ;; Ensure minor mode loads
+;;  :after (:any citar denote)
+;;  :custom
+;;  ;; Package defaults
+;;  (citar-denote-file-type             'org                )
+;;  (citar-denote-keyword               "bib"               )
+;;  (citar-denote-signature             nil                 )
+;;  ;;(citar-denote-subdir              nil                 )
+;;  (citar-denote-subdir                "litnotes"          )  ;; usefull
+;;  (citar-denote-template              'biblio             )  ;; 'biblio is defined at denote
+;;  (citar-denote-title-format          "author-year-title" )
+;;  (citar-denote-title-format-andstr   "and"               )
+;;  (citar-denote-title-format-authors  1                   )
+;;  (citar-denote-use-bib-keywords      nil                 )
+;;  :preface
+;;  (bind-key "C-c w n" #'citar-denote-open-note)
+;;  :init
+;;  (citar-denote-mode)
+;;  ;; Bind all available commands
+;;  :bind (("C-c w d" . citar-denote-dwim                 )
+;;         ("C-c w e" . citar-denote-open-reference-entry )
+;;         ("C-c w a" . citar-denote-add-citekey          )
+;;         ("C-c w k" . citar-denote-remove-citekey       )
+;;         ("C-c w r" . citar-denote-find-reference       )
+;;         ("C-c w l" . citar-denote-link-reference       )
+;;         ("C-c w f" . citar-denote-find-citation        )
+;;         ("C-c w x" . citar-denote-nocite               )
+;;         ("C-c w y" . citar-denote-cite-nocite          )
+;;         ("C-c w z" . citar-denote-nobib                )))
 #+end_src
+** =org-roam=
+#+begin_src emacs-lisp
+(use-package org-roam
+  ;; :requires org-roam-dailies ??
+  :ensure t
+  :custom
+  (org-roam-node-display-template (concat "${title:100} "
+                                          (propertize "${tags:50}"
+                                                      'face 'org-tag)))
+
+  (org-roam-v2-ack                   t                 )
+  (org-roam-directory                "~/BrainDump/roam_research")
+  (org-roam-db-location              "~/BrainDump/roam_research/0000_database.db")
+
+  (org-roam-completion-everywhere    nil               ) ;;  do I need this?
+  (org-roam-dailies-capture-templates
+   `(("d" "default" entry "* %<%I:%M %p>: %?"
+      :if-new (file+head "g_journal/%<%Y%m%dT%H%M%S>--${slug}.org"
+                         ,(concat ":PROPERTIES:\n"
+                                  ":ID: %<%Y%m%dT%H%M%S>\n"
+                                  ":END:\n"
+                                  "#+title: %<%Y-%m-%d>\n"
+                                  "#+auto_tangle: nil\n"
+                                  "#+startup: show2levels\n"
+                                  "#+filetags: :nohtmlexport:\n"
+                                  "#+setupfile: ~/.config/emacs/org-templates/level-0-html-export-template.org\n")))
+     ))
+
+  (org-roam-capture-templates
+   `(("d" "Default" plain "* %?"
+      :if-new (file+head "%<%Y%m%dT%H%M%S>--${slug}.org"
+                         ,(concat ":PROPERTIES:\n"
+                                  ":ID: %<%Y%m%dT%H%M%S>\n"
+                                  ":END:\n"
+                                  "#+title:    ${title}\n"
+                                  "#+filetags: :notag:\n"
+                                  "#+date:     %U\n"
+                                  "#+setupfile: ~/.config/emacs/org-templates/level-0-html-export-template.org\n"))
+      :unnarrowed t)
+     ("r" "Research" plain "* %?"
+      :if-new (file+head "g_research/%<%Y%m%dT%H%M%S>--${slug}__rsch.org"
+                         ,(concat ":PROPERTIES:\n"
+                                  ":ID: %<%Y%m%dT%H%M%S>\n"
+                                  ":END:\n"
+                                  "#+title:    ${title}\n"
+                                  "#+filetags: :rsch:\n"
+                                  "#+date:     %U\n"
+                                  "#+setupfile: ~/.config/emacs/org-templates/level-0-html-export-template.org\n"
+                                  ))
+      :unnarrowed t)
+
+     ("k" "Kanji" plain "* %?"
+      :if-new (file+head "g_kanji/%<%Y%m%dT%H%M%S>--${slug}.org"
+                         ,(concat ":PROPERTIES:\n"
+                                  ":ID: %<%Y%m%dT%H%M%S>\n"
+                                  ":END:\n"
+                                  "#+title:     ${title}\n"
+                                  "#+filetags: :kanji:\n"
+                                  "#+date:      %U\n"
+                                  "#+setupfile: ~/.config/emacs/org-templates/level-0-html-export-template.org\n"
+                                  ))
+      :unnarrowed t)
+     ))
+
+  :config
+  ;;(org-roam-setup)
+  ;;(org-roam-db-autosync-mode)
+  (org-roam-db-autosync-enable) ;;(require 'org-roam-dailies)
+
+
+  ;; Change the slug (aka filename to be same format as from denote)
+  ;; https://github.com/org-roam/org-roam/pull/1544#issuecomment-2211801343
+  (cl-defmethod org-roam-node-slug :around ((node org-roam-node))
+    (string-replace "_" "-" (cl-call-next-method)))
+
+  )
+#+end_src
+
+** =org-roam-ui=: graphing of org-roam in web browser
+#+begin_src emacs-lisp
+(use-package org-roam-ui :ensure t)
+#+end_src
+
+** =consult-org-roam=
+#+begin_src emacs-lisp
+(use-package consult-org-roam
+   :ensure t
+   :after org-roam
+   :init (require 'consult-org-roam)
+   ;; Activate the minor mode
+   (consult-org-roam-mode 1)
+   :custom
+   (consult-org-roam-grep-func #'consult-ripgrep)
+   (consult-org-roam-buffer-narrow-key ?r)
+   (consult-org-roam-buffer-after-buffers t)
+   :config
+   ;; Eventually suppress previewing for certain functions
+   (consult-customize consult-org-roam-forward-links :preview-key "M-.")
+   :bind
+   ;; Define some convenient keybindings as an addition
+   ("C-c n e" . consult-org-roam-file-find)
+   ("C-c n b" . consult-org-roam-backlinks)
+   ("C-c n B" . consult-org-roam-backlinks-recursive)
+   ("C-c n l" . consult-org-roam-forward-links)
+   ("C-c n r" . consult-org-roam-search)
+   )
+#+end_src
+
+** =citar-org-roam=
+#+begin_src emacs-lisp
+(use-package citar-org-roam
+  :after citar org-roam
+  :no-require
+  :custom
+  (citar-org-roam-subdir                      "g_paper")
+  (citar-org-roam-note-title-template (concat "${=key=}\n"
+                                              "#+subtitle: ${=type=}: ${title}\n"
+                                              "#+author:   author(s): ${author}\n"
+                                              "#+filetags: :paper:\n\n"
+                                              "[cite:@${=key=}]\n\n"
+                                              "* Notes\n\n"
+                                              ))
+  :config
+  (citar-org-roam-mode))
+
+#+end_src
+
+** =org-node= helper with org-id
+#+begin_src emacs-lisp
+(use-package org-node)
+#+end_src
+
+** Choosing roam directory                                                    :customFunc:
+#+begin_src emacs-lisp 
+(defun garid/choose-roam-directory ()
+  ""
+  (interactive)
+  (setq org-roam-directory
+        (completing-read "Choose: "
+                         (mapcar
+                          (lambda (xx) (f-join "/home/garid/BrainDump/" xx)) ;; re-apply root dir
+                          (seq-filter                                               
+                           (lambda (x) (string-match "roam.*" x))         ;; filter only starting with roam
+                           (directory-files "/home/garid/BrainDump/")))   ;; list sub dirs
+                         ))
+
+  (setq org-roam-db-location
+        (f-join org-roam-directory "0000_database.db" ))
+
+  (message "Now org-roam-directory = %s" org-roam-directory)
+  (if (string= "yes"
+               (completing-read "Update DB: " '("no" "yes")))
+      (org-roam-db-sync)
+    ))
+#+end_src
+
 * Org Time managements
 ** =calendar=
 #+begin_src emacs-lisp
@@ -1620,7 +1776,7 @@ Similar to vim-signify.
   (interactive)
   (setq org-hide-emphasis-markers (not org-hide-emphasis-markers))
   (setq org-link-descriptive           org-hide-emphasis-markers) ;;(org-toggle-link-display) more in below
-  (org-link-descriptive-ensure) ;; strange isseu need to check later
+  ;;(org-link-descriptive-ensure) ;; strange isseu need to check later
   (org-restart-font-lock)
   (font-lock-update))
 #+end_src
@@ -1733,6 +1889,18 @@ Similar to vim-signify.
   )
 #+end_src
 
+** Remove equal sign from both sides in string
+#+begin_src emacs-lisp
+(defun remove-equal-from-both-sides (str)
+  "Remove the tilde (~) character from the beginning and end of STR."
+  (if (string-match "\\`=\\(.*?\\)=\\'" str)  ;;
+      ;; \\`~ front
+      ;; \\(.*?\\) capture group
+      ;; ~\\'  end?
+      (match-string 1 str)
+    str))
+#+end_src
+
 * Writing & Reading
 ** Writing packages
 #+begin_src emacs-lisp
@@ -1763,7 +1931,7 @@ Similar to vim-signify.
 
   (cond
    ;((member "xkcd Script"     (font-family-list)) (set-face-attribute 'default nil :font "xkcd Script"     :height 160))
-   ;;((member "Iosevka Comfy Duo"   (font-family-list)) (set-face-attribute 'default nil :font "Iosevka Comfy Duo"   :height 130))
+   ((member "Iosevka Comfy Duo"   (font-family-list)) (set-face-attribute 'default nil :font "Iosevka Comfy Duo"   :height 120))
    ;;((member "Iosevka Aile"    (font-family-list)) (set-face-attribute 'default nil :font "Iosevka Aile"    :height 200))
    ((member "Libre Baskerville" (font-family-list)) (set-face-attribute 'default nil :font "Libre Baskerville" :height 120))
    ((member "Liberation Sans" (font-family-list)) (set-face-attribute 'default nil :font "Liberation Sans" :height 120))
@@ -1925,7 +2093,6 @@ Similar to vim-signify.
   :ensure t)
 #+end_src
 
-
 * Keybinding
 ** =which-key=: keybinding shower
 #+begin_src emacs-lisp
@@ -1973,16 +2140,6 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 #+caption: adsf
 #+name: convert-global-keybindings
 #+begin_src elisp :var tab=tbl-global-keybindings :wrap src emacs-lisp :tangle no
-
-(defun remove-equal-from-both-sides (str)
-  "Remove the tilde (~) character from the beginning and end of STR."
-  (if (string-match "\\`=\\(.*?\\)=\\'" str)  ;;
-      ;; \\`~ front
-      ;; \\(.*?\\) capture group
-      ;; ~\\'  end?
-      (match-string 1 str)
-    str))
-
 (concat
  (mapconcat
   (lambda (row)
@@ -2247,6 +2404,27 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | =nlF=    | =denote-link=                                 | forward-link                 | -    |        |
 | =nla=    | =denote-add-links=                            | add-links regex              | -    |        |
 
+**** Roam related
+#+attr_latex: :placement [H]
+#+caption: Roam
+#+name: tbl-global-general-keybindings-roam
+| key(s) | function                                                         | short description                    | mode | lambda |
+|--------+------------------------------------------------------------------+--------------------------------------+------+--------|
+| =r=    | =:ignore t=                                                      | roam........................         | -    |        |
+| =rr=   | =(message "Current org-roam-directory = %s" org-roam-directory)= | show directory                       | -    | y      |
+| =rc=   | =garid/choose-roam-directory=                                    | roam chande directory                | -    |        |
+| =rd=   | =(dired org-roam-directory)=                                     | dired                                | -    | y      |
+| =rs=   | =consult-org-roam-search=                                        | consult-org-roam-search              | -    |        |
+| =rf=   | =consult-org-roam-file-find=                                     | consult-org-roam-file-find           | -    |        |
+| =rlb=  | =consult-org-roam-backlinks=                                     | consult-org-roam-backlinks           | -    |        |
+| =rlf=  | =consult-org-roam-forward-links=                                 | consult-org-roam-forward-links       | -    |        |
+| =rlB=  | =consult-org-roam-backlinks-recursive=                           | consult-org-roam-backlinks-recursive | -    |        |
+| =rli=  | =org-roam-node-insert=                                           | org-roam-node-insert                 | -    |        |
+| =rui=  | =org-roam-ui-open=                                               | org-roam-ui-open                     | -    |        |
+| =rta=  | =org-roam-tag-add=                                               | org-roam-tag-add                     | -    |        |
+| =rtr=  | =org-roam-tag-remove=                                            | org-roam-tag-remove                  | -    |        |
+| =rbt=  | =org-roam-buffer-toggle=                                         | org-roam-buffer-toggle               | -    |        |
+
 **** org related
 #+attr_latex: :placement [H]
 #+caption: Org related stuffs
@@ -2434,12 +2612,13 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 :header-args+: :var tbl_16=tbl-orgmode-general-keybindings-export
 :header-args+: :var tbl_17=tbl-orgmode-general-keybindings-link
 :header-args+: :var tbl_18=tbl-orgmode-general-keybindings-img
+:header-args+: :var tbl_19=tbl-global-general-keybindings-roam
 :END:
 #+caption: converting
 #+name: src_that_converts_key_tables
 #+begin_src elisp :wrap src emacs-lisp :tangle no
 (setq tblall (append tbl_01 tbl_02 tbl_03 tbl_04 tbl_05 tbl_06 tbl_07 tbl_08 tbl_09 tbl_10
-                     tbl_11 tbl_12 tbl_13 tbl_14 tbl_15 tbl_16 tbl_17 tbl_18))
+                     tbl_11 tbl_12 tbl_13 tbl_14 tbl_15 tbl_16 tbl_17 tbl_18 tbl_19))
 
 
 
@@ -2650,6 +2829,20 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "oa" '(:ignore t :which-key "agenda......................")
   "oag" '(org-agenda :which-key "agenda")
   "oab" '(org-timeblock :which-key "block")
+  "r" '(:ignore t :which-key "roam........................")
+  "rr" '((lambda () (interactive) (message "Current org-roam-directory = %s" org-roam-directory) ) :which-key "show directory")
+  "rc" '(garid/choose-roam-directory :which-key "roam chande directory")
+  "rd" '((lambda () (interactive) (dired org-roam-directory) ) :which-key "dired")
+  "rs" '(consult-org-roam-search :which-key "consult-org-roam-search")
+  "rf" '(consult-org-roam-file-find :which-key "consult-org-roam-file-find")
+  "rlb" '(consult-org-roam-backlinks :which-key "consult-org-roam-backlinks")
+  "rlf" '(consult-org-roam-forward-links :which-key "consult-org-roam-forward-links")
+  "rlB" '(consult-org-roam-backlinks-recursive :which-key "consult-org-roam-backlinks-recursive")
+  "rli" '(org-roam-node-insert :which-key "org-roam-node-insert")
+  "rui" '(org-roam-ui-open :which-key "org-roam-ui-open")
+  "rta" '(org-roam-tag-add :which-key "org-roam-tag-add")
+  "rtr" '(org-roam-tag-remove :which-key "org-roam-tag-remove")
+  "rbt" '(org-roam-buffer-toggle :which-key "org-roam-buffer-toggle")
 )
 
 (garids-keybind/in-org-mode
@@ -2912,16 +3105,21 @@ fi
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(safe-local-variable-values
-   '((eval setq org-download-image-dir
-           (file-relative-name
-            (concat "./data/"
-                    (file-name-as-directory
-                     (car
-                      (split-string
-                       (file-name-base
-                        (buffer-file-name))
-                       "--"))))))
-     (dired-omit-files . "\\`[.]?#\\|\\`[.][.]?\\'\\|\\.html\\'\\|\\.tex\\'")))) ;
+                                        '((eval setq org-download-image-dir
+                                                (file-relative-name
+                                                 (concat "./data/"
+                                                         (file-name-as-directory
+                                                          (org-id-get 1)))))
+                                          (eval setq org-download-image-dir
+                                                (file-relative-name
+                                                 (concat "./data/"
+                                                         (file-name-as-directory
+                                                          (car
+                                                           (split-string
+                                                            (file-name-base
+                                                             (buffer-file-name))
+                                                            "--"))))))
+                                          (dired-omit-files . "\\`[.]?#\\|\\`[.][.]?\\'\\|\\.html\\'\\|\\.tex\\'"))))
 #+end_src
 * Finish Notifier
 #+begin_src emacs-lisp
