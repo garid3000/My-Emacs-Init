@@ -3119,6 +3119,12 @@ fi
            (file-relative-name
             (concat "./data/"
                     (file-name-as-directory
+                     (org-id-get 1))))
+           org-ipe-folder org-download-image-dir)
+     (eval setq org-download-image-dir
+           (file-relative-name
+            (concat "./data/"
+                    (file-name-as-directory
                      (car
                       (split-string
                        (file-name-base
