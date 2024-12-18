@@ -3105,21 +3105,31 @@ fi
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(safe-local-variable-values
-                                        '((eval setq org-download-image-dir
-                                                (file-relative-name
-                                                 (concat "./data/"
-                                                         (file-name-as-directory
-                                                          (org-id-get 1)))))
-                                          (eval setq org-download-image-dir
-                                                (file-relative-name
-                                                 (concat "./data/"
-                                                         (file-name-as-directory
-                                                          (car
-                                                           (split-string
-                                                            (file-name-base
-                                                             (buffer-file-name))
-                                                            "--"))))))
-                                          (dired-omit-files . "\\`[.]?#\\|\\`[.][.]?\\'\\|\\.html\\'\\|\\.tex\\'"))))
+   '((eval setq org-download-image-dir
+           (file-relative-name
+            (concat "./data/"
+                    (file-name-as-directory
+                     (car
+                      (split-string
+                       (file-name-base
+                        (buffer-file-name))
+                       "--")))))
+           org-ipe-folder org-download-image-dir)
+     (eval setq org-download-image-dir
+           (file-relative-name
+            (concat "./data/"
+                    (file-name-as-directory
+                     (org-id-get 1)))))
+     (eval setq org-download-image-dir
+           (file-relative-name
+            (concat "./data/"
+                    (file-name-as-directory
+                     (car
+                      (split-string
+                       (file-name-base
+                        (buffer-file-name))
+                       "--"))))))
+     (dired-omit-files . "\\`[.]?#\\|\\`[.][.]?\\'\\|\\.html\\'\\|\\.tex\\'"))))
 #+end_src
 * Finish Notifier
 #+begin_src emacs-lisp
