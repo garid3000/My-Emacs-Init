@@ -1344,6 +1344,16 @@ case "$ext" in
 esac
 #+end_src
 
+** =org-ipe=
+#+begin_src emacs-lisp
+(use-package org-ipe
+  :straight (org-ipe
+             :type git
+             :host github
+             :brach "master"
+             :repo "Stefanomarton/org-ipe"))
+#+end_src
+
 ** =org-auto-tangle=
 #+begin_src emacs-lisp
 (use-package org-auto-tangle
