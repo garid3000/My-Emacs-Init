@@ -825,6 +825,17 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   (cl-defmethod org-roam-node-slug :around ((node org-roam-node))
     (string-replace "_" "-" (cl-call-next-method)))
 
+
+  (defun garid-custom/org-roam-node-insert-immediate (arg &rest args)
+    (interactive "P")
+    (let ((args (cons arg args))
+          (org-roam-capture-templates
+	       (list (append (car org-roam-capture-templates)
+		                 '(:immediate-finish t)))))
+      (apply #'org-roam-node-insert args)
+      ))
+
+
   )
 #+end_src
 
