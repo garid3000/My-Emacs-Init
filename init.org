@@ -702,12 +702,19 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   (bibtex-dialect               'biblatex                     )
   (citar-library-paths           (list (concat (file-name-as-directory denote-directory) "lit/")) )
   (citar-file-open-functions '(("html" . citar-file-open-external)
-                               ("pdf" . citar-file-open-external)
+                               ("pdf" . garid/ask-pdf-openner)
                                (t . find-file)))
   :hook
   (org-mode   . citar-capf-setup)
   (LaTeX-mode . citar-capf-setup)
-  )
+  :config
+  (defun garid/ask-pdf-openner (file)
+    (interactive)
+    (call-process (completing-read "Application"
+                                   '("sioyek" "okular" "xournalpp"))
+                  nil 0 nil
+                  file)
+    ))
 #+end_src
 ** COMMENT =citar-denote=: citation in denote
 #+begin_src emacs-lisp
