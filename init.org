@@ -278,7 +278,24 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 #+end_src
 ** =consult=: consulting
 #+begin_src emacs-lisp
-(use-package consult :ensure t)
+(use-package consult
+  :ensure t
+  :custom
+  (consult-preview-key nil)
+  ;; (consult-preview-key 'any)
+  ;;(consult-preview-key (list :debounce 0.5 'any))
+  :config
+  (defun garid/consult-preview-change ()
+    (interactive)
+    (setq consult-preview-key 'any)
+    (let ((tmp-chose (completing-read "choose" '("nil" "any" "0.5sec"))))
+      (when (string= "nil" tmp-chose)    (setq consult-preview-key nil))
+      (when (string= "any" tmp-chose)    (setq consult-preview-key 'any))
+      (when (string= "0.5sec" tmp-chose) (setq consult-preview-key (list :debounce 0.5 'any)))
+      )
+
+    )
+  )
 #+end_src
 ** =orderless=: orderless completion
 #+begin_src emacs-lisp
