@@ -1,7 +1,7 @@
 #+LATEX_COMPILER: xelatex
 
 #+latex_class:         article
-#+latex_class_options: [11pt, a4paper]
+#+latex_class_options: [12pt, a4paper]
 #+latex_header: \setlength{\parindent}{0pt}            % no-indent
 #+latex_header: \usepackage{setspace}                  % 1.5 line-spaceing
 #+latex_header: \onehalfspacing                        % 1.5 line-spaceing
@@ -18,7 +18,7 @@
 #+LATEX_HEADER: \usepackage{fontspec}
 #+LATEX_HEADER: \usepackage[margin=1.01in]{geometry}
 #+LATEX_HEADER: \usepackage{bookmark}
-#+LATEX_HEADER: \usepackage[inkscapelatex=false]{svg}
+#+LATEX_HEADER: \usepackage[inkscapelatex=false,notransparent]{svg}
 #+LATEX_HEADER: \usepackage{pgf}
 #+LATEX_HEADER: \usepackage{keystroke}       %% keyboard
 #+LATEX_HEADER: \usepackage{float}
@@ -162,23 +162,21 @@
 #+LATEX_HEADER:      partial=upright,
 #+LATEX_HEADER:      nabla=upright
 #+LATEX_HEADER:  ]{unicode-math}
-#+LATEX_HEADER: %\setmainfont{CMU Serif}
-#+LATEX_HEADER: \setmainfont{Linux Libertine O}
-#+LATEX_HEADER: %\setmathfont{Libertinus Math}
-#+LATEX_HEADER: %\setmonofont{Iosevka Term SS06}
-#+LATEX_HEADER: \setmonofont[Scale=MatchLowercase]{Iosevka Fixed Slab}
-#+LATEX_HEADER: \urlstyle{same}
-
-#+LATEX_HEADER: %\newfontfamily\myregularfont{CMU Serif}
-#+LATEX_HEADER: %\newfontfamily\myregularfont{Linux Libertine O}
-
-#+LATEX_HEADER: %\usepackage[CJK]{ucharclasses}
-#+LATEX_HEADER: %\newfontfamily\myCJKfont{IPAMincho}
-#+LATEX_HEADER: %\setTransitionsForCJK{\myCJKfont}{\myregularfont}
 
 #+LATEX_HEADER: \usepackage{xeCJK}
 #+LATEX_HEADER: \setCJKmainfont{IPAMincho} % for \rmfamily
 #+LATEX_HEADER: \setCJKsansfont{IPAGothic} % for \sffamily
+#+LATEX_HEADER: \setCJKmonofont{IPAGothic}
+
+#+LATEX_HEADER: \setmainfont{Linux Libertine O}
+#+LATEX_HEADER: %\setmainfont{CMU Serif}
+#+LATEX_HEADER: %\setmainfont{Times New Roman}
+#+LATEX_HEADER: \setmathfont{Libertinus Math}
+#+LATEX_HEADER: %\setmonofont{Iosevka Term SS06}
+#+LATEX_HEADER: \setmonofont[Scale=MatchLowercase]{Iosevka Fixed Slab}
+#+LATEX_HEADER: \urlstyle{same}
+
+
 
 
 #+LATEX_HEADER: \hypersetup{   %using answer https://tex.stackexchange.com/a/847/292504
