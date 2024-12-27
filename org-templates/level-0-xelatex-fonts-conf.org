@@ -86,7 +86,7 @@
 
 #+LATEX_HEADER: \lstdefinelanguage{Lisp}{        % new Lip language
 #+LATEX_HEADER:     % alsodigit = {-},           
-#+LATEX_HEADER:     otherkeywords = {use\-package, \:hook, \:custom, \:map, \:bind, \:config, \:ensure, \:after, add\-to\-list, defcustom, defun, lambda, interactive},           
+#+LATEX_HEADER:     otherkeywords = {use\-package, \:delight, \:demand, \:init, \:hook, \:custom, \:map, \:bind, \:config, \:ensure, \:after, add\-to\-list, defcustom, defun, lambda, interactive},           
 #+LATEX_HEADER:     comment=[l]{;},
 #+LATEX_HEADER:     commentstyle=\color{Gray}\ttfamily,
 #+LATEX_HEADER:     stringstyle=\color{ForestGreen}\ttfamily,

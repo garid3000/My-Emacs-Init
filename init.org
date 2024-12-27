@@ -927,18 +927,11 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 ** =org-agenda=: the agenda
 #+begin_src emacs-lisp :results none
 (use-package org-agenda
-  :after   org ;; should I write after calendar?
+  :after    org
   :ensure   nil
-  ;; :bind (:map org-agenda-mode-map
-  ;;             ("j" . evil-next-line    )
-  ;;             ("k" . evil-previous-line)
-  ;;             )
   :custom
-  (org-agenda-files '(
-                      "~/BrainDump/gtd/main.org"
-                      ;;"~/BrainDump/denote/phd/20241114T160402--development-of-novel-methodology-for-measuring-hemispherical-direction-reflection-factor-hdrf-in-vegetation-fields-via-utilizing-a-gimbal-motorized-spectrometer__phd_thesis.org"
-                      ))
-  (org-agenda-span 90)
+  (org-agenda-files '("~/BrainDump/gtd/main.org"))
+  (org-agenda-span   90)
   (org-agenda-custom-commands
    '(("i" "Inbox"                tags-todo "+TODO=\"VAGUE\"" ((org-agenda-files (file-expand-wildcards "~/BrainDump/gtd/inbox.org"))))
      ("n" "Next actions"         tags-todo "+TODO=\"TODO\"")
