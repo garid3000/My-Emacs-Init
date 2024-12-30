@@ -110,7 +110,7 @@
 #+LATEX_HEADER:   morekeywords=[2]{,__init__,__add__,__mul__,__div__,__sub__,__call__,__getitem__,__setitem__,__eq__,__ne__,__nonzero__,__rmul__,__radd__,__repr__,__str__,__get__,__truediv__,__pow__,__name__,__future__,__all__,}, % magic methods
 #+LATEX_HEADER:   morekeywords=[3]{,object,type,isinstance,copy,deepcopy,zip,enumerate,reversed,list,set,len,dict,tuple,range,xrange,append,execfile,real,imag,reduce,str,repr,}, % common functions
 #+LATEX_HEADER:   morekeywords=[4]{,Exception,NameError,IndexError,SyntaxError,TypeError,ValueError,OverflowError,ZeroDivisionError,}, % errors
-#+LATEX_HEADER:   morekeywords=[5]{,ode,fsolve,sqrt,exp,sin,cos,arctan,arctan2,arccos,pi, array,norm,solve,dot,arange,isscalar,max,sum,flatten,shape,reshape,find,any,all,abs,plot,linspace,legend,quad,polyval,polyfit,hstack,concatenate,vstack,column_stack,empty,zeros,ones,rand,vander,grid,pcolor,eig,eigs,eigvals,svd,qr,tan,det,logspace,roll,min,mean,cumsum,cumprod,diff,vectorize,lstsq,cla,eye,xlabel,ylabel,squeeze,}, % numpy / math
+#+LATEX_HEADER:   morekeywords=[5]{,ode,fsolve,sqrt,exp,sin,cos,arctan,arctan2,arccos,pi, array,norm,solve,dot,arange,isscalar,max,sum,flatten,shape,find,any,all,abs,plot,linspace,legend,quad,polyval,polyfit,hstack,concatenate,vstack,column_stack,empty,zeros,ones,rand,vander,grid,pcolor,eig,eigs,eigvals,svd,qr,tan,det,logspace,roll,min,mean,cumsum,cumprod,diff,vectorize,lstsq,cla,eye,xlabel,ylabel,squeeze,}, % numpy / math
 #+LATEX_HEADER:   morestring=[b]",
 #+LATEX_HEADER:   morestring=[b]',
 #+LATEX_HEADER: }                                % modified from from https://tex.stackexchange.com/a/317276/292504 
@@ -127,6 +127,35 @@
 #+LATEX_HEADER: }                                % modified from from https://tex.stackexchange.com/a/317276/292504 
 
 
+#+LATEX_HEADER: \lstdefinelanguage{lua} {
+#+LATEX_HEADER:   morekeywords={and,break,do,else,elseif,end,false,for,function,if,in,local,
+#+LATEX_HEADER:     nil,not,or,repeat,return,then,true,until,while},
+#+LATEX_HEADER:   morekeywords={[2]arg,assert,collectgarbage,dofile,error,_G,getfenv,
+#+LATEX_HEADER:     getmetatable,ipairs,load,loadfile,loadstring,next,pairs,pcall,print,
+#+LATEX_HEADER:     rawequal,rawget,rawset,select,setfenv,setmetatable,tonumber,tostring,
+#+LATEX_HEADER:     type,unpack,_VERSION,xpcall},
+#+LATEX_HEADER:   morekeywords={[2]coroutine.create,coroutine.resume,coroutine.running,
+#+LATEX_HEADER:     coroutine.status,coroutine.wrap,coroutine.yield},
+#+LATEX_HEADER:   morekeywords={[2]module,require,package.cpath,package.load,package.loaded,
+#+LATEX_HEADER:     package.loaders,package.loadlib,package.path,package.preload,
+#+LATEX_HEADER:     package.seeall},
+#+LATEX_HEADER:   morekeywords={[2]string.byte,string.char,string.dump,string.find,
+#+LATEX_HEADER:     string.format,string.gmatch,string.gsub,string.len,string.lower,
+#+LATEX_HEADER:     string.match,string.rep,string.reverse,string.sub,string.upper},
+#+LATEX_HEADER:   morekeywords={[2]table.concat,table.insert,table.maxn,table.remove,
+#+LATEX_HEADER:     table.sort},
+#+LATEX_HEADER:   morekeywords={[2]math.abs,math.acos,math.asin,math.atan,math.atan2,
+#+LATEX_HEADER:     math.ceil,math.cos,math.cosh,math.deg,math.exp,math.floor,math.fmod,
+#+LATEX_HEADER:     math.frexp,math.huge,math.ldexp,math.log,math.log10,math.max,math.min,
+#+LATEX_HEADER:     math.modf,math.pi,math.pow,math.rad,math.random,math.randomseed,math.sin,
+#+LATEX_HEADER:     math.sinh,math.sqrt,math.tan,math.tanh},
+#+LATEX_HEADER:   morekeywords={[2]io.close,io.flush,io.input,io.lines,io.open,io.output,
+#+LATEX_HEADER:     io.popen,io.read,io.tmpfile,io.type,io.write,file:close,file:flush,
+#+LATEX_HEADER:     file:lines,file:read,file:seek,file:setvbuf,file:write},
+#+LATEX_HEADER:   morekeywords={[2]os.clock,os.date,os.difftime,os.execute,os.exit,os.getenv,
+#+LATEX_HEADER:     os.remove,os.rename,os.setlocale,os.time,os.tmpname},
+#+LATEX_HEADER:     sensitive=true, morecomment=[l]{--}, morecomment=[s]{--[[}{]]},
+#+LATEX_HEADER:     morestring=[b]", morestring=[d]' }
 
 
 #+LATEX_HEADER: \definecolor{codegreen}{rgb}{0,0.6,0}
