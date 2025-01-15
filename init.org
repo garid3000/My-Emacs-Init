@@ -561,7 +561,17 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 (use-package ob-go        :after org)
 (use-package ob-asymptote :after org)
 (use-package ob-nix       :after org)
-(use-package jupyter)     ;; which contains org-babel jupyter
+(use-package jupyter ;; which contains org-babel jupyter
+  :config
+  ;; following is from  https://github.com/emacs-jupyter/jupyter/issues/366
+  ;; the key issue was that, org-bullets or org-superstar
+  ;; conflicting with the result of the jupyter output making
+  ;; the jupyter output's rendering unreadable hex codes instead of colored text
+  (defun display-ansi-colors ()
+    (ansi-color-apply-on-region (point-min) (point-max)))
+  (add-hook 'org-babel-after-execute-hook #'display-ansi-colors)
+
+  )
 #+end_src
 
 ** =ob-sagemath=
