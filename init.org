@@ -466,6 +466,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
                                (awk        . t) (go         . t)
                                (asymptote  . t) (ditaa      . t)
                                (nix        . t) (lua        . t)
+                               (jupyter    . t)
                                ;; (asymptote  . t)
                                ))
 
@@ -545,43 +546,20 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 
 ** org-babel languages related
 #+begin_src emacs-lisp
-(use-package plantuml-mode
-  ;; :custom
-  ;; (plantuml-executable-path "plantuml")
-  ;; (plantuml-default-exec-mode 'executable)
-
-  ;;:config
-  ;;(font-lock-add-keywords
-  ;; 'plantuml-mode
-  ;; '(
-  ;;   ;; gantts relaeted
-  ;;   ("\\<\\(days\\|weeks\\)\\>" .                      font-lock-keyword-face) ;; duration
-  ;;   ("\\<\\(starts\\|ends\\|lasts\\)\\>" .             font-lock-keyword-face) ;; verbs - duration
-  ;;   ("\\<\\(at\\|after\\|on\\|from\\|to\\|end\\)\\>" . font-lock-keyword-face) ;; prepositions
-  ;;   ("\\<\\(then\\)\\>" .                              font-lock-keyword-face) ;; short nickname
-  ;;   ("\\<\\(as\\)\\>" .                                font-lock-keyword-face) ;; short nickname
-  ;;   ("\\<\\(is\\)\\>" .                                font-lock-keyword-face) ;; is
-  ;;   ("\\<\\(completed\\|complete\\)\\>" .              font-lock-keyword-face) ;; completion
-  ;;   ("\\<\\(colored\\|in\\)\\>" .                      font-lock-keyword-face) ;; coloring
-  ;;   ("\\<\\(happen)\\>" .                              font-lock-keyword-face) ;; verbs - milestone
-  ;;   ("\\<\\(links)\\>" .                               font-lock-keyword-face) ;; verbs - milestone
-  ;;   ("\\<\\(closed\\|open)\\>" .                       font-lock-keyword-face) ;; closed or open
-  ;;   ))
-  )
-
-
+(use-package plantuml-mode)
 (use-package ob-plantuml
   :ensure nil
   :after (org plantuml-mode)
   :config
   ;;(org-plantuml-jar-path        "/home/garid/.config/emacs/plantuml.jar" )
   (setq org-plantuml-executable-path "plantuml")
-  (setq org-plantuml-exec-mode 'plantuml)
-  )
+  (setq org-plantuml-exec-mode 'plantuml))
+
 (use-package ob-nim       :after org)
 (use-package ob-go        :after org)
 (use-package ob-asymptote :after org)
 (use-package ob-nix       :after org)
+(use-package jupyter)     ;; which contains org-babel jupyter
 #+end_src
 
 ** =ob-sagemath=
