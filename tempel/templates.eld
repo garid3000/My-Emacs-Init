@@ -431,14 +431,18 @@ org-mode
                                                 '( "verbatim" "value" "output" "table" "file xxx :output-dir .../"
                                                    "list" "scalar" "code" "drawer" "html" "latex" "link" "org" "pp")))
 (vardown                      "#+header: :var outputVar=" :post (insert (concat org-download-image-dir "/filename.svg") ))
-(varatta                      "#+header: :var outputVar=(my/org-attach-dir \"" r ".svg\")" )
+(file                         ":file "   :post (insert (concat org-download-image-dir "/tempFile") ))
 (cache                        "cache "   :post (gry/choose-from-list-and-insert-it '("yes" "no")))
 (wrap                         "wrap "    :post (gry/choose-from-list-and-insert-it '("example" "src python" "src sh" "src bash")))
 (mkdirp                       "mkdirp "  :post (gry/choose-from-list-and-insert-it '("yes" "no")))
 (eval                         "eval "    :post (gry/choose-from-list-and-insert-it '("never-export" "no" "yes")))
 (exports                      "exports " :post (gry/choose-from-list-and-insert-it '("code" "results" "both" "none")))
-(session                      "session " :post (gry/choose-from-list-and-insert-it '("SessionName")))
+(session                      "session " :post (gry/choose-from-list-and-insert-it '("SessionName" "" "/ssh:localhost:py" "/jpy:localhost#8888")))
+(async                        "session " :post (gry/choose-from-list-and-insert-it '("yes" "no")))
 (tangle                       "tangle ~/")
+(tangle_iff                   "tangle (if (not file-exists-p \"foo\") \"foo\" \"no\")")
+(shebang                      "shebang #!/bin/bash")
+
 
 (eqin1                        "\\(" r> "\\)")
 (eqin2                        "\\[" r> "\\]")
@@ -448,10 +452,8 @@ org-mode
 (equationref                  "\\ref{"    r  "}" )
 
 (latexdocclass                "#+latex_class: extarticle" r> n> "#+LATEX_CLASS_OPTIONS: [a4paper, 8pt, twocolumn]")
-
 (latexstayhere                "#+attr_latex: :placement [H]")
 (auto_tangle                  "#+auto_tangle:  t")
-(shebang                      ":shebang #!/bin/bash")
 
 
 (denote_links                 "#+begin: denote-links :regexp \"" r "\" :excluded-dirs-regexp nil :sort-by-component nil :reverse-sort nil :id-only nil :include-date nil" n> r> n "#+end:")
@@ -460,11 +462,12 @@ org-mode
 (frac                        "\\frac{" p "}{" q "}")
 
 (include                     "#+INCLUDE: \"\" :only-contents t")
-(structure
- "#+begin_src emacs-lisp :results file" r n
- "(garid/create-plantuml-using-temp-file \"structure.svg\")" r n
- "#+end_src"
- )
+(structure                   "#+begin_src emacs-lisp :results file" r n
+                             "(garid/create-plantuml-using-temp-file \"structure.svg\")" r n
+                             "#+end_src")
+(iframehtml                  "#+begin_export html" r n
+                             "<iframe src=\"tempFile.html\" width=\"100%\" height=\"500\"></iframe>" r n
+                             "#+end_export")
 
 ;; Local Variables:
 ;; mode: lisp-data
