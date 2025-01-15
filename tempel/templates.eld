@@ -468,6 +468,7 @@ org-mode
 (iframehtml                  "#+begin_export html" r n
                              "<iframe src=\"tempFile.html\" width=\"100%\" height=\"500\"></iframe>" r n
                              "#+end_export")
+(jupyter-inline-svg          "%config InlineBackend.figure_formats = ['svg']")
 
 ;; Local Variables:
 ;; mode: lisp-data
