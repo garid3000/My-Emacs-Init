@@ -76,7 +76,7 @@ I'm pulling packages from following 3 places (not sure that I need all three):
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 
-(straight-use-package 'org)
+;;(straight-use-package 'org)
 #+end_src
 
 * Vi-movement and its friends
@@ -356,12 +356,12 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 #+name: lst_org
 #+begin_src emacs-lisp :eval no
 (use-package org
-  :straight (org
-             :type git
-             ;;:brach "release_9.6.30"
-             :repo "https://git.savannah.gnu.org/git/emacs/org-mode.git";;            :repo "misohena/el-easydraw"
-            )
-  :demand
+  ;;:straight (org
+  ;;           :type git
+  ;;           :brach "release_9.6.30"
+  ;;           :repo "https://git.savannah.gnu.org/git/emacs/org-mode.git";;            :repo "misohena/el-easydraw"
+  ;;          )
+  ;;:demand
   :delight " org"
   :bind (:map
          org-mode-map
