@@ -1491,6 +1491,8 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
 (setq major-mode-remap-alist
       '((bash-mode   . bash-ts-mode)
         (python-mode . python-ts-mode)))
+
+(setf (alist-get "python" org-src-lang-modes nil nil #'equal) 'python-ts)
 #+end_src
 ** =indent-bars=
 #+begin_src emacs-lisp
@@ -1507,7 +1509,7 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
 				      list list_comprehension
 				      dictionary dictionary_comprehension
 				      parenthesized_expression subscript)))
-  :hook ((python-base-mode yaml-mode) . indent-bars-mode)
+  ;;:hook ((python-base-mode yaml-mode) . indent-bars-mode)
   ;;:hook ((python-base-mode yaml-mode) . indent-bars--ts-mode)
   )
 #+end_src
