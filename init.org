@@ -449,7 +449,9 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
      ("s" . "src")
      ("sage" . "src sage")
      ("sage1" . "src sage :session foo :results drawer :exports both :post equation_wrapper_equation_aligned(data=*this*)  :eval never-export")
-     ("v" . "verse")))
+     ("v" . "verse")
+     ("ju" . "src jupyter-python :session juSess1 :async yes :eval never-export :exports both")
+     ))
   :config
   (require 'org-tempo)
   (plist-put    org-format-latex-options   :scale 1.7      )    ;; latex equation previewing
