@@ -370,10 +370,14 @@ c-mode :when (re-search-backward "^\\S-*$" (line-beginning-position) 'noerror)
 python-mode
 
 (callback "self.ui." p ".clicked.connect(self." p ")")
-(fn "def " p "(" p ") -> None:" r> "return")
-(mt "def " p "(self, " p ") -> None:" n> n> "return")
-(npd ": np.ndarray[tuple[Literal[4]], np.dtype[np.float64]]")
-(npt ": np.dtype[np.float64]")
+(fn       "def " p "(" p ") -> None:" r> "return")
+(mt       "def " p "(self, " p ") -> None:" n> n> "return")
+(npd      ": np.ndarray[tuple[Literal[4]], np.dtype[np.float64]]")
+(npt      ": np.dtype[np.float64]")
+(pvpl     "pl = pv.Plotter(shape=(1, 1))" r n 
+          "_ = pl.add_mesh(surf)"         r n
+          "pl.save_graphic(\"img.svg\")"      )
+(pv.save_graph    "pl.save_graphic(\"\")"     )
 
 graphviz-dot-mode
 (digraph "digraph {\n" r> n> "}")
