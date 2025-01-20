@@ -2196,14 +2196,15 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 #+attr_latex: :placement [H]
 #+caption: File and directory related commands
 #+name: tbl-kbinding-file-n-dired
-| key(s) | function                 | short description   | mode | lambda |
-|--------+--------------------------+---------------------+------+--------|
-| =SPC=    | =execute-extended-command= | M-x                 | -    |        |
-| =f=      | =find-file=                | find-file           | -    |        |
-| =d=      | =dired-jump=               | directory           | -    |        |
-| =D=      | =:ignore t=                | Dired.............. | -    |        |
-| =Ds=     | =dired=                    | simple              | -    |        |
-| =Dp=     | =dired-preview-mode=       | preview             | -    |        |
+| key(s) | function                       | short description   | mode | lambda |
+|--------+--------------------------------+---------------------+------+--------|
+| =SPC=  | =execute-extended-command=     | M-x                 | -    |        |
+| =f=    | =find-file=                    | find-file           | -    |        |
+| =d=    | =dired-jump=                   | directory           | -    |        |
+| =D=    | =:ignore t=                    | Dired.............. | -    |        |
+| =Ds=   | =dired=                        | simple              | -    |        |
+| =Dp=   | =dired-preview-mode=           | preview             | -    |        |
+| =Dw=   | =wdired-change-to-wdired-mode= | wdired              | -    |        |
 
 **** Buffer and operations on buffer
 #+attr_latex: :placement [H]
@@ -2689,6 +2690,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "D" '(:ignore t :which-key "Dired..............")
   "Ds" '(dired :which-key "simple")
   "Dp" '(dired-preview-mode :which-key "preview")
+  "Dw" '(wdired-change-to-wdired-mode :which-key "wdired")
   "o" '(:ignore t :which-key "org............................")
   "z" '(:ignore t :which-key "conveniences....................")
   "za" '(garid-custom/align-regexp-and-untabify :which-key "align")
@@ -2953,7 +2955,6 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   :hook     ((dired-mode . denote-dired-mode)
              (dired-mode . dired-omit-mode  ))
   :config
-
   (evil-collection-define-key 'normal 'dired-mode-map
     "h"          'dired-up-directory
     "l"          'dired-find-file
