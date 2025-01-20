@@ -1390,17 +1390,22 @@ esac
 #+begin_src emacs-lisp
 (use-package python
   :ensure nil
-  :config
-  (defun garid/nix-shel-python-path-reload ()
-    ""
-    (interactive)
-    (if (file-exists-p "/tmp/current-nix-shell-python-path")
-        (progn
-          (setq python-shell-exec-path
-                (list (string-trim (f-read "/tmp/current-nix-shell-python-path"))))
-          (message "python-path: updated to %s" (car python-shell-exec-path)))
+  ;;:config
+  ;;(defun garid/nix-shel-python-path-reload ()
+  ;;  ""
+  ;;  (interactive)
+  ;;  (if (file-exists-p "/tmp/current-nix-shell-python-path")
+  ;;      (progn
+  ;;        (setq python-shell-exec-path
+  ;;              (list (string-trim (f-read "/tmp/current-nix-shell-python-path"))))
+  ;;        (message "python-path: updated to %s" (car python-shell-exec-path)))
 
-      (message "/tmp/current-nix-shell-python-path doesn't exist."))))
+  ;;    (message "/tmp/current-nix-shell-python-path doesn't exist.")))
+  )
+#+end_src
+** =jupyter=
+#+begin_src emacs-lisp
+(use-package jupyter)
 #+end_src
 ** =graphviz-dot-mode=
 #+begin_src emacs-lisp
@@ -1421,10 +1426,7 @@ esac
 #+begin_src emacs-lisp
 (use-package json-mode :ensure t)
 #+end_src
-** =nix-ts-mode=
-#+begin_src emacs-lisp
-(use-package nix-ts-mode :ensure t)
-#+end_src
+
 * Coding input
 ** =tempel=: snippet system
 #+begin_src emacs-lisp
