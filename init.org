@@ -1913,6 +1913,14 @@ Similar to vim-signify.
     str))
 #+end_src
 
+** Kill ring and garbage collect
+#+begin_src emacs-lisp
+(defun garid/clear-kill-ring-and-garbage-collect ()
+  (interactive)
+  (setq kill-ring nil)
+  (garbage-collect))
+#+end_src
+
 * Writing & Reading
 ** Writing packages
 #+begin_src emacs-lisp
