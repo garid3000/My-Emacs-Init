@@ -635,12 +635,12 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 (use-package denote
   :ensure t
   :custom
-  ;;(denote-excluded-files-regexp       "export_.*")
+  (denote-journal-extras-title-format 'day)
   (denote-excluded-directories-regexp  ".*export_.*\\|.*website.*")
-  (denote-directory       "~/BrainDump/denote")
-  (denote-known-keywords  '(  "finance"  "failures"  "philosophy"        ))
-  (denote-templates       '((biblio . "* Abstract\n\n* Review")
-                            (plain  . nil)))
+  (denote-directory                    "~/BrainDump/denote")
+  (denote-known-keywords               '("phd"  "code"  "python"))
+  (denote-templates                    '((biblio . "* Abstract\n\n* Review")
+                                         (plain  . nil)))
 
   :config
   (defun garid-custom/denote-node-insert-immediate(start end)
@@ -1075,10 +1075,10 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   ;; (org-html-validation-link              nil) ;; Don't show validation link
   ;; (org-html-head-include-scripts         nil) ;; Use our own scripts
   ;; (org-html-head-include-default-style   nil) ;; Use our own styles
-  (org-html-head  "<link rel=\"stylesheet\" type=\"text/css\" href=\"https://unpkg.com/chota\"/>")
-  ;;(org-html-head  "<link rel=\"stylesheet\" type=\"text/css\" href=\"/tmp/chota.css\"/>")
+  ;; (org-html-head  "<link rel=\"stylesheet\" type=\"text/css\" href=\"https://unpkg.com/chota\"/>")
+  ;; (org-html-head  "<link rel=\"stylesheet\" type=\"text/css\" href=\"/tmp/chota.css\"/>")
   ;; org-html-head "<link rel=\"stylesheet\" href=\"https://cdn.simplecss.org/simple.min.css\" />"
-  ;;(org-html-head "<link rel=\"stylesheet\" type=\"text/css\" href=\"https://orgmode.org/worg/style/worg.css\"/>" )
+  (org-html-head "<link rel=\"stylesheet\" type=\"text/css\" href=\"https://orgmode.org/worg/style/worg.css\"/>" )
   )
 #+end_src
 
