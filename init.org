@@ -76,7 +76,7 @@ I'm pulling packages from following 3 places (not sure that I need all three):
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 
-;;(straight-use-package 'org)
+(straight-use-package 'org)
 #+end_src
 
 * Vi-movement and its friends
@@ -1323,7 +1323,7 @@ I publish first from org to md in the local dir. Then using that local dir to cr
   (org-download-enable))
 #+end_src
 
-** org-download editing shell script                                        :shell_script:
+** COMMENT org-download editing shell script                                        :shell_script:
 #+begin_src shell :tangle garid/edit_img.sh :shebang "#!/bin/sh"
 file=$(readlink -f "$1")
 ext="${file##*.}"
@@ -1366,7 +1366,7 @@ esac
   )
 #+end_src
 
-** =org-transclusion=
+** COMMENT =org-transclusion=
 #+begin_src emacs-lisp
 (use-package org-transclusion
   :ensure t
@@ -1388,20 +1388,7 @@ esac
 * Programming languages
 ** =python=
 #+begin_src emacs-lisp
-(use-package python
-  :ensure nil
-  ;;:config
-  ;;(defun garid/nix-shel-python-path-reload ()
-  ;;  ""
-  ;;  (interactive)
-  ;;  (if (file-exists-p "/tmp/current-nix-shell-python-path")
-  ;;      (progn
-  ;;        (setq python-shell-exec-path
-  ;;              (list (string-trim (f-read "/tmp/current-nix-shell-python-path"))))
-  ;;        (message "python-path: updated to %s" (car python-shell-exec-path)))
-
-  ;;    (message "/tmp/current-nix-shell-python-path doesn't exist.")))
-  )
+(use-package python)
 #+end_src
 ** =jupyter=
 #+begin_src emacs-lisp
@@ -2073,7 +2060,7 @@ Similar to vim-signify.
 ** checking (could be useful)
 #+begin_src emacs-lisp
 ;; (use-package langtool   :ensure t) it required external jar / java  someday i will try
-;; (use-package jinx          :ensure t)
+(use-package jinx          :ensure t)
 (use-package mw-thesaurus  :ensure t :after org)
 (use-package org-wc        :ensure t :after org)
 #+end_src
@@ -2109,7 +2096,7 @@ Similar to vim-signify.
   )
 #+end_src
 
-** annotate
+** COMMENT annotate
 #+begin_src emacs-lisp
 (use-package annotate
   :ensure t)
@@ -2968,10 +2955,12 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   (evil-collection-define-key 'normal 'dired-mode-map
     "h"          'dired-up-directory
     "l"          'dired-find-file
-    (kbd "C-s")  'dired-omit-mode      ;; same keybinding with my lf config
     " "          'nil
-    (kbd "N")    'mkdir
-    (kbd "C-n")  'mkdir)
+    "N"          'dired-create-directory
+    "W"          'wdired-change-to-wdired-mode
+    (kbd "C-n")  'mkdir
+    (kbd "C-s")  'dired-omit-mode      ;; same keybinding with my lf config
+    )
 
   (when (eq system-type 'berkeley-unix)   ;; change the main ls with gnu ls in bsd
     (setq insert-directory-program "gls"))
