@@ -155,6 +155,10 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
                 (push '(101 . ("\\("              . "\\)"           )) evil-surround-pairs-alist)
                 (push '(100 . (":drawername:"     . ":end:"         )) evil-surround-pairs-alist)
                 ))
+
+  (python-base-mode . (lambda ()
+                        (push '(?>  . ("#"      . "#"     )) evil-surround-pairs-alist)
+                        ))
   :config
   (global-evil-surround-mode)
   )
@@ -1392,7 +1396,10 @@ esac
 #+end_src
 ** =jupyter=
 #+begin_src emacs-lisp
-(use-package jupyter)
+(use-package jupyter
+  :custom (jupyter-repl-echo-eval-p t)
+  )
+
 #+end_src
 ** =graphviz-dot-mode=
 #+begin_src emacs-lisp
@@ -3108,6 +3115,12 @@ fi
              :host github
              :branch "master"
              :repo "karthink/reftex-xref"))
+#+end_src
+** test garbage-collect
+#+begin_src emacs-lisp
+(use-package gcmh
+  :config
+  (gcmh-mode 1))
 #+end_src
 * Custom set variable:
 [[https://www.youtube.com/watch?v=tw2-rI2bxSg&t=1s][Initial idea from Systems crafter]], [[https://emacs.stackexchange.com/a/18785/38482][and code structure from this answer on emacs stackexchange]], and need to set ~enble-local-eval~ to ~t~.
