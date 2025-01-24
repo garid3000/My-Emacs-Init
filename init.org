@@ -372,7 +372,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
          ("C-S-j" . org-next-visible-heading     )
          ("C-S-k" . org-previous-visible-heading ))
 
-  ;; :hook (org-mode . garid-custom/org-mode-hooked-func)
+  ;; :hook (org-mode . garid/org-mode-hooked-func)
   :custom
   ;;(org-src-window-setup         'other-frame) ;; for new window (better for the the tiling window manager
   ;; theme/styling ...............................................................................
@@ -647,7 +647,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
                                          (plain  . nil)))
 
   :config
-  (defun garid-custom/denote-node-insert-immediate(start end)
+  (defun garid/denote-node-insert-immediate(start end)
     ;; create emtpy denote note on the regions
     (interactive "r")
     (let* ((tmp-str-marked              (string-trim (buffer-substring start end) ))
@@ -819,7 +819,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
     (string-replace "_" "-" (cl-call-next-method)))
 
 
-  (defun garid-custom/org-roam-node-insert-immediate (arg &rest args)
+  (defun garid/org-roam-node-insert-immediate (arg &rest args)
     (interactive "P")
     (let ((args (cons arg args))
           (org-roam-capture-templates
@@ -1033,7 +1033,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   :after org
   :custom
   (org-latex-src-block-backend              'listings                                             )
-  (org-latex-format-headline-function       'garid-custom/latex-formattig-headings                )
+  (org-latex-format-headline-function       'garid/latex-formattig-headings                )
   (org-latex-active-timestamp-format         "\\textcolor{Brown}{%s}"                             )
   (org-latex-inactive-timestamp-format       "\\textcolor{Brown}{%s}"                             )
   (org-latex-pdf-process
@@ -1051,7 +1051,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
                                     ("\\subparagraph{%s}"  . "\\subparagraph*{%s}")))
 
   ;; function -------------------------------------------------------------------------------------
-  (defun garid-custom/latex-formattig-headings
+  (defun garid/latex-formattig-headings
       (todo todo-type priority text tags _info)
     "Default format function for a headline.
   See `org-latex-format-headline-function' for details."
@@ -1327,7 +1327,7 @@ I publish first from org to md in the local dir. Then using that local dir to cr
   (org-download-enable))
 #+end_src
 
-** COMMENT org-download editing shell script                                        :shell_script:
+** COMMENT org-download editing shell script                                :shell_script:
 #+begin_src shell :tangle garid/edit_img.sh :shebang "#!/bin/sh"
 file=$(readlink -f "$1")
 ext="${file##*.}"
@@ -1691,7 +1691,7 @@ Similar to vim-signify.
 
 ** Custom Aligner function (with untabify)                                    :customFunc:
 #+begin_src emacs-lisp
-(defun garid-custom/align-regexp-and-untabify (beg end)
+(defun garid/align-regexp-and-untabify (beg end)
   (interactive "r")
   (align-regexp beg end
                 (concat "\\(\\s-*\\)" (read-string "Align regexp: ")))
@@ -1699,7 +1699,7 @@ Similar to vim-signify.
 #+end_src
 ** Toggling between 3 inputs (eng, mon, teq)                                  :customFunc:
 #+begin_src emacs-lisp
-(defun garid-custom/toggle-eng-mon-teq-input-methods ()
+(defun garid/toggle-eng-mon-teq-input-methods ()
   (interactive)
   (if (string= default-input-method nil )
       (set-input-method "cyrillic-mongolian")
@@ -1709,9 +1709,10 @@ Similar to vim-signify.
 	  (set-input-method "TeQ-Math")))))
 #+end_src
 ** copy link in org at point                                                  :customFunc:
+[[https://emacs.stackexchange.com/a/60555/38482][stack exchange]]
 #+begin_src emacs-lisp
-(defun code-from-internet/org-link-open-parent-with-dired-at-point (&optional arg)
-  "Extract URL from org-mode link and add it to kill ring." ;;;https://emacs.stackexchange.com/a/60555/38482
+(defun garid/open-org-link-at-point-with-dired (&optional arg)
+  "Extract URL from org-mode link and add it to kill ring." ;;;
   (interactive "P")
   (let* (
          (link (org-element-lineage (org-element-context) '(link) t))
@@ -1726,38 +1727,17 @@ Similar to vim-signify.
   )
 
 
-(defun code-from-internet/org-link-copy-at-point (&optional arg)
-  "Extract URL from org-mode link and add it to kill ring." ;;;https://emacs.stackexchange.com/a/60555/38482
-  (interactive "P")
-  (let* (
-         (link (org-element-lineage (org-element-context) '(link) t))
-         (type (org-element-property :type link))
-         (url (org-element-property :path link))
-         (url (concat type ":" url)))
-    (kill-new url)
-    (message (concat "Copied URL: " url)))
-  )
-#+end_src
-** put empty svg file at point                                                :customFunc:
-#+begin_src emacs-lisp
-(defun garid/put-emtpy-svg-img-at-point ()
-  (interactive)
-  ;;Part 1: creates org-image if non existense
-  (unless (file-directory-p org-download-image-dir);; when not
-    (make-directory org-download-image-dir))
-
-  ;;Part 2: copy the template
-  (copy-file;; "~/.config/emacs/org-templates/template.svg"
-   (concat (file-name-directory user-init-file) "org-templates/template.svg")
-   (concat (file-name-as-directory org-download-image-dir)
-           (format-time-string "%Y%m%d-%H%M%S.svg")))
-
-  ;;Part 3: insert the link to the buffer
-  (insert
-   "[[file:"
-   (concat (file-name-as-directory org-download-image-dir)
-           (format-time-string "%Y%m%d-%H%M%S.svg"))
-   "]]"))
+;;(defun code-from-internet/org-link-copy-at-point (&optional arg)
+;;  "Extract URL from org-mode link and add it to kill ring." ;;;https://emacs.stackexchange.com/a/60555/38482
+;;  (interactive "P")
+;;  (let* (
+;;         (link (org-element-lineage (org-element-context) '(link) t))
+;;         (type (org-element-property :type link))
+;;         (url (org-element-property :path link))
+;;         (url (concat type ":" url)))
+;;    (kill-new url)
+;;    (message (concat "Copied URL: " url)))
+;;  )
 #+end_src
 ** Jumping ref-label in org or latex                                          :customFunc:
 #+begin_src emacs-lisp
@@ -1780,7 +1760,7 @@ Similar to vim-signify.
 #+end_src
 ** Org toggle hide/shot hyperlink                                             :customFunc:
 #+begin_src emacs-lisp
-(defun garid-custom/org-toggle-link-n-emphasis ()
+(defun garid/org-toggle-link-n-emphasis ()
   (interactive)
   (setq org-hide-emphasis-markers (not org-hide-emphasis-markers))
   (setq org-link-descriptive           org-hide-emphasis-markers) ;;(org-toggle-link-display) more in below
@@ -1791,7 +1771,7 @@ Similar to vim-signify.
 
 ** Custom opening external terminal at current buffer                         :customFunc:
 #+begin_src emacs-lisp
-(defun garid-custom/open-external-term-here ()
+(defun garid/open-external-term-here ()
   (interactive)
   (call-process-shell-command
    (concat
@@ -1801,7 +1781,7 @@ Similar to vim-signify.
 
 ** Org toggle hide/shot display images                                        :customFunc:
 #+begin_src emacs-lisp
-(defun garid-custom/org-toggle-display-images-n-edraw ()
+(defun garid/org-toggle-display-images-n-edraw ()
   (interactive)
   (org-toggle-inline-images)
   (if org-inline-image-overlays
@@ -1917,6 +1897,27 @@ Similar to vim-signify.
   (garbage-collect))
 #+end_src
 
+** COMMENT put empty svg file at point                                        :customFunc:
+#+begin_src emacs-lisp
+(defun garid/put-emtpy-svg-img-at-point ()
+  (interactive)
+  ;;Part 1: creates org-image if non existense
+  (unless (file-directory-p org-download-image-dir);; when not
+    (make-directory org-download-image-dir))
+
+  ;;Part 2: copy the template
+  (copy-file;; "~/.config/emacs/org-templates/template.svg"
+   (concat (file-name-directory user-init-file) "org-templates/template.svg")
+   (concat (file-name-as-directory org-download-image-dir)
+           (format-time-string "%Y%m%d-%H%M%S.svg")))
+
+  ;;Part 3: insert the link to the buffer
+  (insert
+   "[[file:"
+   (concat (file-name-as-directory org-download-image-dir)
+           (format-time-string "%Y%m%d-%H%M%S.svg"))
+   "]]"))
+#+end_src
 * Writing & Reading
 ** Writing packages
 #+begin_src emacs-lisp
@@ -2129,27 +2130,27 @@ Similar to vim-signify.
 *** Global keybinding table
 #+caption: Global (aka from anywhere) non-sequential keybinding
 #+name: tbl-global-keybindings
-| key     | function                                      | description                         | state                 |
-|---------+-----------------------------------------------+-------------------------------------+-----------------------|
-| =M-q=     | =delete-window=                                 | delete window                       | =evil-normal-state-map= |
-| =M-Q=     | =kill-current-buffer=                           | delete buffer                       | =evil-normal-state-map= |
-| =M-J=     | =other-window=                                  | jump to other window                | =evil-normal-state-map= |
-| =M-W=     | =evil-window-vnew=                              | divide window vertically (on right) | =evil-normal-state-map= |
-| =M-E=     | =evil-window-vsplit=                            | divide window vertically (on left)  | =evil-normal-state-map= |
-| =M-]=     | =comint-dynamic-complete-filename=              | complete file path                  | =evil-normal-state-map= |
-| =M-f=     | =consult-line=                                  | search line in buffer               | =evil-normal-state-map= |
-| =M-F=     | =zoom-window-zoom=                              | zoom window mode                    | =evil-normal-state-map= |
-| =M-y=     | =consult-yank-from-kill-ring=                   | consult yank from kill ring         | =evil-normal-state-map= |
-| =C-/=     | =comment-line=                                  | set selected lines comment          | =evil-normal-state-map= |
-| =C-\vert= | =garid-custom/toggle-eng-mon-teq-input-methods= | change toggle input (Eng-Mon-Teq)   | =evil-normal-state-map= |
-| =M-1=     | =harpoon-go-to-1=                               | harpoon-go-to-1                     | =evil-normal-state-map= |
-| =M-2=     | =harpoon-go-to-2=                               | harpoon-go-to-2                     | =evil-normal-state-map= |
-| =M-3=     | =harpoon-go-to-3=                               | harpoon-go-to-3                     | =evil-normal-state-map= |
-| =M-4=     | =harpoon-go-to-4=                               | harpoon-go-to-4                     | =evil-normal-state-map= |
-| =M-5=     | =harpoon-go-to-5=                               | harpoon-go-to-5                     | =evil-normal-state-map= |
-| =M-6=     | =harpoon-go-to-6=                               | harpoon-go-to-6                     | =evil-normal-state-map= |
-| =<f9>=    | =harpoon-quick-menu-hydra=                      | harpoon                             | =evil-normal-state-map= |
-| =M-<f9>=  | =gry/toggle-distraction-free-writing=           | toggle distraction free writing     | =evil-normal-state-map= |
+| key     | function                               | description                         | state                 |
+|---------+----------------------------------------+-------------------------------------+-----------------------|
+| =M-q=     | =delete-window=                          | delete window                       | =evil-normal-state-map= |
+| =M-Q=     | =kill-current-buffer=                    | delete buffer                       | =evil-normal-state-map= |
+| =M-J=     | =other-window=                           | jump to other window                | =evil-normal-state-map= |
+| =M-W=     | =evil-window-vnew=                       | divide window vertically (on right) | =evil-normal-state-map= |
+| =M-E=     | =evil-window-vsplit=                     | divide window vertically (on left)  | =evil-normal-state-map= |
+| =M-]=     | =comint-dynamic-complete-filename=       | complete file path                  | =evil-normal-state-map= |
+| =M-f=     | =consult-line=                           | search line in buffer               | =evil-normal-state-map= |
+| =M-F=     | =zoom-window-zoom=                       | zoom window mode                    | =evil-normal-state-map= |
+| =M-y=     | =consult-yank-from-kill-ring=            | consult yank from kill ring         | =evil-normal-state-map= |
+| =C-/=     | =comment-line=                           | set selected lines comment          | =evil-normal-state-map= |
+| =C-\vert= | =garid/toggle-eng-mon-teq-input-methods= | change toggle input (Eng-Mon-Teq)   | =evil-normal-state-map= |
+| =M-1=     | =harpoon-go-to-1=                        | harpoon-go-to-1                     | =evil-normal-state-map= |
+| =M-2=     | =harpoon-go-to-2=                        | harpoon-go-to-2                     | =evil-normal-state-map= |
+| =M-3=     | =harpoon-go-to-3=                        | harpoon-go-to-3                     | =evil-normal-state-map= |
+| =M-4=     | =harpoon-go-to-4=                        | harpoon-go-to-4                     | =evil-normal-state-map= |
+| =M-5=     | =harpoon-go-to-5=                        | harpoon-go-to-5                     | =evil-normal-state-map= |
+| =M-6=     | =harpoon-go-to-6=                        | harpoon-go-to-6                     | =evil-normal-state-map= |
+| =<f9>=    | =harpoon-quick-menu-hydra=               | harpoon                             | =evil-normal-state-map= |
+| =M-<f9>=  | =gry/toggle-distraction-free-writing=    | toggle distraction free writing     | =evil-normal-state-map= |
 
 Note to myself: after changing Table-[[tbl-global-keybindings]], I need to update [[convert-global-keybindings]]
 *** Convert global keybinding table into elisp
@@ -2183,7 +2184,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 (global-set-key (kbd "M-F") 'zoom-window-zoom)
 (global-set-key (kbd "M-y") 'consult-yank-from-kill-ring)
 (global-set-key (kbd "C-/") 'comment-line)
-(global-set-key (kbd "C-|") 'garid-custom/toggle-eng-mon-teq-input-methods)
+(global-set-key (kbd "C-|") 'garid/toggle-eng-mon-teq-input-methods)
 (global-set-key (kbd "M-1") 'harpoon-go-to-1)
 (global-set-key (kbd "M-2") 'harpoon-go-to-2)
 (global-set-key (kbd "M-3") 'harpoon-go-to-3)
@@ -2237,27 +2238,27 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 #+attr_latex: :placement [H]
 #+caption: Convenient commands
 #+name: tbl-kbind-zconvenients
-| key(s) | function                               | short description                 | mode | lambda |
-|--------+----------------------------------------+-----------------------------------+------+--------|
-| =z=      | =:ignore t=                              | conveniences....................  | -    |        |
-| =za=     | =garid-custom/align-regexp-and-untabify= | align                             | -    |        |
-| =zr=     | =replace-regexp=                         | replace                           | -    |        |
-| =zh=     | =highlight-symbol-at-point=              | highlight-on                      | -    |        |
-| =zH=     | =unhighlight-regexp=                     | highlight-off                     | -    |        |
-|--------+----------------------------------------+-----------------------------------+------+--------|
-| =zs=     | =:ignore t=                              | spell............................ | -    |        |
-| =zsw=    | =ispell-word=                            | word                              | -    |        |
-| =zsr=    | =ispell-region=                          | region                            | -    |        |
-| =zsC=    | =ispell-comments-and-strings=            | comment-full                      | -    |        |
-| =zsc=    | =ispell-comment-or-string-at-point=      | comment-here                      | -    |        |
-| =zsb=    | =ispell-buffer=                          | buffer                            | -    |        |
-| =zsm=    | =ispell-message=                         | message                           | -    |        |
-| =zsq=    | =ispell-kill-ispell=                     | quit                              | -    |        |
-| =zsl=    | =ispell-change-dictionary=               | language en/mn                    | -    |        |
-| =zst=    | =mw-thesaurus-lookup-at-point=           | thesaurus current word            | -    |        |
-| =zsT=    | =mw-thesaurus-lookup=                    | thesaurus                         | -    |        |
-|--------+----------------------------------------+-----------------------------------+------+--------|
-| =ZQ=     | =kill-emacs=                             | kill Emacs                        | -    |        |
+| key(s) | function                          | short description                 | mode | lambda |
+|--------+-----------------------------------+-----------------------------------+------+--------|
+| =z=      | =:ignore t=                         | conveniences....................  | -    |        |
+| =za=     | =garid/align-regexp-and-untabify=   | align                             | -    |        |
+| =zr=     | =replace-regexp=                    | replace                           | -    |        |
+| =zh=     | =highlight-symbol-at-point=         | highlight-on                      | -    |        |
+| =zH=     | =unhighlight-regexp=                | highlight-off                     | -    |        |
+|--------+-----------------------------------+-----------------------------------+------+--------|
+| =zs=     | =:ignore t=                         | spell............................ | -    |        |
+| =zsw=    | =ispell-word=                       | word                              | -    |        |
+| =zsr=    | =ispell-region=                     | region                            | -    |        |
+| =zsC=    | =ispell-comments-and-strings=       | comment-full                      | -    |        |
+| =zsc=    | =ispell-comment-or-string-at-point= | comment-here                      | -    |        |
+| =zsb=    | =ispell-buffer=                     | buffer                            | -    |        |
+| =zsm=    | =ispell-message=                    | message                           | -    |        |
+| =zsq=    | =ispell-kill-ispell=                | quit                              | -    |        |
+| =zsl=    | =ispell-change-dictionary=          | language en/mn                    | -    |        |
+| =zst=    | =mw-thesaurus-lookup-at-point=      | thesaurus current word            | -    |        |
+| =zsT=    | =mw-thesaurus-lookup=               | thesaurus                         | -    |        |
+|--------+-----------------------------------+-----------------------------------+------+--------|
+| =ZQ=     | =kill-emacs=                        | kill Emacs                        | -    |        |
 
 **** System
 #+attr_latex: :placement [H]
@@ -2296,7 +2297,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | =t=      | =:ignore t=                                                                                  | terminal..................... | -    |        |
 | =te=     | =eshell=                                                                                     | eshell emacs-shell            | -    |        |
 | =tv=     | =vterm=                                                                                      | vterm  vterm                  | -    |        |
-| =tx=     | =garid-custom/open-external-term-here=                                                       | xternal terminal              | -    |        |
+| =tx=     | =garid/open-external-term-here=                                                              | xternal terminal              | -    |        |
 | =tm=     | =tmr-with-description=                                                                       | timer                         | -    |        |
 | =u=      | =:ignore=                                                                                    | undo ........................ | -    |        |
 | =ut=     | =undo-tree-visualize=                                                                        | tree                          | -    |        |
@@ -2410,7 +2411,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | =nil=    | =denote-insert-link=                          | insert-link                  | -    |        |
 | =nij=    | =denote-journal-extras-link-or-create-entry=  | insert-journal-link          | -    |        |
 | =nt=     | =denote-template=                             | template                     | -    |        |
-| =nI=     | =garid-custom/denote-node-insert-immediate=   | Insert-note                  | -    |        |
+| =nI=     | =garid/denote-node-insert-immediate=   | Insert-note                  | -    |        |
 | =ns=     | =consult-denote-grep=                         | live-grep                    | -    |        |
 | =nF=     | =consult-denote-find=                         | consult-denote-find          | -    |        |
 | =nl=     | =:ignore t=                                   | denote link................. | -    |        |
@@ -2433,7 +2434,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | =rd=     | =(dired org-roam-directory)=                                     | dired                                       | -    | y      |
 | =rs=     | =consult-org-roam-search=                                        | consult-org-roam-search                     | -    |        |
 | =rf=     | =consult-org-roam-file-find=                                     | consult-org-roam-file-find                  | -    |        |
-| =rI=     | =garid-custom/org-roam-node-insert-immediate=                    | garid-custom/org-roam-node-insert-immediate | -    |        |
+| =rI=     | =garid/org-roam-node-insert-immediate=                    | garid/org-roam-node-insert-immediate | -    |        |
 | =rlb=    | =consult-org-roam-backlinks=                                     | consult-org-roam-backlinks                  | -    |        |
 | =rlf=    | =consult-org-roam-forward-links=                                 | consult-org-roam-forward-links              | -    |        |
 | =rlB=    | =consult-org-roam-backlinks-recursive=                           | consult-org-roam-backlinks-recursive        | -    |        |
@@ -2447,13 +2448,13 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 #+attr_latex: :placement [H]
 #+caption: Org related stuffs
 #+name: tbl-global-general-keybindings-org-mode-related
-| key(s) | function                                                    | short description               | mode | lambda |
-|--------+-------------------------------------------------------------+---------------------------------+------+--------|
-| =o=      | =:ignore t=                                                   | org............................ | -    |        |
-| =oo=     | =org-open-at-point=                                           | open                            | org  |        |
-| =oO=     | =garid/jump-label-def-of-ref-at-point-word=                   | open ref def                    | org  |        |
-| =od=     | =code-from-internet/org-link-open-parent-with-dired-at-point= | directory-open                  | org  |        |
-| =,=      | =org-ctrl-c-ctrl-c=                                           | C-c C-c                         | org  |        |
+| key(s) | function                                    | short description               | mode | lambda |
+|--------+---------------------------------------------+---------------------------------+------+--------|
+| =o=    | =:ignore t=                                 | org............................ | -    |        |
+| =oo=   | =org-open-at-point=                         | open                            | org  |        |
+| =oO=   | =garid/jump-label-def-of-ref-at-point-word= | open ref def                    | org  |        |
+| =od=   | =garid/open-org-link-at-point-with-dired=   | directory-open                  | org  |        |
+| =,=    | =org-ctrl-c-ctrl-c=                         | C-c C-c                         | org  |        |
 
 **** org table related
 #+attr_latex: :placement [H]
@@ -2555,40 +2556,40 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 #+attr_latex: :placement [H]
 #+caption: org-link related
 #+name: tbl-orgmode-general-keybindings-link
-| key(s) | function                                | short description            | mode | lambda |
-|--------+-----------------------------------------+------------------------------+------+--------|
-| =ol=     | =:ignore t=                               | link........................ | org  |        |
-| =old=    | =garid-custom/org-toggle-link-n-emphasis= | description-toggle           | org  |        |
-| =oli=    | =org-insert-link=                         | insert                       | org  |        |
-| =oln=    | =hydra-org-link-jumper/body=              | next-link                    | org  |        |
-| =olp=    | =hydra-org-link-jumper/body=              | prev-link                    | org  |        |
-| =olo=    | =org-open-at-point=                       | open (same as SPC o o)       | org  |        |
-| =olf=    | =org-footnote-new=                        | footnote-new                 | org  |        |
-| =olF=    | =org-footnote-action=                     | Footnote-action              | org  |        |
-| =olc=    | =org-cite-insert=                         | citation                     | org  |        |
-| =oll=    | =org-lint=                                | lint                         | org  |        |
+| key(s) | function                         | short description            | mode | lambda |
+|--------+----------------------------------+------------------------------+------+--------|
+| =ol=     | =:ignore t=                        | link........................ | org  |        |
+| =old=    | =garid/org-toggle-link-n-emphasis= | description-toggle           | org  |        |
+| =oli=    | =org-insert-link=                  | insert                       | org  |        |
+| =oln=    | =hydra-org-link-jumper/body=       | next-link                    | org  |        |
+| =olp=    | =hydra-org-link-jumper/body=       | prev-link                    | org  |        |
+| =olo=    | =org-open-at-point=                | open (same as SPC o o)       | org  |        |
+| =olf=    | =org-footnote-new=                 | footnote-new                 | org  |        |
+| =olF=    | =org-footnote-action=              | Footnote-action              | org  |        |
+| =olc=    | =org-cite-insert=                  | citation                     | org  |        |
+| =oll=    | =org-lint=                         | lint                         | org  |        |
 
 **** org-image related
 #+attr_latex: :placement [H]
 #+caption: handing images in org-file
 #+name: tbl-orgmode-general-keybindings-img
-| key(s) | function                                       | short description            | mode | lambda |
-|--------+------------------------------------------------+------------------------------+------+--------|
-| =oi=     | =:ignore t=                                      | image....................... | org  |        |
-| =oii=    | =(insert "[[edraw:]]")=                          | inline edraw                 | org  | y      |
-| =oic=    | =garid/put-emtpy-svg-img-at-point=               | create svg                   | org  |        |
-| =oip=    | =org-download-clipboard=                         | paste clipboard              | org  |        |
-| =oiP=    | =org-download-image=                             | Paste from-path              | org  |        |
-| =oid=    | =org-download-delete=                            | delete file                  | org  |        |
-| =oie=    | =edraw-org-edit-regular-file-link=               | edit edraw                   | org  |        |
-| =oiE=    | =org-download-edit=                              | Edit externally              | org  |        |
-| =oir=    | =org-download-rename-at-point=                   | rename file                  | org  |        |
-| =oit=    | =garid-custom/org-toggle-display-images-n-edraw= | toggle shot/hide image       | org  |        |
-|--------+------------------------------------------------+------------------------------+------+--------|
-| =ois=    | =:ignore t=                                      | size........................ | org  |        |
-| =oisn=   | =(setq org-image-actual-width '(800))=           | normal 800px                 | org  | y      |
-| =oisb=   | =(setq org-image-actual-width '(1500))=          | big    1500px                | org  | y      |
-| =oiss=   | =(setq org-image-actual-width '(400))=           | small  400px                 | org  | y      |
+| key(s) | function                                | short description            | mode | lambda |
+|--------+-----------------------------------------+------------------------------+------+--------|
+| =oi=     | =:ignore t=                               | image....................... | org  |        |
+| =oii=    | =(insert "[[edraw:]]")=                   | inline edraw                 | org  | y      |
+| =oic=    | =org-ipe-insert-drawing=                  | create ipe-svg               | org  |        |
+| =oip=    | =org-download-clipboard=                  | paste clipboard              | org  |        |
+| =oiP=    | =org-download-image=                      | Paste from-path              | org  |        |
+| =oid=    | =org-download-delete=                     | delete file                  | org  |        |
+| =oie=    | =edraw-org-edit-regular-file-link=        | edit edraw                   | org  |        |
+| =oiE=    | =org-download-edit=                       | Edit externally              | org  |        |
+| =oir=    | =org-download-rename-at-point=            | rename file                  | org  |        |
+| =oit=    | =garid/org-toggle-display-images-n-edraw= | toggle shot/hide image       | org  |        |
+|--------+-----------------------------------------+------------------------------+------+--------|
+| =ois=    | =:ignore t=                               | size........................ | org  |        |
+| =oisn=   | =(setq org-image-actual-width '(800))=    | normal 800px                 | org  | y      |
+| =oisb=   | =(setq org-image-actual-width '(1500))=   | big    1500px                | org  | y      |
+| =oiss=   | =(setq org-image-actual-width '(400))=    | small  400px                 | org  | y      |
 
 *** Converting tables actual keybinding
 **** General.el config
@@ -2697,7 +2698,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "Dw" '(wdired-change-to-wdired-mode :which-key "wdired")
   "o" '(:ignore t :which-key "org............................")
   "z" '(:ignore t :which-key "conveniences....................")
-  "za" '(garid-custom/align-regexp-and-untabify :which-key "align")
+  "za" '(garid/align-regexp-and-untabify :which-key "align")
   "zr" '(replace-regexp :which-key "replace")
   "zh" '(highlight-symbol-at-point :which-key "highlight-on")
   "zH" '(unhighlight-regexp :which-key "highlight-off")
@@ -2741,7 +2742,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "t" '(:ignore t :which-key "terminal.....................")
   "te" '(eshell :which-key "eshell emacs-shell")
   "tv" '(vterm :which-key "vterm  vterm")
-  "tx" '(garid-custom/open-external-term-here :which-key "xternal terminal")
+  "tx" '(garid/open-external-term-here :which-key "xternal terminal")
   "tm" '(tmr-with-description :which-key "timer")
   "u" '(:ignore :which-key "undo ........................")
   "ut" '(undo-tree-visualize :which-key "tree")
@@ -2754,7 +2755,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "nil" '(denote-insert-link :which-key "insert-link")
   "nij" '(denote-journal-extras-link-or-create-entry :which-key "insert-journal-link")
   "nt" '(denote-template :which-key "template")
-  "nI" '(garid-custom/denote-node-insert-immediate :which-key "Insert-note")
+  "nI" '(garid/denote-node-insert-immediate :which-key "Insert-note")
   "ns" '(consult-denote-grep :which-key "live-grep")
   "nF" '(consult-denote-find :which-key "consult-denote-find")
   "nl" '(:ignore t :which-key "denote link.................")
@@ -2854,7 +2855,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "rd" '((lambda () (interactive) (dired org-roam-directory) ) :which-key "dired")
   "rs" '(consult-org-roam-search :which-key "consult-org-roam-search")
   "rf" '(consult-org-roam-file-find :which-key "consult-org-roam-file-find")
-  "rI" '(garid-custom/org-roam-node-insert-immediate :which-key "garid-custom/org-roam-node-insert-immediate")
+  "rI" '(garid/org-roam-node-insert-immediate :which-key "garid/org-roam-node-insert-immediate")
   "rlb" '(consult-org-roam-backlinks :which-key "consult-org-roam-backlinks")
   "rlf" '(consult-org-roam-forward-links :which-key "consult-org-roam-forward-links")
   "rlB" '(consult-org-roam-backlinks-recursive :which-key "consult-org-roam-backlinks-recursive")
@@ -2868,7 +2869,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 (garids-keybind/in-org-mode
   "oo" '(org-open-at-point :which-key "open")
   "oO" '(garid/jump-label-def-of-ref-at-point-word :which-key "open ref def")
-  "od" '(code-from-internet/org-link-open-parent-with-dired-at-point :which-key "directory-open")
+  "od" '(garid/open-org-link-at-point-with-dired :which-key "directory-open")
   "," '(org-ctrl-c-ctrl-c :which-key "C-c C-c")
   "oTx" '(org-table-export :which-key "export as csv file")
   "oTs" '(org-table-sum :which-key "sum")
@@ -2921,7 +2922,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "oxO" '(gry/org-open-html :which-key "html open")
   "op" '(org-latex-preview :which-key "preview")
   "ol" '(:ignore t :which-key "link........................")
-  "old" '(garid-custom/org-toggle-link-n-emphasis :which-key "description-toggle")
+  "old" '(garid/org-toggle-link-n-emphasis :which-key "description-toggle")
   "oli" '(org-insert-link :which-key "insert")
   "oln" '(hydra-org-link-jumper/body :which-key "next-link")
   "olp" '(hydra-org-link-jumper/body :which-key "prev-link")
@@ -2932,14 +2933,14 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "oll" '(org-lint :which-key "lint")
   "oi" '(:ignore t :which-key "image.......................")
   "oii" '((lambda () (interactive) (insert "[[edraw:]]") ) :which-key "inline edraw")
-  "oic" '(garid/put-emtpy-svg-img-at-point :which-key "create svg")
+  "oic" '(org-ipe-insert-drawing :which-key "create ipe-svg")
   "oip" '(org-download-clipboard :which-key "paste clipboard")
   "oiP" '(org-download-image :which-key "Paste from-path")
   "oid" '(org-download-delete :which-key "delete file")
   "oie" '(edraw-org-edit-regular-file-link :which-key "edit edraw")
   "oiE" '(org-download-edit :which-key "Edit externally")
   "oir" '(org-download-rename-at-point :which-key "rename file")
-  "oit" '(garid-custom/org-toggle-display-images-n-edraw :which-key "toggle shot/hide image")
+  "oit" '(garid/org-toggle-display-images-n-edraw :which-key "toggle shot/hide image")
   "ois" '(:ignore t :which-key "size........................")
   "oisn" '((lambda () (interactive) (setq org-image-actual-width '(800)) ) :which-key "normal 800px")
   "oisb" '((lambda () (interactive) (setq org-image-actual-width '(1500)) ) :which-key "big    1500px")
@@ -3025,7 +3026,7 @@ else
 	return 0
 fi
 #+end_src
-** Make long file faster
+** COMMENT Make long file faster
 [[https://200ok.ch/posts/2020-09-29_comprehensive_guide_on_handling_long_lines_in_emacs.html][this article]]
 
 #+begin_src emacs-lisp
