@@ -1451,20 +1451,19 @@ esac
   (add-hook 'conf-mode-hook 'tempel-setup-capf)
   (add-hook 'prog-mode-hook 'tempel-setup-capf)
   (add-hook 'text-mode-hook 'tempel-setup-capf)
+
+  :config
+  (defun garid/choose-from-list-and-insert-it (asdf)
+    (interactive)
+    (insert (let ((choices asdf))
+              (completing-read "Choose: " choices))))
+
+
+  (defun garid/choose-from-list-and-return-it (asdf)
+    (interactive)
+    (let ((choices asdf))
+      (completing-read "Choose: " choices)))
   )
-#+end_src
-
-#+begin_src emacs-lisp
-(defun gry/choose-from-list-and-insert-it (asdf)
-  (interactive)
-  (insert (let ((choices asdf))
-    (completing-read "Choose: " choices))))
-
-
-(defun gry/choose-from-list-and-return-it (asdf)
-  (interactive)
-  (let ((choices asdf))
-    (completing-read "Choose: " choices)))
 #+end_src
 
 ** =elec-pair=: auto parenthesis pair
@@ -1657,7 +1656,7 @@ Similar to vim-signify.
 (defun replace-in-string (what with in)
   (replace-regexp-in-string (regexp-quote what) with in nil 'literal))
 
-(defun gry/org-open-pdf ()
+(defun garid/org-open-pdf ()
   (interactive)
   (call-process-shell-command
    (concat "xdg-open "                                  ;; try to open default PDF viewer
@@ -1667,7 +1666,7 @@ Similar to vim-signify.
            ".pdf &"                                     ;; adds extension
            )))
 
-(defun gry/org-open-html ()
+(defun garid/org-open-html ()
   (interactive)
   (call-process-shell-command
    ;; (concat "xdg-open "                               ;; try to open default PDF viewer
@@ -1930,7 +1929,7 @@ Similar to vim-signify.
 
 ** Writing Distraction free                                                   :customFunc:
 #+begin_src emacs-lisp
-(defun gry/distraction-free-on ()
+(defun garid/distraction-free-on ()
   (interactive)
   ;;(turn-off-evil-mode)
   (global-set-key (kbd "M-f") 'forward-word) ;; this is kind a stupid, just use the evil settings int he future
@@ -1957,7 +1956,7 @@ Similar to vim-signify.
    ((member "M+ 1p medium"    (font-family-list)) (set-face-attribute 'default nil :font "M+ 1p medium"    :height 140))
    ))
 
-(defun gry/distraction-free-off ()
+(defun garid/distraction-free-off ()
   (interactive)
 
   (global-set-key (kbd "M-f") 'consult-line) ;; this is kind a stupid, just use the evil settings int he future
@@ -1979,17 +1978,17 @@ Similar to vim-signify.
 
 (setq gry-toggle-distraction-free-writing-state t)
 
-(defun gry/toggle-distraction-free-writing ()
+(defun garid/toggle-distraction-free-writing ()
   (interactive)
   (setq gry-toggle-distraction-free-writing-state
         (not gry-toggle-distraction-free-writing-state))
   (if gry-toggle-distraction-free-writing-state
-      (gry/distraction-free-on)
-    (gry/distraction-free-off)))
+      (garid/distraction-free-on)
+    (garid/distraction-free-off)))
 #+end_src
 
 #+RESULTS:
-: gry/toggle-distraction-free-writing
+: garid/toggle-distraction-free-writing
 
 ** =pdf-tools=: reading pdf in Emacs
 #+begin_src emacs-lisp
@@ -2011,7 +2010,7 @@ Similar to vim-signify.
 (use-package spray
     :ensure t
     :bind (("<f6>"  . spray-mode))
-    :hook ((spray-mode . gry/distraction-free-on))
+    :hook ((spray-mode . garid/distraction-free-on))
 )
 #+end_src
 ** =edraw= svg drawing inline in org
@@ -2150,7 +2149,7 @@ Similar to vim-signify.
 | =M-5=     | =harpoon-go-to-5=                        | harpoon-go-to-5                     | =evil-normal-state-map= |
 | =M-6=     | =harpoon-go-to-6=                        | harpoon-go-to-6                     | =evil-normal-state-map= |
 | =<f9>=    | =harpoon-quick-menu-hydra=               | harpoon                             | =evil-normal-state-map= |
-| =M-<f9>=  | =gry/toggle-distraction-free-writing=    | toggle distraction free writing     | =evil-normal-state-map= |
+| =M-<f9>=  | =garid/toggle-distraction-free-writing=    | toggle distraction free writing     | =evil-normal-state-map= |
 
 Note to myself: after changing Table-[[tbl-global-keybindings]], I need to update [[convert-global-keybindings]]
 *** Convert global keybinding table into elisp
@@ -2192,7 +2191,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 (global-set-key (kbd "M-5") 'harpoon-go-to-5)
 (global-set-key (kbd "M-6") 'harpoon-go-to-6)
 (global-set-key (kbd "<f9>") 'harpoon-quick-menu-hydra)
-(global-set-key (kbd "M-<f9>") 'gry/toggle-distraction-free-writing)
+(global-set-key (kbd "M-<f9>") 'garid/toggle-distraction-free-writing)
 #+end_src
 
 ** Sequential keybindings (General.el keybinding configuration)
@@ -2280,8 +2279,8 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | =scl=    | =(global-command-log-mode) (clm/open-command-log-buffer)=                                    | command log mode              | -    | y      |
 | =sw=     | =whitespace-mode=                                                                            | whitespace                    | -    |        |
 | =sg=     | =:ignore t=                                                                                  | garid                         | -    |        |
-| =sgf=    | =gry/distraction-free-on=                                                                    | focus                         | -    |        |
-| =sgr=    | =gry/distraction-free-off=                                                                   | reset                         | -    |        |
+| =sgf=    | =garid/distraction-free-on=                                                                    | focus                         | -    |        |
+| =sgr=    | =garid/distraction-free-off=                                                                   | reset                         | -    |        |
 |--------+--------------------------------------------------------------------------------------------+-------------------------------+------+--------|
 | =O=      | =:ignore t=                                                                                  | open........................  | -    |        |
 | =Oe=     | =(find-file "~/.config/emacs/init.org")=                                                     | emacs init.org                | -    | y      |
@@ -2548,8 +2547,8 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | =oxB=    | =(org-beamer-export-to-pdf nil t)= | beamer               subtree  | org  | y      |
 | =oxP=    | =(org-latex-export-to-pdf nil t)=  | pdf latex            subtree  | org  | y      |
 | =oxr=    | =org-reveal-export-to-html=        | reveal js                     | org  |        |
-| =oxo=    | =gry/org-open-pdf=                 | pdf open                      | org  |        |
-| =oxO=    | =gry/org-open-html=                | html open                     | org  |        |
+| =oxo=    | =garid/org-open-pdf=                 | pdf open                      | org  |        |
+| =oxO=    | =garid/org-open-html=                | html open                     | org  |        |
 | =op=     | =org-latex-preview=                | preview                       | org  |        |
 
 **** org-link related
@@ -2727,8 +2726,8 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "scl" '((lambda () (interactive) (global-command-log-mode) (clm/open-command-log-buffer) ) :which-key "command log mode")
   "sw" '(whitespace-mode :which-key "whitespace")
   "sg" '(:ignore t :which-key "garid")
-  "sgf" '(gry/distraction-free-on :which-key "focus")
-  "sgr" '(gry/distraction-free-off :which-key "reset")
+  "sgf" '(garid/distraction-free-on :which-key "focus")
+  "sgr" '(garid/distraction-free-off :which-key "reset")
   "O" '(:ignore t :which-key "open........................")
   "Oe" '((lambda () (interactive) (find-file "~/.config/emacs/init.org") ) :which-key "emacs init.org")
   "OE" '((lambda () (interactive) (find-file "~/.config/emacs/init.el") ) :which-key "emacs init.el")
@@ -2918,8 +2917,8 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "oxB" '((lambda () (interactive) (org-beamer-export-to-pdf nil t) ) :which-key "beamer               subtree")
   "oxP" '((lambda () (interactive) (org-latex-export-to-pdf nil t) ) :which-key "pdf latex            subtree")
   "oxr" '(org-reveal-export-to-html :which-key "reveal js")
-  "oxo" '(gry/org-open-pdf :which-key "pdf open")
-  "oxO" '(gry/org-open-html :which-key "html open")
+  "oxo" '(garid/org-open-pdf :which-key "pdf open")
+  "oxO" '(garid/org-open-html :which-key "html open")
   "op" '(org-latex-preview :which-key "preview")
   "ol" '(:ignore t :which-key "link........................")
   "old" '(garid/org-toggle-link-n-emphasis :which-key "description-toggle")

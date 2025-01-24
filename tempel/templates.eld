@@ -388,14 +388,14 @@ graphviz-dot-mode
 (fontsize "fontsize=14")
 (rankdir "rankdir=LR")
 (label "label=\"" r> n> "\"")
-(shape "shape=" :post (gry/choose-from-list-and-insert-it '("box" "polygon" "ellipse" "oval" "circle" "point" "egg" "triangle" "plaintext" "plain" "diamond" "trapezium" "parallelogram" "house" "pentagon" "hexagon" "septagon" "octagon" "doublecircle" "doubleoctagon" "tripleoctagon" "invtriangle" "invtrapezium" "invhouse" "rect" "square" "start" "none" "underline" "cylinder" "note" "tab" "folder" "box3d" "component" "prometer" "cds" "rarrow" "larrow" "rpromoter" "lpromoter" "signature" "insulator")))
+(shape "shape=" :post (garid/choose-from-list-and-insert-it '("box" "polygon" "ellipse" "oval" "circle" "point" "egg" "triangle" "plaintext" "plain" "diamond" "trapezium" "parallelogram" "house" "pentagon" "hexagon" "septagon" "octagon" "doublecircle" "doubleoctagon" "tripleoctagon" "invtriangle" "invtrapezium" "invhouse" "rect" "square" "start" "none" "underline" "cylinder" "note" "tab" "folder" "box3d" "component" "prometer" "cds" "rarrow" "larrow" "rpromoter" "lpromoter" "signature" "insulator")))
 
-(arrowhead "arrowhead=" :post (gry/choose-from-list-and-insert-it '("box" "crow" "curve" "diamond" "dot" "icurve" "inv" "none" "normal" "tee" "vee")))
-(arrowtail "arrowtail=" :post (gry/choose-from-list-and-insert-it '("box" "crow" "curve" "diamond" "dot" "icurve" "inv" "none" "normal" "tee" "vee")))
+(arrowhead "arrowhead=" :post (garid/choose-from-list-and-insert-it '("box" "crow" "curve" "diamond" "dot" "icurve" "inv" "none" "normal" "tee" "vee")))
+(arrowtail "arrowtail=" :post (garid/choose-from-list-and-insert-it '("box" "crow" "curve" "diamond" "dot" "icurve" "inv" "none" "normal" "tee" "vee")))
 
-(color     "color="     :post (gry/choose-from-list-and-insert-it '("gray" "red" "blue" "yellow" "green" "aliceblue" "black" "blueviolet" "brown" "cadetblue" "coral" "darkblue" "darkcyan" "1" "2" "3" "4" "5" "6" "7" "8" "9")))
-(fillcolor "fillcolor=" :post (gry/choose-from-list-and-insert-it '("gray" "red" "blue" "yellow" "green" "aliceblue" "black" "blueviolet" "brown" "cadetblue" "coral" "darkblue" "darkcyan" "1" "2" "3" "4" "5" "6" "7" "8" "9")))
-(fontcolor "fontcolor=" :post (gry/choose-from-list-and-insert-it '("gray" "red" "blue" "yellow" "green" "aliceblue" "black" "blueviolet" "brown" "cadetblue" "coral" "darkblue" "darkcyan" "1" "2" "3" "4" "5" "6" "7" "8" "9")))
+(color     "color="     :post (garid/choose-from-list-and-insert-it '("gray" "red" "blue" "yellow" "green" "aliceblue" "black" "blueviolet" "brown" "cadetblue" "coral" "darkblue" "darkcyan" "1" "2" "3" "4" "5" "6" "7" "8" "9")))
+(fillcolor "fillcolor=" :post (garid/choose-from-list-and-insert-it '("gray" "red" "blue" "yellow" "green" "aliceblue" "black" "blueviolet" "brown" "cadetblue" "coral" "darkblue" "darkcyan" "1" "2" "3" "4" "5" "6" "7" "8" "9")))
+(fontcolor "fontcolor=" :post (garid/choose-from-list-and-insert-it '("gray" "red" "blue" "yellow" "green" "aliceblue" "black" "blueviolet" "brown" "cadetblue" "coral" "darkblue" "darkcyan" "1" "2" "3" "4" "5" "6" "7" "8" "9")))
 
 
 (dir "dir=both")
@@ -403,7 +403,7 @@ graphviz-dot-mode
 org-mode
 
 (caption                      "#+caption: ")
-(name                         "#+name: " :post (gry/choose-from-list-and-insert-it '("fig:" "tbl:" "eqn:" "lst:")))
+(name                         "#+name: " :post (garid/choose-from-list-and-insert-it '("fig:" "tbl:" "eqn:" "lst:")))
 (drawer                       ":" p ":" n r ":end:")
 (begin                        "#+begin_" (s name) n> r> n "#+end_" name)
 (quote                        "#+begin_quote" n> r> n "#+end_quote")
@@ -423,28 +423,28 @@ org-mode
 (elisp                        "#+begin_src emacs-lisp" n r n "#+end_src" :post (org-edit-src-code))
 (inlsrc                       "src_" p "[:exports code]{" q "}")
 (title                        "#+title: " p n "#+author: Garid Zorigoo" n "#+language: en" n  "#+startup: show2levels" n "#+auto_tangle: t")
-(toc                          "#+options: " n :post (gry/choose-from-list-and-insert-it '("toc:t" "toc:2" "toc:nil")))
+(toc                          "#+options: " n :post (garid/choose-from-list-and-insert-it '("toc:t" "toc:2" "toc:nil")))
 (shell                        "#+begin_src sh :eval no-export :results verbatim :exports both" n "#!/bin/sh" n r n  "#+end_src" :post (org-edit-src-code))
 
-(startup                      "#+startup: " :post (gry/choose-from-list-and-insert-it '("overview" "content" "showall" "showeverything" "show2levels"  "show3levels"  "show4levels"  "show5levels")))
+(startup                      "#+startup: " :post (garid/choose-from-list-and-insert-it '("overview" "content" "showall" "showeverything" "show2levels"  "show3levels"  "show4levels"  "show5levels")))
 (imgw                         "#+attr_latex: :width 0.9\\textwidth" n   "#+attr_html:  :width 100% :height 100%")
-(oxr                          "#+reveal_root: https://cdn.jsdelivr.net/npm/reveal.js" n "#+reveal_init_options: width:1920, height:1080" n "#+reveal_theme: "  :post (gry/choose-from-list-and-insert-it '("black" "white" "league" "beige" "night" "serif" "solarized" "moon" "dracula" "sky" "blood")))
+(oxr                          "#+reveal_root: https://cdn.jsdelivr.net/npm/reveal.js" n "#+reveal_init_options: width:1920, height:1080" n "#+reveal_theme: "  :post (garid/choose-from-list-and-insert-it '("black" "white" "league" "beige" "night" "serif" "solarized" "moon" "dracula" "sky" "blood")))
 (oxt                          "#+setupfile: ~/.config/emacs/org-templates/level-0-xelatex-fonts-conf.org")
 (oxh                          "#+setupfile: ~/.config/emacs/org-templates/level-0-html-export-template.org")
 (printbibliograph             "#+print_bibliography:")
 
-(results                      "results " :post (gry/choose-from-list-and-insert-it
+(results                      "results " :post (garid/choose-from-list-and-insert-it
                                                 '( "verbatim" "value" "output" "table" "file xxx :output-dir .../"
                                                    "list" "scalar" "code" "drawer" "html" "latex" "link" "org" "pp")))
 (vardown                      "#+header: :var outputVar=" :post (insert (concat org-download-image-dir "/filename.svg") ))
 (file                         ":file "   :post (insert (concat org-download-image-dir "/tempFile") ))
-(cache                        "cache "   :post (gry/choose-from-list-and-insert-it '("yes" "no")))
-(wrap                         "wrap "    :post (gry/choose-from-list-and-insert-it '("example" "src python" "src sh" "src bash")))
-(mkdirp                       "mkdirp "  :post (gry/choose-from-list-and-insert-it '("yes" "no")))
-(eval                         "eval "    :post (gry/choose-from-list-and-insert-it '("never-export" "no" "yes")))
-(exports                      "exports " :post (gry/choose-from-list-and-insert-it '("code" "results" "both" "none")))
-(session                      "session " :post (gry/choose-from-list-and-insert-it '("SessionName" "" "/ssh:localhost:py" "/jpy:localhost#8888")))
-(async                        "session " :post (gry/choose-from-list-and-insert-it '("yes" "no")))
+(cache                        "cache "   :post (garid/choose-from-list-and-insert-it '("yes" "no")))
+(wrap                         "wrap "    :post (garid/choose-from-list-and-insert-it '("example" "src python" "src sh" "src bash")))
+(mkdirp                       "mkdirp "  :post (garid/choose-from-list-and-insert-it '("yes" "no")))
+(eval                         "eval "    :post (garid/choose-from-list-and-insert-it '("never-export" "no" "yes")))
+(exports                      "exports " :post (garid/choose-from-list-and-insert-it '("code" "results" "both" "none")))
+(session                      "session " :post (garid/choose-from-list-and-insert-it '("SessionName" "" "/ssh:localhost:py" "/jpy:localhost#8888")))
+(async                        "session " :post (garid/choose-from-list-and-insert-it '("yes" "no")))
 (tangle                       "tangle ~/")
 (tangle_iff                   "tangle (if (not file-exists-p \"foo\") \"foo\" \"no\")")
 (shebang                      "shebang #!/bin/bash")
