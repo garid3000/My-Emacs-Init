@@ -915,8 +915,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 #+begin_src emacs-lisp
 (use-package calendar
   :ensure nil
-  :custom
-  (calendar-week-start-day 1))
+  :custom (calendar-week-start-day 1))
 #+end_src
 ** =org-agenda=: the agenda
 #+begin_src emacs-lisp :results none
