@@ -1512,8 +1512,9 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
 ** =eglot=: lsp
 #+begin_src emacs-lisp
 (use-package eglot
-  :config
-  (add-to-list 'eglot-server-programs '(nix-ts-mode . ("nil"))))
+  :custom (eglot-report-progress nil)
+  ;;:config (add-to-list 'eglot-server-programs '(nix-ts-mode . ("nil")))
+  )
 #+end_src
 ** =consult-eglot=: consulting with lsp
 #+begin_src emacs-lisp

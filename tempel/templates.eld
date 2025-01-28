@@ -378,6 +378,9 @@ python-mode
           "_ = pl.add_mesh(surf)"         r n
           "pl.save_graphic(\"img.svg\")"      )
 (pv.save_graph    "pl.save_graphic(\"\")"     )
+(hh     "# -------------------------------------------------------------------------------------------------------- # "
+        :post (progn (backward-char 95) (evil-enter-replace-state 0) ))
+
 
 graphviz-dot-mode
 (digraph "digraph {\n" r> n> "}")
