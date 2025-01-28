@@ -1642,7 +1642,8 @@ Similar to vim-signify.
 (use-package git-gutter
   :delight  " git"
   :ensure t
-  :config (global-git-gutter-mode))
+  ;;:config (global-git-gutter-mode)
+  )
 #+end_src
 
 ** =harpoon=

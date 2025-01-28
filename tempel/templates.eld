@@ -2,15 +2,16 @@
 
 fundamental-mode ;; Available everywhere
 
-(today (format-time-string "%Y-%m-%d"))
-(date (org-read-date "%Y-%m-%d"))
+(today  (format-time-string "%Y-%m-%d"))
+(date   (org-read-date "%Y-%m-%d"))
+(update (format-time-string "Regular update: %Y-%m-%d %Hh%M") )
 
 prog-mode
 
 (fixme (if (derived-mode-p 'emacs-lisp-mode) ";; " comment-start) "FIXME ")
-(todo (if (derived-mode-p 'emacs-lisp-mode) ";; " comment-start) "TODO ")
-(bug (if (derived-mode-p 'emacs-lisp-mode) ";; " comment-start) "BUG ")
-(hack (if (derived-mode-p 'emacs-lisp-mode) ";; " comment-start) "HACK ")
+(todo  (if (derived-mode-p 'emacs-lisp-mode) ";; " comment-start) "TODO ")
+(bug   (if (derived-mode-p 'emacs-lisp-mode) ";; " comment-start) "BUG ")
+(hack  (if (derived-mode-p 'emacs-lisp-mode) ";; " comment-start) "HACK ")
 
 plantuml-mode
 
@@ -237,14 +238,9 @@ plantuml-mode
 (icon-yen                       "<&yen>")
 (icon-zoom-in                   "<&zoom-in>")
 (icon-zoom-out                  "<&zoom-out>")
-
 (sub-diagram                  "{{" r> n> "}}")
-;;
 (gantt                         "@startgantt\n" r> n> "@endgantt")
 (starts                       "starts date")
-;;
-
-;; Sequence diagram
 (participant-actor              "actor       \"name\" as id")
 (participant-boundary           "boundary    \"name\" as id")
 (participant-control            "control     \"name\" as id")
@@ -252,44 +248,42 @@ plantuml-mode
 (participant-database           "database    \"name\" as id")
 (participant-collections        "collections \"name\" as id")
 (participant-queue              "queue       \"name\" as id")
-
 (theme-font                     "!theme toy\nskinparam defaultFontName Linux Libertine\n")
-
-
 
 
 latex-mode
 
-(abstract "\\begin{abstract}\n" r> n> "\\end{abstract}")
-(align "\\begin{align}\n" r> n> "\\end{align}")
-(alignn "\\begin{align*}\n" r> n> "\\end{align*}")
-(gather "\\begin{gather}\n" r> n> "\\end{gather}")
-(gatherr "\\begin{gather*}\n" r> n> "\\end{gather*}")
-(appendix "\\begin{appendix}\n" r> n> "\\end{appendix}")
-(begin "\\begin{" (s env) "}" r> n> "\\end{" (s env) "}")
-(center "\\begin{center}\n" r> n> "\\end{center}")
-(displaymath "\\begin{displaymath}\n" r> n> "\\end{displaymath}") (document "\\begin{document}\n" r> n> "\\end{document}")
-(enumerate "\\begin{enumerate}\n\\item " r> n> "\\end{enumerate}")
-(equation "\\begin{equation}" r> n> "\\end{equation}")
-(flushleft "\\begin{flushleft}" r> n> "\\end{flushleft}")
-(flushright "\\begin{flushright}" r> n> "\\end{flushright}")
-(frac "\\frac{" p "}{" q "}")
-(fussypar "\\begin{fussypar}" r> n> "\\end{fussypar}")
-(itemize "\\begin{itemize}\n\\item " r> n> "\\end{itemize}")
-(letter "\\begin{letter}\n" r> n> "\\end{letter}")
-(math "\\begin{math}\n" r> n> "\\end{math}")
-(minipage "\\begin{minipage}[t]{0.5\linewidth}\n" r> n> "\\end{minipage}")
-(quotation "\\begin{quotation}\n" r> n> "\\end{quotation}")
-(quote "\\begin{quote}\n" r> n> "\\end{quote}")
-(sloppypar "\\begin{sloppypar}\n" r> n> "\\end{sloppypar}")
-(theindex "\\begin{theindex}\n" r> n> "\\end{theindex}")
-(trivlist "\\begin{trivlist}\n" r> n> "\\end{trivlist}")
-(verbatim "\\begin{verbatim}\n" r> n> "\\end{verbatim}")
-(verbatimm "\\begin{verbatim*}\n" r> n> "\\end{verbatim*}")
-(matrixp    "\\begin{pmatrix}" n>
-            r " & " r " & " r " & " r n>
-            r " & " r " & " r " & " r n>
-            r " & " r " & " r " & " r n>
+(abstract    "\\begin{abstract}\n"                   r> n> "\\end{abstract}"   )
+(align       "\\begin{align}\n"                      r> n> "\\end{align}"      )
+(alignn      "\\begin{align*}\n"                     r> n> "\\end{align*}"     )
+(gather      "\\begin{gather}\n"                     r> n> "\\end{gather}"     )
+(gatherr     "\\begin{gather*}\n"                    r> n> "\\end{gather*}"    )
+(appendix    "\\begin{appendix}\n"                   r> n> "\\end{appendix}"   )
+(begin       "\\begin{" (s env) "}"                  r> n> "\\end{" (s env) "}")
+(center      "\\begin{center}\n"                     r> n> "\\end{center}"     )
+(displaymath "\\begin{displaymath}\n"                r> n> "\\end{displaymath}")
+(document    "\\begin{document}\n"                   r> n> "\\end{document}"   )
+(enumerate   "\\begin{enumerate}\n\\item "           r> n> "\\end{enumerate}"  )
+(equation    "\\begin{equation}"                     r> n> "\\end{equation}"   )
+(flushleft   "\\begin{flushleft}"                    r> n> "\\end{flushleft}"  )
+(flushright  "\\begin{flushright}"                   r> n> "\\end{flushright}" )
+(frac        "\\frac{" p "}{" q "}"                                            )
+(fussypar    "\\begin{fussypar}"                     r> n> "\\end{fussypar}"   )
+(itemize     "\\begin{itemize}\n\\item "             r> n> "\\end{itemize}"    )
+(letter      "\\begin{letter}\n"                     r> n> "\\end{letter}"     )
+(math        "\\begin{math}\n"                       r> n> "\\end{math}"       )
+(minipage    "\\begin{minipage}[t]{0.5\linewidth}\n" r> n> "\\end{minipage}"   )
+(quotation   "\\begin{quotation}\n"                  r> n> "\\end{quotation}"  )
+(quote       "\\begin{quote}\n"                      r> n> "\\end{quote}"      )
+(sloppypar   "\\begin{sloppypar}\n"                  r> n> "\\end{sloppypar}"  )
+(theindex    "\\begin{theindex}\n"                   r> n> "\\end{theindex}"   )
+(trivlist    "\\begin{trivlist}\n"                   r> n> "\\end{trivlist}"   )
+(verbatim    "\\begin{verbatim}\n"                   r> n> "\\end{verbatim}"   )
+(verbatimm   "\\begin{verbatim*}\n"                  r> n> "\\end{verbatim*}"  )
+(matrixp     "\\begin{pmatrix}"     r n>
+            r " & " r " & " r " & " r "\\\\" n> 
+            r " & " r " & " r " & " r "\\\\" n> 
+            r " & " r " & " r " & " r "\\\\" n> 
             "\\end{pmatrix}")
 
 lisp-mode emacs-lisp-mode ;; Specify multiple modes
@@ -298,50 +292,50 @@ lisp-mode emacs-lisp-mode ;; Specify multiple modes
 
 emacs-lisp-mode
 
-(autoload ";;;###autoload")
-(pt "(point)")
-(var "(defvar " p "\n  \"" p "\")")
-(local "(defvar-local " p "\n  \"" p "\")")
-(const "(defconst " p "\n  \"" p "\")")
-(custom "(defcustom " p "\n  \"" p "\"" n> ":type '" p ")")
-(face "(defface " p " '((t :inherit " p "))\n  \"" p "\")")
-(group "(defgroup " p " nil\n  \"" p "\"" n> ":group '" p n> ":prefix \"" p "-\")")
-(macro "(defmacro " p " (" p ")\n  \"" p "\"" n> r> ")")
-(alias "(defalias '" p " '" p ")")
-(fun "(defun " p " (" p ")\n  \"" p "\"" n> r> ")")
-(iflet "(if-let (" p ")" n> r> ")")
-(whenlet "(when-let (" p ")" n> r> ")")
-(whilelet "(while-let (" p ")" n> r> ")")
-(andlet "(and-let* (" p ")" n> r> ")")
-(cond "(cond" n "(" q "))" >)
-(pcase "(pcase " (p "scrutinee") n "(" q "))" >)
-(let "(let (" p ")" n> r> ")")
-(lett "(let* (" p ")" n> r> ")")
-(pcaselet "(pcase-let (" p ")" n> r> ")")
+(autoload  ";;;###autoload")
+(pt        "(point)")
+(var       "(defvar " p "\n  \"" p "\")")
+(local     "(defvar-local " p "\n  \"" p "\")")
+(const     "(defconst " p "\n  \"" p "\")")
+(custom    "(defcustom " p "\n  \"" p "\"" n> ":type '" p ")")
+(face      "(defface " p " '((t :inherit " p "))\n  \"" p "\")")
+(group     "(defgroup " p " nil\n  \"" p "\"" n> ":group '" p n> ":prefix \"" p "-\")")
+(macro     "(defmacro " p " (" p ")\n  \"" p "\"" n> r> ")")
+(alias     "(defalias '" p " '" p ")")
+(fun       "(defun " p " (" p ")\n  \"" p "\"" n> r> ")")
+(iflet     "(if-let (" p ")" n> r> ")")
+(whenlet   "(when-let (" p ")" n> r> ")")
+(whilelet  "(while-let (" p ")" n> r> ")")
+(andlet    "(and-let* (" p ")" n> r> ")")
+(cond      "(cond" n "(" q "))" >)
+(pcase     "(pcase " (p "scrutinee") n "(" q "))" >)
+(let       "(let (" p ")" n> r> ")")
+(lett      "(let* (" p ")" n> r> ")")
+(pcaselet  "(pcase-let (" p ")" n> r> ")")
 (pcaselett "(pcase-let* (" p ")" n> r> ")")
-(rec "(letrec (" p ")" n> r> ")")
-(dotimes "(dotimes (" p ")" n> r> ")")
-(dolist "(dolist (" p ")" n> r> ")")
-(loop "(cl-loop for " p " in " p " do" n> r> ")")
-(command "(defun " p " (" p ")\n  \"" p "\"" n> "(interactive" p ")" n> r> ")")
-(advice "(defun " (p "adv" name) " (&rest app)" n> p n> "(apply app))" n>
-        "(advice-add #'" (p "fun") " " (p ":around") " #'" (s name) ")")
-(header ";;; " (file-name-nondirectory (or (buffer-file-name) (buffer-name)))
-        " -- " p " -*- lexical-binding: t -*-" n
-        ";;; Commentary:" n ";;; Code:" n n)
-(provide "(provide '" (file-name-base (or (buffer-file-name) (buffer-name))) ")" n
-         ";;; " (file-name-nondirectory (or (buffer-file-name) (buffer-name)))
-         " ends here" n)
+(rec       "(letrec (" p ")" n> r> ")")
+(dotimes   "(dotimes (" p ")" n> r> ")")
+(dolist    "(dolist (" p ")" n> r> ")")
+(loop      "(cl-loop for " p " in " p " do" n> r> ")")
+(command   "(defun " p " (" p ")\n  \"" p "\"" n> "(interactive" p ")" n> r> ")")
+(advice    "(defun " (p "adv" name) " (&rest app)" n> p n> "(apply app))" n>
+           "(advice-add #'" (p "fun") " " (p ":around") " #'" (s name) ")")
+(header    ";;; " (file-name-nondirectory (or (buffer-file-name) (buffer-name)))
+           " -- " p " -*- lexical-binding: t -*-" n
+           ";;; Commentary:" n ";;; Code:" n n)
+(provide   "(provide '" (file-name-base (or (buffer-file-name) (buffer-name))) ")" n
+           ";;; " (file-name-nondirectory (or (buffer-file-name) (buffer-name)))
+           " ends here" n)
 
 eshell-mode
 
-(for "for " (p "i") " in " p " { " q " }")
-(while "while { " p " } { " q " }")
-(until "until { " p " } { " q " }")
-(if "if { " p " } { " q " }")
-(ife "if { " p " } { " p " } { " q " }")
-(unl "unless { " p " } { " q " }")
-(unle "unless { " p " } { " p " } { " q " }")
+(for   "for " (p "i") " in " p " { " q " }")
+(while "while { "  p " } { " q " }")
+(until "until { "  p " } { " q " }")
+(if    "if { "     p " } { " q " }")
+(ife   "if { "     p " } { " p " } { " q " }")
+(unl   "unless { " p " } { " q " }")
+(unle  "unless { " p " } { " p " } { " q " }")
 
 text-mode
 
@@ -354,24 +348,29 @@ text-mode
 (cut "--8<---------------cut here---------------start------------->8---" n r n
      "--8<---------------cut here---------------end--------------->8---" n)
 (rot13 (p "plain text" text) n "----" n (rot13 text))
-(calc (p "taylor(sin(x),x=0,3)" formula) n "----" n (format "%s" (calc-eval formula)) :pre (electric-pair-mode -1) :post(electric-pair-mode +1))
+(calc (p "taylor(sin(x),x=0,3)" formula) n
+      "----" n
+      (format "%s" (calc-eval formula))
+      :pre (electric-pair-mode -1)
+      :post(electric-pair-mode +1))
 
 rst-mode
-
-(title (make-string (length title) ?=) n (p "Title: " title) n (make-string (length title) ?=) n)
+(title (make-string (length title) ?=) n
+       (p "Title: " title) n
+       (make-string (length title) ?=) n)
 
 
 c-mode :when (re-search-backward "^\\S-*$" (line-beginning-position) 'noerror)
 
-(inc "#include <" (p (concat (file-name-base (or (buffer-file-name) (buffer-name))) ".h")) ">")
+(inc "#include <"   (p (concat (file-name-base (or (buffer-file-name) (buffer-name))) ".h")) ">")
 (incc "#include \"" (p (concat (file-name-base (or (buffer-file-name) (buffer-name))) ".h")) "\"")
 
 
 python-mode
 
 (callback "self.ui." p ".clicked.connect(self." p ")")
-(fn       "def " p "(" p ") -> None:" r> "return")
-(mt       "def " p "(self, " p ") -> None:" n> n> "return")
+(fn       "def "     p "(" p ") -> None:" r> "return")
+(mt       "def "     p "(self, " p ") -> None:" n> n> "return")
 (npd      ": np.ndarray[tuple[Literal[4]], np.dtype[np.float64]]")
 (npt      ": np.dtype[np.float64]")
 (pvpl     "pl = pv.Plotter(shape=(1, 1))" r n 
@@ -383,101 +382,113 @@ python-mode
 
 
 graphviz-dot-mode
-(digraph "digraph {\n" r> n> "}")
-(subgraph "subgraph cluster_name {\n" r> "    label=\"some label\"" n> "}")
-(node "node [fontname=\"Iosevka SS06\", fontsize=18, shape=box];")
-(edge "edge [fontname=\"Arial\", fontsize=10];")
-(fontname "fontname=\"Liberation Serif\"")
-(fontsize "fontsize=14")
-(rankdir "rankdir=LR")
-(label "label=\"" r> n> "\"")
-(shape "shape=" :post (garid/choose-from-list-and-insert-it '("box" "polygon" "ellipse" "oval" "circle" "point" "egg" "triangle" "plaintext" "plain" "diamond" "trapezium" "parallelogram" "house" "pentagon" "hexagon" "septagon" "octagon" "doublecircle" "doubleoctagon" "tripleoctagon" "invtriangle" "invtrapezium" "invhouse" "rect" "square" "start" "none" "underline" "cylinder" "note" "tab" "folder" "box3d" "component" "prometer" "cds" "rarrow" "larrow" "rpromoter" "lpromoter" "signature" "insulator")))
-
+(digraph   "digraph {\n" r> n> "}")
+(subgraph  "subgraph cluster_name {\n" r> "    label=\"some label\"" n> "}")
+(node      "node [fontname=\"Iosevka SS06\", fontsize=18, shape=box];")
+(edge      "edge [fontname=\"Arial\", fontsize=10];")
+(fontname  "fontname=\"Liberation Serif\"")
+(fontsize  "fontsize=14")
+(rankdir   "rankdir=LR")
+(label     "label=\"" r> n> "\"")
+(shape     "shape=" :post (garid/choose-from-list-and-insert-it
+                           '("box" "polygon" "ellipse" "oval" "circle" "point" "egg" "triangle" "plaintext" "plain" "diamond"
+                            "trapezium" "parallelogram" "house" "pentagon" "hexagon" "septagon" "octagon" "doublecircle"
+                            "doubleoctagon" "tripleoctagon" "invtriangle" "invtrapezium" "invhouse" "rect" "square" "start"
+                            "none" "underline" "cylinder" "note" "tab" "folder" "box3d" "component" "prometer" "cds"
+                            "rarrow" "larrow" "rpromoter" "lpromoter" "signature" "insulator")))
 (arrowhead "arrowhead=" :post (garid/choose-from-list-and-insert-it '("box" "crow" "curve" "diamond" "dot" "icurve" "inv" "none" "normal" "tee" "vee")))
 (arrowtail "arrowtail=" :post (garid/choose-from-list-and-insert-it '("box" "crow" "curve" "diamond" "dot" "icurve" "inv" "none" "normal" "tee" "vee")))
-
 (color     "color="     :post (garid/choose-from-list-and-insert-it '("gray" "red" "blue" "yellow" "green" "aliceblue" "black" "blueviolet" "brown" "cadetblue" "coral" "darkblue" "darkcyan" "1" "2" "3" "4" "5" "6" "7" "8" "9")))
 (fillcolor "fillcolor=" :post (garid/choose-from-list-and-insert-it '("gray" "red" "blue" "yellow" "green" "aliceblue" "black" "blueviolet" "brown" "cadetblue" "coral" "darkblue" "darkcyan" "1" "2" "3" "4" "5" "6" "7" "8" "9")))
 (fontcolor "fontcolor=" :post (garid/choose-from-list-and-insert-it '("gray" "red" "blue" "yellow" "green" "aliceblue" "black" "blueviolet" "brown" "cadetblue" "coral" "darkblue" "darkcyan" "1" "2" "3" "4" "5" "6" "7" "8" "9")))
-
-
-(dir "dir=both")
+(dir       "dir=both")
 
 org-mode
 
-(caption                      "#+caption: ")
-(name                         "#+name: " :post (garid/choose-from-list-and-insert-it '("fig:" "tbl:" "eqn:" "lst:")))
-(drawer                       ":" p ":" n r ":end:")
-(begin                        "#+begin_" (s name) n> r> n "#+end_" name)
-(quote                        "#+begin_quote" n> r> n "#+end_quote")
-(abstract                     "#+begin_abstract" n> r> n "#+end_abstract")
-(sidenote                     "#+begin_sidenote" n> r> n "#+end_sidenote")
-(marginnote                   "#+begin_marginnote" n> r> n "#+end_marginnote")
-(example                      "#+begin_example" n> r> n "#+end_example")
-(center                       "#+begin_center" n> r> n "#+end_center")
-(ascii                        "#+begin_export ascii" n> r> n "#+end_export")
-(html                         "#+begin_export html" n> r> n "#+end_export")
-(latex                        "#+begin_export latex" n> r> n "#+end_export")
-(comment                      "#+begin_comment" n> r> n "#+end_comment")
-(verse                        "#+begin_verse" n> r> n "#+end_verse")
-(src                          "#+begin_src " q n r n "#+end_src")
-(conf                         "#+begin_src conf" q n r n "#+end_src")
-(gnuplot                      "#+begin_src gnuplot :var data=" (p "table") " :file " (p "plot.png") n r n "#+end_src" :post (org-edit-src-code))
-(elisp                        "#+begin_src emacs-lisp" n r n "#+end_src" :post (org-edit-src-code))
-(inlsrc                       "src_" p "[:exports code]{" q "}")
-(title                        "#+title: " p n "#+author: Garid Zorigoo" n "#+language: en" n  "#+startup: show2levels" n "#+auto_tangle: t")
-(toc                          "#+options: " n :post (garid/choose-from-list-and-insert-it '("toc:t" "toc:2" "toc:nil")))
-(shell                        "#+begin_src sh :eval no-export :results verbatim :exports both" n "#!/bin/sh" n r n  "#+end_src" :post (org-edit-src-code))
+(caption     "#+caption: ")
+(name        "#+name: " :post (garid/choose-from-list-and-insert-it '("fig-" "tbl-" "eqn-" "lst-")))
+(drawer      ":" p ":" n r ":end:")
+(begin       "#+begin_" (s name)    n> r> n "#+end_" name)
+(quote       "#+begin_quote"        n> r> n "#+end_quote")
+(abstract    "#+begin_abstract"     n> r> n "#+end_abstract")
+(sidenote    "#+begin_sidenote"     n> r> n "#+end_sidenote")
+(marginnote  "#+begin_marginnote"   n> r> n "#+end_marginnote")
+(example     "#+begin_example"      n> r> n "#+end_example")
+(center      "#+begin_center"       n> r> n "#+end_center")
+(ascii       "#+begin_export ascii" n> r> n "#+end_export")
+(html        "#+begin_export html"  n> r> n "#+end_export")
+(latex       "#+begin_export latex" n> r> n "#+end_export")
+(comment     "#+begin_comment"      n> r> n "#+end_comment")
+(verse       "#+begin_verse"        n> r> n "#+end_verse")
+(src         "#+begin_src "         q n r n "#+end_src")
+(conf        "#+begin_src conf"     q n r n "#+end_src")
+(gnuplot     "#+begin_src gnuplot :var data=" (p "table") " :file " (p "plot.png") n r n "#+end_src" :post (org-edit-src-code))
+(elisp       "#+begin_src emacs-lisp" n r n "#+end_src" :post (org-edit-src-code))
+(inlsrc      "src_" p "[:exports code]{" q "}")
+(title       "#+title: " p n
+             "#+author: Garid Zorigoo" n
+             "#+language: en" n
+             "#+startup: show2levels" n
+             "#+auto_tangle: t")
+(toc         "#+options: " n
+             :post (garid/choose-from-list-and-insert-it '("toc:t" "toc:2" "toc:nil")))
+(shell       "#+begin_src sh :eval no-export :results verbatim :exports both" n
+             "#!/bin/sh" n r n
+             "#+end_src"
+             :post (org-edit-src-code))
+(startup     "#+startup: "
+             :post (garid/choose-from-list-and-insert-it
+                    '("overview" "content" "showall" "showeverything"
+                      "show2levels" "show3levels" "show4levels" "show5levels")))
+(imgw        "#+attr_latex: :width 0.9\\textwidth" n
+             "#+attr_html:  :width 100% :height 100%")
+(oxr         "#+reveal_root: https://cdn.jsdelivr.net/npm/reveal.js" n
+             "#+reveal_init_options: width:1920, height:1080" n
+             "#+reveal_theme: "
+             :post (garid/choose-from-list-and-insert-it
+                    '("black" "white" "league" "beige" "night" "serif"
+                      "solarized" "moon" "dracula" "sky" "blood")))
+(oxt               "#+setupfile: ~/.config/emacs/org-templates/level-0-xelatex-fonts-conf.org")
+(oxh               "#+setupfile: ~/.config/emacs/org-templates/level-0-html-export-template.org")
+(printbibliograph  "#+print_bibliography:")
+(results           "results "
+                   :post (garid/choose-from-list-and-insert-it
+                          '("verbatim" "value" "output" "table" "file xxx :output-dir .../"
+                            "list" "scalar" "code" "drawer" "html" "latex" "link" "org" "pp")))
+(vardown      "#+header: :var outputVar=" :post (insert (concat org-download-image-dir "/filename.svg") ))
+(file         ":file "                    :post (insert (concat org-download-image-dir "/tempFile") ))
+(cache        "cache "                    :post (garid/choose-from-list-and-insert-it '("yes" "no")))
+(wrap         "wrap "                     :post (garid/choose-from-list-and-insert-it '("example" "src python" "src sh" "src bash")))
+(mkdirp       "mkdirp "                   :post (garid/choose-from-list-and-insert-it '("yes" "no")))
+(eval         "eval "                     :post (garid/choose-from-list-and-insert-it '("never-export" "no" "yes")))
+(exports      "exports "                  :post (garid/choose-from-list-and-insert-it '("code" "results" "both" "none")))
+(session      "session "                  :post (garid/choose-from-list-and-insert-it '("SessionName" "" "/ssh:localhost:py" "/jpy:localhost#8888")))
+(async        "session "                  :post (garid/choose-from-list-and-insert-it '("yes" "no")))
+(tangle       "tangle ~/")
+(tangle_iff   "tangle (if (not file-exists-p \"foo\") \"foo\" \"no\")")
+(shebang      "shebang #!/bin/bash")
 
-(startup                      "#+startup: " :post (garid/choose-from-list-and-insert-it '("overview" "content" "showall" "showeverything" "show2levels"  "show3levels"  "show4levels"  "show5levels")))
-(imgw                         "#+attr_latex: :width 0.9\\textwidth" n   "#+attr_html:  :width 100% :height 100%")
-(oxr                          "#+reveal_root: https://cdn.jsdelivr.net/npm/reveal.js" n "#+reveal_init_options: width:1920, height:1080" n "#+reveal_theme: "  :post (garid/choose-from-list-and-insert-it '("black" "white" "league" "beige" "night" "serif" "solarized" "moon" "dracula" "sky" "blood")))
-(oxt                          "#+setupfile: ~/.config/emacs/org-templates/level-0-xelatex-fonts-conf.org")
-(oxh                          "#+setupfile: ~/.config/emacs/org-templates/level-0-html-export-template.org")
-(printbibliograph             "#+print_bibliography:")
 
-(results                      "results " :post (garid/choose-from-list-and-insert-it
-                                                '( "verbatim" "value" "output" "table" "file xxx :output-dir .../"
-                                                   "list" "scalar" "code" "drawer" "html" "latex" "link" "org" "pp")))
-(vardown                      "#+header: :var outputVar=" :post (insert (concat org-download-image-dir "/filename.svg") ))
-(file                         ":file "   :post (insert (concat org-download-image-dir "/tempFile") ))
-(cache                        "cache "   :post (garid/choose-from-list-and-insert-it '("yes" "no")))
-(wrap                         "wrap "    :post (garid/choose-from-list-and-insert-it '("example" "src python" "src sh" "src bash")))
-(mkdirp                       "mkdirp "  :post (garid/choose-from-list-and-insert-it '("yes" "no")))
-(eval                         "eval "    :post (garid/choose-from-list-and-insert-it '("never-export" "no" "yes")))
-(exports                      "exports " :post (garid/choose-from-list-and-insert-it '("code" "results" "both" "none")))
-(session                      "session " :post (garid/choose-from-list-and-insert-it '("SessionName" "" "/ssh:localhost:py" "/jpy:localhost#8888")))
-(async                        "session " :post (garid/choose-from-list-and-insert-it '("yes" "no")))
-(tangle                       "tangle ~/")
-(tangle_iff                   "tangle (if (not file-exists-p \"foo\") \"foo\" \"no\")")
-(shebang                      "shebang #!/bin/bash")
-
-
-(eqin1                        "\\(" r> "\\)")
-(eqin2                        "\\[" r> "\\]")
-(equation                     "\\begin{equation}" r> n> "\\end{equation}")
-(equationaligned              "\\begin{equation}" n> "\\begin{aligned}" r> n> "\\end{aligned}" n> "\\end{equation}")
-(equationlabel                "\\label{"  r  "}" )
-(equationref                  "\\ref{"    r  "}" )
-
-(latexdocclass                "#+latex_class: extarticle" r> n> "#+LATEX_CLASS_OPTIONS: [a4paper, 8pt, twocolumn]")
-(latexstayhere                "#+attr_latex: :placement [H]")
-(auto_tangle                  "#+auto_tangle:  t")
-
-
-(denote_links                 "#+begin: denote-links :regexp \"" r "\" :excluded-dirs-regexp nil :sort-by-component nil :reverse-sort nil :id-only nil :include-date nil" n> r> n "#+end:")
-
-(gtdclarify                  "- [ ] what-it-is :: " r n  "- [ ] resolution :: "  r n "- [ ] next-step? :: " n> )
-(frac                        "\\frac{" p "}{" q "}")
-
-(include                     "#+INCLUDE: \"\" :only-contents t")
-(structure                   "#+begin_src emacs-lisp :results file" r n
-                             "(garid/create-plantuml-using-temp-file \"structure.svg\")" r n
-                             "#+end_src")
-(iframehtml                  "#+begin_export html" r n
-                             "<iframe src=\"tempFile.html\" width=\"100%\" height=\"500\"></iframe>" r n
-                             "#+end_export")
-(jupyter-inline-svg          "%config InlineBackend.figure_formats = ['svg']")
+(eqin1               "\\(" r> "\\)")
+(eqin2               "\\[" r> "\\]")
+(equation            "\\begin{equation}" r> n> "\\end{equation}")
+(equationaligned     "\\begin{equation}" n> "\\begin{aligned}" r> n> "\\end{aligned}" n> "\\end{equation}")
+(equationlabel       "\\label{"  r  "}" )
+(equationref         "\\ref{"    r  "}" )
+(latexdocclass       "#+latex_class: extarticle" r> n> "#+LATEX_CLASS_OPTIONS: [a4paper, 8pt, twocolumn]")
+(latexstayhere       "#+attr_latex: :placement [H]")
+(auto_tangle         "#+auto_tangle:  t")
+(denote_links        "#+begin: denote-links :regexp \"" r "\" :excluded-dirs-regexp nil :sort-by-component nil :reverse-sort nil :id-only nil :include-date nil" n> r> n "#+end:")
+(gtdclarify          "- [ ] what-it-is :: " r n  "- [ ] resolution :: "  r n "- [ ] next-step? :: " n> )
+(frac                "\\frac{" p "}{" q "}")
+(include             "#+INCLUDE: \"\" :only-contents t")
+(structure           "#+begin_src emacs-lisp :results file" r n
+                     "(garid/create-plantuml-using-temp-file \"structure.svg\")" r n
+                     "#+end_src")
+(iframehtml          "#+begin_export html" r n
+                     "<iframe src=\"tempFile.html\" width=\"100%\" height=\"500\"></iframe>" r n
+                     "#+end_export")
+(jupyter-inline-svg  "%config InlineBackend.figure_formats = ['svg']")
 
 ;; Local Variables:
 ;; mode: lisp-data
