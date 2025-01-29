@@ -1513,6 +1513,7 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
 (use-package eglot
   :custom (eglot-report-progress nil)
   ;;:config (add-to-list 'eglot-server-programs '(nix-ts-mode . ("nil")))
+  :config (add-to-list 'eglot-stay-out-of 'eldoc)
   )
 #+end_src
 ** =consult-eglot=: consulting with lsp
