@@ -207,7 +207,8 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   (tooltip-mode          -1)        ; Disable tooltips
   (menu-bar-mode         -1)        ; Disable the menu bar
   (setq-default tab-width 4)
-  ;; (set-fringe-mode 15)         ; Give some breathing room
+  (set-fringe-mode       20)        ; Give some breathing room
+  (column-number-mode      )
 
   (setq-default indent-tabs-mode nil)
   ;; Align with spaces only
