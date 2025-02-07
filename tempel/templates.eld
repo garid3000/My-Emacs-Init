@@ -379,6 +379,7 @@ python-mode
 (pv.save_graph    "pl.save_graphic(\"\")"     )
 (hh     "# -------------------------------------------------------------------------------------------------------- # "
         :post (progn (backward-char 95) (evil-enter-replace-state 0) ))
+(pyright_ignore "pyright: ignore["  "]")
 
 
 graphviz-dot-mode
@@ -489,6 +490,7 @@ org-mode
                      "<iframe src=\"tempFile.html\" width=\"100%\" height=\"500\"></iframe>" r n
                      "#+end_export")
 (jupyter-inline-svg  "%config InlineBackend.figure_formats = ['svg']")
+(challenge           "challenge: I can't do ")
 
 ;; Local Variables:
 ;; mode: lisp-data
