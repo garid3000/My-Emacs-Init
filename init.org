@@ -107,7 +107,6 @@ undo-tree is Emacs's undo & redo helper with built-in tree graph of versions.
 
   :custom
   (evil-undo-system         'undo-tree)
-  (evil-want-C-i-jump       t)
   ;; evil-want-C-i-jump     nil       ;; test I may need jumpy back and forth
 
   ;; not much related with evil but related to movement
@@ -117,7 +116,9 @@ undo-tree is Emacs's undo & redo helper with built-in tree graph of versions.
 
   :config
   ;;(evil-define-key 'normal  org-mode-map   (kbd "TAB") #'org-cycle) ;; for org-cycle (tab) working for terminal
+  (setq evil-want-C-i-jump       t)
   (evil-define-key 'normal 'prog-mode-map  (kbd "K")   'eldoc)      ;; or 'eldoc-box-help-at-point
+  (evil-define-key 'normal  org-mode-map   (kbd "TAB") #'org-cycle)
   (evil-mode 1))
 #+end_src
 ** =evil-collection=: vi-movements everywhere
