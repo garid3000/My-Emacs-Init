@@ -397,10 +397,10 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
                    ;; ("\\.html\\'"            . "thorium-browser   \"%s\""  )
                    ("\\.gif\\'"                . "mpv     \"%s\""            )
                    ("\\.mp4\\'"                . "mpv     \"%s\""            )
-                   ("\\.png\\'"                . "sxiv    \"%s\""            )
+                   ("\\.png\\'"                . "nsxiv    \"%s\""            )
                    ("\\.svg\\'"                . "inkview \"%s\""            )
-                   ("\\.jpeg\\'"               . "sxiv    \"%s\""            )
-                   ("\\.jpg\\'"                . "sxiv    \"%s\""            )
+                   ("\\.jpeg\\'"               . "nsxiv    \"%s\""            )
+                   ("\\.jpg\\'"                . "nsxiv    \"%s\""            )
                    ("\\.pdf\\'"                . "sioyek  \"%s\""            )
                    ("\\.pdf::\\([0-9]+\\)?\\'" . "sioyek  \"%s\" --page %1"  )
                    ("\\.mkv\\'"                . "mpv     \"%s\""            )
@@ -885,7 +885,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 
 #+end_src
 
-** =org-node= helper with org-id
+** COMMENT =org-node= helper with org-id
 #+begin_src emacs-lisp
 (use-package org-node)
 #+end_src
@@ -987,7 +987,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
          ("<f7>" . casual-agenda-tmenu))
   )
 #+end_src
-** =org-timeblock=: agenda to SVG
+** COMMENT =org-timeblock=: agenda to SVG
 #+begin_src emacs-lisp
 (use-package org-timeblock :after org)
 #+end_src
