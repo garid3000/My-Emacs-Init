@@ -80,7 +80,7 @@ I'm pulling packages from following 3 places (not sure that I need all three):
 #+end_src
 
 * Vi-movement and its friends
-** =undo-tree=
+** COMMENT =undo-tree=
 undo-tree is Emacs's undo & redo helper with built-in tree graph of versions.
 
 #+begin_src emacs-lisp
@@ -90,7 +90,11 @@ undo-tree is Emacs's undo & redo helper with built-in tree graph of versions.
   :config
   (global-undo-tree-mode))
 #+end_src
+** =vundo=: visual undo
 
+#+begin_src emacs-lisp
+(use-package vundo)
+#+end_src
 ** =evil=: vi-movements
 #+begin_src emacs-lisp
 ;; Vim Bindings
@@ -106,7 +110,8 @@ undo-tree is Emacs's undo & redo helper with built-in tree graph of versions.
   (setq evil-want-keybinding     nil) ;;; should I put it in :init?
 
   :custom
-  (evil-undo-system         'undo-tree)
+  ;;(evil-undo-system         'undo-tree)
+  (evil-undo-system         'undo-redo)
   ;; evil-want-C-i-jump     nil       ;; test I may need jumpy back and forth
 
   ;; not much related with evil but related to movement
@@ -2269,43 +2274,43 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 #+attr_latex: :placement [H]
 #+caption: system commmands
 #+name: tbl-kbind-sys-related
-| key(s) | function                                                                                   | short description             | mode | lambda |
-|--------+--------------------------------------------------------------------------------------------+-------------------------------+------+--------|
-| =s=      | =:ignore t=                                                                                  | system....................... | -    |        |
-| =srf=    | =recentf-open-files=                                                                         | recent-f.iles                 | -    |        |
-|--------+--------------------------------------------------------------------------------------------+-------------------------------+------+--------|
-| =sl=     | =:ignore t=                                                                                  | line......................... | -    |        |
-| =sl5=    | =(setq display-line-numbers-width 5)=                                                        | digit number                  | -    | y      |
-| =sl4=    | =(setq display-line-numbers-width 4)=                                                        | digit number                  | -    | y      |
-| =sl3=    | =(setq display-line-numbers-width 3)=                                                        | digit number                  | -    | y      |
-| =slm=    | =scroll-lock-mode=                                                                           | scroll-lock-mode              | -    |        |
-| =slv=    | =global-display-fill-column-indicator-mode=                                                  | vertical-line                 | -    |        |
-| =sln=    | =display-line-numbers-mode=                                                                  | number toggle                 | -    |        |
-| =slr=    | =ruler-mode=                                                                                 | ruler mode                    | -    |        |
-| =scl=    | =(global-command-log-mode) (clm/open-command-log-buffer)=                                    | command log mode              | -    | y      |
-| =sw=     | =whitespace-mode=                                                                            | whitespace                    | -    |        |
-| =sg=     | =:ignore t=                                                                                  | garid                         | -    |        |
-| =sgf=    | =garid/distraction-free-on=                                                                    | focus                         | -    |        |
-| =sgr=    | =garid/distraction-free-off=                                                                   | reset                         | -    |        |
-|--------+--------------------------------------------------------------------------------------------+-------------------------------+------+--------|
-| =O=      | =:ignore t=                                                                                  | open........................  | -    |        |
-| =Oe=     | =(find-file "~/.config/emacs/init.org")=                                                     | emacs init.org                | -    | y      |
-| =OE=     | =(find-file "~/.config/emacs/init.el")=                                                      | emacs init.el                 | -    | y      |
-| =Ob=     | =(find-file (nth 0 org-cite-global-bibliography))=                                           | bibliography                  | -    | y      |
-| =Op=     | =(find-file "~/BrainDump/bookshelf/")=                                                       | pdf                           | -    | y      |
-| =Oc=     | =citar-open=                                                                                 | citaiton                      | -    |        |
-| =OO=     | =(find-file org-default-notes-file)=                                                         | org capture                   | -    | y      |
-| =Oi=     | =(find-file "~/BrainDump/gtd/inbox.org")=                                                    | inbox                         | -    | y      |
-| =Om=     | =(find-file "~/BrainDump/gtd/main.org")=                                                     | main                          | -    | y      |
-| =Or=     | =(find-file (concat denote-directory "/phd/20240814T113502--00-garids-phd-index__phd.org"))= | research index                | -    | y      |
-|--------+--------------------------------------------------------------------------------------------+-------------------------------+------+--------|
-| =t=      | =:ignore t=                                                                                  | terminal..................... | -    |        |
-| =te=     | =eshell=                                                                                     | eshell emacs-shell            | -    |        |
-| =tv=     | =vterm=                                                                                      | vterm  vterm                  | -    |        |
-| =tx=     | =garid/open-external-term-here=                                                              | xternal terminal              | -    |        |
-| =tm=     | =tmr-with-description=                                                                       | timer                         | -    |        |
-| =u=      | =:ignore=                                                                                    | undo ........................ | -    |        |
-| =ut=     | =undo-tree-visualize=                                                                        | tree                          | -    |        |
+| key(s) | function                                                                                     | short description             | mode | lambda |
+|--------+----------------------------------------------------------------------------------------------+-------------------------------+------+--------|
+| =s=    | =:ignore t=                                                                                  | system....................... | -    |        |
+| =srf=  | =recentf-open-files=                                                                         | recent-f.iles                 | -    |        |
+|--------+----------------------------------------------------------------------------------------------+-------------------------------+------+--------|
+| =sl=   | =:ignore t=                                                                                  | line......................... | -    |        |
+| =sl5=  | =(setq display-line-numbers-width 5)=                                                        | digit number                  | -    | y      |
+| =sl4=  | =(setq display-line-numbers-width 4)=                                                        | digit number                  | -    | y      |
+| =sl3=  | =(setq display-line-numbers-width 3)=                                                        | digit number                  | -    | y      |
+| =slm=  | =scroll-lock-mode=                                                                           | scroll-lock-mode              | -    |        |
+| =slv=  | =global-display-fill-column-indicator-mode=                                                  | vertical-line                 | -    |        |
+| =sln=  | =display-line-numbers-mode=                                                                  | number toggle                 | -    |        |
+| =slr=  | =ruler-mode=                                                                                 | ruler mode                    | -    |        |
+| =scl=  | =(global-command-log-mode) (clm/open-command-log-buffer)=                                    | command log mode              | -    | y      |
+| =sw=   | =whitespace-mode=                                                                            | whitespace                    | -    |        |
+| =sg=   | =:ignore t=                                                                                  | garid                         | -    |        |
+| =sgf=  | =garid/distraction-free-on=                                                                  | focus                         | -    |        |
+| =sgr=  | =garid/distraction-free-off=                                                                 | reset                         | -    |        |
+|--------+----------------------------------------------------------------------------------------------+-------------------------------+------+--------|
+| =O=    | =:ignore t=                                                                                  | open........................  | -    |        |
+| =Oe=   | =(find-file "~/.config/emacs/init.org")=                                                     | emacs init.org                | -    | y      |
+| =OE=   | =(find-file "~/.config/emacs/init.el")=                                                      | emacs init.el                 | -    | y      |
+| =Ob=   | =(find-file (nth 0 org-cite-global-bibliography))=                                           | bibliography                  | -    | y      |
+| =Op=   | =(find-file "~/BrainDump/bookshelf/")=                                                       | pdf                           | -    | y      |
+| =Oc=   | =citar-open=                                                                                 | citaiton                      | -    |        |
+| =OO=   | =(find-file org-default-notes-file)=                                                         | org capture                   | -    | y      |
+| =Oi=   | =(find-file "~/BrainDump/gtd/inbox.org")=                                                    | inbox                         | -    | y      |
+| =Om=   | =(find-file "~/BrainDump/gtd/main.org")=                                                     | main                          | -    | y      |
+| =Or=   | =(find-file (concat denote-directory "/phd/20240814T113502--00-garids-phd-index__phd.org"))= | research index                | -    | y      |
+|--------+----------------------------------------------------------------------------------------------+-------------------------------+------+--------|
+| =t=    | =:ignore t=                                                                                  | terminal..................... | -    |        |
+| =te=   | =eshell=                                                                                     | eshell emacs-shell            | -    |        |
+| =tv=   | =vterm=                                                                                      | vterm  vterm                  | -    |        |
+| =tx=   | =garid/open-external-term-here=                                                              | xternal terminal              | -    |        |
+| =tm=   | =tmr-with-description=                                                                       | timer                         | -    |        |
+| =u=    | =:ignore=                                                                                    | undo ........................ | -    |        |
+| =ut=   | =vundo=                                                                                      | vundo                         | -    |        |
 
 **** Bookmark
 #+attr_latex: :placement [H]
@@ -2750,7 +2755,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "tx" '(garid/open-external-term-here :which-key "xternal terminal")
   "tm" '(tmr-with-description :which-key "timer")
   "u" '(:ignore :which-key "undo ........................")
-  "ut" '(undo-tree-visualize :which-key "tree")
+  "ut" '(vundo :which-key "vundo")
   "n" '(:ignore t :which-key "note........................")
   "nr" '(denote-rename-file :which-key "rename")
   "nf" '(denote-open-or-create :which-key "find")
