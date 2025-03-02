@@ -1622,12 +1622,16 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
   (setq-default abbrev-mode t)
   )
 #+end_src
-** =fancy-dabbrev=
+** completion preview mode
 #+begin_src emacs-lisp
-(use-package fancy-dabbrev
-  :delight " fda"
-  :ensure t
-  :config (global-fancy-dabbrev-mode))
+(use-package completion-preview
+  :bind (:map
+         completion-preview-active-mode-map
+         ("C-i" . completion-preview-insert    )  ;; default bind
+         ("M-i" . completion-preview-complete  )  ;; default bind
+         ("M-h" . completion-preview-insert    )) ;; my preferred bind
+  :config
+  (global-completion-preview-mode))
 #+end_src
 
 * Coding convenient
