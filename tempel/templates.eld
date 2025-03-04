@@ -492,6 +492,10 @@ org-mode
 (jupyter-inline-svg  "%config InlineBackend.figure_formats = ['svg']")
 (challenge           "challenge: I can't do ")
 
+(initcontacts        ":EMAIL: %(org-contacts-template-email) " r n ":PHONE:" r n ":ALIAS:" r n ":NICKNAME:" r n ":IGNORE:" r n ":ICON:" r n ":NOTE:" r n ":ADDRESS:" r n ":BIRTHDAY:")
+
+
+
 ;; Local Variables:
 ;; mode: lisp-data
 ;; outline-regexp: "[a-z]"
