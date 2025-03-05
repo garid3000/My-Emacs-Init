@@ -3113,6 +3113,14 @@ fi
   (zoom-window-mode-line-color "dark slate gray")
   )
 #+end_src
+** screen
+#+begin_src emacs-lisp
+(use-package gif-screencast
+  :custom
+  (gif-screencast-program "hyprshot")
+  (gif-screencast-args '("-m" "window" "-m" "active" "-o" "/" "-f")))
+;; this is configured to be on wayland/hyprland
+#+end_src
 ** test karthinks consult reftex                                                    :test:
 #+begin_src emacs-lisp
 (use-package consult-reftex
