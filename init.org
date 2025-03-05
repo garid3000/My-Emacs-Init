@@ -480,8 +480,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
                                (awk        . t) (go         . t)
                                (asymptote  . t) (ditaa      . t)
                                (nix        . t) (lua        . t)
-                               (jupyter    . t)
-                               ;; (asymptote  . t)
+                               ;;(jupyter    . t)
                                ))
 
   (font-lock-add-keywords 'org-mode
