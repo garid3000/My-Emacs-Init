@@ -651,3 +651,132 @@ stork.register(
   (message (concat "focus tag changed to " garids-focus-tag)))
 #+end_src
 +end_src
+
+* COMMENT put empty svg file at point                                         :customFunc:
+#+begin_src emacs-lisp
+(defun garid/put-emtpy-svg-img-at-point ()
+  (interactive)
+  ;;Part 1: creates org-image if non existense
+  (unless (file-directory-p org-download-image-dir);; when not
+    (make-directory org-download-image-dir))
+
+  ;;Part 2: copy the template
+  (copy-file;; "~/.config/emacs/org-templates/template.svg"
+   (concat (file-name-directory user-init-file) "org-templates/template.svg")
+   (concat (file-name-as-directory org-download-image-dir)
+           (format-time-string "%Y%m%d-%H%M%S.svg")))
+
+  ;;Part 3: insert the link to the buffer
+  (insert
+   "[[file:"
+   (concat (file-name-as-directory org-download-image-dir)
+           (format-time-string "%Y%m%d-%H%M%S.svg"))
+   "]]"))
+#+end_src
+
+* COMMENT Make long file faster
+[[https://200ok.ch/posts/2020-09-29_comprehensive_guide_on_handling_long_lines_in_emacs.html][this article]]
+
+#+begin_src emacs-lisp
+(setq-default bidi-paragraph-direction 'left-to-right )
+(setq         bidi-inhibit-bpa          t             )
+#+end_src
+
+
+* COMMENT annotate
+#+begin_src emacs-lisp
+(use-package annotate
+  :ensure t)
+#+end_src
+
+
+
+* COMMENT =org-transclusion=
+#+begin_src emacs-lisp
+(use-package org-transclusion
+  :ensure t
+  :after org
+  :bind (:map org-mode-map
+              ("<f12>"   . org-transclusion-add     )
+              ("M-<f12>" . org-transclusion-add-all )
+              ("<f11>"   . org-transclusion-mode    )))
+#+end_src
+
+
+* COMMENT org-download editing shell script                                 :shell_script:
+#+begin_src shell :tangle garid/edit_img.sh :shebang "#!/bin/sh"
+file=$(readlink -f "$1")
+ext="${file##*.}"
+
+# create empty file if the file doesn't exist
+if [ ! -f "$file" ]; then
+    convert -size 480x320 xc:white "$file";
+    echo "created new $file"
+fi
+
+# open image-editor based on the file's extension
+case "$ext" in
+	jpeg) gimp      "$file" ;;
+	jpg)  gimp      "$file" ;;
+	png)  gimp      "$file" ;;
+	svg)  inkscape  "$file" ;;
+	xopp) xournalpp "$file" ;;
+esac
+#+end_src
+
+
+
+
+* COMMENT =org-node= helper with org-id
+#+begin_src emacs-lisp
+(use-package org-node)
+#+end_src
+
+
+* COMMENT =citar-denote=: citation in denote
+#+begin_src emacs-lisp
+;;(use-package citar-denote
+;;  :ensure t
+;;  :demand t ;; Ensure minor mode loads
+;;  :after (:any citar denote)
+;;  :custom
+;;  ;; Package defaults
+;;  (citar-denote-file-type             'org                )
+;;  (citar-denote-keyword               "bib"               )
+;;  (citar-denote-signature             nil                 )
+;;  ;;(citar-denote-subdir              nil                 )
+;;  (citar-denote-subdir                "litnotes"          )  ;; usefull
+;;  (citar-denote-template              'biblio             )  ;; 'biblio is defined at denote
+;;  (citar-denote-title-format          "author-year-title" )
+;;  (citar-denote-title-format-andstr   "and"               )
+;;  (citar-denote-title-format-authors  1                   )
+;;  (citar-denote-use-bib-keywords      nil                 )
+;;  :preface
+;;  (bind-key "C-c w n" #'citar-denote-open-note)
+;;  :init
+;;  (citar-denote-mode)
+;;  ;; Bind all available commands
+;;  :bind (("C-c w d" . citar-denote-dwim                 )
+;;         ("C-c w e" . citar-denote-open-reference-entry )
+;;         ("C-c w a" . citar-denote-add-citekey          )
+;;         ("C-c w k" . citar-denote-remove-citekey       )
+;;         ("C-c w r" . citar-denote-find-reference       )
+;;         ("C-c w l" . citar-denote-link-reference       )
+;;         ("C-c w f" . citar-denote-find-citation        )
+;;         ("C-c w x" . citar-denote-nocite               )
+;;         ("C-c w y" . citar-denote-cite-nocite          )
+;;         ("C-c w z" . citar-denote-nobib                )))
+#+end_src
+
+
+
+* COMMENT =undo-tree=
+undo-tree is Emacs's undo & redo helper with built-in tree graph of versions.
+
+#+begin_src emacs-lisp
+(use-package undo-tree
+  :delight " udt"
+  :ensure t
+  :config
+  (global-undo-tree-mode))
+#+end_src

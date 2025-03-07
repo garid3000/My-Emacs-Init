@@ -80,16 +80,6 @@ I'm pulling packages from following 3 places (not sure that I need all three):
 #+end_src
 
 * Vi-movement and its friends
-** COMMENT =undo-tree=
-undo-tree is Emacs's undo & redo helper with built-in tree graph of versions.
-
-#+begin_src emacs-lisp
-(use-package undo-tree
-  :delight " udt"
-  :ensure t
-  :config
-  (global-undo-tree-mode))
-#+end_src
 ** =vundo=: visual undo
 
 #+begin_src emacs-lisp
@@ -658,8 +648,22 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
       (insert (format "[[denote:%s][%s]]"
                       (format-time-string "%Y%m%dT%H%M%S" tmp-cur-time-of-this-note)
                       tmp-str-marked
-                      ))
-      ))
+                      ))))
+
+  (defun garid/choose-denote-directory ()
+    ""
+    (interactive)
+    (setq denote-directory
+          (completing-read
+           "Choose: "
+           (mapcar
+            (lambda (xx) (f-join "/home/garid/BrainDump/" xx)) ;; re-apply root dir
+            (seq-filter
+             (lambda (x) (string-match "denote.*" x))         ;; filter only starting with roam
+             (directory-files "/home/garid/BrainDump/")))   ;; list sub dirs
+           ))
+
+    (message "Now denote-directory = %s" denote-directory))
 
   )
 #+end_src
@@ -668,11 +672,11 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 #+begin_src emacs-lisp
 (use-package consult-denote
   :ensure t
-  ;; :custom
-  ;; (consult-denote-silo-source '("/home/garid/BrainDump/denote"
-  ;;                               "/home/garid/BrainDump/silo-linguistic"
-  ;;                               "/home/garid/BrainDump/silo-research"
-  ;;                               "/home/garid/BrainDump/silo-work"))
+  :custom
+  (consult-denote-silo-source
+   '("/home/garid/BrainDump/denote"
+     "/home/garid/BrainDump/denote_bps/"
+     "/home/garid/BrainDump/denote_proj_grape//"))
   :config
   (consult-denote-mode 1))
 #+end_src
@@ -704,40 +708,6 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
                   nil 0 nil
                   file)
     ))
-#+end_src
-** COMMENT =citar-denote=: citation in denote
-#+begin_src emacs-lisp
-;;(use-package citar-denote
-;;  :ensure t
-;;  :demand t ;; Ensure minor mode loads
-;;  :after (:any citar denote)
-;;  :custom
-;;  ;; Package defaults
-;;  (citar-denote-file-type             'org                )
-;;  (citar-denote-keyword               "bib"               )
-;;  (citar-denote-signature             nil                 )
-;;  ;;(citar-denote-subdir              nil                 )
-;;  (citar-denote-subdir                "litnotes"          )  ;; usefull
-;;  (citar-denote-template              'biblio             )  ;; 'biblio is defined at denote
-;;  (citar-denote-title-format          "author-year-title" )
-;;  (citar-denote-title-format-andstr   "and"               )
-;;  (citar-denote-title-format-authors  1                   )
-;;  (citar-denote-use-bib-keywords      nil                 )
-;;  :preface
-;;  (bind-key "C-c w n" #'citar-denote-open-note)
-;;  :init
-;;  (citar-denote-mode)
-;;  ;; Bind all available commands
-;;  :bind (("C-c w d" . citar-denote-dwim                 )
-;;         ("C-c w e" . citar-denote-open-reference-entry )
-;;         ("C-c w a" . citar-denote-add-citekey          )
-;;         ("C-c w k" . citar-denote-remove-citekey       )
-;;         ("C-c w r" . citar-denote-find-reference       )
-;;         ("C-c w l" . citar-denote-link-reference       )
-;;         ("C-c w f" . citar-denote-find-citation        )
-;;         ("C-c w x" . citar-denote-nocite               )
-;;         ("C-c w y" . citar-denote-cite-nocite          )
-;;         ("C-c w z" . citar-denote-nobib                )))
 #+end_src
 ** =org-roam=
 #+begin_src emacs-lisp
@@ -804,10 +774,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
      ))
 
   :config
-  ;;(org-roam-setup)
-  ;;(org-roam-db-autosync-mode)
-  (org-roam-db-autosync-enable) ;;(require 'org-roam-dailies)
-
+  (org-roam-db-autosync-enable)
 
   ;; Change the slug (aka filename to be same format as from denote)
   ;; https://github.com/org-roam/org-roam/pull/1544#issuecomment-2211801343
@@ -821,9 +788,27 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
           (org-roam-capture-templates
 	       (list (append (car org-roam-capture-templates)
 		                 '(:immediate-finish t)))))
-      (apply #'org-roam-node-insert args)
-      ))
+      (apply #'org-roam-node-insert args)))
 
+
+  (defun garid/choose-roam-directory ()
+    (interactive)
+    (setq org-roam-directory
+          (completing-read "Choose: "
+                           (mapcar
+                            (lambda (xx) (f-join "/home/garid/BrainDump/" xx)) ;; re-apply root dir
+                            (seq-filter
+                             (lambda (x) (string-match "roam.*" x))         ;; filter only starting with roam
+                             (directory-files "/home/garid/BrainDump/")))   ;; list sub dirs
+                           ))
+
+    (setq org-roam-db-location
+          (f-join org-roam-directory "0000_database.db" ))
+
+    (message "Now org-roam-directory = %s" org-roam-directory)
+    (if (string= "yes"
+                 (completing-read "Update DB: " '("no" "yes")))
+        (org-roam-db-sync)))
 
   )
 #+end_src
@@ -876,35 +861,6 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   :config
   (citar-org-roam-mode))
 
-#+end_src
-
-** COMMENT =org-node= helper with org-id
-#+begin_src emacs-lisp
-(use-package org-node)
-#+end_src
-
-** Choosing roam directory                                                    :customFunc:
-#+begin_src emacs-lisp 
-(defun garid/choose-roam-directory ()
-  ""
-  (interactive)
-  (setq org-roam-directory
-        (completing-read "Choose: "
-                         (mapcar
-                          (lambda (xx) (f-join "/home/garid/BrainDump/" xx)) ;; re-apply root dir
-                          (seq-filter                                               
-                           (lambda (x) (string-match "roam.*" x))         ;; filter only starting with roam
-                           (directory-files "/home/garid/BrainDump/")))   ;; list sub dirs
-                         ))
-
-  (setq org-roam-db-location
-        (f-join org-roam-directory "0000_database.db" ))
-
-  (message "Now org-roam-directory = %s" org-roam-directory)
-  (if (string= "yes"
-               (completing-read "Update DB: " '("no" "yes")))
-      (org-roam-db-sync)
-    ))
 #+end_src
 
 * Org Time managements
@@ -982,7 +938,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 #+end_src
 ** COMMENT =org-timeblock=: agenda to SVG
 #+begin_src emacs-lisp
-(use-package org-timeblock :after org)
+(use-package org-timeblock)
 #+end_src
 * Org Exporting related
 ** =ox=
@@ -1323,27 +1279,6 @@ I publish first from org to md in the local dir. Then using that local dir to cr
   (org-download-enable))
 #+end_src
 
-** COMMENT org-download editing shell script                                :shell_script:
-#+begin_src shell :tangle garid/edit_img.sh :shebang "#!/bin/sh"
-file=$(readlink -f "$1")
-ext="${file##*.}"
-
-# create empty file if the file doesn't exist
-if [ ! -f "$file" ]; then
-    convert -size 480x320 xc:white "$file";
-    echo "created new $file"
-fi
-
-# open image-editor based on the file's extension
-case "$ext" in
-	jpeg) gimp      "$file" ;;
-	jpg)  gimp      "$file" ;;
-	png)  gimp      "$file" ;;
-	svg)  inkscape  "$file" ;;
-	xopp) xournalpp "$file" ;;
-esac
-#+end_src
-
 ** =org-ipe=
 #+begin_src emacs-lisp
 (use-package org-ipe
@@ -1366,24 +1301,16 @@ esac
   )
 #+end_src
 
-** COMMENT =org-transclusion=
-#+begin_src emacs-lisp
-(use-package org-transclusion
-  :ensure t
-  :after org
-  :bind (:map org-mode-map
-              ("<f12>"   . org-transclusion-add     )
-              ("M-<f12>" . org-transclusion-add-all )
-              ("<f11>"   . org-transclusion-mode    )))
-#+end_src
-
 ** =org-contacts=
 #+begin_src emacs-lisp
 (use-package org-contacts
   :ensure t
   :after (org denote)
-  :custom
-  (org-contacts-files '("~/BrainDump/denote/20240802T185223--contacts__info.org")))
+  :config
+  (setq org-contacts-files
+        '("/home/garid/BrainDump/denote/20240802T185223--contacts__info.org"
+          "/home/garid/BrainDump/denote_bps/20250306T114521--contacts__info.org"))
+  )
 #+end_src
 * Programming languages
 ** =python=
@@ -1910,27 +1837,6 @@ Similar to vim-signify.
   (garbage-collect))
 #+end_src
 
-** COMMENT put empty svg file at point                                        :customFunc:
-#+begin_src emacs-lisp
-(defun garid/put-emtpy-svg-img-at-point ()
-  (interactive)
-  ;;Part 1: creates org-image if non existense
-  (unless (file-directory-p org-download-image-dir);; when not
-    (make-directory org-download-image-dir))
-
-  ;;Part 2: copy the template
-  (copy-file;; "~/.config/emacs/org-templates/template.svg"
-   (concat (file-name-directory user-init-file) "org-templates/template.svg")
-   (concat (file-name-as-directory org-download-image-dir)
-           (format-time-string "%Y%m%d-%H%M%S.svg")))
-
-  ;;Part 3: insert the link to the buffer
-  (insert
-   "[[file:"
-   (concat (file-name-as-directory org-download-image-dir)
-           (format-time-string "%Y%m%d-%H%M%S.svg"))
-   "]]"))
-#+end_src
 * Writing & Reading
 ** Writing packages
 #+begin_src emacs-lisp
@@ -2104,12 +2010,6 @@ Similar to vim-signify.
   )
 #+end_src
 
-** COMMENT annotate
-#+begin_src emacs-lisp
-(use-package annotate
-  :ensure t)
-#+end_src
-
 * Keybinding
 ** =which-key=: keybinding shower
 #+begin_src emacs-lisp
@@ -2117,11 +2017,12 @@ Similar to vim-signify.
   :delight
   :ensure t
   :custom
-  (which-key-popup-type              'side-window               )
-  (which-key-side-window-location    'right                     )
-  (which-key-idle-delay               0.5                       )
+  ;;(which-key-popup-type              'side-window             )
+  ;;(which-key-side-window-location    'right                   )
+  ;;(which-key-side-window-max-width    0.5                     )
+  (which-key-popup-type              'minibuffer                )
+  (which-key-idle-delay               0.8                       )
   (which-key-idle-secondary-delay     0.01                      )
-  (which-key-side-window-max-width    0.5                       )
   (which-key-sort-order              'which-key-key-order-alpha )
   :config (which-key-mode))
 #+end_src
@@ -2413,27 +2314,28 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 #+attr_latex: :placement [H]
 #+caption: Denote
 #+name: tbl-global-general-keybindings-denote
-| key(s) | function                                    | short description            | mode | lambda |
-|--------+---------------------------------------------+------------------------------+------+--------|
-| =n=      | =:ignore t=                                   | note........................ | -    |        |
-| =nr=     | =denote-rename-file=                          | rename                       | -    |        |
-| =nf=     | =denote-open-or-create=                       | find                         | -    |        |
-| =nd=     | =(dired denote-directory)=                    | dired                        | -    | y      |
-| =nj=     | =denote-journal-extras-new-entry=             | journal                      | -    |        |
-| =nJ=     | =denote-journal-extras-new-or-existing-entry= | Journal-find                 | -    |        |
-| =nil=    | =denote-insert-link=                          | insert-link                  | -    |        |
-| =nij=    | =denote-journal-extras-link-or-create-entry=  | insert-journal-link          | -    |        |
-| =nt=     | =denote-template=                             | template                     | -    |        |
-| =nI=     | =garid/denote-node-insert-immediate=   | Insert-note                  | -    |        |
-| =ns=     | =consult-denote-grep=                         | live-grep                    | -    |        |
-| =nF=     | =consult-denote-find=                         | consult-denote-find          | -    |        |
-| =nl=     | =:ignore t=                                   | denote link................. | -    |        |
-| =nli=    | =denote-insert-link=                          | link insert                  | -    |        |
-| =nlb=    | =denote-find-backlink=                        | find-backlink                | -    |        |
-| =nlf=    | =denote-find-link=                            | find-forward-link            | -    |        |
-| =nlB=    | =denote-backlinks=                            | backlink                     | -    |        |
-| =nlF=    | =denote-link=                                 | forward-link                 | -    |        |
-| =nla=    | =denote-add-links=                            | add-links regex              | -    |        |
+| key(s) | function                                      | short description            | mode | lambda |
+|--------+-----------------------------------------------+------------------------------+------+--------|
+| =n=    | =:ignore t=                                   | note........................ | -    |        |
+| =nr=   | =denote-rename-file=                          | rename                       | -    |        |
+| =nf=   | =denote-open-or-create=                       | find                         | -    |        |
+| =nd=   | =(dired denote-directory)=                    | dired                        | -    | y      |
+| =nj=   | =denote-journal-extras-new-entry=             | journal                      | -    |        |
+| =nJ=   | =denote-journal-extras-new-or-existing-entry= | Journal-find                 | -    |        |
+| =nil=  | =denote-insert-link=                          | insert-link                  | -    |        |
+| =nij=  | =denote-journal-extras-link-or-create-entry=  | insert-journal-link          | -    |        |
+| =nt=   | =denote-template=                             | template                     | -    |        |
+| =nI=   | =garid/denote-node-insert-immediate=          | Insert-note                  | -    |        |
+| =ns=   | =consult-denote-grep=                         | live-grep                    | -    |        |
+| =nF=   | =consult-denote-find=                         | consult-denote-find          | -    |        |
+| =nl=   | =:ignore t=                                   | denote link................. | -    |        |
+| =nli=  | =denote-insert-link=                          | link insert                  | -    |        |
+| =nlb=  | =denote-find-backlink=                        | find-backlink                | -    |        |
+| =nlf=  | =denote-find-link=                            | find-forward-link            | -    |        |
+| =nlB=  | =denote-backlinks=                            | backlink                     | -    |        |
+| =nlF=  | =denote-link=                                 | forward-link                 | -    |        |
+| =nla=  | =denote-add-links=                            | add-links regex              | -    |        |
+| =nc=   | =garid/choose-denote-directory=               | change denote                | -    |        |
 
 **** Roam related
 #+attr_latex: :placement [H]
@@ -2505,6 +2407,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | =oss=  | =org-sort=                                        | sort                         | org  |        |
 | =osp=  | =org-set-property=                                | property                     | org  |        |
 | =osI=  | =org-indent-mode=                                 | indent-mode                  | org  |        |
+| =ose=  | =org-set-effort=                                  | org-set-effort               | org  |        |
 |--------+---------------------------------------------------+------------------------------+------+--------|
 | =osi=  | =:ignore t=                                       | insert heading.............. | org  |        |
 | =osia= | =org-insert-heading-after-current=                | after                  C-RET | org  |        |
@@ -2561,8 +2464,8 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | =oxB=    | =(org-beamer-export-to-pdf nil t)= | beamer               subtree  | org  | y      |
 | =oxP=    | =(org-latex-export-to-pdf nil t)=  | pdf latex            subtree  | org  | y      |
 | =oxr=    | =org-reveal-export-to-html=        | reveal js                     | org  |        |
-| =oxo=    | =garid/org-open-pdf=                 | pdf open                      | org  |        |
-| =oxO=    | =garid/org-open-html=                | html open                     | org  |        |
+| =oxo=    | =garid/org-open-pdf=               | pdf open                      | org  |        |
+| =oxO=    | =garid/org-open-html=              | html open                     | org  |        |
 | =op=     | =org-latex-preview=                | preview                       | org  |        |
 
 **** org-link related
@@ -2778,6 +2681,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "nlB" '(denote-backlinks :which-key "backlink")
   "nlF" '(denote-link :which-key "forward-link")
   "nla" '(denote-add-links :which-key "add-links regex")
+  "nc" '(garid/choose-denote-directory :which-key "change denote")
   "h" '(:ignore t :which-key "help...........................")
   "hh" '(describe-symbol :which-key "help symbol (elisp)")
   "hH" '(describe-key :which-key "help keybinding")
@@ -2902,6 +2806,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "oss" '(org-sort :which-key "sort")
   "osp" '(org-set-property :which-key "property")
   "osI" '(org-indent-mode :which-key "indent-mode")
+  "ose" '(org-set-effort :which-key "org-set-effort")
   "osi" '(:ignore t :which-key "insert heading..............")
   "osia" '(org-insert-heading-after-current :which-key "after                  C-RET")
   "osih" '(org-insert-heading :which-key "heading                M-RET")
@@ -3039,14 +2944,6 @@ else
 	return 0
 fi
 #+end_src
-** COMMENT Make long file faster
-[[https://200ok.ch/posts/2020-09-29_comprehensive_guide_on_handling_long_lines_in_emacs.html][this article]]
-
-#+begin_src emacs-lisp
-(setq-default bidi-paragraph-direction 'left-to-right )
-(setq         bidi-inhibit-bpa          t             )
-#+end_src
-
 * Misc Packages
 ** =crux=
 #+begin_src emacs-lisp
