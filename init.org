@@ -90,17 +90,10 @@ I'm pulling packages from following 3 places (not sure that I need all three):
 ;; Vim Bindings
 (use-package evil
   :ensure t
-  ;; :bind (;; ("<escape>" . keyboard-escape-quit  )  commented on nov21
-  ;;        ;; ("M-j"      . evil-scroll-line-down )  C-e
-  ;;        ;; ("M-k"      . evil-scroll-line-up   )  C-y
-  ;;        ;; ("M-d"      . evil-scroll-page-down )  G
-  ;;        ;; ("M-u"      . evil-scroll-page-up   )  g g
-  ;;        )
   :init
   (setq evil-want-keybinding     nil) ;;; should I put it in :init?
 
   :custom
-  ;;(evil-undo-system         'undo-tree)
   (evil-undo-system         'undo-redo)
   ;; evil-want-C-i-jump     nil       ;; test I may need jumpy back and forth
 
