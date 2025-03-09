@@ -91,7 +91,8 @@ I'm pulling packages from following 3 places (not sure that I need all three):
 (use-package evil
   :ensure t
   :init
-  (setq evil-want-keybinding     nil) ;;; should I put it in :init?
+  (setq evil-want-keybinding     nil) ;;  these
+  (setq evil-want-integration      t) ;;  are for the evil-collection
 
   :custom
   (evil-undo-system         'undo-redo)
@@ -106,7 +107,7 @@ I'm pulling packages from following 3 places (not sure that I need all three):
   ;;(evil-define-key 'normal  org-mode-map   (kbd "TAB") #'org-cycle) ;; for org-cycle (tab) working for terminal
   (setq evil-want-C-i-jump       t)
   (evil-define-key 'normal 'prog-mode-map  (kbd "K")   'eldoc)      ;; or 'eldoc-box-help-at-point
-  (evil-define-key 'normal  org-mode-map   (kbd "TAB") #'org-cycle)
+  ;; (evil-define-key 'normal  org-mode-map   (kbd "TAB") #'org-cycle)
   (evil-mode 1))
 #+end_src
 ** =evil-collection=: vi-movements everywhere
@@ -114,11 +115,10 @@ I'm pulling packages from following 3 places (not sure that I need all three):
 (use-package evil-collection
   :ensure t
   :after evil
-  :delight " evco"
   :config
-  (setq evil-want-integration t)
   (evil-collection-init))
 #+end_src
+
 ** =evil-surround=: easily surround selected region
 I sometimes use. It can wrap (visually) selected region with quotation mark or parenthesis.
 
@@ -500,6 +500,20 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
         '("xelatex -interaction nonstopmode -output-directory %o %f"))
   )
 #+end_src
+** org-indent
+#+begin_src emacs-lisp
+(use-package org-indent
+  :ensure nil
+  :hook (org-mode . org-indent-mode))
+#+end_src
+** org-modern
+#+begin_src emacs-lisp
+(use-package org-modern
+  :after org
+  :config
+  (global-org-modern-mode 1)
+  )
+#+end_src
 ** =org-attach=
 #+begin_src emacs-lisp
 (use-package org-attach
@@ -553,49 +567,8 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 
 (use-package ob-nim       :after org)
 (use-package ob-go        :after org)
-(use-package ob-asymptote :after org)
-(use-package ob-nix       :after org)
-#+end_src
-
-** =ob-sagemath=
-#+begin_src emacs-lisp
-(use-package ob-sagemath
-  :ensure t
-  :after org
-  :config
-  (org-babel-do-load-languages
-   'org-babel-load-languages '((python     . t) (emacs-lisp . t)
-                               (latex      . t) (shell      . t)
-                               (dot        . t) (makefile   . t)
-                               (sqlite     . t) (gnuplot    . t)
-                               (nim        . t) (plantuml   . t)
-                               (maxima     . t) (calc       . t)
-                               (awk        . t) (go         . t)
-                               (asymptote  . t) (ditaa      . t)
-                               (nix        . t) (lua        . t)
-                               (sagemath  . t)))
-
-
-  ;; Ob-sagemath supports only evaluating with a session.
-  (setq org-babel-default-header-args:sage '((:session . t)
-                                             (:results . "output")))
-
-  ;; C-c c for asynchronous evaluating (only for SageMath code blocks).
-  ;;(with-eval-after-load "org"
-  ;;  (define-key org-mode-map (kbd "C-c c") 'ob-sagemath-execute-async))
-  ;;
-  ;; Do not confirm before evaluation
-  ;;(setq org-confirm-babel-evaluate nil)
-
-  ;; Do not evaluate code blocks when exporting.
-  ;;(setq org-export-babel-evaluate nil)
-
-  ;; Show images when opening a file.
-  ;;(setq org-startup-with-inline-images t)
-
-  ;; Show images after evaluating code blocks.
-  ;;(add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
-  )
+;; (use-package ob-asymptote :after org)
+;; (use-package ob-nix       :after org)
 #+end_src
 
 ** =org-bullet=: changing bullets in org file
@@ -612,6 +585,16 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 #+begin_src emacs-lisp
 (use-package org-tidy :ensure t)
 #+end_src
+** COMMENT =ob-sagemath=
+#+begin_src emacs-lisp
+(use-package ob-sagemath
+  :after org
+  :config
+  (setq org-babel-default-header-args:sage '((:session . t)
+                                             (:results . "output")))
+  )
+#+end_src
+
 * Org zettelkasten notes
 ** =denote=: Note taking package
 #+begin_src emacs-lisp
@@ -1572,8 +1555,7 @@ Similar to vim-signify.
 (use-package git-gutter
   :delight  " git"
   :ensure t
-  ;;:config (global-git-gutter-mode)
-  )
+  :config (global-git-gutter-mode))
 #+end_src
 
 ** =harpoon=
@@ -1833,7 +1815,6 @@ Similar to vim-signify.
 #+begin_src emacs-lisp
 (use-package selectric-mode       :ensure t)
 (use-package typewriter-roll-mode :ensure t)
-;;(use-package writeroom-mode       :ensure t)
 (use-package darkroom             :ensure t)
 (use-package focus                :ensure t)
 #+end_src
