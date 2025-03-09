@@ -343,6 +343,31 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 #+name: lst_org
 #+begin_src emacs-lisp :eval no
 (use-package org
+  :defer
+  :straight `(org
+              :fork (:host nil
+                           :repo "https://git.tecosaur.net/tec/org-mode.git"
+                           :branch "dev"
+                           :remote "tecosaur")
+              :files (:defaults "etc")
+              :build t
+              :pre-build
+              (with-temp-file "org-version.el"
+                (require 'lisp-mnt)
+                (let ((version
+                       (with-temp-buffer
+                         (insert-file-contents "lisp/org.el")
+                         (lm-header "version")))
+                      (git-version
+                       (string-trim
+                        (with-temp-buffer
+                          (call-process "git" nil t nil "rev-parse" "--short" "HEAD")
+                          (buffer-string)))))
+                  (insert
+                   (format "(defun org-release () \"The release version of Org.\" %S)\n" version)
+                   (format "(defun org-git-version () \"The truncate git commit hash of Org mode.\" %S)\n" git-version)
+                   "(provide 'org-version)\n")))
+              :pin nil)
   :delight " org"
   :bind (:map
          org-mode-map
@@ -354,12 +379,12 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   ;; theme/styling ...............................................................................
   ;; (org-ellipsis                     " ▼"    )
   (org-hide-emphasis-markers         t      )
-  (org-image-actual-width            '(400) )
+  (org-image-actual-width            1.0 )
   (org-startup-folded         "show2levels" ) ;; fold
   (org-startup-indented              t      )
   (org-src-fontify-natively          t      )
   (org-startup-with-inline-images    t     )
-  (org-startup-with-latex-preview    t     )
+  (org-startup-with-latex-preview    nil   ) ;;
   (org-startup-numerated             t     )
   (org-highlight-latex-and-related    '(latex entities native))
 
@@ -484,16 +509,10 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; setting latex preview
-  (setq org-preview-latex-default-process 'imagemagick)
-  (setf (plist-get (cdr (assq 'imagemagick org-preview-latex-process-alist)) :latex-compiler)
-        '("xelatex -interaction nonstopmode -output-directory %o %f"))
+  ;;(setq org-preview-latex-default-process 'imagemagick)
+  ;;(setf (plist-get (cdr (assq 'imagemagick org-preview-latex-process-alist)) :latex-compiler)
+  ;;     '("xelatex -interaction nonstopmode -output-directory %o %f"))
   )
-#+end_src
-** org-indent
-#+begin_src emacs-lisp
-(use-package org-indent
-  :ensure nil
-  :hook (org-mode . org-indent-mode))
 #+end_src
 ** org-modern
 #+begin_src emacs-lisp
@@ -559,7 +578,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 ;; (use-package ob-nix       :after org)
 #+end_src
 
-** =org-bullet=: changing bullets in org file
+** COMMENT =org-bullet=: changing bullets in org file
 #+begin_src emacs-lisp
 (use-package org-bullets
   :ensure t
@@ -571,7 +590,9 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 
 ** =org-tidy=: hiding the properties
 #+begin_src emacs-lisp
-(use-package org-tidy :ensure t)
+(use-package org-tidy
+  :ensure t
+  :hook   (org-mode . org-tidy-mode))
 #+end_src
 ** COMMENT =ob-sagemath=
 #+begin_src emacs-lisp
@@ -2467,23 +2488,23 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 #+attr_latex: :placement [H]
 #+caption: handing images in org-file
 #+name: tbl-orgmode-general-keybindings-img
-| key(s) | function                                | short description            | mode | lambda |
-|--------+-----------------------------------------+------------------------------+------+--------|
-| =oi=     | =:ignore t=                               | image....................... | org  |        |
-| =oii=    | =(insert "[[edraw:]]")=                   | inline edraw                 | org  | y      |
-| =oic=    | =org-ipe-insert-drawing=                  | create ipe-svg               | org  |        |
-| =oip=    | =org-download-clipboard=                  | paste clipboard              | org  |        |
-| =oiP=    | =org-download-image=                      | Paste from-path              | org  |        |
-| =oid=    | =org-download-delete=                     | delete file                  | org  |        |
-| =oie=    | =edraw-org-edit-regular-file-link=        | edit edraw                   | org  |        |
-| =oiE=    | =org-download-edit=                       | Edit externally              | org  |        |
-| =oir=    | =org-download-rename-at-point=            | rename file                  | org  |        |
-| =oit=    | =garid/org-toggle-display-images-n-edraw= | toggle shot/hide image       | org  |        |
-|--------+-----------------------------------------+------------------------------+------+--------|
-| =ois=    | =:ignore t=                               | size........................ | org  |        |
-| =oisn=   | =(setq org-image-actual-width '(800))=    | normal 800px                 | org  | y      |
-| =oisb=   | =(setq org-image-actual-width '(1500))=   | big    1500px                | org  | y      |
-| =oiss=   | =(setq org-image-actual-width '(400))=    | small  400px                 | org  | y      |
+| key(s) | function                                  | short description            | mode | lambda |
+|--------+-------------------------------------------+------------------------------+------+--------|
+| =oi=   | =:ignore t=                               | image....................... | org  |        |
+| =oii=  | =(insert "[[edraw:]]")=                   | inline edraw                 | org  | y      |
+| =oic=  | =org-ipe-insert-drawing=                  | create ipe-svg               | org  |        |
+| =oip=  | =org-download-clipboard=                  | paste clipboard              | org  |        |
+| =oiP=  | =org-download-image=                      | Paste from-path              | org  |        |
+| =oid=  | =org-download-delete=                     | delete file                  | org  |        |
+| =oie=  | =edraw-org-edit-regular-file-link=        | edit edraw                   | org  |        |
+| =oiE=  | =org-download-edit=                       | Edit externally              | org  |        |
+| =oir=  | =org-download-rename-at-point=            | rename file                  | org  |        |
+| =oit=  | =garid/org-toggle-display-images-n-edraw= | toggle shot/hide image       | org  |        |
+|--------+-------------------------------------------+------------------------------+------+--------|
+| =ois=  | =:ignore t=                               | size........................ | org  |        |
+| =oisn= | =(setq org-image-actual-width 1.0)=       | normal 800px                 | org  | y      |
+| =oisb= | =(setq org-image-actual-width 2.0)=       | big    1500px                | org  | y      |
+| =oiss= | =(setq org-image-actual-width 0.5)=       | small  400px                 | org  | y      |
 
 *** Converting tables actual keybinding
 **** General.el config
@@ -2838,9 +2859,9 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "oir" '(org-download-rename-at-point :which-key "rename file")
   "oit" '(garid/org-toggle-display-images-n-edraw :which-key "toggle shot/hide image")
   "ois" '(:ignore t :which-key "size........................")
-  "oisn" '((lambda () (interactive) (setq org-image-actual-width '(800)) ) :which-key "normal 800px")
-  "oisb" '((lambda () (interactive) (setq org-image-actual-width '(1500)) ) :which-key "big    1500px")
-  "oiss" '((lambda () (interactive) (setq org-image-actual-width '(400)) ) :which-key "small  400px")
+  "oisn" '((lambda () (interactive) (setq org-image-actual-width 1.0) ) :which-key "normal 800px")
+  "oisb" '((lambda () (interactive) (setq org-image-actual-width 2.0) ) :which-key "big    1500px")
+  "oiss" '((lambda () (interactive) (setq org-image-actual-width 0.5) ) :which-key "small  400px")
 )
 #+end_src
 
