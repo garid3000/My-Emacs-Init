@@ -929,9 +929,10 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
          ("<f7>" . casual-agenda-tmenu))
   )
 #+end_src
-** COMMENT =org-timeblock=: agenda to SVG
+** =org-timeblock=: agenda to SVG
 #+begin_src emacs-lisp
-(use-package org-timeblock)
+(use-package org-timeblock
+  :after compat-macs)
 #+end_src
 * Org Exporting related
 ** =ox=
@@ -1478,9 +1479,6 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
               ("M-SPC"      . corfu-insert-separator )
               ("TAB"        . corfu-insert           )
               ([tab]        . corfu-insert           )
-              ;;("S-TAB"     . corfu-previous        )
-              ;; ("M-k"        . corfu-previous      )
-              ;; ("M-j"        . corfu-next          )
               ("S-<return>" . corfu-insert           )
               ("M-h"        . corfu-insert           )
               ("RET"        . nil                    ))
