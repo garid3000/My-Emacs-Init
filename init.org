@@ -111,22 +111,22 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   :after evil
   :hook
   (LaTeX-mode . (lambda ()  ;; adds to latex-mode-hook
-                  (push '(40  . ("\\left("       . "\\right)"  )) evil-surround-pairs-alist)
-                  (push '(123 . ("\\left\\{"     . "\\right\\}")) evil-surround-pairs-alist)
-                  (push '(91  . ("\\left["       . "\\right]"  )) evil-surround-pairs-alist)
-                  (push '(47  . ("\\frac{"       . "}{ }"      )) evil-surround-pairs-alist)
-                  (push '(63  . ("\\frac{ }{"    . " }"        )) evil-surround-pairs-alist)
-                  (push '(94  . ("{"             . "}^{ }"     )) evil-surround-pairs-alist)
-                  (push '(98  . ("\\boxed{"      . "}"         )) evil-surround-pairs-alist)
-                  (push '(95  . ("\\underbrace{" . "}_{ }"     )) evil-surround-pairs-alist)
-                  (push '(45  . ("\\overbrace{"  . "}_{ }"     )) evil-surround-pairs-alist)
+                  (push '(40  . ("\\left("       . "\\right)"  )) evil-surround-pairs-alist) ;; ?(
+                  (push '(123 . ("\\left\\{"     . "\\right\\}")) evil-surround-pairs-alist) ;; ?{
+                  (push '(91  . ("\\left["       . "\\right]"  )) evil-surround-pairs-alist) ;; ?[
+                  (push '(47  . ("\\frac{"       . "}{ }"      )) evil-surround-pairs-alist) ;; ?/
+                  (push '(63  . ("\\frac{ }{"    . " }"        )) evil-surround-pairs-alist) ;; ??
+                  (push '(94  . ("{"             . "}^{ }"     )) evil-surround-pairs-alist) ;; ?^
+                  (push '(?b  . ("\\boxed{"      . "}"         )) evil-surround-pairs-alist) ;; ?b
+                  (push '(95  . ("\\underbrace{" . "}_{ }"     )) evil-surround-pairs-alist) ;; ?_
+                  (push '(45  . ("\\overbrace{"  . "}_{ }"     )) evil-surround-pairs-alist) ;; -
                   ))
 
   (org-mode . (lambda ()
-                (push '(83  . ("#+begin_src"      . "#+end_src"     )) evil-surround-pairs-alist)
-                (push '(69  . ("#+begin_example"  . "#+end_example" )) evil-surround-pairs-alist)
-                (push '(101 . ("\\("              . "\\)"           )) evil-surround-pairs-alist)
-                (push '(100 . (":drawername:"     . ":end:"         )) evil-surround-pairs-alist)
+                (push '(?S  . ("#+begin_src"      . "#+end_src"     )) evil-surround-pairs-alist)
+                (push '(?E  . ("#+begin_example"  . "#+end_example" )) evil-surround-pairs-alist)
+                (push '(?e  . ("\\("              . "\\)"           )) evil-surround-pairs-alist)
+                (push '(?d . (":drawername:"      . ":end:"         )) evil-surround-pairs-alist)
                 ))
 
   (python-base-mode . (lambda ()
@@ -227,14 +227,11 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 (use-package vertico
   :ensure t
   :bind (:map vertico-map
-              ;; ("C-j" . vertico-next          ) ("M-j" . vertico-next        )
-              ;; ("C-k" . vertico-previous      ) ("M-k" . vertico-previous    )
-              ;; ("C-f" . vertico-exit          ) ("M-f" . vertico-exit        )
-              ;; ("C-u" . vertico-scroll-up     ) ("M-u" . vertico-scroll-up   )
-              ;; ("C-d" . vertico-scroll-down   ) ("M-d" . vertico-scroll-down )
-              ("M-p" . vertico-previous      ) ("M-n" . vertico-next        )
-              ("M-h" . vertico-exit          )
-              ("M-q" . vertico-quick-insert  ) ("C-q" . vertico-quick-exit  ))
+              ("M-p" . vertico-previous     )
+              ("M-n" . vertico-next         )
+              ("M-h" . vertico-exit         )
+              ("M-q" . vertico-quick-insert )
+              ("C-q" . vertico-quick-exit   ))
   :init
   (require 'vertico-quick)
   :custom
@@ -494,8 +491,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 (use-package org-modern
   :after org
   :config
-  (global-org-modern-mode 1)
-  )
+  (global-org-modern-mode 1))
 #+end_src
 ** =org-attach=
 #+begin_src emacs-lisp
@@ -882,7 +878,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
      ))
 
   :config
-  (add-hook 'org-agenda-finalize-hook (lambda () (org-agenda-write "/tmp/current-agenda-text")))
+  ;; (add-hook 'org-agenda-finalize-hook (lambda () (org-agenda-write "/tmp/current-agenda-text")))
   (add-hook 'org-capture-mode-hook 'evil-insert-state)
   )
 #+end_src
