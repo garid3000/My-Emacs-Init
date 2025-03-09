@@ -343,12 +343,6 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 #+name: lst_org
 #+begin_src emacs-lisp :eval no
 (use-package org
-  ;;:straight (org
-  ;;           :type git
-  ;;           :brach "release_9.6.30"
-  ;;           :repo "https://git.savannah.gnu.org/git/emacs/org-mode.git";;            :repo "misohena/el-easydraw"
-  ;;          )
-  ;;:demand
   :delight " org"
   :bind (:map
          org-mode-map
@@ -357,14 +351,17 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 
   ;; :hook (org-mode . garid/org-mode-hooked-func)
   :custom
-  ;;(org-src-window-setup         'other-frame) ;; for new window (better for the the tiling window manager
   ;; theme/styling ...............................................................................
-  (org-ellipsis                     " ▼"    )
+  ;; (org-ellipsis                     " ▼"    )
   (org-hide-emphasis-markers         t      )
-  (org-image-actual-width            '(800) )
+  (org-image-actual-width            '(400) )
   (org-startup-folded         "show2levels" ) ;; fold
+  (org-startup-indented              t      )
   (org-src-fontify-natively          t      )
-  (org-highlight-latex-and-related          '(latex entities native)       )
+  (org-startup-with-inline-images    t     )
+  (org-startup-with-latex-preview    t     )
+  (org-startup-numerated             t     )
+  (org-highlight-latex-and-related    '(latex entities native))
 
   ;; org-src
   (org-src-tab-acts-natively         t      )  ;; org-src
@@ -377,10 +374,10 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
                    ;; ("\\.html\\'"            . "thorium-browser   \"%s\""  )
                    ("\\.gif\\'"                . "mpv     \"%s\""            )
                    ("\\.mp4\\'"                . "mpv     \"%s\""            )
-                   ("\\.png\\'"                . "nsxiv    \"%s\""            )
+                   ("\\.png\\'"                . "nsxiv    \"%s\""           )
                    ("\\.svg\\'"                . "inkview \"%s\""            )
-                   ("\\.jpeg\\'"               . "nsxiv    \"%s\""            )
-                   ("\\.jpg\\'"                . "nsxiv    \"%s\""            )
+                   ("\\.jpeg\\'"               . "nsxiv    \"%s\""           )
+                   ("\\.jpg\\'"                . "nsxiv    \"%s\""           )
                    ("\\.pdf\\'"                . "sioyek  \"%s\""            )
                    ("\\.pdf::\\([0-9]+\\)?\\'" . "sioyek  \"%s\" --page %1"  )
                    ("\\.mkv\\'"                . "mpv     \"%s\""            )
@@ -398,7 +395,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
                             ("VAGUE" . "medium purple"  )
                             ("CNCL"  . (:foreground "gray30" :weight bold))))
 
-  (org-log-done              t)
+  (org-log-done            'time)
   (org-tags-column         -90)   ;; how many spaces left padding for tags
   (org-tag-alist           '((:startgroup . nil)
                              ("@rsch" . ?r) ("@bps" . ?w) ("@home" . ?h)
@@ -412,32 +409,32 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
                              ))
 
   (org-structure-template-alist
-   '(("ba" . "abstract")
-     ("mk" . "src makefile :tangle no")
-     ("sq" . "sqlite")
-     ("py2" . "src python :session pySess2 :results output :exports both :eval no-export")
-     ("py1" . "src python :session pySess1 :results output :exports both :eval no-export")
-     ("py" . "src python")
-     ("do1" . "src src dot :file (concat org-download-image-dir \"/tmp.svg\") :exports results :eval no-export")
-     ("do" . "src dot")
-     ("te" . "src text")
-     ("sh" . "src sh :eval no-export :shebang \"#!/bin/sh\"")
-     ("go1" . "src go :exports both :eval never-export")
-     ("go" . "src go")
-     ("el" . "src emacs-lisp")
-     ("a" . "export ascii")
-     ("c" . "center")
-     ("C" . "comment")
-     ("e" . "example")
-     ("E" . "export")
-     ("h" . "export html")
-     ("l" . "export latex")
-     ("q" . "quote")
-     ("s" . "src")
-     ("sage" . "src sage")
+   '(("ba"    . "abstract")
+     ("mk"    . "src makefile :tangle no")
+     ("sq"    . "sqlite")
+     ("py2"   . "src python :session pySess2 :results output :exports both :eval no-export")
+     ("py1"   . "src python :session pySess1 :results output :exports both :eval no-export")
+     ("py"    . "src python")
+     ("do1"   . "src src dot :file (concat org-download-image-dir \"/tmp.svg\") :exports results :eval no-export")
+     ("do"    . "src dot")
+     ("te"    . "src text")
+     ("sh"    . "src sh :eval no-export :shebang \"#!/bin/sh\"")
+     ("go1"   . "src go :exports both :eval never-export")
+     ("go"    . "src go")
+     ("el"    . "src emacs-lisp")
+     ("a"     . "export ascii")
+     ("c"     . "center")
+     ("C"     . "comment")
+     ("e"     . "example")
+     ("E"     . "export")
+     ("h"     . "export html")
+     ("l"     . "export latex")
+     ("q"     . "quote")
+     ("s"     . "src")
+     ("sage"  . "src sage")
      ("sage1" . "src sage :session foo :results drawer :exports both :post equation_wrapper_equation_aligned(data=*this*)  :eval never-export")
-     ("v" . "verse")
-     ("ju" . "src jupyter-python :session juSess1 :async yes :eval never-export :exports both")
+     ("v"     . "verse")
+     ("ju"    . "src jupyter-python :session juSess1 :async yes :eval never-export :exports both")
      ))
   :config
   (require 'org-tempo)
