@@ -241,6 +241,18 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   :config
   (vertico-mode))
 #+end_src
+** =vertico-posframe=
+#+begin_src emacs-lisp
+(use-package vertico-posframe
+  :custom
+  (vertico-posframe-width        180)
+  (vertico-posframe-border-width 2)
+  (vertico-posframe-height       16)
+  :config
+  (vertico-posframe-mode 1)
+  )
+#+end_src
+
 ** =marginalia=
 #+begin_src emacs-lisp
 (use-package marginalia
@@ -1273,6 +1285,23 @@ I publish first from org to md in the local dir. Then using that local dir to cr
 #+begin_src emacs-lisp
 (use-package python)
 #+end_src
+** =code-cells-mode=
+#+begin_src emacs-lisp
+(use-package code-cells
+  :bind (:map code-cells-mode-map
+              ("M-<RET>" . code-cells-eval-and-step)
+              ("M-[" . code-cells-backward-cell)
+              ("M-]" . code-cells-forward-cell)
+              ("M-{" . code-cells-move-cell-up)
+              ("M-}" . code-cells-move-cell-down)
+              ("M-v" . code-cells-mark-cell)
+              ("M-d" . code-cells-kill)
+              ("M-D" . code-cells-duplicate)
+              ("M-;" . code-cells-comment-or-uncomment)
+              ("M-l" . (lambda () (interactive) (insert "# %% -----"))))
+  )
+#+end_src
+
 ** =jupyter=
 #+begin_src emacs-lisp
 (use-package jupyter
@@ -1509,8 +1538,9 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
          ("M-p" . completion-preview-prev-candidate)
          ("M-i" . completion-preview-complete  )  ;; default bind
          ("M-h" . completion-preview-insert    )) ;; my preferred bind
-  :config
-  (global-completion-preview-mode))
+  ;;:config (global-completion-preview-mode)
+  :hook (prog-mode . completion-preview-mode)
+  )
 #+end_src
 
 * Coding convenient
@@ -1863,7 +1893,7 @@ Similar to vim-signify.
 #+begin_src emacs-lisp
 (use-package tmr :ensure t)
 #+end_src
-** =spray=: spraying texts
+** COMMENT =spray=: spraying texts
 #+begin_src emacs-lisp
 (use-package spray
     :ensure t
@@ -1927,7 +1957,7 @@ Similar to vim-signify.
 ;; (use-package langtool   :ensure t) it required external jar / java  someday i will try
 (use-package jinx          :ensure t)
 (use-package mw-thesaurus  :ensure t :after org)
-(use-package org-wc        :ensure t :after org)
+;;(use-package org-wc        :ensure t :after org)
 #+end_src
 
 ** =captain=
