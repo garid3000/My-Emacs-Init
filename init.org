@@ -374,18 +374,17 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
          ("C-S-j" . org-next-visible-heading     )
          ("C-S-k" . org-previous-visible-heading ))
 
-  ;; :hook (org-mode . garid/org-mode-hooked-func)
   :custom
   ;; theme/styling ...............................................................................
-  ;; (org-ellipsis                     " ▼"    )
+  ;; (org-ellipsis                     " ▼" )
   (org-hide-emphasis-markers         t      )
-  (org-image-actual-width            1.0 )
+  (org-image-actual-width            1.0    )
   (org-startup-folded         "show2levels" ) ;; fold
   (org-startup-indented              t      )
   (org-src-fontify-natively          t      )
-  (org-startup-with-inline-images    t     )
-  (org-startup-with-latex-preview    nil   ) ;;
-  (org-startup-numerated             t     )
+  (org-startup-with-inline-images    t      )
+  (org-startup-with-latex-preview    nil    ) ;;
+  (org-startup-numerated             t      )
   (org-highlight-latex-and-related    '(latex entities native))
 
   ;; org-src
@@ -1007,7 +1006,39 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
                   (mapconcat #'org-latex--protect-text tags ":")))))
   )
 #+end_src
+** =org-latex-preview=
+#+begin_src emacs-lisp
+(use-package org-latex-preview
+  :ensure nil
+  :after org-mode
+  :hook (org-mode . org-latex-preview-auto-mode)
+  :config
+  ;; Increase preview width
+  (plist-put org-latex-preview-appearance-options
+             :page-width 0.8
+             )
 
+   ;; Use dvisvgm to generate previews
+   ;; You don't need this, it's the default:
+   (setq org-latex-preview-process-default 'dvisvgm)
+
+   ;; Block C-n, C-p etc from opening up previews when using auto-mode
+   (setq org-latex-preview-auto-ignored-commands
+         '(next-line previous-line mwheel-scroll
+                     scroll-up-command scroll-down-command))
+
+   ;; Enable consistent equation numbering
+   (setq org-latex-preview-numbered t)
+
+   ;; Bonus: Turn on live previews.  This shows you a live preview of a LaTeX
+   ;; fragment and updates the preview in real-time as you edit it.
+   ;; To preview only environments, set it to '(block edit-special) instead
+   (setq org-latex-preview-live t)
+
+   ;; More immediate live-previews -- the default delay is 1 second
+   (setq org-latex-preview-live-debounce 0.25)
+  )
+#+end_src
 ** =ox-html=
 #+begin_src emacs-lisp
 (use-package ox-html
@@ -1019,7 +1050,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   ;; (org-html-head-include-default-style   nil) ;; Use our own styles
   ;; (org-html-head  "<link rel=\"stylesheet\" type=\"text/css\" href=\"https://unpkg.com/chota\"/>")
   ;; (org-html-head  "<link rel=\"stylesheet\" type=\"text/css\" href=\"/tmp/chota.css\"/>")
-  ;; org-html-head "<link rel=\"stylesheet\" href=\"https://cdn.simplecss.org/simple.min.css\" />"
+  ;; org-html-head  "<link rel=\"stylesheet\" href=\"https://cdn.simplecss.org/simple.min.css\" />"
   (org-html-head "<link rel=\"stylesheet\" type=\"text/css\" href=\"https://orgmode.org/worg/style/worg.css\"/>" )
   )
 #+end_src
@@ -1283,7 +1314,7 @@ I publish first from org to md in the local dir. Then using that local dir to cr
   :after org
   :delight " oat"
   :custom (org-auto-tangle-default    nil)
-  :hook (org-mode . org-auto-tangle-mode)
+  :hook   (org-mode . org-auto-tangle-mode)
   )
 #+end_src
 
