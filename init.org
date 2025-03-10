@@ -1344,7 +1344,7 @@ I publish first from org to md in the local dir. Then using that local dir to cr
 ** =code-cells-mode=
 #+begin_src emacs-lisp
 (use-package code-cells
-  :hook (python-mode . code-cells-mode)
+  :hook (python-base-mode . code-cells-mode)
   :bind (:map code-cells-mode-map
 
               ("M-[" . code-cells-backward-cell     )
@@ -1500,10 +1500,22 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
 ** =eglot=: lsp
 #+begin_src emacs-lisp
 (use-package eglot
-  :custom (eglot-report-progress nil)
-  ;;:config (add-to-list 'eglot-server-programs '(nix-ts-mode . ("nil")))
-  :config (add-to-list 'eglot-stay-out-of 'eldoc)
+  ;;:custom (eglot-report-progress nil)   ;
+  ;; :custom (eglot-report-progress t)   ;
+  ;; ;;:config (add-to-list 'eglot-server-programs '(nix-ts-mode . ("nil")))
+  :hook
+  (python-base-mode . eglot-ensure)
+  ;; :config
+  ;; ;; (add-to-list 'eglot-stay-out-of 'eldoc)
+  ;; (add-to-list 'eglot-server-programs
+  ;;              '(python-mode . ("pyright")))
+
+  :config
+  ;; (add-to-list 'eglot-stay-out-of 'eldoc)
+  (add-to-list 'eglot-server-programs
+               '(python-mode . ("pyright-langserver" "--stdio")))
   )
+                                     ;;"--flag=value"))))
 #+end_src
 ** =consult-eglot=: consulting with lsp
 #+begin_src emacs-lisp
