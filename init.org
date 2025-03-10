@@ -1330,6 +1330,13 @@ I publish first from org to md in the local dir. Then using that local dir to cr
   )
 #+end_src
 * Programming languages
+** =prog-mode=
+#+begin_src emacs-lisp
+(use-package prog-mode
+  :ensure nil
+  :bind (:map prog-mode-map
+              ("M-q" .  nil))) ;; I use M-q for delete-window
+#+end_src
 ** =python=
 #+begin_src emacs-lisp
 (use-package python)
@@ -1337,6 +1344,7 @@ I publish first from org to md in the local dir. Then using that local dir to cr
 ** =code-cells-mode=
 #+begin_src emacs-lisp
 (use-package code-cells
+  :hook (org-mode . code-cells-mode)
   :bind (:map code-cells-mode-map
 
               ("M-[" . code-cells-backward-cell     )
@@ -1450,10 +1458,10 @@ I publish first from org to md in the local dir. Then using that local dir to cr
 #+begin_src emacs-lisp
 (use-package elec-pair
   :ensure nil
-  :custom
-  (electric-pair-inhibit-predicate
-   (lambda (c)
-     (if (char-equal c ?\<) t (electric-pair-default-inhibit c))))
+  ;; :custom
+  ;; (electric-pair-inhibit-predicate
+  ;;  (lambda (c)
+  ;;    (if (char-equal c ?\<) t (electric-pair-default-inhibit c))))
 
   :config
   (electric-pair-mode 1))
@@ -1531,8 +1539,8 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
   ;; Optionally use TAB for cycling, default is `corfu-complete'.
   :bind (:map corfu-map
               ("M-SPC"      . corfu-insert-separator )
-              ("TAB"        . corfu-insert           )
-              ([tab]        . corfu-insert           )
+              ;;("TAB"        . corfu-insert           )
+              ;;([tab]        . corfu-insert           )
               ("S-<return>" . corfu-insert           )
               ("M-h"        . corfu-insert           )
               ("RET"        . nil                    ))
@@ -1591,7 +1599,7 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
   (setq-default abbrev-mode t)
   )
 #+end_src
-** completion preview mode
+** COMMENT completion preview mode
 #+begin_src emacs-lisp
 (use-package completion-preview
   :bind (:map
@@ -2159,15 +2167,15 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 #+attr_latex: :placement [H]
 #+caption: File and directory related commands
 #+name: tbl-kbinding-file-n-dired
-| key(s) | function                       | short description   | mode | lambda |
-|--------+--------------------------------+---------------------+------+--------|
-| =SPC=  | =execute-extended-command=     | M-x                 | -    |        |
-| =f=    | =find-file=                    | find-file           | -    |        |
-| =d=    | =dired-jump=                   | directory           | -    |        |
-| =D=    | =:ignore t=                    | Dired.............. | -    |        |
-| =Ds=   | =dired=                        | simple              | -    |        |
-| =Dp=   | =dired-preview-mode=           | preview             | -    |        |
-| =Dw=   | =wdired-change-to-wdired-mode= | wdired              | -    |        |
+| key(s) | function                     | short description   | mode | lambda |
+|--------+------------------------------+---------------------+------+--------|
+| =SPC=    | =execute-extended-command=     | M-x                 | -    |        |
+| =f=      | =find-file=                    | find-file           | -    |        |
+| =d=      | =dired-jump=                   | directory           | -    |        |
+| =D=      | =:ignore t=                    | Dired.............. | -    |        |
+| =Ds=     | =dired=                        | simple              | -    |        |
+| =Dp=     | =dired-preview-mode=           | preview             | -    |        |
+| =Dw=     | =wdired-change-to-wdired-mode= | wdired              | -    |        |
 
 **** Buffer and operations on buffer
 #+attr_latex: :placement [H]
@@ -2413,24 +2421,25 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | =oo=   | =org-open-at-point=                         | open                            | org  |        |
 | =oO=   | =garid/jump-label-def-of-ref-at-point-word= | open ref def                    | org  |        |
 | =od=   | =garid/open-org-link-at-point-with-dired=   | directory-open                  | org  |        |
+| =omm=  | =org-modern-mode=                           | org-modern-mode                 | org  |        |
 | =,=    | =org-ctrl-c-ctrl-c=                         | C-c C-c                         | org  |        |
 
 **** org table related
 #+attr_latex: :placement [H]
 #+caption: Org related stuffs
 #+name: tbl-global-general-keybindings-org-tbl-related
-| key(s) | function                             | short description            | mode | lambda |
-|--------+--------------------------------------+------------------------------+------+--------|
-| =oT=     | =:ignore t=                            | table....................... | -    |        |
-| =oTm=    | =orgtbl-mode=                          | mode                         | -    |        |
-| =oTc=    | =orgtbl-create-or-convert-from-region= | create                       | -    |        |
-| =oTT=    | =org-table-toggle-column-width=        | toggle-hide-column           | -    |        |
-| =oTC=    | =org-table-toggle-coordinate-overlays= | coordinate                   | -    |        |
-| =oTx=    | =org-table-export=                     | export as csv file           | org  |        |
-| =oTs=    | =org-table-sum=                        | sum                          | org  |        |
-| =oTi=    | =:ignore t=                            | insert...................... | org  |        |
-| =oTic=   | =org-table-insert-column=              | column                       | org  |        |
-| =oTir=   | =org-table-insert-row=                 | row                          | org  |        |
+| key(s) | function                               | short description            | mode | lambda |
+|--------+----------------------------------------+------------------------------+------+--------|
+| =oT=   | =:ignore t=                            | table....................... | -    |        |
+| =oTm=  | =orgtbl-mode=                          | mode                         | -    |        |
+| =oTc=  | =orgtbl-create-or-convert-from-region= | create                       | -    |        |
+| =oTT=  | =org-table-toggle-column-width=        | toggle-hide-column           | -    |        |
+| =oTC=  | =org-table-toggle-coordinate-overlays= | coordinate                   | -    |        |
+| =oTx=  | =org-table-export=                     | export as csv file           | org  |        |
+| =oTs=  | =org-table-sum=                        | sum                          | org  |        |
+| =oTi=  | =:ignore t=                            | insert...................... | org  |        |
+| =oTic= | =org-table-insert-column=              | column                       | org  |        |
+| =oTir= | =org-table-insert-row=                 | row                          | org  |        |
 
 **** org-subtree operations
 #+attr_latex: :placement [H]
@@ -2831,6 +2840,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "oo" '(org-open-at-point :which-key "open")
   "oO" '(garid/jump-label-def-of-ref-at-point-word :which-key "open ref def")
   "od" '(garid/open-org-link-at-point-with-dired :which-key "directory-open")
+  "omm" '(org-modern-mode :which-key "org-modern-mode")
   "," '(org-ctrl-c-ctrl-c :which-key "C-c C-c")
   "oTx" '(org-table-export :which-key "export as csv file")
   "oTs" '(org-table-sum :which-key "sum")
