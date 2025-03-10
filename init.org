@@ -1338,16 +1338,30 @@ I publish first from org to md in the local dir. Then using that local dir to cr
 #+begin_src emacs-lisp
 (use-package code-cells
   :bind (:map code-cells-mode-map
-              ("M-<RET>" . code-cells-eval-and-step)
-              ("M-[" . code-cells-backward-cell)
-              ("M-]" . code-cells-forward-cell)
-              ("M-{" . code-cells-move-cell-up)
-              ("M-}" . code-cells-move-cell-down)
+
+              ("M-[" . code-cells-backward-cell     )
+              ("M-]" . code-cells-forward-cell      )
+              ("M-{" . code-cells-move-cell-up      )
+              ("M-}" . code-cells-move-cell-down    )
+              ("M-<RET>" . code-cells-eval          )
+
+              ;; ("C-p" . code-cells-backward-cell     )
+              ;; ("C-n" . code-cells-forward-cell      )
+              ("C-k" . code-cells-backward-cell     )
+              ("C-j" . code-cells-forward-cell      )
+              ("M-k" . code-cells-move-cell-up      )
+              ("M-j" . code-cells-move-cell-down    )
+              ("S-<return>" . code-cells-eval-and-step )
+              ("C-<return>" . (lambda () (interactive)
+                                (code-cells-forward-cell)
+                                (insert "\n# %%\n")
+                                ) )
+
               ("M-v" . code-cells-mark-cell)
               ("M-d" . code-cells-kill)
               ("M-D" . code-cells-duplicate)
               ("M-;" . code-cells-comment-or-uncomment)
-              ("M-l" . (lambda () (interactive) (insert "# %% -----"))))
+              ("M-l" . (lambda () (interactive) (insert "\n# %%\n"))))
   )
 #+end_src
 
@@ -1507,9 +1521,9 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
   :ensure t
   :custom
   (corfu-cycle            t          ) ;; Allows cycling through candidates
-  ;; (corfu-auto             t          ) ;; Enable auto completion nov23 C-M-i?
-  ;; (corfu-auto-prefix      2          )
-  ;; (corfu-auto-delay       0.1        )
+  (corfu-auto             t          ) ;; Enable auto completion nov23 C-M-i?
+  (corfu-auto-prefix      2          )
+  (corfu-auto-delay       0.1        )
   (corfu-popupinfo-delay '(0.8 . 0.2))
   (corfu-preview-current   nil       )
   (corfu-on-exact-match    nil       ) ;; Don't auto expand tempel snippets
