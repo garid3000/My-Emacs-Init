@@ -641,10 +641,10 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
           (completing-read
            "Choose: "
            (mapcar
-            (lambda (xx) (f-join "/home/garid/BrainDump/" xx)) ;; re-apply root dir
+            (lambda (xx) (f-join "~/BrainDump/" xx)) ;; re-apply root dir
             (seq-filter
              (lambda (x) (string-match "denote.*" x))         ;; filter only starting with roam
-             (directory-files "/home/garid/BrainDump/")))   ;; list sub dirs
+             (directory-files "~/BrainDump/")))   ;; list sub dirs
            ))
 
     (message "Now denote-directory = %s" denote-directory))
@@ -658,9 +658,9 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   :ensure t
   :custom
   (consult-denote-silo-source
-   '("/home/garid/BrainDump/denote"
-     "/home/garid/BrainDump/denote_bps/"
-     "/home/garid/BrainDump/denote_proj_grape//"))
+   '("~/BrainDump/denote"
+     "~/BrainDump/denote_bps/"
+     "~/BrainDump/denote_proj_grape//"))
   :config
   (consult-denote-mode 1))
 #+end_src
@@ -780,10 +780,10 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
     (setq org-roam-directory
           (completing-read "Choose: "
                            (mapcar
-                            (lambda (xx) (f-join "/home/garid/BrainDump/" xx)) ;; re-apply root dir
+                            (lambda (xx) (f-join "~/BrainDump/" xx)) ;; re-apply root dir
                             (seq-filter
                              (lambda (x) (string-match "roam.*" x))         ;; filter only starting with roam
-                             (directory-files "/home/garid/BrainDump/")))   ;; list sub dirs
+                             (directory-files "~/BrainDump/")))   ;; list sub dirs
                            ))
 
     (setq org-roam-db-location
@@ -1055,7 +1055,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   )
 #+end_src
 
-** =ox-publish=
+** COMMENT =ox-publish=
 
 *** Helper publisher function
 #+begin_src emacs-lisp
@@ -1325,8 +1325,8 @@ I publish first from org to md in the local dir. Then using that local dir to cr
   :after (org denote)
   :config
   (setq org-contacts-files
-        '("/home/garid/BrainDump/denote/20240802T185223--contacts__info.org"
-          "/home/garid/BrainDump/denote_bps/20250306T114521--contacts__info.org"))
+        '("~/BrainDump/denote/20240802T185223--contacts__info.org"
+          "~/BrainDump/denote_bps/20250306T114521--contacts__info.org"))
   )
 #+end_src
 * Programming languages
@@ -1344,7 +1344,7 @@ I publish first from org to md in the local dir. Then using that local dir to cr
 ** =code-cells-mode=
 #+begin_src emacs-lisp
 (use-package code-cells
-  :hook (org-mode . code-cells-mode)
+  :hook (python-mode . code-cells-mode)
   :bind (:map code-cells-mode-map
 
               ("M-[" . code-cells-backward-cell     )
