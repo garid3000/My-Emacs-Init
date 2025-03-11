@@ -1377,8 +1377,8 @@ I publish first from org to md in the local dir. Then using that local dir to cr
               ("S-<return>" . code-cells-eval-and-step )
               ("C-<return>" . (lambda () (interactive)
                                 (code-cells-forward-cell)
-                                (insert "\n# %%\n")
-                                ) )
+                                (insert "\n# %%\n\n")
+                                (previous-line)))
 
               ("M-v" . code-cells-mark-cell)
               ("M-d" . code-cells-kill)
@@ -1529,8 +1529,12 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
   ;; (add-to-list 'eglot-stay-out-of 'eldoc)
   (add-to-list 'eglot-server-programs
                '(python-mode . ("pyright-langserver" "--stdio")))
+  (evil-define-key 'normal 'prog-mode-map  (kbd "g o") 'eglot-find-typeDefinition)
+  (evil-define-key 'normal 'prog-mode-map  (kbd "] d") 'flymake-goto-next-error)
+  (evil-define-key 'normal 'prog-mode-map  (kbd "[ d") 'flymake-goto-prev-error)
+
   )
-                                     ;;"--flag=value"))))
+;;"--flag=value"))))
 #+end_src
 ** =consult-eglot=: consulting with lsp
 #+begin_src emacs-lisp
@@ -3030,7 +3034,15 @@ fi
 #+end_src
 ** =format-all=
 #+begin_src emacs-lisp
-(use-package format-all)
+(use-package format-all
+  :commands format-all-mode
+  :hook (prog-mode . format-all-mode)
+  :config
+  (setq-default format-all-formatters
+                '(("C"     (astyle "--mode=c"))
+                  ("Shell" (shfmt "-i" "4" "-ci"))
+                  ("Python" (ruff "format" "--line-length" "120"))
+                  )))
 #+end_src
 ** =popper=
 #+begin_src emacs-lisp
