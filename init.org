@@ -89,7 +89,6 @@ I'm pulling packages from following 3 places (not sure that I need all three):
   :config
   ;;(evil-define-key 'normal  org-mode-map   (kbd "TAB") #'org-cycle) ;; for org-cycle (tab) working for terminal
   (setq evil-want-C-i-jump       t)
-  (evil-define-key 'normal 'prog-mode-map  (kbd "K")   'eldoc)      ;; or 'eldoc-box-help-at-point
   ;; (evil-define-key 'normal  org-mode-map   (kbd "TAB") #'org-cycle)
   (evil-mode 1))
 #+end_src
@@ -1335,11 +1334,27 @@ I publish first from org to md in the local dir. Then using that local dir to cr
 (use-package prog-mode
   :ensure nil
   :bind (:map prog-mode-map
-              ("M-q" .  nil))) ;; I use M-q for delete-window
+              ("M-q" .  nil))
+  ;; :config
+  ;; (evil-define-key 'normal 'prog-mode-map  (kbd "K")   'eldoc)      ;; or 'eldoc-box-help-at-point
+  ) ;; I use M-q for delete-window
+#+end_src
+** =eldoc=
+#+begin_src emacs-lisp
+(use-package eldoc-box
+  :config
+  (evil-define-key 'normal 'prog-mode-map  (kbd "K")
+    (lambda ()
+      (interactive)
+      (if (eglot-current-server)
+          (eldoc-box-eglot-help-at-point)
+        (eldoc-box-help-at-point))))
+  )
 #+end_src
 ** =python=
 #+begin_src emacs-lisp
-(use-package python)
+(use-package python
+  )
 #+end_src
 ** =code-cells-mode=
 #+begin_src emacs-lisp
