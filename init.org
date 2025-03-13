@@ -1354,6 +1354,7 @@ I publish first from org to md in the local dir. Then using that local dir to cr
 ** =python=
 #+begin_src emacs-lisp
 (use-package python
+  :hook (inferior-python-mode  . (lambda () (interactive)(setq comint-ptyp nil)))
   )
 #+end_src
 ** =code-cells-mode=
@@ -1532,6 +1533,16 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
   (evil-define-key 'normal 'prog-mode-map  (kbd "g o") 'eglot-find-typeDefinition)
   (evil-define-key 'normal 'prog-mode-map  (kbd "] d") 'flymake-goto-next-error)
   (evil-define-key 'normal 'prog-mode-map  (kbd "[ d") 'flymake-goto-prev-error)
+
+  (add-hook
+   'eglot-managed-mode-hook
+   (lambda ()
+     ;; we want eglot to setup callbacks from eldoc, but we don't want eldoc
+     ;; running after every command. As a workaround, we disable it after we just
+     ;; enabled it. Now calling `M-x eldoc` will put the help we want in the eldoc
+     ;; buffer. Alternatively we could tell eglot to stay out of eldoc, and add
+     ;; the hooks manually, but that seems fragile to updates in eglot.
+     (eldoc-mode -1)))
 
   )
 ;;"--flag=value"))))
@@ -3053,8 +3064,8 @@ fi
          ("C-M-`" . popper-toggle-type ))
   :init
   (setq popper-reference-buffers '("\\*Messages\\*"
-                                   "\\*eldoc\\*"
-                                   "\\*eldoc.*\\*" ;;regex
+                                   ;;"\\*eldoc\\*"
+                                   ;;"\\*eldoc.*\\*" ;;regex
                                    "\\*Outline.*\\*" ;;regex
                                    "\\*xref\\*"
                                    "\\*Help\\*"
