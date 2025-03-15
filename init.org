@@ -152,18 +152,19 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 * Theme & colors
 ** Fonts
 #+begin_src emacs-lisp
-(when (member "Iosevka" (font-family-list))
-  (set-face-attribute 'default        nil :font "Iosevka" :height 120)
-  (set-face-attribute 'fixed-pitch    nil :family "Iosevka"))
-
-(when (member "Iosevka Term SS06" (font-family-list))
-  (set-face-attribute 'default        nil :font "Iosevka Term SS06" :height 120)
-  (set-face-attribute 'fixed-pitch    nil :family "Iosevka Term SS06"))
-
-(when (member "Iosevka Aile" (font-family-list))
-  (set-face-attribute 'variable-pitch nil :family "Iosevka Aile" :height 1.18))
+(use-package faces
+  :ensure nil
+  :defer t
+  :custom
+  (face-font-family-alternatives
+   '(("Monospace"        "Iosevka SS06" "Iosevka Term SS06" "Liberation Mono" "courier" "fixed")
+     ("Serif"            "Iosevka aile" "Linux Libertine"  "CMU Serif" "Georgia"  "DejaVu Serif" "serif")))
+  :custom-face
+  (variable-pitch ((t (:family "Serif"           :height 120))))
+  (fixed-pitch    ((t (:family "Monospace"       :height 120))))
+  (default        ((t (:family "Monospace"       :height 120))))
+  )
 #+end_src
-
 ** Theme
 #+begin_src emacs-lisp :results none
 (use-package uwu-theme
