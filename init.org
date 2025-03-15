@@ -1356,7 +1356,9 @@ I publish first from org to md in the local dir. Then using that local dir to cr
 #+begin_src emacs-lisp
 (use-package python
   :hook (inferior-python-mode  . (lambda () (interactive)(setq comint-ptyp nil)))
-  )
+  :bind (:map inferior-python-mode-map
+              ("C-l" . comint-clear-buffer )
+              ))
 #+end_src
 ** =code-cells-mode=
 #+begin_src emacs-lisp
