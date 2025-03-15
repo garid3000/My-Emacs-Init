@@ -392,6 +392,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   (org-src-preserve-indentation      nil    )  ;; org-src
   (org-edit-src-content-indentation  0      )  ;; org-src
 
+
   ;; openning file links ..........................................................................
   (org-file-apps '((auto-mode                  . emacs                       )
                    ;; ("\\.html\\'"            . "brave   \"%s\""            )
@@ -431,6 +432,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
                              ("Life" . ?L) ("write" . ?W) ("errand"   . ?e)
                              ("hkdn" . ?H) ("read" . ?R)
                              ))
+  (org-return-follows-link t)
 
   (org-structure-template-alist
    '(("ba"    . "abstract")
