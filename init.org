@@ -515,13 +515,19 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   ;;     '("xelatex -interaction nonstopmode -output-directory %o %f"))
   )
 #+end_src
-** org-modern
+** =org-modern=
 #+begin_src emacs-lisp
 (use-package org-modern
   :after org
   :config
   (global-org-modern-mode 1))
 #+end_src
+** =org-appear=
+#+begin_src emacs-lisp
+(use-package org-appear
+  :hook (org-mode . org-appear-mode))
+#+end_src
+
 ** =org-attach=
 #+begin_src emacs-lisp
 (use-package org-attach
@@ -2214,395 +2220,395 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 #+attr_latex: :placement [H]
 #+caption: File and directory related commands
 #+name: tbl-kbinding-file-n-dired
-| key(s) | function                       | short description   | mode | lambda |
-|--------+--------------------------------+---------------------+------+--------|
-| =SPC=  | =execute-extended-command=     | M-x                 | -    |        |
-| =f=    | =find-file=                    | find-file           | -    |        |
-| =d=    | =dired-jump=                   | directory           | -    |        |
-| =D=    | =:ignore t=                    | Dired.............. | -    |        |
-| =Ds=   | =dired=                        | simple              | -    |        |
-| =Dp=   | =dired-preview-mode=           | preview             | -    |        |
-| =Dw=   | =wdired-change-to-wdired-mode= | wdired              | -    |        |
+| key(s) | function                     | short description   | mode | lambda |
+|--------+------------------------------+---------------------+------+--------|
+| =SPC=    | =execute-extended-command=     | M-x                 | -    |        |
+| =f=      | =find-file=                    | find-file           | -    |        |
+| =d=      | =dired-jump=                   | directory           | -    |        |
+| =D=      | =:ignore t=                    | Dired.............. | -    |        |
+| =Ds=     | =dired=                        | simple              | -    |        |
+| =Dp=     | =dired-preview-mode=           | preview             | -    |        |
+| =Dw=     | =wdired-change-to-wdired-mode= | wdired              | -    |        |
 
 **** Buffer and operations on buffer
 #+attr_latex: :placement [H]
 #+caption: buffer related commands
 #+name: tbl-kbind-buffer-related
-| key(s) | function                      | short description           | mode | lambda |
-|--------+-------------------------------+-----------------------------+------+--------|
-| =l=    | =consult-buffer=              | list-buffer                 | -    |        |
-| =L=    | =:ignore t=                   | buffer..................... | -    |        |
-| =Lr=   | =revert-buffer-quick=         | revert (reload)             | -    |        |
-| =Le=   | =eval-buffer=                 | evaluate buffer             | -    |        |
-| =Li=   | =ibuffer=                     | ibuffer                     | -    |        |
-| =Ln=   | =rename-buffer=               | rename                      | -    |        |
-| =L<=   | =switch-to-prev-buffer=       | <prev                       | -    |        |
-| =L>=   | =switch-to-next-buffer=       | >next                       | -    |        |
-| =Ld=   | =crux-delete-file-and-buffer= | delete                      | -    |        |
-| =Lc=   | =clone-indirect-buffer=       | clone                       | -    |        |
-| =Ls=   | =crux-create-scratch-buffer=  | scratch-buffer              | -    |        |
-| =Lh=   | =buf-move-left=               | move left                   | -    |        |
-| =Lj=   | =buf-move-down=               | move down                   | -    |        |
-| =Lk=   | =buf-move-up=                 | move up                     | -    |        |
-| =Ll=   | =buf-move-right=              | move right                  | -    |        |
-| =LL=   | =tear-off-window=             | tear window to frame        | -    |        |
+| key(s) | function                    | short description           | mode | lambda |
+|--------+-----------------------------+-----------------------------+------+--------|
+| =l=      | =consult-buffer=              | list-buffer                 | -    |        |
+| =L=      | =:ignore t=                   | buffer..................... | -    |        |
+| =Lr=     | =revert-buffer-quick=         | revert (reload)             | -    |        |
+| =Le=     | =eval-buffer=                 | evaluate buffer             | -    |        |
+| =Li=     | =ibuffer=                     | ibuffer                     | -    |        |
+| =Ln=     | =rename-buffer=               | rename                      | -    |        |
+| =L<=     | =switch-to-prev-buffer=       | <prev                       | -    |        |
+| =L>=     | =switch-to-next-buffer=       | >next                       | -    |        |
+| =Ld=     | =crux-delete-file-and-buffer= | delete                      | -    |        |
+| =Lc=     | =clone-indirect-buffer=       | clone                       | -    |        |
+| =Ls=     | =crux-create-scratch-buffer=  | scratch-buffer              | -    |        |
+| =Lh=     | =buf-move-left=               | move left                   | -    |        |
+| =Lj=     | =buf-move-down=               | move down                   | -    |        |
+| =Lk=     | =buf-move-up=                 | move up                     | -    |        |
+| =Ll=     | =buf-move-right=              | move right                  | -    |        |
+| =LL=     | =tear-off-window=             | tear window to frame        | -    |        |
 
 **** Convenient
 #+attr_latex: :placement [H]
 #+caption: Convenient commands
 #+name: tbl-kbind-zconvenients
-| key(s) | function                            | short description                 | mode | lambda |
-|--------+-------------------------------------+-----------------------------------+------+--------|
-| =z=    | =:ignore t=                         | conveniences....................  | -    |        |
-| =za=   | =garid/align-regexp-and-untabify=   | align                             | -    |        |
-| =zr=   | =replace-regexp=                    | replace                           | -    |        |
-| =zh=   | =highlight-symbol-at-point=         | highlight-on                      | -    |        |
-| =zH=   | =unhighlight-regexp=                | highlight-off                     | -    |        |
-|--------+-------------------------------------+-----------------------------------+------+--------|
-| =zs=   | =:ignore t=                         | spell............................ | -    |        |
-| =zsw=  | =ispell-word=                       | word                              | -    |        |
-| =zsr=  | =ispell-region=                     | region                            | -    |        |
-| =zsC=  | =ispell-comments-and-strings=       | comment-full                      | -    |        |
-| =zsc=  | =ispell-comment-or-string-at-point= | comment-here                      | -    |        |
-| =zsb=  | =ispell-buffer=                     | buffer                            | -    |        |
-| =zsm=  | =ispell-message=                    | message                           | -    |        |
-| =zsq=  | =ispell-kill-ispell=                | quit                              | -    |        |
-| =zsl=  | =ispell-change-dictionary=          | language en/mn                    | -    |        |
-| =zst=  | =mw-thesaurus-lookup-at-point=      | thesaurus current word            | -    |        |
-| =zsT=  | =mw-thesaurus-lookup=               | thesaurus                         | -    |        |
-|--------+-------------------------------------+-----------------------------------+------+--------|
-| =ZQ=   | =kill-emacs=                        | kill Emacs                        | -    |        |
+| key(s) | function                          | short description                 | mode | lambda |
+|--------+-----------------------------------+-----------------------------------+------+--------|
+| =z=      | =:ignore t=                         | conveniences....................  | -    |        |
+| =za=     | =garid/align-regexp-and-untabify=   | align                             | -    |        |
+| =zr=     | =replace-regexp=                    | replace                           | -    |        |
+| =zh=     | =highlight-symbol-at-point=         | highlight-on                      | -    |        |
+| =zH=     | =unhighlight-regexp=                | highlight-off                     | -    |        |
+|--------+-----------------------------------+-----------------------------------+------+--------|
+| =zs=     | =:ignore t=                         | spell............................ | -    |        |
+| =zsw=    | =ispell-word=                       | word                              | -    |        |
+| =zsr=    | =ispell-region=                     | region                            | -    |        |
+| =zsC=    | =ispell-comments-and-strings=       | comment-full                      | -    |        |
+| =zsc=    | =ispell-comment-or-string-at-point= | comment-here                      | -    |        |
+| =zsb=    | =ispell-buffer=                     | buffer                            | -    |        |
+| =zsm=    | =ispell-message=                    | message                           | -    |        |
+| =zsq=    | =ispell-kill-ispell=                | quit                              | -    |        |
+| =zsl=    | =ispell-change-dictionary=          | language en/mn                    | -    |        |
+| =zst=    | =mw-thesaurus-lookup-at-point=      | thesaurus current word            | -    |        |
+| =zsT=    | =mw-thesaurus-lookup=               | thesaurus                         | -    |        |
+|--------+-----------------------------------+-----------------------------------+------+--------|
+| =ZQ=     | =kill-emacs=                        | kill Emacs                        | -    |        |
 
 **** System
 #+attr_latex: :placement [H]
 #+caption: system commmands
 #+name: tbl-kbind-sys-related
-| key(s) | function                                                                                     | short description             | mode | lambda |
-|--------+----------------------------------------------------------------------------------------------+-------------------------------+------+--------|
-| =s=    | =:ignore t=                                                                                  | system....................... | -    |        |
-| =srf=  | =recentf-open-files=                                                                         | recent-f.iles                 | -    |        |
-|--------+----------------------------------------------------------------------------------------------+-------------------------------+------+--------|
-| =sl=   | =:ignore t=                                                                                  | line......................... | -    |        |
-| =slm=  | =scroll-lock-mode=                                                                           | scroll-lock-mode              | -    |        |
-| =slv=  | =global-display-fill-column-indicator-mode=                                                  | vertical-line                 | -    |        |
-| =sln=  | =display-line-numbers-mode=                                                                  | number toggle                 | -    |        |
-| =slr=  | =ruler-mode=                                                                                 | ruler mode                    | -    |        |
-| =scl=  | =(global-command-log-mode) (clm/open-command-log-buffer)=                                    | command log mode              | -    | y      |
-| =sw=   | =whitespace-mode=                                                                            | whitespace                    | -    |        |
-| =sg=   | =:ignore t=                                                                                  | garid                         | -    |        |
-| =sgf=  | =garid/distraction-free-on=                                                                  | focus                         | -    |        |
-| =sgr=  | =garid/distraction-free-off=                                                                 | reset                         | -    |        |
-|--------+----------------------------------------------------------------------------------------------+-------------------------------+------+--------|
-| =O=    | =:ignore t=                                                                                  | open........................  | -    |        |
-| =Oe=   | =(find-file "~/.config/emacs/init.org")=                                                     | emacs init.org                | -    | y      |
-| =OE=   | =(find-file "~/.config/emacs/init.el")=                                                      | emacs init.el                 | -    | y      |
-| =Ob=   | =(find-file (nth 0 org-cite-global-bibliography))=                                           | bibliography                  | -    | y      |
-| =Op=   | =(find-file "~/BrainDump/bookshelf/")=                                                       | pdf                           | -    | y      |
-| =Oc=   | =citar-open=                                                                                 | citaiton                      | -    |        |
-| =OO=   | =(find-file org-default-notes-file)=                                                         | org capture                   | -    | y      |
-| =Oi=   | =(find-file "~/BrainDump/gtd/inbox.org")=                                                    | inbox                         | -    | y      |
-| =Om=   | =(find-file "~/BrainDump/gtd/main.org")=                                                     | main                          | -    | y      |
-| =Or=   | =(find-file (concat denote-directory "/phd/20240814T113502--00-garids-phd-index__phd.org"))= | research index                | -    | y      |
-|--------+----------------------------------------------------------------------------------------------+-------------------------------+------+--------|
-| =t=    | =:ignore t=                                                                                  | terminal..................... | -    |        |
-| =te=   | =eshell=                                                                                     | eshell emacs-shell            | -    |        |
-| =tv=   | =vterm=                                                                                      | vterm  vterm                  | -    |        |
-| =tx=   | =garid/open-external-term-here=                                                              | xternal terminal              | -    |        |
-| =tm=   | =tmr-with-description=                                                                       | timer                         | -    |        |
-| =u=    | =:ignore=                                                                                    | undo ........................ | -    |        |
-| =ut=   | =vundo=                                                                                      | vundo                         | -    |        |
+| key(s) | function                                                                                   | short description             | mode | lambda |
+|--------+--------------------------------------------------------------------------------------------+-------------------------------+------+--------|
+| =s=      | =:ignore t=                                                                                  | system....................... | -    |        |
+| =srf=    | =recentf-open-files=                                                                         | recent-f.iles                 | -    |        |
+|--------+--------------------------------------------------------------------------------------------+-------------------------------+------+--------|
+| =sl=     | =:ignore t=                                                                                  | line......................... | -    |        |
+| =slm=    | =scroll-lock-mode=                                                                           | scroll-lock-mode              | -    |        |
+| =slv=    | =global-display-fill-column-indicator-mode=                                                  | vertical-line                 | -    |        |
+| =sln=    | =display-line-numbers-mode=                                                                  | number toggle                 | -    |        |
+| =slr=    | =ruler-mode=                                                                                 | ruler mode                    | -    |        |
+| =scl=    | =(global-command-log-mode) (clm/open-command-log-buffer)=                                    | command log mode              | -    | y      |
+| =sw=     | =whitespace-mode=                                                                            | whitespace                    | -    |        |
+| =sg=     | =:ignore t=                                                                                  | garid                         | -    |        |
+| =sgf=    | =garid/distraction-free-on=                                                                  | focus                         | -    |        |
+| =sgr=    | =garid/distraction-free-off=                                                                 | reset                         | -    |        |
+|--------+--------------------------------------------------------------------------------------------+-------------------------------+------+--------|
+| =O=      | =:ignore t=                                                                                  | open........................  | -    |        |
+| =Oe=     | =(find-file "~/.config/emacs/init.org")=                                                     | emacs init.org                | -    | y      |
+| =OE=     | =(find-file "~/.config/emacs/init.el")=                                                      | emacs init.el                 | -    | y      |
+| =Ob=     | =(find-file (nth 0 org-cite-global-bibliography))=                                           | bibliography                  | -    | y      |
+| =Op=     | =(find-file "~/BrainDump/bookshelf/")=                                                       | pdf                           | -    | y      |
+| =Oc=     | =citar-open=                                                                                 | citaiton                      | -    |        |
+| =OO=     | =(find-file org-default-notes-file)=                                                         | org capture                   | -    | y      |
+| =Oi=     | =(find-file "~/BrainDump/gtd/inbox.org")=                                                    | inbox                         | -    | y      |
+| =Om=     | =(find-file "~/BrainDump/gtd/main.org")=                                                     | main                          | -    | y      |
+| =Or=     | =(find-file (concat denote-directory "/phd/20240814T113502--00-garids-phd-index__phd.org"))= | research index                | -    | y      |
+|--------+--------------------------------------------------------------------------------------------+-------------------------------+------+--------|
+| =t=      | =:ignore t=                                                                                  | terminal..................... | -    |        |
+| =te=     | =eshell=                                                                                     | eshell emacs-shell            | -    |        |
+| =tv=     | =vterm=                                                                                      | vterm  vterm                  | -    |        |
+| =tx=     | =garid/open-external-term-here=                                                              | xternal terminal              | -    |        |
+| =tm=     | =tmr-with-description=                                                                       | timer                         | -    |        |
+| =u=      | =:ignore=                                                                                    | undo ........................ | -    |        |
+| =ut=     | =vundo=                                                                                      | vundo                         | -    |        |
 
 **** Bookmark
 #+attr_latex: :placement [H]
 #+caption: bookmark
 #+name: tbl-kbind-bookmarks
-| key(s) | function                   | short description              | mode | lambda |
-|--------+----------------------------+--------------------------------+------+--------|
-| =b=    | =harpoon-quick-menu-hydra= | bookmark-harpoon               | -    |        |
-| =B=    | =:ignore t=                | bookmark...................... | -    |        |
-| =B1=   | =harpoon-go-to-1=          |                                | -    |        |
-| =B2=   | =harpoon-go-to-2=          |                                | -    |        |
-| =B3=   | =harpoon-go-to-3=          |                                | -    |        |
-| =B4=   | =harpoon-go-to-4=          |                                | -    |        |
-| =B5=   | =harpoon-go-to-5=          |                                | -    |        |
-| =Ba=   | =harpoon-add-file=         | add-file                       | -    |        |
+| key(s) | function                 | short description              | mode | lambda |
+|--------+--------------------------+--------------------------------+------+--------|
+| =b=      | =harpoon-quick-menu-hydra= | bookmark-harpoon               | -    |        |
+| =B=      | =:ignore t=                | bookmark...................... | -    |        |
+| =B1=     | =harpoon-go-to-1=          |                                | -    |        |
+| =B2=     | =harpoon-go-to-2=          |                                | -    |        |
+| =B3=     | =harpoon-go-to-3=          |                                | -    |        |
+| =B4=     | =harpoon-go-to-4=          |                                | -    |        |
+| =B5=     | =harpoon-go-to-5=          |                                | -    |        |
+| =Ba=     | =harpoon-add-file=         | add-file                       | -    |        |
 
 **** Help related
 #+attr_latex: :placement [H]
 #+caption: Help for emacs/elisp related
 #+name: tbl-kbind-help
-| key(s) | function                   | short description               | mode | lambda |
-|--------+----------------------------+---------------------------------+------+--------|
-| =h=    | =:ignore t=                | help........................... | -    |        |
-| =hh=   | =describe-symbol=          | help symbol (elisp)             | -    |        |
-| =hH=   | =describe-key=             | help keybinding                 | -    |        |
-| =ho=   | =org-info=                 | org-info                        | -    |        |
-| =hw=   | =which-key-show-top-level= | which-key                       | -    |        |
-| =hm=   | =consult-man=              | man                             | -    |        |
-| =hi=   | =Info-goto-node=           | read docs                       | -    |        |
+| key(s) | function                 | short description               | mode | lambda |
+|--------+--------------------------+---------------------------------+------+--------|
+| =h=      | =:ignore t=                | help........................... | -    |        |
+| =hh=     | =describe-symbol=          | help symbol (elisp)             | -    |        |
+| =hH=     | =describe-key=             | help keybinding                 | -    |        |
+| =ho=     | =org-info=                 | org-info                        | -    |        |
+| =hw=     | =which-key-show-top-level= | which-key                       | -    |        |
+| =hm=     | =consult-man=              | man                             | -    |        |
+| =hi=     | =Info-goto-node=           | read docs                       | -    |        |
 
 **** Development commands
 #+attr_latex: :placement [H]
 #+caption: misc. development related
 #+name: tbl-kbind-dev
-| key(s) | function                        | short description                | mode | lambda |
-|--------+---------------------------------+----------------------------------+------+--------|
-| =mg=   | =magit-status=                  | magit                            | -    |        |
-| =<=    | =recompile=                     | recompile                        | -    |        |
-| =sco=  | =corfu-mode=                    | corfu-mode                       | -    |        |
-| =se=   | =eglot=                         | eglot                            | -    |        |
-| =rg=   | =rg=                            | ripgrep                          | -    |        |
-| =g=    | =:ignore t=                     | git............................  | -    |        |
-| =gS=   | =git-gutter:stage-hunk=         | stage hunkk                      | -    |        |
-| =gs=   | =git-gutter:popup-hunk=         | popup hunk                       | -    |        |
-| =gr=   | =git-gutter:update-all-windows= | refresh                          | -    |        |
-| =gg=   | =git-gutter-mode=               | gutter-mode                      | -    |        |
-| =gn=   | =git-gutter:next-hunk=          | jump-next                        | -    |        |
-| =gp=   | =git-gutter:previous-hunk=      | jump-prev                        | -    |        |
-| =gd=   | =magit-ediff-compare=           | magit-ediff-compare              | -    |        |
-| =P=    | =:ignore=                       | python (inferior)............... | -    |        |
-| =Pr=   | =python-shell-restart=          | restart                          | -    |        |
-| =PP=   | =run-python=                    | run-python                       | -    |        |
-| =Pk=   | =comint-send-eof=               | kill  (also C-c C-d)             | -    |        |
+| key(s) | function                      | short description                | mode | lambda |
+|--------+-------------------------------+----------------------------------+------+--------|
+| =mg=     | =magit-status=                  | magit                            | -    |        |
+| =<=      | =recompile=                     | recompile                        | -    |        |
+| =sco=    | =corfu-mode=                    | corfu-mode                       | -    |        |
+| =se=     | =eglot=                         | eglot                            | -    |        |
+| =rg=     | =rg=                            | ripgrep                          | -    |        |
+| =g=      | =:ignore t=                     | git............................  | -    |        |
+| =gS=     | =git-gutter:stage-hunk=         | stage hunkk                      | -    |        |
+| =gs=     | =git-gutter:popup-hunk=         | popup hunk                       | -    |        |
+| =gr=     | =git-gutter:update-all-windows= | refresh                          | -    |        |
+| =gg=     | =git-gutter-mode=               | gutter-mode                      | -    |        |
+| =gn=     | =git-gutter:next-hunk=          | jump-next                        | -    |        |
+| =gp=     | =git-gutter:previous-hunk=      | jump-prev                        | -    |        |
+| =gd=     | =magit-ediff-compare=           | magit-ediff-compare              | -    |        |
+| =P=      | =:ignore=                       | python (inferior)............... | -    |        |
+| =Pr=     | =python-shell-restart=          | restart                          | -    |        |
+| =PP=     | =run-python=                    | run-python                       | -    |        |
+| =Pk=     | =comint-send-eof=               | kill  (also C-c C-d)             | -    |        |
 
 **** Consult related (picking & choosing stuff)
 #+attr_latex: :placement [H]
 #+caption: consult
 #+name: tbl-global-general-keybindings-consult
-| key(s) | function                 | short description              | mode | lambda |
-|--------+--------------------------+--------------------------------+------+--------|
-| =c=    | =:ignore t=              | consult....................... | -    |        |
-| =co=   | =consult-org-heading=    | consult-org-heading    [ ofh ] | -    |        |
-| =ci=   | =consult-imenu=          | consult-imenu                  | -    |        |
-| =cm=   | =consult-man=            | consult-man                    | -    |        |
-| =cr=   | =consult-ripgrep=        | consult-ripgrep         [ ps ] | -    |        |
-| =cR=   | =consult-recent-file=    | consult-recent-files           | -    |        |
-| =cf=   | =consult-flymake=        | consult-flymake                | -    |        |
-| =cp=   | =consult-project-buffer= | consult-project-buffer  [ pl ] | -    |        |
-| =cd=   | =consult-dir=            | consult-dir                    | -    |        |
-| =cF=   | =consult-fd=             | consult-fd               [ F ] | -    |        |
-| =F=    | =consult-fd=             | consult-fd              [ cF ] | -    |        |
-| =ca=   | =consult-org-agenda=     | consult-org-agenda             | -    |        |
-| =cg=   | =consult-git-grep=       | consult-git-grep        [ ps ] | -    |        |
+| key(s) | function               | short description              | mode | lambda |
+|--------+------------------------+--------------------------------+------+--------|
+| =c=      | =:ignore t=              | consult....................... | -    |        |
+| =co=     | =consult-org-heading=    | consult-org-heading    [ ofh ] | -    |        |
+| =ci=     | =consult-imenu=          | consult-imenu                  | -    |        |
+| =cm=     | =consult-man=            | consult-man                    | -    |        |
+| =cr=     | =consult-ripgrep=        | consult-ripgrep         [ ps ] | -    |        |
+| =cR=     | =consult-recent-file=    | consult-recent-files           | -    |        |
+| =cf=     | =consult-flymake=        | consult-flymake                | -    |        |
+| =cp=     | =consult-project-buffer= | consult-project-buffer  [ pl ] | -    |        |
+| =cd=     | =consult-dir=            | consult-dir                    | -    |        |
+| =cF=     | =consult-fd=             | consult-fd               [ F ] | -    |        |
+| =F=      | =consult-fd=             | consult-fd              [ cF ] | -    |        |
+| =ca=     | =consult-org-agenda=     | consult-org-agenda             | -    |        |
+| =cg=     | =consult-git-grep=       | consult-git-grep        [ ps ] | -    |        |
 
 **** Project related
 #+attr_latex: :placement [H]
 #+caption: Project (more like git-repo)
 #+name: tbl-global-general-keybindings-project
-| key(s) | function                 | short description             | mode | lambda |
-|--------+--------------------------+-------------------------------+------+--------|
-| =p=    | =:ignore t=              | project.....................  | -    |        |
-| =pr=   | =xref-find-references=   | references                    | -    |        |
-| =pR=   | =consult-eglot-symbols=  | references consult            | -    |        |
-| =pd=   | =consult-flymake=        | diagnostic                    | -    |        |
-| =pf=   | =project-find-file=      | find-file                     | -    |        |
-| =pz=   | =project-switch-project= | jump-to-other-proj            | -    |        |
-| =ps=   | =consult-git-grep=       | search git files              | -    |        |
-| =pS=   | =project-find-regexp=    | search-in-proj                | -    |        |
-| =pk=   | =project-kill-buffers=   | kill-buf-proj                 | -    |        |
-| =pl=   | =consult-project-buffer= | list-buf-proj                 | -    |        |
-| =pv=   | =consult-imenu=          | variables                     | -    |        |
-| =v=    | =:ignore t=              | variables.................... | -    |        |
-| =vq=   | =format-all-buffer=      | format-buffer                 | -    |        |
-| =vr=   | =eglot-rename=           | rename variable               | -    |        |
+| key(s) | function               | short description             | mode | lambda |
+|--------+------------------------+-------------------------------+------+--------|
+| =p=      | =:ignore t=              | project.....................  | -    |        |
+| =pr=     | =xref-find-references=   | references                    | -    |        |
+| =pR=     | =consult-eglot-symbols=  | references consult            | -    |        |
+| =pd=     | =consult-flymake=        | diagnostic                    | -    |        |
+| =pf=     | =project-find-file=      | find-file                     | -    |        |
+| =pz=     | =project-switch-project= | jump-to-other-proj            | -    |        |
+| =ps=     | =consult-git-grep=       | search git files              | -    |        |
+| =pS=     | =project-find-regexp=    | search-in-proj                | -    |        |
+| =pk=     | =project-kill-buffers=   | kill-buf-proj                 | -    |        |
+| =pl=     | =consult-project-buffer= | list-buf-proj                 | -    |        |
+| =pv=     | =consult-imenu=          | variables                     | -    |        |
+| =v=      | =:ignore t=              | variables.................... | -    |        |
+| =vq=     | =format-all-buffer=      | format-buffer                 | -    |        |
+| =vr=     | =eglot-rename=           | rename variable               | -    |        |
 
 **** Denote related
 #+attr_latex: :placement [H]
 #+caption: Denote
 #+name: tbl-global-general-keybindings-denote
-| key(s) | function                                      | short description            | mode | lambda |
-|--------+-----------------------------------------------+------------------------------+------+--------|
-| =n=    | =:ignore t=                                   | note........................ | -    |        |
-| =nr=   | =denote-rename-file=                          | rename                       | -    |        |
-| =nf=   | =denote-open-or-create=                       | find                         | -    |        |
-| =nd=   | =(dired denote-directory)=                    | dired                        | -    | y      |
-| =nj=   | =denote-journal-extras-new-entry=             | journal                      | -    |        |
-| =nJ=   | =denote-journal-extras-new-or-existing-entry= | Journal-find                 | -    |        |
-| =nil=  | =denote-insert-link=                          | insert-link                  | -    |        |
-| =nij=  | =denote-journal-extras-link-or-create-entry=  | insert-journal-link          | -    |        |
-| =nt=   | =denote-template=                             | template                     | -    |        |
-| =nI=   | =garid/denote-node-insert-immediate=          | Insert-note                  | -    |        |
-| =ns=   | =consult-denote-grep=                         | live-grep                    | -    |        |
-| =nF=   | =consult-denote-find=                         | consult-denote-find          | -    |        |
-| =nl=   | =:ignore t=                                   | denote link................. | -    |        |
-| =nli=  | =denote-insert-link=                          | link insert                  | -    |        |
-| =nlb=  | =denote-find-backlink=                        | find-backlink                | -    |        |
-| =nlf=  | =denote-find-link=                            | find-forward-link            | -    |        |
-| =nlB=  | =denote-backlinks=                            | backlink                     | -    |        |
-| =nlF=  | =denote-link=                                 | forward-link                 | -    |        |
-| =nla=  | =denote-add-links=                            | add-links regex              | -    |        |
-| =nc=   | =garid/choose-denote-directory=               | change denote                | -    |        |
+| key(s) | function                                    | short description            | mode | lambda |
+|--------+---------------------------------------------+------------------------------+------+--------|
+| =n=      | =:ignore t=                                   | note........................ | -    |        |
+| =nr=     | =denote-rename-file=                          | rename                       | -    |        |
+| =nf=     | =denote-open-or-create=                       | find                         | -    |        |
+| =nd=     | =(dired denote-directory)=                    | dired                        | -    | y      |
+| =nj=     | =denote-journal-extras-new-entry=             | journal                      | -    |        |
+| =nJ=     | =denote-journal-extras-new-or-existing-entry= | Journal-find                 | -    |        |
+| =nil=    | =denote-insert-link=                          | insert-link                  | -    |        |
+| =nij=    | =denote-journal-extras-link-or-create-entry=  | insert-journal-link          | -    |        |
+| =nt=     | =denote-template=                             | template                     | -    |        |
+| =nI=     | =garid/denote-node-insert-immediate=          | Insert-note                  | -    |        |
+| =ns=     | =consult-denote-grep=                         | live-grep                    | -    |        |
+| =nF=     | =consult-denote-find=                         | consult-denote-find          | -    |        |
+| =nl=     | =:ignore t=                                   | denote link................. | -    |        |
+| =nli=    | =denote-insert-link=                          | link insert                  | -    |        |
+| =nlb=    | =denote-find-backlink=                        | find-backlink                | -    |        |
+| =nlf=    | =denote-find-link=                            | find-forward-link            | -    |        |
+| =nlB=    | =denote-backlinks=                            | backlink                     | -    |        |
+| =nlF=    | =denote-link=                                 | forward-link                 | -    |        |
+| =nla=    | =denote-add-links=                            | add-links regex              | -    |        |
+| =nc=     | =garid/choose-denote-directory=               | change denote                | -    |        |
 
 **** Roam related
 #+attr_latex: :placement [H]
 #+caption: Roam
 #+name: tbl-global-general-keybindings-roam
-| key(s) | function                                                         | short description                    | mode | lambda |
-|--------+------------------------------------------------------------------+--------------------------------------+------+--------|
-| =r=    | =:ignore t=                                                      | roam........................         | -    |        |
-| =rr=   | =(message "Current org-roam-directory = %s" org-roam-directory)= | show directory                       | -    | y      |
-| =rc=   | =garid/choose-roam-directory=                                    | roam chande directory                | -    |        |
-| =rd=   | =(dired org-roam-directory)=                                     | dired                                | -    | y      |
-| =rs=   | =consult-org-roam-search=                                        | consult-org-roam-search              | -    |        |
-| =rf=   | =consult-org-roam-file-find=                                     | consult-org-roam-file-find           | -    |        |
-| =rI=   | =garid/org-roam-node-insert-immediate=                           | garid/org-roam-node-insert-immediate | -    |        |
-| =rlb=  | =consult-org-roam-backlinks=                                     | consult-org-roam-backlinks           | -    |        |
-| =rlf=  | =consult-org-roam-forward-links=                                 | consult-org-roam-forward-links       | -    |        |
-| =rlB=  | =consult-org-roam-backlinks-recursive=                           | consult-org-roam-backlinks-recursive | -    |        |
-| =rli=  | =org-roam-node-insert=                                           | org-roam-node-insert                 | -    |        |
-| =rui=  | =org-roam-ui-open=                                               | org-roam-ui-open                     | -    |        |
-| =rta=  | =org-roam-tag-add=                                               | org-roam-tag-add                     | -    |        |
-| =rtr=  | =org-roam-tag-remove=                                            | org-roam-tag-remove                  | -    |        |
-| =rbt=  | =org-roam-buffer-toggle=                                         | org-roam-buffer-toggle               | -    |        |
+| key(s) | function                                                       | short description                    | mode | lambda |
+|--------+----------------------------------------------------------------+--------------------------------------+------+--------|
+| =r=      | =:ignore t=                                                      | roam........................         | -    |        |
+| =rr=     | =(message "Current org-roam-directory = %s" org-roam-directory)= | show directory                       | -    | y      |
+| =rc=     | =garid/choose-roam-directory=                                    | roam chande directory                | -    |        |
+| =rd=     | =(dired org-roam-directory)=                                     | dired                                | -    | y      |
+| =rs=     | =consult-org-roam-search=                                        | consult-org-roam-search              | -    |        |
+| =rf=     | =consult-org-roam-file-find=                                     | consult-org-roam-file-find           | -    |        |
+| =rI=     | =garid/org-roam-node-insert-immediate=                           | garid/org-roam-node-insert-immediate | -    |        |
+| =rlb=    | =consult-org-roam-backlinks=                                     | consult-org-roam-backlinks           | -    |        |
+| =rlf=    | =consult-org-roam-forward-links=                                 | consult-org-roam-forward-links       | -    |        |
+| =rlB=    | =consult-org-roam-backlinks-recursive=                           | consult-org-roam-backlinks-recursive | -    |        |
+| =rli=    | =org-roam-node-insert=                                           | org-roam-node-insert                 | -    |        |
+| =rui=    | =org-roam-ui-open=                                               | org-roam-ui-open                     | -    |        |
+| =rta=    | =org-roam-tag-add=                                               | org-roam-tag-add                     | -    |        |
+| =rtr=    | =org-roam-tag-remove=                                            | org-roam-tag-remove                  | -    |        |
+| =rbt=    | =org-roam-buffer-toggle=                                         | org-roam-buffer-toggle               | -    |        |
 
 **** org related
 #+attr_latex: :placement [H]
 #+caption: Org related stuffs
 #+name: tbl-global-general-keybindings-org-mode-related
-| key(s) | function                                    | short description               | mode | lambda |
-|--------+---------------------------------------------+---------------------------------+------+--------|
-| =o=    | =:ignore t=                                 | org............................ | -    |        |
-| =oo=   | =org-open-at-point=                         | open                            | org  |        |
-| =oO=   | =garid/jump-label-def-of-ref-at-point-word= | open ref def                    | org  |        |
-| =od=   | =garid/open-org-link-at-point-with-dired=   | directory-open                  | org  |        |
-| =omm=  | =org-modern-mode=                           | org-modern-mode                 | org  |        |
-| =,=    | =org-ctrl-c-ctrl-c=                         | C-c C-c                         | org  |        |
+| key(s) | function                                  | short description               | mode | lambda |
+|--------+-------------------------------------------+---------------------------------+------+--------|
+| =o=      | =:ignore t=                                 | org............................ | -    |        |
+| =oo=     | =org-open-at-point=                         | open                            | org  |        |
+| =oO=     | =garid/jump-label-def-of-ref-at-point-word= | open ref def                    | org  |        |
+| =od=     | =garid/open-org-link-at-point-with-dired=   | directory-open                  | org  |        |
+| =omm=    | =org-modern-mode=                           | org-modern-mode                 | org  |        |
+| =,=      | =org-ctrl-c-ctrl-c=                         | C-c C-c                         | org  |        |
 
 **** org table related
 #+attr_latex: :placement [H]
 #+caption: Org related stuffs
 #+name: tbl-global-general-keybindings-org-tbl-related
-| key(s) | function                               | short description            | mode | lambda |
-|--------+----------------------------------------+------------------------------+------+--------|
-| =oT=   | =:ignore t=                            | table....................... | -    |        |
-| =oTm=  | =orgtbl-mode=                          | mode                         | -    |        |
-| =oTc=  | =orgtbl-create-or-convert-from-region= | create                       | -    |        |
-| =oTT=  | =org-table-toggle-column-width=        | toggle-hide-column           | -    |        |
-| =oTC=  | =org-table-toggle-coordinate-overlays= | coordinate                   | -    |        |
-| =oTx=  | =org-table-export=                     | export as csv file           | org  |        |
-| =oTs=  | =org-table-sum=                        | sum                          | org  |        |
-| =oTi=  | =:ignore t=                            | insert...................... | org  |        |
-| =oTic= | =org-table-insert-column=              | column                       | org  |        |
-| =oTir= | =org-table-insert-row=                 | row                          | org  |        |
+| key(s) | function                             | short description            | mode | lambda |
+|--------+--------------------------------------+------------------------------+------+--------|
+| =oT=     | =:ignore t=                            | table....................... | -    |        |
+| =oTm=    | =orgtbl-mode=                          | mode                         | -    |        |
+| =oTc=    | =orgtbl-create-or-convert-from-region= | create                       | -    |        |
+| =oTT=    | =org-table-toggle-column-width=        | toggle-hide-column           | -    |        |
+| =oTC=    | =org-table-toggle-coordinate-overlays= | coordinate                   | -    |        |
+| =oTx=    | =org-table-export=                     | export as csv file           | org  |        |
+| =oTs=    | =org-table-sum=                        | sum                          | org  |        |
+| =oTi=    | =:ignore t=                            | insert...................... | org  |        |
+| =oTic=   | =org-table-insert-column=              | column                       | org  |        |
+| =oTir=   | =org-table-insert-row=                 | row                          | org  |        |
 
 **** org-subtree operations
 #+attr_latex: :placement [H]
 #+caption: in org-file, frequent commands
 #+name: tbl-orgmode-general-keybindings-freq
-| key(s) | function                                          | short description            | mode | lambda |
-|--------+---------------------------------------------------+------------------------------+------+--------|
-| =os=   | =:ignore t=                                       | subtree..................... | org  |        |
-| =osy=  | =org-copy-subtree=                                | yank (verbatim copy)         | org  |        |
-| =osa=  | =(org-archive-subtree-default-with-confirmation)= | archive                      | org  | y      |
-| =osY=  | =org-id-copy=                                     | yank (ID)                    | org  |        |
-| =osv=  | =org-mark-element=                                | visually select element      | org  |        |
-| =osm=  | =org-refile=                                      | move/refile                  | org  |        |
-| =osd=  | =org-cut-subtree=                                 | delete (aka cut)             | org  |        |
-| =ost=  | =org-toggle-narrow-to-subtree=                    | toggle narrow                | org  |        |
-| =osT=  | =org-tidy-mode=                                   | tidy-mode                    | org  |        |
-| =osn=  | =org-num-mode=                                    | num-mode                     | org  |        |
-| =oss=  | =org-sort=                                        | sort                         | org  |        |
-| =osp=  | =org-set-property=                                | property                     | org  |        |
-| =osI=  | =org-indent-mode=                                 | indent-mode                  | org  |        |
-| =ose=  | =org-set-effort=                                  | org-set-effort               | org  |        |
-|--------+---------------------------------------------------+------------------------------+------+--------|
-| =osi=  | =:ignore t=                                       | insert heading.............. | org  |        |
-| =osia= | =org-insert-heading-after-current=                | after                  C-RET | org  |        |
-| =osih= | =org-insert-heading=                              | heading                M-RET | org  |        |
-| =osis= | =org-insert-subheading=                           | subheading                   | org  |        |
-| =osiH= | =org-insert-todo-heading=                         | heading         todo M-S-RET | org  |        |
-| =osiA= | =org-insert-todo-heading-respect-content=         | After           todo C-S-RET | org  |        |
-| =osiS= | =org-insert-todo-subheading=                      | subheading      todo         | org  |        |
+| key(s) | function                                        | short description            | mode | lambda |
+|--------+-------------------------------------------------+------------------------------+------+--------|
+| =os=     | =:ignore t=                                       | subtree..................... | org  |        |
+| =osy=    | =org-copy-subtree=                                | yank (verbatim copy)         | org  |        |
+| =osa=    | =(org-archive-subtree-default-with-confirmation)= | archive                      | org  | y      |
+| =osY=    | =org-id-copy=                                     | yank (ID)                    | org  |        |
+| =osv=    | =org-mark-element=                                | visually select element      | org  |        |
+| =osm=    | =org-refile=                                      | move/refile                  | org  |        |
+| =osd=    | =org-cut-subtree=                                 | delete (aka cut)             | org  |        |
+| =ost=    | =org-toggle-narrow-to-subtree=                    | toggle narrow                | org  |        |
+| =osT=    | =org-tidy-mode=                                   | tidy-mode                    | org  |        |
+| =osn=    | =org-num-mode=                                    | num-mode                     | org  |        |
+| =oss=    | =org-sort=                                        | sort                         | org  |        |
+| =osp=    | =org-set-property=                                | property                     | org  |        |
+| =osI=    | =org-indent-mode=                                 | indent-mode                  | org  |        |
+| =ose=    | =org-set-effort=                                  | org-set-effort               | org  |        |
+|--------+-------------------------------------------------+------------------------------+------+--------|
+| =osi=    | =:ignore t=                                       | insert heading.............. | org  |        |
+| =osia=   | =org-insert-heading-after-current=                | after                  C-RET | org  |        |
+| =osih=   | =org-insert-heading=                              | heading                M-RET | org  |        |
+| =osis=   | =org-insert-subheading=                           | subheading                   | org  |        |
+| =osiH=   | =org-insert-todo-heading=                         | heading         todo M-S-RET | org  |        |
+| =osiA=   | =org-insert-todo-heading-respect-content=         | After           todo C-S-RET | org  |        |
+| =osiS=   | =org-insert-todo-subheading=                      | subheading      todo         | org  |        |
 
 **** org-agenda/calendar/todo related
 #+attr_latex: :placement [H]
 #+caption: agenda-todo-schedule
 #+name: tbl-orgmode-general-keybindings-todo
-| key(s) | function        | short description            | mode | lambda |
-|--------+-----------------+------------------------------+------+--------|
-| =oc=   | =org-capture=   | capture                      | -    |        |
-| =ot=   | =org-todo=      | todo                         | org  |        |
-|--------+-----------------+------------------------------+------+--------|
-| =oa=   | =:ignore t=     | agenda...................... | -    |        |
-| =oag=  | =org-agenda=    | agenda                       | -    |        |
-| =oab=  | =org-timeblock= | block                        | -    |        |
-| =oas=  | =org-schedule=  | schedule                     | org  |        |
-| =oad=  | =org-deadline=  | deadline                     | org  |        |
-| =oac=  | =org-clock-in=  | clock in                     | org  |        |
-| =oaC=  | =org-clock-out= | clock in                     | org  |        |
+| key(s) | function      | short description            | mode | lambda |
+|--------+---------------+------------------------------+------+--------|
+| =oc=     | =org-capture=   | capture                      | -    |        |
+| =ot=     | =org-todo=      | todo                         | org  |        |
+|--------+---------------+------------------------------+------+--------|
+| =oa=     | =:ignore t=     | agenda...................... | -    |        |
+| =oag=    | =org-agenda=    | agenda                       | -    |        |
+| =oab=    | =org-timeblock= | block                        | -    |        |
+| =oas=    | =org-schedule=  | schedule                     | org  |        |
+| =oad=    | =org-deadline=  | deadline                     | org  |        |
+| =oac=    | =org-clock-in=  | clock in                     | org  |        |
+| =oaC=    | =org-clock-out= | clock in                     | org  |        |
 
 **** org jumping around or finding things
 #+attr_latex: :placement [H]
 #+caption: jumping or finding stuff in org file
 #+name: tbl-orgmode-general-keybindings-find
-| key(s) | function                          | short description         | mode | lambda |
-|--------+-----------------------------------+---------------------------+------+--------|
-| =of=   | =:ignore t=                       | find..................... | org  |        |
-| =ofh=  | =(consult-org-heading)=           | heading                   | org  | y      |
-| =ofn=  | =(consult-line "^#+name"   )=     | named table/eq/src        | org  | y      |
-| =ofr=  | =(consult-line "^#+result" )=     | result        /src        | org  | y      |
-| =ofs=  | =(consult-line "^#+begin_" )=     | source src-block          | org  | y      |
-| =ofl=  | =(consult-line "\\\\label{.*}" )= | label                     | org  | y      |
-| =ofr=  | =(consult-line "\\\\ref{.*}" )=   | ref                       | org  | y      |
-| =j=    | =org-next-block=                  | jump to next src-block    | org  |        |
-| =k=    | =org-previous-block=              | jump to prev src-block    | org  |        |
+| key(s) | function                        | short description         | mode | lambda |
+|--------+---------------------------------+---------------------------+------+--------|
+| =of=     | =:ignore t=                       | find..................... | org  |        |
+| =ofh=    | =(consult-org-heading)=           | heading                   | org  | y      |
+| =ofn=    | =(consult-line "^#+name"   )=     | named table/eq/src        | org  | y      |
+| =ofr=    | =(consult-line "^#+result" )=     | result        /src        | org  | y      |
+| =ofs=    | =(consult-line "^#+begin_" )=     | source src-block          | org  | y      |
+| =ofl=    | =(consult-line "\\\\label{.*}" )= | label                     | org  | y      |
+| =ofr=    | =(consult-line "\\\\ref{.*}" )=   | ref                       | org  | y      |
+| =j=      | =org-next-block=                  | jump to next src-block    | org  |        |
+| =k=      | =org-previous-block=              | jump to prev src-block    | org  |        |
 
 **** org-export related
 #+attr_latex: :placement [H]
 #+caption: exporting org
 #+name: tbl-orgmode-general-keybindings-export
-| key(s) | function                           | short description             | mode | lambda |
-|--------+------------------------------------+-------------------------------+------+--------|
-| =ox=   | =:ignore t=                        | export....................... | org  |        |
-| =oxh=  | =org-html-export-to-html=          | html                          | org  |        |
-| =oxb=  | =org-beamer-export-to-pdf=         | beamer                        | org  |        |
-| =oxp=  | =org-latex-export-to-pdf=          | pdf latex                     | org  |        |
-| =oxH=  | =(org-html-export-to-html nil t)=  | Html                 subtree  | org  | y      |
-| =oxB=  | =(org-beamer-export-to-pdf nil t)= | beamer               subtree  | org  | y      |
-| =oxP=  | =(org-latex-export-to-pdf nil t)=  | pdf latex            subtree  | org  | y      |
-| =oxr=  | =org-reveal-export-to-html=        | reveal js                     | org  |        |
-| =oxo=  | =garid/org-open-pdf=               | pdf open                      | org  |        |
-| =oxO=  | =garid/org-open-html=              | html open                     | org  |        |
-| =op=   | =org-latex-preview=                | preview                       | org  |        |
+| key(s) | function                         | short description             | mode | lambda |
+|--------+----------------------------------+-------------------------------+------+--------|
+| =ox=     | =:ignore t=                        | export....................... | org  |        |
+| =oxh=    | =org-html-export-to-html=          | html                          | org  |        |
+| =oxb=    | =org-beamer-export-to-pdf=         | beamer                        | org  |        |
+| =oxp=    | =org-latex-export-to-pdf=          | pdf latex                     | org  |        |
+| =oxH=    | =(org-html-export-to-html nil t)=  | Html                 subtree  | org  | y      |
+| =oxB=    | =(org-beamer-export-to-pdf nil t)= | beamer               subtree  | org  | y      |
+| =oxP=    | =(org-latex-export-to-pdf nil t)=  | pdf latex            subtree  | org  | y      |
+| =oxr=    | =org-reveal-export-to-html=        | reveal js                     | org  |        |
+| =oxo=    | =garid/org-open-pdf=               | pdf open                      | org  |        |
+| =oxO=    | =garid/org-open-html=              | html open                     | org  |        |
+| =op=     | =org-latex-preview=                | preview                       | org  |        |
 
 **** org-link related
 #+attr_latex: :placement [H]
 #+caption: org-link related
 #+name: tbl-orgmode-general-keybindings-link
-| key(s) | function                           | short description            | mode | lambda |
-|--------+------------------------------------+------------------------------+------+--------|
-| =ol=   | =:ignore t=                        | link........................ | org  |        |
-| =old=  | =garid/org-toggle-link-n-emphasis= | description-toggle           | org  |        |
-| =oli=  | =org-insert-link=                  | insert                       | org  |        |
-| =oln=  | =hydra-org-link-jumper/body=       | next-link                    | org  |        |
-| =olp=  | =hydra-org-link-jumper/body=       | prev-link                    | org  |        |
-| =olo=  | =org-open-at-point=                | open (same as SPC o o)       | org  |        |
-| =olf=  | =org-footnote-new=                 | footnote-new                 | org  |        |
-| =olF=  | =org-footnote-action=              | Footnote-action              | org  |        |
-| =olc=  | =org-cite-insert=                  | citation                     | org  |        |
-| =oll=  | =org-lint=                         | lint                         | org  |        |
+| key(s) | function                         | short description            | mode | lambda |
+|--------+----------------------------------+------------------------------+------+--------|
+| =ol=     | =:ignore t=                        | link........................ | org  |        |
+| =old=    | =garid/org-toggle-link-n-emphasis= | description-toggle           | org  |        |
+| =oli=    | =org-insert-link=                  | insert                       | org  |        |
+| =oln=    | =hydra-org-link-jumper/body=       | next-link                    | org  |        |
+| =olp=    | =hydra-org-link-jumper/body=       | prev-link                    | org  |        |
+| =olo=    | =org-open-at-point=                | open (same as SPC o o)       | org  |        |
+| =olf=    | =org-footnote-new=                 | footnote-new                 | org  |        |
+| =olF=    | =org-footnote-action=              | Footnote-action              | org  |        |
+| =olc=    | =org-cite-insert=                  | citation                     | org  |        |
+| =oll=    | =org-lint=                         | lint                         | org  |        |
 
 **** org-image related
 #+attr_latex: :placement [H]
 #+caption: handing images in org-file
 #+name: tbl-orgmode-general-keybindings-img
-| key(s) | function                                  | short description            | mode | lambda |
-|--------+-------------------------------------------+------------------------------+------+--------|
-| =oi=   | =:ignore t=                               | image....................... | org  |        |
-| =oii=  | =(insert "[[edraw:]]")=                   | inline edraw                 | org  | y      |
-| =oic=  | =org-ipe-insert-drawing=                  | create ipe-svg               | org  |        |
-| =oip=  | =org-download-clipboard=                  | paste clipboard              | org  |        |
-| =oiP=  | =org-download-image=                      | Paste from-path              | org  |        |
-| =oid=  | =org-download-delete=                     | delete file                  | org  |        |
-| =oie=  | =edraw-org-edit-regular-file-link=        | edit edraw                   | org  |        |
-| =oiE=  | =org-download-edit=                       | Edit externally              | org  |        |
-| =oir=  | =org-download-rename-at-point=            | rename file                  | org  |        |
-| =oit=  | =garid/org-toggle-display-images-n-edraw= | toggle shot/hide image       | org  |        |
-|--------+-------------------------------------------+------------------------------+------+--------|
-| =ois=  | =:ignore t=                               | size........................ | org  |        |
-| =oisn= | =(setq org-image-actual-width 1.0)=       | normal 800px                 | org  | y      |
-| =oisb= | =(setq org-image-actual-width 2.0)=       | big    1500px                | org  | y      |
-| =oiss= | =(setq org-image-actual-width 0.5)=       | small  400px                 | org  | y      |
+| key(s) | function                                | short description            | mode | lambda |
+|--------+-----------------------------------------+------------------------------+------+--------|
+| =oi=     | =:ignore t=                               | image....................... | org  |        |
+| =oii=    | =(insert "[[edraw:]]")=                   | inline edraw                 | org  | y      |
+| =oic=    | =org-ipe-insert-drawing=                  | create ipe-svg               | org  |        |
+| =oip=    | =org-download-clipboard=                  | paste clipboard              | org  |        |
+| =oiP=    | =org-download-image=                      | Paste from-path              | org  |        |
+| =oid=    | =org-download-delete=                     | delete file                  | org  |        |
+| =oie=    | =edraw-org-edit-regular-file-link=        | edit edraw                   | org  |        |
+| =oiE=    | =org-download-edit=                       | Edit externally              | org  |        |
+| =oir=    | =org-download-rename-at-point=            | rename file                  | org  |        |
+| =oit=    | =garid/org-toggle-display-images-n-edraw= | toggle shot/hide image       | org  |        |
+|--------+-----------------------------------------+------------------------------+------+--------|
+| =ois=    | =:ignore t=                               | size........................ | org  |        |
+| =oisn=   | =(setq org-image-actual-width 1.0)=       | normal 800px                 | org  | y      |
+| =oisb=   | =(setq org-image-actual-width 2.0)=       | big    1500px                | org  | y      |
+| =oiss=   | =(setq org-image-actual-width 0.5)=       | small  400px                 | org  | y      |
 
 *** Converting tables actual keybinding
 **** General.el config
