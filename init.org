@@ -960,8 +960,10 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 (use-package casual-suite
   :ensure t
   :after org-agenda
-  :bind (:map org-agenda-mode-map
-         ("<f7>" . casual-agenda-tmenu))
+  :bind (:map org-agenda-mode-map ("<f7>" . casual-agenda-tmenu)
+         :map ibuffer-mode-map    ("<f7>" . casual-ibuffer-tmenu)
+         :map calc-mode-map       ("<f7>" . casual-calc-tmenu)
+         :map dired-mode-map      ("<f7>" . casual-dired-tmenu))
   )
 #+end_src
 ** =org-timeblock=: agenda to SVG
