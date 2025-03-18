@@ -628,6 +628,20 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
                                          (plain  . nil)))
 
   :config
+  (when (not (assoc 'python denote-file-types))
+    (push '(python :extension ".py"
+                   :date-function denote-date-iso-8601
+                   :front-matter "# title:      %s\n# date:       %s\n# tags:       %s\n# identifier: %s\n# ---------------------------\n\n"
+                   :title-key-regexp "^# title\\s-*:"
+                   :title-value-function denote-format-string-for-org-front-matter
+                   :title-value-reverse-function denote-trim-whitespace
+                   :keywords-key-regexp "^# tags\\s-*:"
+                   :keywords-value-function denote-format-keywords-for-text-front-matter
+                   :keywords-value-reverse-function denote-extract-keywords-from-front-matter
+                   :link denote-org-link-format
+                   :link-in-context-regexp denote-org-link-in-context-regexp)
+          denote-file-types))
+
   (defun garid/denote-node-insert-immediate(start end)
     ;; create emtpy denote note on the regions
     (interactive "r")
@@ -1434,14 +1448,15 @@ I publish first from org to md in the local dir. Then using that local dir to cr
   :custom
   (jupyter-repl-echo-eval-p t)
 
-  :config
-  ;; following is from  https://github.com/emacs-jupyter/jupyter/issues/366
-  ;; the key issue was that, org-bullets or org-superstar
-  ;; conflicting with the result of the jupyter output making
-  ;; the jupyter output's rendering unreadable hex codes instead of colored text
-  (defun display-ansi-colors ()
-    (ansi-color-apply-on-region (point-min) (point-max)))
-  (add-hook 'org-babel-after-execute-hook #'display-ansi-colors)
+  ;; :config
+  ;; ;; following is from  https://github.com/emacs-jupyter/jupyter/issues/366
+  ;; ;; the key issue was that, org-bullets or org-superstar
+  ;; ;; conflicting with the result of the jupyter output making
+  ;; ;; the jupyter output's rendering unreadable hex codes instead of colored text
+  ;; (defun display-ansi-colors ()
+  ;;   (ansi-color-apply-on-region (point-min) (point-max)))
+  ;; (add-hook 'org-babel-after-execute-hook #'display-ansi-colors)
+  ;; I stopped using the jupter in the org mode after update org-elements
   )
 #+end_src
 ** =graphviz-dot-mode=
