@@ -621,7 +621,6 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 (use-package denote
   :ensure t
   :custom
-  (denote-journal-extras-title-format 'day)
   (denote-excluded-directories-regexp  ".*export_.*\\|.*website.*")
   (denote-directory                    "~/BrainDump/denote")
   (denote-known-keywords               '("phd"  "code"  "python"))
@@ -663,7 +662,26 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 
   )
 #+end_src
-
+** =denote-journal= denote journal
+#+begin_src emacs-lisp
+(use-package denote-journal
+  :custom
+  (denote-journal-extras-title-format 'day)
+  )
+#+end_src
+** =denote-org=
+#+begin_src emacs-lisp
+(use-package denote-org)
+#+end_src
+** =denote-silo= 
+#+begin_src emacs-lisp
+(use-package denote-silo
+  :custom
+  (denote-silo-directories '("~/BrainDump/denote"
+                            "~/BrainDump/denote_bps/"
+                            "~/BrainDump/denote_proj_grape/"))
+  )
+#+end_src
 ** =consult-denote=: consulting with denote
 #+begin_src emacs-lisp
 (use-package consult-denote
@@ -1369,8 +1387,14 @@ I publish first from org to md in the local dir. Then using that local dir to cr
 (use-package python
   :hook (inferior-python-mode  . (lambda () (interactive)(setq comint-ptyp nil)))
   :bind (:map inferior-python-mode-map
-              ("C-l" . comint-clear-buffer )
-              ))
+              ("C-l" . comint-clear-buffer ))
+  :config
+  (defun garid/run-pydev-python ()
+    ""
+    (interactive)
+    (run-python "/home/garid/.local/pydev/bin/python"))
+
+  )
 #+end_src
 ** =code-cells-mode=
 #+begin_src emacs-lisp
@@ -2440,28 +2464,28 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 #+attr_latex: :placement [H]
 #+caption: Denote
 #+name: tbl-global-general-keybindings-denote
-| key(s) | function                                    | short description            | mode | lambda |
-|--------+---------------------------------------------+------------------------------+------+--------|
-| =n=      | =:ignore t=                                   | note........................ | -    |        |
-| =nr=     | =denote-rename-file=                          | rename                       | -    |        |
-| =nf=     | =denote-open-or-create=                       | find                         | -    |        |
-| =nd=     | =(dired denote-directory)=                    | dired                        | -    | y      |
-| =nj=     | =denote-journal-extras-new-entry=             | journal                      | -    |        |
-| =nJ=     | =denote-journal-extras-new-or-existing-entry= | Journal-find                 | -    |        |
-| =nil=    | =denote-insert-link=                          | insert-link                  | -    |        |
-| =nij=    | =denote-journal-extras-link-or-create-entry=  | insert-journal-link          | -    |        |
-| =nt=     | =denote-template=                             | template                     | -    |        |
-| =nI=     | =garid/denote-node-insert-immediate=          | Insert-note                  | -    |        |
-| =ns=     | =consult-denote-grep=                         | live-grep                    | -    |        |
-| =nF=     | =consult-denote-find=                         | consult-denote-find          | -    |        |
-| =nl=     | =:ignore t=                                   | denote link................. | -    |        |
-| =nli=    | =denote-insert-link=                          | link insert                  | -    |        |
-| =nlb=    | =denote-find-backlink=                        | find-backlink                | -    |        |
-| =nlf=    | =denote-find-link=                            | find-forward-link            | -    |        |
-| =nlB=    | =denote-backlinks=                            | backlink                     | -    |        |
-| =nlF=    | =denote-link=                                 | forward-link                 | -    |        |
-| =nla=    | =denote-add-links=                            | add-links regex              | -    |        |
-| =nc=     | =garid/choose-denote-directory=               | change denote                | -    |        |
+| key(s) | function                             | short description            | mode | lambda |
+|--------+--------------------------------------+------------------------------+------+--------|
+| =n=      | =:ignore t=                            | note........................ | -    |        |
+| =nr=     | =denote-rename-file=                   | rename                       | -    |        |
+| =nf=     | =denote-open-or-create=                | find                         | -    |        |
+| =nd=     | =(dired denote-directory)=             | dired                        | -    | y      |
+| =nj=     | =denote-journal-new-entry=             | journal                      | -    |        |
+| =nJ=     | =denote-journal-new-or-existing-entry= | Journal-find                 | -    |        |
+| =nil=    | =denote-insert-link=                   | insert-link                  | -    |        |
+| =nij=    | =denote-journal-link-or-create-entry=  | insert-journal-link          | -    |        |
+| =nt=     | =denote-template=                      | template                     | -    |        |
+| =nI=     | =garid/denote-node-insert-immediate=   | Insert-note                  | -    |        |
+| =ns=     | =consult-denote-grep=                  | live-grep                    | -    |        |
+| =nF=     | =consult-denote-find=                  | consult-denote-find          | -    |        |
+| =nl=     | =:ignore t=                            | denote link................. | -    |        |
+| =nli=    | =denote-insert-link=                   | link insert                  | -    |        |
+| =nlb=    | =denote-find-backlink=                 | find-backlink                | -    |        |
+| =nlf=    | =denote-find-link=                     | find-forward-link            | -    |        |
+| =nlB=    | =denote-backlinks=                     | backlink                     | -    |        |
+| =nlF=    | =denote-link=                          | forward-link                 | -    |        |
+| =nla=    | =denote-add-links=                     | add-links regex              | -    |        |
+| =nc=     | =garid/choose-denote-directory=        | change denote                | -    |        |
 
 **** Roam related
 #+attr_latex: :placement [H]
