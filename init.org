@@ -1733,11 +1733,16 @@ Similar to vim-signify.
 (use-package git-gutter
   :delight  " git"
   :ensure t
-  :bind (:repeat-map git-gutter+-repeat-map
+  :bind (:repeat-map git-gutter:repeat-map
                      ("n" . git-gutter:next-hunk)
                      ("p" . git-gutter:previous-hunk)
                      ("s" . git-gutter:stage-hunk)
-                     ("r" . git-gutter:revert-hunk))
+                     ("r" . git-gutter:revert-hunk)
+                     :exit ;; here are available in the repeat, but only once executed
+                     ("c" . magit-commit-create)
+                     ("C" . magit-commit)
+                     ("b" . magit-blame)
+                     )
   :config (global-git-gutter-mode)
   )
 #+end_src
@@ -3129,7 +3134,7 @@ fi
 #+begin_src emacs-lisp
 (use-package format-all
   :commands format-all-mode
-  :hook (prog-mode . format-all-mode)
+  ;;:hook (prog-mode . format-all-mode)
   :config
   (setq-default format-all-formatters
                 '(("C"     (astyle "--mode=c"))
