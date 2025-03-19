@@ -1733,7 +1733,13 @@ Similar to vim-signify.
 (use-package git-gutter
   :delight  " git"
   :ensure t
-  :config (global-git-gutter-mode))
+  :bind (:repeat-map git-gutter+-repeat-map
+                     ("n" . git-gutter:next-hunk)
+                     ("p" . git-gutter:previous-hunk)
+                     ("s" . git-gutter:stage-hunk)
+                     ("r" . git-gutter:revert-hunk))
+  :config (global-git-gutter-mode)
+  )
 #+end_src
 
 ** =harpoon=
