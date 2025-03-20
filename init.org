@@ -3121,6 +3121,45 @@ else
 	return 0
 fi
 #+end_src
+* email
+** reading
+#+begin_src emacs-lisp
+(use-package notmuch
+  :ensure t
+  :defer t)
+#+end_src
+
+** writting
+#+begin_src emacs-lisp
+(use-package sendmail
+  :ensure nil
+  :custom
+  (send-mail-function              'sendmail-send-it )
+  (sendmail-program                "/usr/bin/msmtp"  )
+  (mail-specify-envelope-from      t                 )
+  (message-sendmail-envelope-from  'header           )
+  (mail-envelope-from              'header           )
+  )
+#+end_src
+
+** writting with org mode
+#+begin_src emacs-lisp
+(use-package org-mime
+  :custom
+  (org-mime-library 'mml)
+  (org-mime-export-options '(
+                             :with-latex imagemagick
+                             :section-numbers nil
+                             :with-author nil
+                             :with-toc nil)
+                           ))
+#+end_src
+
+** consulting
+#+begin_src emacs-lisp
+(use-package consult-notmuch)
+#+end_src
+
 * Misc Packages
 ** =crux=
 #+begin_src emacs-lisp
