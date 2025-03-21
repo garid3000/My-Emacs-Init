@@ -149,6 +149,14 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   (define-key evil-outer-text-objects-map "a" (evil-textobj-tree-sitter-get-textobj ("conditional.outer" "loop.outer"))))
 #+end_src
 
+** repeat
+#+begin_src emacs-lisp
+(use-package repeat
+  :ensure nil  ;; built in
+  :config (repeat-mode +1)
+  )
+#+end_src
+
 * Theme & colors
 ** Fonts
 #+begin_src emacs-lisp
