@@ -79,7 +79,8 @@ I'm pulling packages from following 3 places (not sure that I need all three):
 
   :custom
   (evil-undo-system         'undo-redo)
-  ;; evil-want-C-i-jump     nil       ;; test I may need jumpy back and forth
+  (evil-toggle-key           "")      ;; removes the C-z toggling evil accidentally
+  (evil-want-C-i-jump       t)
 
   ;; not much related with evil but related to movement
   (scroll-step           1)
@@ -88,7 +89,7 @@ I'm pulling packages from following 3 places (not sure that I need all three):
 
   :config
   ;;(evil-define-key 'normal  org-mode-map   (kbd "TAB") #'org-cycle) ;; for org-cycle (tab) working for terminal
-  (setq evil-want-C-i-jump       t)
+  ;;(setq evil-want-C-i-jump       t)
   ;; (evil-define-key 'normal  org-mode-map   (kbd "TAB") #'org-cycle)
   (evil-mode 1))
 #+end_src
@@ -377,10 +378,19 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
                    "(provide 'org-version)\n")))
               :pin nil)
   :delight " org"
-  :bind (:map
-         org-mode-map
+  :bind (
+         :repeat-map garid/org-repeat
+         ("[" .     org-previous-visible-heading )
+         ("]" .     org-next-visible-heading     )
+         ("u" .     org-up-heading               )
+         ("{" .     org-backward-paragraph       )
+         ("}" .     org-forward-paragraph        )
+         ("<tab>" . org-cycle                    )
+         ("<backtab>" . org-shifttab             )
+         :map org-mode-map
          ("C-S-j" . org-next-visible-heading     )
-         ("C-S-k" . org-previous-visible-heading ))
+         ("C-S-k" . org-previous-visible-heading )
+         )
 
   :custom
   ;; theme/styling ...............................................................................
@@ -1409,9 +1419,20 @@ I publish first from org to md in the local dir. Then using that local dir to cr
 ** =python=
 #+begin_src emacs-lisp
 (use-package python
+  :bind (:repeat-map my/python-repeat-map
+                     ("e" . python-nav-forward-block       )
+                     ("a" . python-nav-backward-block      )
+                     ("["  . python-nav-backward-defun     )
+                     ("]"  . python-nav-forward-defun      )
+                     ;;("["  . evil-backward-section-begin )
+                     ;;("]"  . evil-forward-section-begin  )
+                     ("p"  . python-nav-backward-statement )
+                     ("n"  . python-nav-forward-statement  )
+                     ("b"  . python-nav-backward-sexp      )
+                     ("f"  . python-nav-forward-sexp       )
+                     :map inferior-python-mode-map
+                     ("C-l" . comint-clear-buffer))
   :hook (inferior-python-mode  . (lambda () (interactive)(setq comint-ptyp nil)))
-  :bind (:map inferior-python-mode-map
-              ("C-l" . comint-clear-buffer ))
   :config
   (defun garid/run-pydev-python ()
     ""
@@ -1419,6 +1440,7 @@ I publish first from org to md in the local dir. Then using that local dir to cr
     (run-python "/home/garid/.local/pydev/bin/python"))
 
   )
+
 #+end_src
 ** =code-cells-mode=
 #+begin_src emacs-lisp
@@ -1594,6 +1616,7 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
   ;; (add-to-list 'eglot-stay-out-of 'eldoc)
   (add-to-list 'eglot-server-programs
                '(python-mode . ("pyright-langserver" "--stdio")))
+               ;;'(python-mode . ("basedpyright"))) ;; not working not sure why
   (evil-define-key 'normal 'prog-mode-map  (kbd "g o") 'eglot-find-typeDefinition)
   (evil-define-key 'normal 'prog-mode-map  (kbd "] d") 'flymake-goto-next-error)
   (evil-define-key 'normal 'prog-mode-map  (kbd "[ d") 'flymake-goto-prev-error)
@@ -2479,22 +2502,23 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 #+attr_latex: :placement [H]
 #+caption: Project (more like git-repo)
 #+name: tbl-global-general-keybindings-project
-| key(s) | function               | short description             | mode | lambda |
-|--------+------------------------+-------------------------------+------+--------|
-| =p=      | =:ignore t=              | project.....................  | -    |        |
-| =pr=     | =xref-find-references=   | references                    | -    |        |
-| =pR=     | =consult-eglot-symbols=  | references consult            | -    |        |
-| =pd=     | =consult-flymake=        | diagnostic                    | -    |        |
-| =pf=     | =project-find-file=      | find-file                     | -    |        |
-| =pz=     | =project-switch-project= | jump-to-other-proj            | -    |        |
-| =ps=     | =consult-git-grep=       | search git files              | -    |        |
-| =pS=     | =project-find-regexp=    | search-in-proj                | -    |        |
-| =pk=     | =project-kill-buffers=   | kill-buf-proj                 | -    |        |
-| =pl=     | =consult-project-buffer= | list-buf-proj                 | -    |        |
-| =pv=     | =consult-imenu=          | variables                     | -    |        |
-| =v=      | =:ignore t=              | variables.................... | -    |        |
-| =vq=     | =format-all-buffer=      | format-buffer                 | -    |        |
-| =vr=     | =eglot-rename=           | rename variable               | -    |        |
+| key(s) | function                   | short description             | mode | lambda |
+|--------+----------------------------+-------------------------------+------+--------|
+| =p=    | =:ignore t=                | project.....................  | -    |        |
+| =pr=   | =xref-find-references=     | references                    | -    |        |
+| =pR=   | =consult-eglot-symbols=    | references consult            | -    |        |
+| =pd=   | =consult-flymake=          | diagnostic                    | -    |        |
+| =pf=   | =project-find-file=        | find-file                     | -    |        |
+| =pz=   | =project-switch-project=   | jump-to-other-proj            | -    |        |
+| =ps=   | =consult-git-grep=         | search git files              | -    |        |
+| =pS=   | =project-find-regexp=      | search-in-proj                | -    |        |
+| =pk=   | =project-kill-buffers=     | kill-buf-proj                 | -    |        |
+| =pl=   | =consult-project-buffer=   | list-buf-proj                 | -    |        |
+| =pv=   | =consult-imenu=            | variables                     | -    |        |
+| =v=    | =:ignore t=                | variables.................... | -    |        |
+| =vq=   | =format-all-buffer=        | format-buffer                 | -    |        |
+| =vr=   | =eglot-rename=             | rename variable               | -    |        |
+| =vf=   | =python-nav-forward-defun= | xxxxxxxxxxxxxxx               | -    |        |
 
 **** Denote related
 #+attr_latex: :placement [H]
@@ -2712,6 +2736,13 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
     :keymaps '(org-mode-map)
     :prefix        "SPC"
     :global-prefix "C-SPC")
+
+  
+  (general-create-definer garids-keybind/in-prog-mode
+    :states '(normal visual)
+    :keymaps '(prog-mode-map)
+    :prefix        "M-SPC"
+    :global-prefix "C-M-n")
   )
 #+end_src
 **** Script that converts previous org-tables into actual emacs configuration
@@ -2887,6 +2918,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "v" '(:ignore t :which-key "variables....................")
   "vq" '(format-all-buffer :which-key "format-buffer")
   "vr" '(eglot-rename :which-key "rename variable")
+  "vf" '(python-nav-forward-defun :which-key "xxxxxxxxxxxxxxx")
   "b" '(harpoon-quick-menu-hydra :which-key "bookmark-harpoon")
   "B" '(:ignore t :which-key "bookmark......................")
   "B1" '(harpoon-go-to-1 :which-key "")
@@ -3048,6 +3080,22 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "oisn" '((lambda () (interactive) (setq org-image-actual-width 1.0) ) :which-key "normal 800px")
   "oisb" '((lambda () (interactive) (setq org-image-actual-width 2.0) ) :which-key "big    1500px")
   "oiss" '((lambda () (interactive) (setq org-image-actual-width 0.5) ) :which-key "small  400px")
+)
+#+end_src
+
+**** manual progmode
+#+begin_src emacs-lisp
+(garids-keybind/in-prog-mode
+  "SPC" '(execute-extended-command      :which-key "")
+  "a" '(python-nav-backward-block       :which-key "block-prev")
+  "e" '(python-nav-forward-block        :which-key "block-next")
+  "[" '(python-nav-backward-defun       :which-key "defun-prev")
+  "]" '(python-nav-forward-defun        :which-key "defun-next")
+  "p" '(python-nav-backward-statement   :which-key "state-prev")
+  "n" '(python-nav-forward-statement    :which-key "state-next")
+  "b" '(python-nav-backward-sexp        :which-key "sexp-prev")
+  "f" '(python-nav-forward-sexp         :which-key "sexp-next")
+
 )
 #+end_src
 

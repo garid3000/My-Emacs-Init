@@ -1,0 +1,7 @@
+#+LATEX_COMPILER: lualatex
+#+LATEX_HEADER: \usepackage{fontspec}
+#+LATEX_HEADER: \usepackage{color}
+#+LATEX_HEADER: \usepackage{cancel}
+#+LATEX_HEADER: \usepackage[dvipsnames]{xcolor}
+#+LATEX_HEADER: \setmainfont{Linux Libertine O}
+
