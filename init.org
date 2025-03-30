@@ -298,6 +298,13 @@ but it feels slow when navigating.
   )
 #+end_src
 
+** pulsar of window movement                                                     :by_prot:
+#+begin_src emacs-lisp
+(use-package pulsar
+  :config
+  (pulsar-global-mode))
+#+end_src
+
 * Mini-buffer completion, selection, suggestion
 ** =vertico=
 #+begin_src emacs-lisp
@@ -452,10 +459,10 @@ but it feels slow when navigating.
          ("C-S-k"     . org-previous-visible-heading    )
          ("C-S-j"     . org-next-visible-heading        )
          :repeat-map garid/org-repeat
-         ("k"         . org-backward-heading-same-level )
-         ("j"         . org-forward-heading-same-level  )
-         ("K"         . org-previous-visible-heading    )
-         ("J"         . org-next-visible-heading        )
+         ;;("k"       . org-backward-heading-same-level )
+         ;;("j"       . org-forward-heading-same-level  )
+         ;;("K"       . org-previous-visible-heading    )
+         ;;("J"       . org-next-visible-heading        )
          ("["         . org-previous-visible-heading    )
          ("]"         . org-next-visible-heading        )
 
@@ -467,7 +474,7 @@ but it feels slow when navigating.
          ("t"         . org-toggle-narrow-to-subtree    ))
 
   :custom
-  ;; theme/styling ...............................................................................
+  ;; ---------------- theme/styling ------------------------------------------------------
   ;; (org-ellipsis                     " ▼" )
   (org-hide-emphasis-markers         t      )
   (org-image-actual-width            1.0    )
@@ -475,20 +482,18 @@ but it feels slow when navigating.
   (org-startup-indented              t      )
   (org-src-fontify-natively          t      )
   (org-startup-with-inline-images    t      )
-  (org-startup-with-latex-preview    nil    ) ;;
+  (org-startup-with-latex-preview    nil    )
   (org-startup-numerated             t      )
   (org-highlight-latex-and-related    '(latex entities native))
 
-  ;; org-src
-  (org-src-tab-acts-natively         t      )  ;; org-src
-  (org-src-preserve-indentation      nil    )  ;; org-src
-  (org-edit-src-content-indentation  0      )  ;; org-src
+  ;; ---------------- source code in org -------------------------------------------------
+  (org-src-tab-acts-natively         t      ) ;; org-src?
+  (org-src-preserve-indentation      nil    )
+  (org-edit-src-content-indentation  0      )
 
-
-  ;; openning file links ..........................................................................
+  ;; ---------------- how to open links in the org mode ----------------------------------
   (org-file-apps '((auto-mode                  . emacs                       )
-                   ;; ("\\.html\\'"            . "brave   \"%s\""            )
-                   ;; ("\\.html\\'"            . "thorium-browser   \"%s\""  )
+                   ("\\.html\\'"               . "thorium-browser   \"%s\""  )
                    ("\\.gif\\'"                . "mpv     \"%s\""            )
                    ("\\.mp4\\'"                . "mpv     \"%s\""            )
                    ("\\.png\\'"                . "nsxiv    \"%s\""           )
@@ -500,11 +505,11 @@ but it feels slow when navigating.
                    ("\\.mkv\\'"                . "mpv     \"%s\""            )
                    ("\\.xopp\\'"               . "xournalpp \"%s\""          )))
 
-  ;; todo and calendar like ....................................................................
+  ;; ---------------- TODO tabs ----------------------------------------------------------
   (org-todo-keywords      '((sequence "TODO(t)" "NEXT(n)" "WAIT(w)" "PRJT(p)" "VAGUE(v)"
                                       "|"       "DONE(d)" "CNCL(c)")))
 
-  (org-todo-keyword-faces '(("TODO"  . org-warning      )
+  (org-todo-keyword-faces '(("TODO"  . org-warning      )       ;; org-faces?
                             ("PRJT"  . "tomato"         )
                             ("NEXT"  . "orange"         )
                             ("WAIT"  . "gold"           )
@@ -524,7 +529,7 @@ but it feels slow when navigating.
                              ("Life" . ?L) ("write" . ?W) ("errand"   . ?e)
                              ("hkdn" . ?H) ("read" . ?R)
                              ))
-  (org-return-follows-link t)
+  (org-return-follows-link      t) ;; org-keys?
 
   (org-structure-template-alist
    '(("ba"    . "abstract")
@@ -708,7 +713,7 @@ but it feels slow when navigating.
 #+end_src
 
 * Org zettelkasten notes
-** =denote=: Note taking package
+** =denote=: Note taking package                                                   :by_prot:
 #+begin_src emacs-lisp
 (use-package denote
   :ensure t
@@ -768,18 +773,18 @@ but it feels slow when navigating.
 
   )
 #+end_src
-** =denote-journal= denote journal
+** =denote-journal= denote journal                                                 :by_prot:
 #+begin_src emacs-lisp
 (use-package denote-journal
   :custom
   (denote-journal-extras-title-format 'day)
   )
 #+end_src
-** =denote-org=
+** =denote-org=                                                                    :by_prot:
 #+begin_src emacs-lisp
 (use-package denote-org)
 #+end_src
-** =denote-silo= 
+** =denote-silo=                                                                   :by_prot:
 #+begin_src emacs-lisp
 (use-package denote-silo
   :custom
@@ -1183,12 +1188,9 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   :ensure nil
   :after org
   :custom
-  ;; (org-html-validation-link              nil) ;; Don't show validation link
+  (org-html-validation-link              nil) ;; Don't show validation link
   ;; (org-html-head-include-scripts         nil) ;; Use our own scripts
   ;; (org-html-head-include-default-style   nil) ;; Use our own styles
-  ;; (org-html-head  "<link rel=\"stylesheet\" type=\"text/css\" href=\"https://unpkg.com/chota\"/>")
-  ;; (org-html-head  "<link rel=\"stylesheet\" type=\"text/css\" href=\"/tmp/chota.css\"/>")
-  ;; org-html-head  "<link rel=\"stylesheet\" href=\"https://cdn.simplecss.org/simple.min.css\" />"
   (org-html-head "<link rel=\"stylesheet\" type=\"text/css\" href=\"https://orgmode.org/worg/style/worg.css\"/>" )
   )
 #+end_src

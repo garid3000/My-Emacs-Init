@@ -281,10 +281,10 @@ latex-mode
 (verbatim    "\\begin{verbatim}\n"                   r> n> "\\end{verbatim}"   )
 (verbatimm   "\\begin{verbatim*}\n"                  r> n> "\\end{verbatim*}"  )
 (matrixp     "\\begin{pmatrix}"     r n>
-            r " & " r " & " r " & " r "\\\\" n> 
-            r " & " r " & " r " & " r "\\\\" n> 
-            r " & " r " & " r " & " r "\\\\" n> 
-            "\\end{pmatrix}")
+             r " & " r " & " r " & " r "\\\\" n>
+             r " & " r " & " r " & " r "\\\\" n>
+             r " & " r " & " r " & " r "\\\\" n>
+             "\\end{pmatrix}")
 
 lisp-mode emacs-lisp-mode ;; Specify multiple modes
 
@@ -373,7 +373,7 @@ python-mode
 (mt       "def "     p "(self, " p ") -> None:" n> n> "return")
 (npd      ": np.ndarray[tuple[Literal[4]], np.dtype[np.float64]]")
 (npt      ": np.dtype[np.float64]")
-(pvpl     "pl = pv.Plotter(shape=(1, 1))" r n 
+(pvpl     "pl = pv.Plotter(shape=(1, 1))" r n
           "_ = pl.add_mesh(surf)"         r n
           "pl.save_graphic(\"img.svg\")"      )
 (pv.save_graph    "pl.save_graphic(\"\")"     )
@@ -393,10 +393,10 @@ graphviz-dot-mode
 (label     "label=\"" r> n> "\"")
 (shape     "shape=" :post (garid/choose-from-list-and-insert-it
                            '("box" "polygon" "ellipse" "oval" "circle" "point" "egg" "triangle" "plaintext" "plain" "diamond"
-                            "trapezium" "parallelogram" "house" "pentagon" "hexagon" "septagon" "octagon" "doublecircle"
-                            "doubleoctagon" "tripleoctagon" "invtriangle" "invtrapezium" "invhouse" "rect" "square" "start"
-                            "none" "underline" "cylinder" "note" "tab" "folder" "box3d" "component" "prometer" "cds"
-                            "rarrow" "larrow" "rpromoter" "lpromoter" "signature" "insulator")))
+                             "trapezium" "parallelogram" "house" "pentagon" "hexagon" "septagon" "octagon" "doublecircle"
+                             "doubleoctagon" "tripleoctagon" "invtriangle" "invtrapezium" "invhouse" "rect" "square" "start"
+                             "none" "underline" "cylinder" "note" "tab" "folder" "box3d" "component" "prometer" "cds"
+                             "rarrow" "larrow" "rpromoter" "lpromoter" "signature" "insulator")))
 (arrowhead "arrowhead=" :post (garid/choose-from-list-and-insert-it '("box" "crow" "curve" "diamond" "dot" "icurve" "inv" "none" "normal" "tee" "vee")))
 (arrowtail "arrowtail=" :post (garid/choose-from-list-and-insert-it '("box" "crow" "curve" "diamond" "dot" "icurve" "inv" "none" "normal" "tee" "vee")))
 (color     "color="     :post (garid/choose-from-list-and-insert-it '("gray" "red" "blue" "yellow" "green" "aliceblue" "black" "blueviolet" "brown" "cadetblue" "coral" "darkblue" "darkcyan" "1" "2" "3" "4" "5" "6" "7" "8" "9")))
@@ -449,8 +449,12 @@ org-mode
              :post (garid/choose-from-list-and-insert-it
                     '("black" "white" "league" "beige" "night" "serif"
                       "solarized" "moon" "dracula" "sky" "blood")))
-(oxt               "#+setupfile: ~/.config/emacs/org-templates/level-0-xelatex-fonts-conf.org")
-(oxh               "#+setupfile: ~/.config/emacs/org-templates/level-0-html-export-template.org")
+(oxt         "#+setupfile: ~/.config/emacs/org-templates/level-0-xelatex-fonts-conf.org")
+(oxh         "#+setupfile: ~/.config/emacs/org-templates/level-0-html-export-template.org")
+(ox2r        "#+reveal_html: <div class=\"column\" style=\"float:left; width:50%\">" n
+             "#+reveal_html: </div>" n n n
+             "#+reveal_html: <div class=\"column\" style=\"float:right; width:50%\">" n
+             "#+reveal_html: </div>"n)
 (printbibliograph  "#+print_bibliography:")
 (results           "results "
                    :post (garid/choose-from-list-and-insert-it
