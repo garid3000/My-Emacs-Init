@@ -401,16 +401,17 @@ but it feels slow when navigating.
   :delight " org"
   :bind (
          :repeat-map garid/org-repeat
-         ("[" .     org-previous-visible-heading )
-         ("]" .     org-next-visible-heading     )
-         ("u" .     org-up-heading               )
-         ("{" .     org-backward-paragraph       )
-         ("}" .     org-forward-paragraph        )
-         ("<tab>" . org-cycle                    )
-         ("<backtab>" . org-shifttab             )
+         ("["         . org-previous-visible-heading )
+         ("]"         . org-next-visible-heading     )
+         ("u"         . org-up-heading               )
+         ("{"         . org-backward-paragraph       )
+         ("}"         . org-forward-paragraph        )
+         ("<tab>"     . org-cycle                    )
+         ("<backtab>" . org-shifttab                 )
+         ("t"         . org-toggle-narrow-to-subtree )
          :map org-mode-map
-         ("C-S-j" . org-next-visible-heading     )
-         ("C-S-k" . org-previous-visible-heading )
+         ("C-S-j"     . org-next-visible-heading     )
+         ("C-S-k"     . org-previous-visible-heading )
          )
 
   :custom
