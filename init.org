@@ -214,7 +214,21 @@ but it feels slow when navigating.
   (variable-pitch ((t (:family "Serif"           :height 120))))
   (fixed-pitch    ((t (:family "Monospace"       :height 120))))
   (default        ((t (:family "Monospace"       :height 120))))
+  ;; :hook ()
+  ;;  :config
+  ;;  (set-face-background   'mode-line          "#2B3260")
+  ;;  (set-face-background   'mode-line-inactive "#1B1B1B")
+  :hook
+  (emacs-startup . (lambda ()
+                     (set-face-background 'mode-line          "#2B3260")
+                     (set-face-background 'mode-line-inactive "#1B1B1B")))
   )
+
+;;(add-hook 'after-init-hook
+;;(lambda ()
+;;(set-face-background 'mode-line "#2B3260")
+;;(set-face-background 'mode-line-inactive "#1B1B1B")))
+;;)
 #+end_src
 ** Theme
 #+begin_src emacs-lisp :results none
@@ -224,8 +238,6 @@ but it feels slow when navigating.
   (enable-theme 'uwu)
 
   ;; not related with this theme itself but generally relates to generally
-  (set-face-background   'mode-line          "#2B3260")
-  (set-face-background   'mode-line-inactive "#2B3244")
   (scroll-bar-mode       -1)        ; Disable visible scrollbar
   (tool-bar-mode         -1)        ; Disable the toolbar
   (tooltip-mode          -1)        ; Disable tooltips
