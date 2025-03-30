@@ -2302,7 +2302,6 @@ Similar to vim-signify.
 |---------+----------------------------------------+-------------------------------------+-----------------------|
 | =M-q=     | =delete-window=                          | delete window                       | =evil-normal-state-map= |
 | =M-Q=     | =kill-current-buffer=                    | delete buffer                       | =evil-normal-state-map= |
-| =M-J=     | =other-window=                           | jump to other window                | =evil-normal-state-map= |
 | =M-W=     | =evil-window-vnew=                       | divide window vertically (on right) | =evil-normal-state-map= |
 | =M-E=     | =evil-window-vsplit=                     | divide window vertically (on left)  | =evil-normal-state-map= |
 | =M-]=     | =comint-dynamic-complete-filename=       | complete file path                  | =evil-normal-state-map= |
@@ -2319,7 +2318,6 @@ Similar to vim-signify.
 | =M-6=     | =harpoon-go-to-6=                        | harpoon-go-to-6                     | =evil-normal-state-map= |
 | =<f9>=    | =harpoon-quick-menu-hydra=               | harpoon                             | =evil-normal-state-map= |
 | =M-<f9>=  | =garid/toggle-distraction-free-writing=    | toggle distraction free writing     | =evil-normal-state-map= |
-
 
  
 Note to myself: after changing Table-[[tbl-global-keybindings]], I need to update [[convert-global-keybindings]]
@@ -2346,7 +2344,6 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 #+begin_src emacs-lisp
 (global-set-key (kbd "M-q") 'delete-window)
 (global-set-key (kbd "M-Q") 'kill-current-buffer)
-(global-set-key (kbd "M-J") 'other-window)
 (global-set-key (kbd "M-W") 'evil-window-vnew)
 (global-set-key (kbd "M-E") 'evil-window-vsplit)
 (global-set-key (kbd "M-]") 'comint-dynamic-complete-filename)
@@ -2364,14 +2361,14 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 (global-set-key (kbd "<f9>") 'harpoon-quick-menu-hydra)
 (global-set-key (kbd "M-<f9>") 'garid/toggle-distraction-free-writing)
 #+end_src
-*** Manual
+*** COMMENT Manual
 #+begin_src emacs-lisp
-(global-set-key (kbd "M-L") 'windmove-right)
-(global-set-key (kbd "M-H") 'windmove-left)
-(global-set-key (kbd "M-J") 'windmove-down)
-(global-set-key (kbd "M-K") 'windmove-up)
-(global-set-key (kbd "M-N") 'other-window)
-(global-set-key (kbd "M-P") (lambda () (interactive) (other-window -1)))
+;; (global-set-key (kbd "M-L") 'windmove-right)
+;; (global-set-key (kbd "M-H") 'windmove-left)
+;; (global-set-key (kbd "M-J") 'windmove-down)
+;; (global-set-key (kbd "M-K") 'windmove-up)
+;; (global-set-key (kbd "M-N") 'other-window)
+;; (global-set-key (kbd "M-P") (lambda () (interactive) (other-window -1)))
 
 ;;(global-set-key (kbd "M-J") 'other-window)
 ;;(global-set-key (kbd "M-K") (lambda () (interactive) (other-window -1)))
