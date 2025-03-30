@@ -3378,6 +3378,18 @@ fi
   :config
   (gcmh-mode 1))
 #+end_src
+* Daemon
+#+begin_src emacs-lisp
+(use-package server
+  :ensure nil
+  :hook
+  (emacs-startup . (lambda ()
+                     (server-start)
+                     (call-process-shell-command
+                      "notify-send \"Emacs\" \"Emacs Daemon initialized, 'emacsclient -c' should be available.\" &")
+                     )))
+#+end_src
+
 * Custom set variable:
 [[https://www.youtube.com/watch?v=tw2-rI2bxSg&t=1s][Initial idea from Systems crafter]], [[https://emacs.stackexchange.com/a/18785/38482][and code structure from this answer on emacs stackexchange]], and need to set ~enble-local-eval~ to ~t~.
 
@@ -3420,8 +3432,3 @@ fi
                        "--"))))))
      (dired-omit-files . "\\`[.]?#\\|\\`[.][.]?\\'\\|\\.html\\'\\|\\.tex\\'"))))
 #+end_src
-* Finish Notifier
-#+begin_src emacs-lisp
-(call-process-shell-command "notify-send \"Emacs\" \"Emacs has initialized\" &")
-#+end_src
-
