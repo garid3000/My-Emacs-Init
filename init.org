@@ -183,20 +183,34 @@ but it feels slow when navigating.
 #+begin_src emacs-lisp
 (use-package windmove
   :after (window evil)
-  :bind (("M-L" . windmove-right     )
-         ("M-H" . windmove-left      )
-         ("M-J" . windmove-down      )
-         ("M-K" . windmove-up        )
+  :bind (("M-L" . windmove-right               )
+         ("M-H" . windmove-left                )
+         ("M-J" . windmove-down                )
+         ("M-K" . windmove-up                  )
+         ("M-V" . evil-window-vsplit           )
+         ("M-S" . evil-window-split            )
          :repeat-map garid/windmove-repeat
-         ("l"   . windmove-right     )
-         ("h"   . windmove-left      )
-         ("j"   . windmove-down      )
-         ("k"   . windmove-up        )
-         ("s"   . evil-window-split  )
-         ("v"   . evil-window-vsplit )
-         ("q"   . delete-window      )
+         ("M-L"   . windmove-right             )
+         ("M-H"   . windmove-left              )
+         ("M-J"   . windmove-down              )
+         ("M-K"   . windmove-up                )
+
+         ("C-l"   . windmove-swap-states-right )
+         ("C-h"   . windmove-swap-states-left  )
+         ("C-j"   . windmove-swap-states-down  )
+         ("C-k"   . windmove-swap-states-up    )
+
+         ("s"   . evil-window-split            )
+         ("v"   . evil-window-vsplit           )
+         ("q"   . delete-window                )
+         ("="   . balance-windows              )
+
+         ("{"   . shrink-window-horizontally   )
+         ("}"   . enlarge-window-horizontally  )
+         ("[".    shrink-window                )
+         ("]".    enlarge-window               )
          :exit
-         ("RET"   . nil              )
+         ("RET"   . nil                        )
          )
   )
 #+end_src
@@ -432,20 +446,25 @@ but it feels slow when navigating.
                    "(provide 'org-version)\n")))
               :pin nil)
   :delight " org"
-  :bind (
+  :bind (:map org-mode-map
+         ("C-k"       . org-backward-heading-same-level )
+         ("C-j"       . org-forward-heading-same-level  )
+         ("C-S-k"     . org-previous-visible-heading    )
+         ("C-S-j"     . org-next-visible-heading        )
          :repeat-map garid/org-repeat
-         ("["         . org-previous-visible-heading )
-         ("]"         . org-next-visible-heading     )
-         ("u"         . org-up-heading               )
-         ("{"         . org-backward-paragraph       )
-         ("}"         . org-forward-paragraph        )
-         ("<tab>"     . org-cycle                    )
-         ("<backtab>" . org-shifttab                 )
-         ("t"         . org-toggle-narrow-to-subtree )
-         :map org-mode-map
-         ("C-S-j"     . org-next-visible-heading     )
-         ("C-S-k"     . org-previous-visible-heading )
-         )
+         ("k"         . org-backward-heading-same-level )
+         ("j"         . org-forward-heading-same-level  )
+         ("K"         . org-previous-visible-heading    )
+         ("J"         . org-next-visible-heading        )
+         ("["         . org-previous-visible-heading    )
+         ("]"         . org-next-visible-heading        )
+
+         ("u"         . org-up-heading                  )
+         ("{"         . org-backward-paragraph          )
+         ("}"         . org-forward-paragraph           )
+         ("<tab>"     . org-cycle                       )
+         ("<backtab>" . org-shifttab                    )
+         ("t"         . org-toggle-narrow-to-subtree    ))
 
   :custom
   ;; theme/styling ...............................................................................
@@ -3345,6 +3364,11 @@ fi
 (use-package zoom-window
   :custom
   (zoom-window-mode-line-color "dark slate gray")
+  :bind (
+         :repeat-map garid/windmove-repeat
+         ("f" . zoom-window-zoom)
+         ("n" . zoom-window-next)
+         )
   )
 #+end_src
 ** screen
