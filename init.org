@@ -637,20 +637,21 @@ but it feels slow when navigating.
   :custom
   (org-id-method                       'ts)
   (org-attach-id-to-path-function-list '(my/org-attach-dir-calculator
-                                          org-attach-id-ts-folder-format
-                                          org-attach-id-uuid-folder-format))
+                                         org-attach-id-ts-folder-format
+                                         org-attach-id-uuid-folder-format))
   :config
   (defun my/org-attach-dir-calculator (id)
     "id"
     (and (< 9 (length id))
-         (buffer-file-name)
-         (format "%s/subtree_id_%s"
-                 (car                     ;; 4. "20241002T190027"
-                  (split-string           ;; 3. ( "20241002T190027"  "denote-getting-id-of-current-file__elisp_org" )
-                   (file-name-base        ;; 2. "20241002T190027--denote-getting-id-of-current-file__elisp_org.org"
-                    (buffer-file-name))   ;; 1. "/home/garid/BrainDump/denote/20241002T190027--denote-getting-id-of-current-file__elisp_org.org"
-                   "--"))                 ;;     3. split-string related
-                 id)))
+         ;;(buffer-file-name)
+         ;;(format "%s/subtree_id_%s"     <---- i longer want each heading to have separate dir
+         (car                     ;; 4. "20241002T190027"
+          (split-string           ;; 3. ( "20241002T190027"  "denote-getting-id-of-current-file__elisp_org" )
+           (file-name-base        ;; 2. "20241002T190027--denote-getting-id-of-current-file__elisp_org.org"
+            (buffer-file-name))   ;; 1. "/home/garid/BrainDump/denote/20241002T190027--denote-getting-id-of-current-file__elisp_org.org"
+           "--"))                 ;;     3. split-string related
+         ;;id)))
+         ))
 
 
   (defun my/org-attach-dir (input-fname)
