@@ -295,7 +295,9 @@ but it feels slow when navigating.
 ** =pulsar= pulses on certain functions                                            :by_prot:
 #+begin_src emacs-lisp
 (use-package pulsar
-  :custom (pulsar-delay 0.015)
+  :custom
+  (pulsar-delay 0.015)
+  (pulsar-iterations 10)
   :config (pulsar-global-mode))
 #+end_src
 
@@ -747,20 +749,19 @@ but it feels slow when navigating.
       (save-buffer)
       (kill-buffer)
 
-      (insert (format "[[denote:%s][%s]]"
-                      (format-time-string "%Y%m%dT%H%M%S" tmp-cur-time-of-this-note)
-                      tmp-str-marked
-                      ))))
-  
+      (insert
+       (format
+        "[[denote:%s][%s]]"
+        (format-time-string "%Y%m%dT%H%M%S" tmp-cur-time-of-this-note)
+        tmp-str-marked))))
+
 
   )
 #+end_src
 ** =denote-journal= denote journal                                                 :by_prot:
 #+begin_src emacs-lisp
 (use-package denote-journal
-  :custom
-  (denote-journal-extras-title-format 'day)
-  )
+  :custom (denote-journal-extras-title-format 'day))
 #+end_src
 ** =denote-org=                                                                    :by_prot:
 #+begin_src emacs-lisp
@@ -775,7 +776,7 @@ but it feels slow when navigating.
                             "~/BrainDump/denote_proj_grape/"))
   )
 #+end_src
-** =consult-denote=: consulting with denote
+** =consult-denote=: consulting with denote                                        :by_prot:
 #+begin_src emacs-lisp
 (use-package consult-denote
   :ensure t
@@ -946,8 +947,7 @@ but it feels slow when navigating.
    ("C-c n b" . consult-org-roam-backlinks)
    ("C-c n B" . consult-org-roam-backlinks-recursive)
    ("C-c n l" . consult-org-roam-forward-links)
-   ("C-c n r" . consult-org-roam-search)
-   )
+   ("C-c n r" . consult-org-roam-search))
 #+end_src
 
 ** =citar-org-roam=
