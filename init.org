@@ -301,8 +301,11 @@ but it feels slow when navigating.
 ** pulsar of window movement                                                     :by_prot:
 #+begin_src emacs-lisp
 (use-package pulsar
+  :custom
+  (pulsar-delay 0.015)
   :config
-  (pulsar-global-mode))
+  (pulsar-global-mode)
+  )
 #+end_src
 
 * Mini-buffer completion, selection, suggestion
