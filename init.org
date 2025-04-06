@@ -430,7 +430,7 @@ but it feels slow when navigating.
 #+name: lst_org
 #+begin_src emacs-lisp :eval no
 (use-package org
-  :defer
+  :demand t ;; :defer
   :straight `(org
               :fork (:host nil
                            :repo "https://git.tecosaur.net/tec/org-mode.git"
@@ -457,24 +457,31 @@ but it feels slow when navigating.
               :pin nil)
   :delight " org"
   :bind (:map org-mode-map
-         ("C-k"       . org-backward-heading-same-level )
-         ("C-j"       . org-forward-heading-same-level  )
-         ("C-S-k"     . org-previous-visible-heading    )
-         ("C-S-j"     . org-next-visible-heading        )
-         :repeat-map garid/org-repeat
-         ;;("k"       . org-backward-heading-same-level )
-         ;;("j"       . org-forward-heading-same-level  )
-         ;;("K"       . org-previous-visible-heading    )
-         ;;("J"       . org-next-visible-heading        )
-         ("["         . org-previous-visible-heading    )
-         ("]"         . org-next-visible-heading        )
-
-         ("u"         . org-up-heading                  )
-         ("{"         . org-backward-paragraph          )
-         ("}"         . org-forward-paragraph           )
-         ("<tab>"     . org-cycle                       )
-         ("<backtab>" . org-shifttab                    )
-         ("t"         . org-toggle-narrow-to-subtree    ))
+              ;; ("C-k"       . org-backward-heading-same-level )
+              ;; ("C-j"       . org-forward-heading-same-level  )
+              ("C-S-k"     . org-previous-visible-heading    )
+              ("C-S-j"     . org-next-visible-heading        )
+              ;;:map evil-normal-state-map
+              ;;("[ ["         . org-previous-visible-heading    )
+              :repeat-map garid/org-repeat
+              ;; ("k"       . org-backward-heading-same-level )
+              ;; ("j"       . org-forward-heading-same-level  )
+              ;; ("K"       . org-previous-visible-heading    )
+              ;; ("J"       . org-next-visible-heading        )
+              ("["         . org-previous-visible-heading    )
+              ("]"         . org-next-visible-heading        )
+              ("u"         . org-up-heading                  )
+              ("{"         . org-backward-paragraph          )
+              ("}"         . org-forward-paragraph           )
+              ("<tab>"     . org-cycle                       )
+              ("<backtab>" . org-shifttab                    )
+              ("t"         . org-toggle-narrow-to-subtree    )
+              ("n"         . org-next-block                  )
+              ("p"         . org-previous-block              )
+              ("c"         . org-ctrl-c-ctrl-c               )
+              :exit
+              ("'"         . org-edit-special                )
+              )
 
   :custom
   ;; ---------------- theme/styling ------------------------------------------------------
@@ -615,6 +622,17 @@ but it feels slow when navigating.
   ;;     '("xelatex -interaction nonstopmode -output-directory %o %f"))
   )
 #+end_src
+** =org-link=
+#+begin_src emacs-lisp
+(use-package ol
+  :ensure nil
+  :after org
+  :bind (:map org-mode-map
+              :repeat-map garid/org-repeat
+              ("N"  . org-next-link     )
+              ("P"  . org-previous-link ))
+  )
+#+end_src
 ** =org-modern=
 #+begin_src emacs-lisp
 (use-package org-modern
@@ -664,12 +682,6 @@ but it feels slow when navigating.
      (file-name-as-directory
       (my/org-attach-dir-calculator (org-id-get-create)))
      input-fname))
-
-  ;; (setq org-id-method 'ts)
-  ;; (setq org-attach-id-to-path-function-list
-  ;;       '(my/org-attach-dir-calculator
-  ;;         org-attach-id-ts-folder-format
-  ;;         org-attach-id-uuid-folder-format))
   )
 #+end_src
 
@@ -1488,30 +1500,44 @@ I publish first from org to md in the local dir. Then using that local dir to cr
 #+begin_src emacs-lisp
 (use-package eldoc-box
   :config
-  (evil-define-key 'normal 'prog-mode-map  (kbd "K")
-    (lambda ()
-      (interactive)
-      (if (eglot-current-server)
-          (eldoc-box-eglot-help-at-point)
-        (eldoc-box-help-at-point))))
+  ;; (evil-define-key 'normal 'prog-mode-map  (kbd "K")
+  ;;   (lambda ()
+  ;;     (interactive)
+  ;;     (if (eglot-current-server)
+  ;;         (eldoc-box-eglot-help-at-point)
+  ;;       ;;(eldoc-box-help-at-point)
+  ;;       (eldoc))))
+  (evil-define-key 'normal 'prog-mode-map  (kbd "K") 'eldoc)
+      
   )
 #+end_src
 ** =python=
 #+begin_src emacs-lisp
 (use-package python
-  :bind (:repeat-map my/python-repeat-map
-                     ("e" . python-nav-forward-block       )
-                     ("a" . python-nav-backward-block      )
-                     ("["  . python-nav-backward-defun     )
-                     ("]"  . python-nav-forward-defun      )
-                     ;;("["  . evil-backward-section-begin )
-                     ;;("]"  . evil-forward-section-begin  )
-                     ("p"  . python-nav-backward-statement )
-                     ("n"  . python-nav-forward-statement  )
-                     ("b"  . python-nav-backward-sexp      )
-                     ("f"  . python-nav-forward-sexp       )
-                     :map inferior-python-mode-map
-                     ("C-l" . comint-clear-buffer))
+  :bind (
+         ;; ;("["  . python-nav-backward-defun     )
+         ;; ;("]"  . python-nav-forward-defun      )
+         ("M-["  . python-nav-backward-defun )
+         ("M-]"  . python-nav-forward-defun  )
+         :repeat-map my/python-repeat-map
+         ("e"    . python-nav-forward-block  )
+         ("a"    . python-nav-backward-block )
+         ("["    . python-nav-backward-defun )
+         ("]"    . python-nav-forward-defun  )
+         ;; ;;("["  . evil-backward-section-begin )
+         ;; ;;("]"  . evil-forward-section-begin  )
+         ("p"  . python-nav-backward-statement )
+         ("n"  . python-nav-forward-statement  )
+         ("b"  . python-nav-backward-sexp      )
+         ("f"  . python-nav-forward-sexp       )
+         ;; ("j"  . evil-next-line     )
+         ;; ("k"  . evil-previous-line )
+         ;; ("h"  . evil-backward-char )
+         ;; ("l"  . evil-forward-char  )
+         ;;("r"  . xref-find-references  )
+         ;;("d"  . xref-find-definitions  )
+         :map inferior-python-mode-map
+         ("C-l" . comint-clear-buffer))
   :hook (inferior-python-mode  . (lambda () (interactive)(setq comint-ptyp nil)))
   :config
   (defun garid/run-pydev-python ()
@@ -1520,18 +1546,16 @@ I publish first from org to md in the local dir. Then using that local dir to cr
     (run-python "/home/garid/.local/pydev/bin/python"))
 
   )
-
 #+end_src
 ** =code-cells-mode=
 #+begin_src emacs-lisp
 (use-package code-cells
   :hook (python-base-mode . code-cells-mode)
   :bind (:map code-cells-mode-map
-
-              ("M-[" . code-cells-backward-cell     )
-              ("M-]" . code-cells-forward-cell      )
-              ("M-{" . code-cells-move-cell-up      )
-              ("M-}" . code-cells-move-cell-down    )
+              ;;("M-[" . code-cells-backward-cell     )
+              ;;("M-]" . code-cells-forward-cell      )
+              ;;("M-{" . code-cells-move-cell-up      )
+              ;;("M-}" . code-cells-move-cell-down    )
               ("M-<RET>" . code-cells-eval          )
 
               ;; ("C-p" . code-cells-backward-cell     )
@@ -1885,7 +1909,7 @@ Similar to vim-signify.
 #+end_src
 
 * Bunch of functions
-** Open PDF/HMTL exported by LaTeX externally                                 :customFunc:
+** Open PDF/HMTL exported by LaTeX externally                                :customFunc:
 #+begin_src emacs-lisp
 (defun replace-in-string (what with in)
   (replace-regexp-in-string (regexp-quote what) with in nil 'literal))
@@ -1912,7 +1936,7 @@ Similar to vim-signify.
            )))
 #+end_src
 
-** My Custom LaTeX writing system (aka TeQ)                                   :customFunc:
+** My Custom LaTeX writing system (aka TeQ)                                  :customFunc:
 #+begin_src emacs-lisp
 (add-to-list 'load-path (expand-file-name "~/.config/emacs/Emacs-TeQ"))
 (register-input-method "TeQ-Math" "Emacs-Teq-Latex" 'quail-use-package
@@ -1922,7 +1946,7 @@ Similar to vim-signify.
       (kmacro-lambda-form [?v ?t tab ?v ?t ?| ?v ?t] 0 "%d"))
 #+end_src
 
-** Custom Aligner function (with untabify)                                    :customFunc:
+** Custom Aligner function (with untabify)                                   :customFunc:
 #+begin_src emacs-lisp
 (defun garid/align-regexp-and-untabify (beg end)
   (interactive "r")
@@ -1930,7 +1954,7 @@ Similar to vim-signify.
                 (concat "\\(\\s-*\\)" (read-string "Align regexp: ")))
   (untabify beg end))
 #+end_src
-** Toggling between 3 inputs (eng, mon, teq)                                  :customFunc:
+** Toggling between 3 inputs (eng, mon, teq)                                 :customFunc:
 #+begin_src emacs-lisp
 (defun garid/toggle-eng-mon-teq-input-methods ()
   (interactive)
@@ -1941,7 +1965,7 @@ Similar to vim-signify.
       (if (string= default-input-method "cyrillic-mongolian")
 	  (set-input-method "TeQ-Math")))))
 #+end_src
-** copy link in org at point                                                  :customFunc:
+** copy link in org at point                                                 :customFunc:
 [[https://emacs.stackexchange.com/a/60555/38482][stack exchange]]
 #+begin_src emacs-lisp
 (defun garid/open-org-link-at-point-with-dired (&optional arg)
@@ -1972,7 +1996,7 @@ Similar to vim-signify.
 ;;    (message (concat "Copied URL: " url)))
 ;;  )
 #+end_src
-** Jumping ref-label in org or latex                                          :customFunc:
+** Jumping ref-label in org or latex                                         :customFunc:
 #+begin_src emacs-lisp
 (defun garid/jump-label-def-of-ref-at-point-word ()
   ""
@@ -1991,7 +2015,7 @@ Similar to vim-signify.
           )
       (message "No matching braces found."))))
 #+end_src
-** Org toggle hide/shot hyperlink                                             :customFunc:
+** Org toggle hide/shot hyperlink                                            :customFunc:
 #+begin_src emacs-lisp
 (defun garid/org-toggle-link-n-emphasis ()
   (interactive)
@@ -2002,7 +2026,7 @@ Similar to vim-signify.
   (font-lock-update))
 #+end_src
 
-** Custom opening external terminal at current buffer                         :customFunc:
+** Custom opening external terminal at current buffer                        :customFunc:
 #+begin_src emacs-lisp
 (defun garid/open-external-term-here ()
   (interactive)
@@ -2012,7 +2036,7 @@ Similar to vim-signify.
 ;;(shell-command (concat user-emacs-directory "garid/open_external_term.sh" " " buffer-file-name)))
 #+end_src
 
-** Org toggle hide/shot display images                                        :customFunc:
+** Org toggle hide/shot display images                                       :customFunc:
 #+begin_src emacs-lisp
 (defun garid/org-toggle-display-images-n-edraw ()
   (interactive)
@@ -2139,7 +2163,7 @@ Similar to vim-signify.
 (use-package focus                :ensure t)
 #+end_src
 
-** Writing Distraction free                                                   :customFunc:
+** Writing Distraction free                                                  :customFunc:
 #+begin_src emacs-lisp
 (defun garid/distraction-free-on ()
   (interactive)
@@ -2329,7 +2353,6 @@ Similar to vim-signify.
 | =M-Q=     | =kill-current-buffer=                    | delete buffer                       | =evil-normal-state-map= |
 | =M-W=     | =evil-window-vnew=                       | divide window vertically (on right) | =evil-normal-state-map= |
 | =M-E=     | =evil-window-vsplit=                     | divide window vertically (on left)  | =evil-normal-state-map= |
-| =M-]=     | =comint-dynamic-complete-filename=       | complete file path                  | =evil-normal-state-map= |
 | =M-f=     | =consult-line=                           | search line in buffer               | =evil-normal-state-map= |
 | =M-F=     | =zoom-window-zoom=                       | zoom window mode                    | =evil-normal-state-map= |
 | =M-y=     | =consult-yank-from-kill-ring=            | consult yank from kill ring         | =evil-normal-state-map= |
@@ -2344,6 +2367,8 @@ Similar to vim-signify.
 | =<f9>=    | =harpoon-quick-menu-hydra=               | harpoon                             | =evil-normal-state-map= |
 | =M-<f9>=  | =garid/toggle-distraction-free-writing=    | toggle distraction free writing     | =evil-normal-state-map= |
 
+
+| =M-]=     | =comint-dynamic-complete-filename=       | complete file path                  | =evil-normal-state-map= |
  
 Note to myself: after changing Table-[[tbl-global-keybindings]], I need to update [[convert-global-keybindings]]
 *** Convert global keybinding table into elisp
@@ -2371,7 +2396,6 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 (global-set-key (kbd "M-Q") 'kill-current-buffer)
 (global-set-key (kbd "M-W") 'evil-window-vnew)
 (global-set-key (kbd "M-E") 'evil-window-vsplit)
-(global-set-key (kbd "M-]") 'comint-dynamic-complete-filename)
 (global-set-key (kbd "M-f") 'consult-line)
 (global-set-key (kbd "M-F") 'zoom-window-zoom)
 (global-set-key (kbd "M-y") 'consult-yank-from-kill-ring)
@@ -2579,23 +2603,25 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 #+attr_latex: :placement [H]
 #+caption: Project (more like git-repo)
 #+name: tbl-global-general-keybindings-project
-| key(s) | function                   | short description             | mode | lambda |
-|--------+----------------------------+-------------------------------+------+--------|
-| =p=    | =:ignore t=                | project.....................  | -    |        |
-| =pr=   | =xref-find-references=     | references                    | -    |        |
-| =pR=   | =consult-eglot-symbols=    | references consult            | -    |        |
-| =pd=   | =consult-flymake=          | diagnostic                    | -    |        |
-| =pf=   | =project-find-file=        | find-file                     | -    |        |
-| =pz=   | =project-switch-project=   | jump-to-other-proj            | -    |        |
-| =ps=   | =consult-git-grep=         | search git files              | -    |        |
-| =pS=   | =project-find-regexp=      | search-in-proj                | -    |        |
-| =pk=   | =project-kill-buffers=     | kill-buf-proj                 | -    |        |
-| =pl=   | =consult-project-buffer=   | list-buf-proj                 | -    |        |
-| =pv=   | =consult-imenu=            | variables                     | -    |        |
-| =v=    | =:ignore t=                | variables.................... | -    |        |
-| =vq=   | =format-all-buffer=        | format-buffer                 | -    |        |
-| =vr=   | =eglot-rename=             | rename variable               | -    |        |
-| =vf=   | =python-nav-forward-defun= | xxxxxxxxxxxxxxx               | -    |        |
+| key(s) | function                     | short description             | mode | lambda |
+|--------+------------------------------+-------------------------------+------+--------|
+| =p=      | =:ignore t=                    | project.....................  | -    |        |
+| =pr=     | =xref-find-references=         | references                    | -    |        |
+| =pR=     | =consult-eglot-symbols=        | references consult            | -    |        |
+| =pd=     | =(consult-flymake nil)=        | diagnostic buffer             | -    | y      |
+| =pD=     | =consult-flymake=              | diagnostic                    | -    |        |
+| =pf=     | =project-find-file=            | find-file                     | -    |        |
+| =pz=     | =project-switch-project=       | jump-to-other-proj            | -    |        |
+| =ps=     | =consult-git-grep=             | search git files              | -    |        |
+| =pS=     | =project-find-regexp=          | search-in-proj                | -    |        |
+| =pk=     | =project-kill-buffers=         | kill-buf-proj                 | -    |        |
+| =pl=     | =consult-project-buffer=       | list-buf-proj                 | -    |        |
+| =pc=     | =project-recompile=            |                               | -    |        |
+| =pqrr=   | =project-query-replace-regexp= |                               | -    |        |
+| =pv=     | =consult-imenu=                | variables                     | -    |        |
+| =v=      | =:ignore t=                    | variables.................... | -    |        |
+| =vq=     | =format-all-buffer=            | format-buffer                 | -    |        |
+| =vr=     | =eglot-rename=                 | rename variable               | -    |        |
 
 **** Denote related
 #+attr_latex: :placement [H]
@@ -2605,7 +2631,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 |--------+--------------------------------------+------------------------------+------+--------|
 | =n=      | =:ignore t=                            | note........................ | -    |        |
 | =nr=     | =denote-rename-file=                   | rename                       | -    |        |
-| =nf=     | =denote-open-or-create=                | find                         | -    |        |
+| =nf=     | =denote-silo-open-or-create=         | find                         | -    |        |
 | =nd=     | =(dired denote-directory)=             | dired                        | -    | y      |
 | =nj=     | =denote-journal-new-entry=             | journal                      | -    |        |
 | =nJ=     | =denote-journal-new-or-existing-entry= | Journal-find                 | -    |        |
@@ -2765,8 +2791,8 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | =ol=     | =:ignore t=                        | link........................ | org  |        |
 | =old=    | =garid/org-toggle-link-n-emphasis= | description-toggle           | org  |        |
 | =oli=    | =org-insert-link=                  | insert                       | org  |        |
-| =oln=    | =hydra-org-link-jumper/body=       | next-link                    | org  |        |
-| =olp=    | =hydra-org-link-jumper/body=       | prev-link                    | org  |        |
+| =oln=    | =org-next-link=                    | next-link                    | org  |        |
+| =olp=    | =org-previous-link=                | previous-link                | org  |        |
 | =olo=    | =org-open-at-point=                | open (same as SPC o o)       | org  |        |
 | =olf=    | =org-footnote-new=                 | footnote-new                 | org  |        |
 | =olF=    | =org-footnote-action=              | Footnote-action              | org  |        |
@@ -2956,7 +2982,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "ut" '(vundo :which-key "vundo")
   "n" '(:ignore t :which-key "note........................")
   "nr" '(denote-rename-file :which-key "rename")
-  "nf" '(denote-open-or-create :which-key "find")
+  "nf" '(denote-silo-open-or-create :which-key "find")
   "nd" '((lambda () (interactive) (dired denote-directory) ) :which-key "dired")
   "nj" '(denote-journal-new-entry :which-key "journal")
   "nJ" '(denote-journal-new-or-existing-entry :which-key "Journal-find")
@@ -2984,18 +3010,20 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "p" '(:ignore t :which-key "project.....................")
   "pr" '(xref-find-references :which-key "references")
   "pR" '(consult-eglot-symbols :which-key "references consult")
-  "pd" '(consult-flymake :which-key "diagnostic")
+  "pd" '((lambda () (interactive) (consult-flymake nil) ) :which-key "diagnostic buffer")
+  "pD" '(consult-flymake :which-key "diagnostic")
   "pf" '(project-find-file :which-key "find-file")
   "pz" '(project-switch-project :which-key "jump-to-other-proj")
   "ps" '(consult-git-grep :which-key "search git files")
   "pS" '(project-find-regexp :which-key "search-in-proj")
   "pk" '(project-kill-buffers :which-key "kill-buf-proj")
   "pl" '(consult-project-buffer :which-key "list-buf-proj")
+  "pc" '(project-recompile :which-key "")
+  "pqrr" '(project-query-replace-regexp :which-key "")
   "pv" '(consult-imenu :which-key "variables")
   "v" '(:ignore t :which-key "variables....................")
   "vq" '(format-all-buffer :which-key "format-buffer")
   "vr" '(eglot-rename :which-key "rename variable")
-  "vf" '(python-nav-forward-defun :which-key "xxxxxxxxxxxxxxx")
   "b" '(harpoon-quick-menu-hydra :which-key "bookmark-harpoon")
   "B" '(:ignore t :which-key "bookmark......................")
   "B1" '(harpoon-go-to-1 :which-key "")
@@ -3136,8 +3164,8 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "ol" '(:ignore t :which-key "link........................")
   "old" '(garid/org-toggle-link-n-emphasis :which-key "description-toggle")
   "oli" '(org-insert-link :which-key "insert")
-  "oln" '(hydra-org-link-jumper/body :which-key "next-link")
-  "olp" '(hydra-org-link-jumper/body :which-key "prev-link")
+  "oln" '(org-next-link :which-key "next-link")
+  "olp" '(org-previous-link :which-key "previous-link")
   "olo" '(org-open-at-point :which-key "open (same as SPC o o)")
   "olf" '(org-footnote-new :which-key "footnote-new")
   "olF" '(org-footnote-action :which-key "Footnote-action")
@@ -3164,16 +3192,16 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 #+begin_src emacs-lisp
 (garids-keybind/in-prog-mode
   "SPC" '(execute-extended-command      :which-key "")
-  "a" '(python-nav-backward-block       :which-key "block-prev")
-  "e" '(python-nav-forward-block        :which-key "block-next")
-  "[" '(python-nav-backward-defun       :which-key "defun-prev")
-  "]" '(python-nav-forward-defun        :which-key "defun-next")
-  "p" '(python-nav-backward-statement   :which-key "state-prev")
-  "n" '(python-nav-forward-statement    :which-key "state-next")
-  "b" '(python-nav-backward-sexp        :which-key "sexp-prev")
-  "f" '(python-nav-forward-sexp         :which-key "sexp-next")
+  ;;  "a" '(python-nav-backward-block       :which-key "block-prev")
+  ;;  "e" '(python-nav-forward-block        :which-key "block-next")
+  ;;  "[" '(python-nav-backward-defun       :which-key "defun-prev")
+  ;;  "]" '(python-nav-forward-defun        :which-key "defun-next")
+  ;;  "p" '(python-nav-backward-statement   :which-key "state-prev")
+  ;;  "n" '(python-nav-forward-statement    :which-key "state-next")
+  ;;  "b" '(python-nav-backward-sexp        :which-key "sexp-prev")
+  ;;  "f" '(python-nav-forward-sexp         :which-key "sexp-next")
 
-)
+  )
 #+end_src
 
 * System:
@@ -3232,7 +3260,7 @@ and later sets cursor at that point when you open that file.
   :config
   (recentf-mode 1))
 #+end_src
-** shell script to open terminal                                            :shell_script:
+** shell script to open terminal                                           :shell_script:
 #+begin_src bash :tangle garid/open_external_term.sh :shebang "#!/bin/bash"
 # Open System termianl $TERMINAL at $1:
 # nohup for exitting terminal that executed this script
@@ -3325,11 +3353,16 @@ fi
   :ensure t ; or :straight t
   :bind (("C-`"   . popper-toggle      )
          ("M-`"   . popper-cycle       )
-         ("C-M-`" . popper-toggle-type ))
+         ("C-M-`" . popper-toggle-type )
+         :repeat-map garid/popper-repeat
+         ("`" .      popper-cycle )
+         ("q" .      popper-close-latest )
+
+         )
   :init
   (setq popper-reference-buffers '("\\*Messages\\*"
-                                   ;;"\\*eldoc\\*"
-                                   ;;"\\*eldoc.*\\*" ;;regex
+                                   "\\*eldoc\\*"
+                                   "\\*eldoc.*\\*" ;;regex
                                    "\\*Outline.*\\*" ;;regex
                                    "\\*xref\\*"
                                    "\\*Help\\*"
@@ -3353,11 +3386,11 @@ fi
 ** =hydra=
 #+begin_src emacs-lisp
 (use-package hydra
-  :config
-  (defhydra hydra-org-link-jumper ()
-    "zoom"
-    ("n" org-next-link     "next")
-    ("p" org-previous-link "prev"))
+  ;; :config
+  ;; (defhydra hydra-org-link-jumper ()
+  ;;   "zoom"
+  ;;   ("n" org-next-link     "next")
+  ;;   ("p" org-previous-link "prev"))
   )
 #+end_src
 
@@ -3385,7 +3418,7 @@ fi
   (gif-screencast-args '("-m" "window" "-m" "active" "-o" "/" "-f")))
 ;; this is configured to be on wayland/hyprland
 #+end_src
-** test karthinks consult reftex                                                    :test:
+** test karthinks consult reftex                                                   :test:
 #+begin_src emacs-lisp
 (use-package consult-reftex
   :straight (consult-reftex
