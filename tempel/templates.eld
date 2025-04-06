@@ -499,6 +499,7 @@ org-mode
 (initcontacts        ":EMAIL: %(org-contacts-template-email) " r n ":PHONE:" r n ":ALIAS:" r n ":NICKNAME:" r n ":IGNORE:" r n ":ICON:" r n ":NOTE:" r n ":ADDRESS:" r n ":BIRTHDAY:")
 
 
+(pySess1 "#+begin_src python :session pySess1 :results output :exports both :eval no-export :async yes :comments link :dir (my/org-attach-dir \"\")" n "# %%" n "#+end_src")
 
 ;; Local Variables:
 ;; mode: lisp-data
