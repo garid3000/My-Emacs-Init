@@ -183,7 +183,9 @@ but it feels slow when navigating.
 #+begin_src emacs-lisp
 (use-package windmove
   :after (window evil)
-  :bind (("M-L" . windmove-right               )
+  :bind (( "M-q"  . delete-window )
+
+         ("M-L" . windmove-right               )
          ("M-H" . windmove-left                )
          ("M-J" . windmove-down                )
          ("M-K" . windmove-up                  )
@@ -224,27 +226,19 @@ but it feels slow when navigating.
   (face-font-family-alternatives
    '(("Monospace"        "Iosevka SS06" "Iosevka Term SS06" "Liberation Mono" "courier" "fixed")
      ("Serif"            "Iosevka aile" "Linux Libertine"  "CMU Serif" "Georgia"  "DejaVu Serif" "serif")))
+
   :custom-face
   (variable-pitch ((t (:family "Serif"           :height 120))))
   (fixed-pitch    ((t (:family "Monospace"       :height 120))))
   (default        ((t (:family "Monospace"       :height 120))))
-  ;; :hook ()
-  ;;  :config
-  ;;  (set-face-background   'mode-line          "#2B3260")
-  ;;  (set-face-background   'mode-line-inactive "#1B1B1B")
+
   :hook
   (emacs-startup . (lambda ()
                      (set-face-background 'mode-line          "#2B3260")
                      (set-face-background 'mode-line-inactive "#1B1B1B")))
   )
-
-;;(add-hook 'after-init-hook
-;;(lambda ()
-;;(set-face-background 'mode-line "#2B3260")
-;;(set-face-background 'mode-line-inactive "#1B1B1B")))
-;;)
 #+end_src
-** Theme
+** theme
 #+begin_src emacs-lisp :results none
 (use-package uwu-theme
   :ensure t
@@ -298,14 +292,11 @@ but it feels slow when navigating.
   )
 #+end_src
 
-** pulsar of window movement                                                     :by_prot:
+** =pulsar= pulses on certain functions                                            :by_prot:
 #+begin_src emacs-lisp
 (use-package pulsar
-  :custom
-  (pulsar-delay 0.015)
-  :config
-  (pulsar-global-mode)
-  )
+  :custom (pulsar-delay 0.015)
+  :config (pulsar-global-mode))
 #+end_src
 
 * Mini-buffer completion, selection, suggestion
@@ -358,6 +349,9 @@ but it feels slow when navigating.
   ;;(consult-preview-key nil)
   (consult-preview-key 'any)
   ;;(consult-preview-key (list :debounce 0.5 'any))
+  :bind
+  ("M-y" . consult-yank-from-kill-ring)
+  ("M-f" . consult-line)
   :config
   (defun garid/consult-preview-change ()
     (interactive)
@@ -1829,7 +1823,16 @@ Similar to vim-signify.
 ** =harpoon=
 #+begin_src emacs-lisp
 (use-package harpoon
-  :ensure t)
+  :ensure t
+  :bind
+  ("M-1"   .  harpoon-go-to-1           )
+  ("M-2"   .  harpoon-go-to-2           )
+  ("M-3"   .  harpoon-go-to-3           )
+  ("M-4"   .  harpoon-go-to-4           )
+  ("M-5"   .  harpoon-go-to-5           )
+  ("M-6"   .  harpoon-go-to-6           )
+  ("<f9>"  .  harpoon-quick-menu-hydra  )
+  )
 #+end_src
 
 ** =project.el=
@@ -2273,30 +2276,17 @@ Similar to vim-signify.
 *** Global keybinding table
 #+caption: Global (aka from anywhere) non-sequential keybinding
 #+name: tbl-global-keybindings
-| key     | function                               | description                         | state                 |
-|---------+----------------------------------------+-------------------------------------+-----------------------|
-| =M-q=     | =delete-window=                          | delete window                       | =evil-normal-state-map= |
-| =M-Q=     | =kill-current-buffer=                    | delete buffer                       | =evil-normal-state-map= |
-| =M-W=     | =evil-window-vnew=                       | divide window vertically (on right) | =evil-normal-state-map= |
-| =M-E=     | =evil-window-vsplit=                     | divide window vertically (on left)  | =evil-normal-state-map= |
-| =M-f=     | =consult-line=                           | search line in buffer               | =evil-normal-state-map= |
-| =M-F=     | =zoom-window-zoom=                       | zoom window mode                    | =evil-normal-state-map= |
-| =M-y=     | =consult-yank-from-kill-ring=            | consult yank from kill ring         | =evil-normal-state-map= |
-| =C-/=     | =comment-line=                           | set selected lines comment          | =evil-normal-state-map= |
-| =C-\vert= | =garid/toggle-eng-mon-teq-input-methods= | change toggle input (Eng-Mon-Teq)   | =evil-normal-state-map= |
-| =M-1=     | =harpoon-go-to-1=                        | harpoon-go-to-1                     | =evil-normal-state-map= |
-| =M-2=     | =harpoon-go-to-2=                        | harpoon-go-to-2                     | =evil-normal-state-map= |
-| =M-3=     | =harpoon-go-to-3=                        | harpoon-go-to-3                     | =evil-normal-state-map= |
-| =M-4=     | =harpoon-go-to-4=                        | harpoon-go-to-4                     | =evil-normal-state-map= |
-| =M-5=     | =harpoon-go-to-5=                        | harpoon-go-to-5                     | =evil-normal-state-map= |
-| =M-6=     | =harpoon-go-to-6=                        | harpoon-go-to-6                     | =evil-normal-state-map= |
-| =<f9>=    | =harpoon-quick-menu-hydra=               | harpoon                             | =evil-normal-state-map= |
-| =M-<f9>=  | =garid/toggle-distraction-free-writing=    | toggle distraction free writing     | =evil-normal-state-map= |
+| key     | function                               | description                       | state                 |
+|---------+----------------------------------------+-----------------------------------+-----------------------|
+| =M-q=     | =delete-window=                          | delete window                     | =evil-normal-state-map= |
+| =M-Q=     | =kill-current-buffer=                    | delete buffer                     | =evil-normal-state-map= |
+| =C-/=     | =comment-line=                           | set selected lines comment        | =evil-normal-state-map= |
+| =C-\vert= | =garid/toggle-eng-mon-teq-input-methods= | change toggle input (Eng-Mon-Teq) | =evil-normal-state-map= |
+| =M-<f9>=  | =garid/toggle-distraction-free-writing=  | toggle distraction free writing   | =evil-normal-state-map= |
+#+TBLFM: 
 
-
-| =M-]=     | =comint-dynamic-complete-filename=       | complete file path                  | =evil-normal-state-map= |
- 
 Note to myself: after changing Table-[[tbl-global-keybindings]], I need to update [[convert-global-keybindings]]
+
 *** Convert global keybinding table into elisp
 #+caption: adsf
 #+name: convert-global-keybindings
@@ -2320,33 +2310,9 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 #+begin_src emacs-lisp
 (global-set-key (kbd "M-q") 'delete-window)
 (global-set-key (kbd "M-Q") 'kill-current-buffer)
-(global-set-key (kbd "M-W") 'evil-window-vnew)
-(global-set-key (kbd "M-E") 'evil-window-vsplit)
-(global-set-key (kbd "M-f") 'consult-line)
-(global-set-key (kbd "M-F") 'zoom-window-zoom)
-(global-set-key (kbd "M-y") 'consult-yank-from-kill-ring)
 (global-set-key (kbd "C-/") 'comment-line)
 (global-set-key (kbd "C-|") 'garid/toggle-eng-mon-teq-input-methods)
-(global-set-key (kbd "M-1") 'harpoon-go-to-1)
-(global-set-key (kbd "M-2") 'harpoon-go-to-2)
-(global-set-key (kbd "M-3") 'harpoon-go-to-3)
-(global-set-key (kbd "M-4") 'harpoon-go-to-4)
-(global-set-key (kbd "M-5") 'harpoon-go-to-5)
-(global-set-key (kbd "M-6") 'harpoon-go-to-6)
-(global-set-key (kbd "<f9>") 'harpoon-quick-menu-hydra)
 (global-set-key (kbd "M-<f9>") 'garid/toggle-distraction-free-writing)
-#+end_src
-*** COMMENT Manual
-#+begin_src emacs-lisp
-;; (global-set-key (kbd "M-L") 'windmove-right)
-;; (global-set-key (kbd "M-H") 'windmove-left)
-;; (global-set-key (kbd "M-J") 'windmove-down)
-;; (global-set-key (kbd "M-K") 'windmove-up)
-;; (global-set-key (kbd "M-N") 'other-window)
-;; (global-set-key (kbd "M-P") (lambda () (interactive) (other-window -1)))
-
-;;(global-set-key (kbd "M-J") 'other-window)
-;;(global-set-key (kbd "M-K") (lambda () (interactive) (other-window -1)))
 #+end_src
 ** Sequential keybindings (General.el keybinding configuration)
 *** Sequential global keybindings
@@ -3305,11 +3271,10 @@ fi
 (use-package zoom-window
   :custom
   (zoom-window-mode-line-color "dark slate gray")
-  :bind (
+  :bind (("M-F" . zoom-window-zoom)
          :repeat-map garid/windmove-repeat
          ("f" . zoom-window-zoom)
-         ("n" . zoom-window-next)
-         )
+         ("n" . zoom-window-next))
   )
 #+end_src
 ** screen
