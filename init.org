@@ -292,7 +292,7 @@ but it feels slow when navigating.
   )
 #+end_src
 
-** =pulsar= pulses on certain functions                                            :by_prot:
+** =pulsar= pulses on certain functions                                         :by_prot:
 #+begin_src emacs-lisp
 (use-package pulsar
   :custom
@@ -710,7 +710,7 @@ but it feels slow when navigating.
 #+end_src
 
 * Org zettelkasten notes
-** =denote=: Note taking package                                                   :by_prot:
+** =denote=: Note taking package                                                :by_prot:
 #+begin_src emacs-lisp
 (use-package denote
   :ensure t
@@ -758,16 +758,16 @@ but it feels slow when navigating.
 
   )
 #+end_src
-** =denote-journal= denote journal                                                 :by_prot:
+** =denote-journal= denote journal                                              :by_prot:
 #+begin_src emacs-lisp
 (use-package denote-journal
   :custom (denote-journal-extras-title-format 'day))
 #+end_src
-** =denote-org=                                                                    :by_prot:
+** =denote-org=                                                                 :by_prot:
 #+begin_src emacs-lisp
 (use-package denote-org)
 #+end_src
-** =denote-silo=                                                                   :by_prot:
+** =denote-silo=                                                                :by_prot:
 #+begin_src emacs-lisp
 (use-package denote-silo
   :custom
@@ -776,7 +776,7 @@ but it feels slow when navigating.
                             "~/BrainDump/denote_proj_grape/"))
   )
 #+end_src
-** =consult-denote=: consulting with denote                                        :by_prot:
+** =consult-denote=: consulting with denote                                     :by_prot:
 #+begin_src emacs-lisp
 (use-package consult-denote
   :ensure t
@@ -1431,10 +1431,11 @@ I publish first from org to md in the local dir. Then using that local dir to cr
 #+begin_src emacs-lisp
 (defun garid/odt-edit-open  (path &optional _)
   (interactive)
-  (let ((outdir (file-name-directory path)))
+  (let ((outdir       (file-name-directory      path))
+        (path_no_ext  (file-name-sans-extension path)))
     (async-shell-command
-     (format "lodraw %s && libreoffice --headless --convert-to %s --outdir %s %s"
-             path "svg" outdir path)
+     (format "lodraw %s.odg && libreoffice --headless --convert-to %s --outdir %s %s.odg"
+             path_no_ext "svg" outdir path_no_ext)
      nil nil)))
 
 (add-to-list 'org-file-apps '("\\ode.svg\\'" . garid/odt-edit-open))
@@ -1856,7 +1857,7 @@ Similar to vim-signify.
 #+end_src
 
 * Bunch of functions
-** Open PDF/HMTL exported by LaTeX externally                                :customFunc:
+** Open PDF/HMTL exported by LaTeX externally                                 :customFunc:
 #+begin_src emacs-lisp
 (defun replace-in-string (what with in)
   (replace-regexp-in-string (regexp-quote what) with in nil 'literal))
@@ -1883,26 +1884,13 @@ Similar to vim-signify.
            )))
 #+end_src
 
-** My Custom LaTeX writing system (aka TeQ)                                  :customFunc:
+** My Custom LaTeX writing system (aka TeQ)                                   :customFunc:
 #+begin_src emacs-lisp
 (add-to-list 'load-path (expand-file-name "~/.config/emacs/Emacs-TeQ"))
 (register-input-method "TeQ-Math" "Emacs-Teq-Latex" 'quail-use-package
                        "TeQ-"     "TeQ-Math input"
                        "Emacs-TeQ.el")
-(fset 'gry-calc-horizontal-concat
-      (kmacro-lambda-form [?v ?t tab ?v ?t ?| ?v ?t] 0 "%d"))
-#+end_src
 
-** Custom Aligner function (with untabify)                                   :customFunc:
-#+begin_src emacs-lisp
-(defun garid/align-regexp-and-untabify (beg end)
-  (interactive "r")
-  (align-regexp beg end
-                (concat "\\(\\s-*\\)" (read-string "Align regexp: ")))
-  (untabify beg end))
-#+end_src
-** Toggling between 3 inputs (eng, mon, teq)                                 :customFunc:
-#+begin_src emacs-lisp
 (defun garid/toggle-eng-mon-teq-input-methods ()
   (interactive)
   (if (string= default-input-method nil )
@@ -1911,9 +1899,22 @@ Similar to vim-signify.
 	(set-input-method "cyrillic-mongolian")
       (if (string= default-input-method "cyrillic-mongolian")
 	  (set-input-method "TeQ-Math")))))
+
+(fset 'gry-calc-horizontal-concat
+      (kmacro-lambda-form [?v ?t tab ?v ?t ?| ?v ?t] 0 "%d"))
 #+end_src
-** copy link in org at point                                                 :customFunc:
+
+** Custom Aligner function (with untabify)                                    :customFunc:
+#+begin_src emacs-lisp
+(defun garid/align-regexp-and-untabify (beg end)
+  (interactive "r")
+  (align-regexp beg end
+                (concat "\\(\\s-*\\)" (read-string "Align regexp: ")))
+  (untabify beg end))
+#+end_src
+** copy link in org at point                                                  :customFunc:
 [[https://emacs.stackexchange.com/a/60555/38482][stack exchange]]
+
 #+begin_src emacs-lisp
 (defun garid/open-org-link-at-point-with-dired (&optional arg)
   "Extract URL from org-mode link and add it to kill ring." ;;;
@@ -1922,11 +1923,9 @@ Similar to vim-signify.
          (type (org-element-property :type link))
          (url (org-element-property  :path link)))
     (message (concat "Copied URL: " url))
-    (dired-jump t (file-name-directory url))
-    )
-  )
+    (dired-jump t (file-name-directory url))))
 #+end_src
-** Jumping ref-label in org or latex                                         :customFunc:
+** Jumping ref-label in org or latex                                          :customFunc:
 #+begin_src emacs-lisp
 (defun garid/jump-label-def-of-ref-at-point-word ()
   ""
@@ -1945,7 +1944,7 @@ Similar to vim-signify.
           )
       (message "No matching braces found."))))
 #+end_src
-** Org toggle hide/shot hyperlink                                            :customFunc:
+** Org toggle hide/shot hyperlink                                             :customFunc:
 #+begin_src emacs-lisp
 (defun garid/org-toggle-link-n-emphasis ()
   (interactive)
@@ -1956,7 +1955,7 @@ Similar to vim-signify.
   (font-lock-update))
 #+end_src
 
-** Custom opening external terminal at current buffer                        :customFunc:
+** Custom opening external terminal at current buffer                         :customFunc:
 #+begin_src emacs-lisp
 (defun garid/open-external-term-here ()
   (interactive)
@@ -1966,7 +1965,7 @@ Similar to vim-signify.
 ;;(shell-command (concat user-emacs-directory "garid/open_external_term.sh" " " buffer-file-name)))
 #+end_src
 
-** Org toggle hide/shot display images                                       :customFunc:
+** Org toggle hide/shot display images                                        :customFunc:
 #+begin_src emacs-lisp
 (defun garid/org-toggle-display-images-n-edraw ()
   (interactive)
@@ -1977,7 +1976,7 @@ Similar to vim-signify.
     ))
 #+end_src
 
-** Org structure in the denote dire
+** Org structure in the denote dire                                           :customFunc:
 #+begin_src emacs-lisp
 (defun garid/org-ql-function-on-each-heading (INCLUDE_PROGRESS)
   ""
@@ -1997,29 +1996,15 @@ Similar to vim-signify.
                         (make-string (- 10 (/ tmp-progress 10) ) ?☐)
                         tmp-progress
                         "%"
-                        ) ;;(format "| shit %d" (+ tmp-progress 1))
-                )
-
-            ""
-            )
-          )
-  ;;(org-heading-components)
-  ;;(nth 0 (org-heading-components)) ;; depth - int
-  ;;(nth 4 (org-heading-components)) ;; title - str
-
-  ;;(seq-find
-  ;;  (lambda (elt) (string= "PROGRESS" (car elt) ))
-  ;;  (org-entry-properties))
-
-  )
+                        ))
+            "")
+          ))
 
 (defun garid/org-ql-plantuml-body-prepper-on-current-buffer ()
   (concat
    ;;"@startwbs\n"
    "@startmindmap\n"
    "* Thesis"
-   ;;(org-get-title) ;;(buffer-name)
-   ;;(org-get-title) ;;(buffer-name)
    "\n"
    (mapconcat 'identity
               (org-ql-select
@@ -2028,13 +2013,11 @@ Similar to vim-signify.
                 ;;:action 'garid/org-ql-function-on-each-heading
                 :action (lambda ()
                           (garid/org-ql-function-on-each-heading t)
-                          )
-                )
+                          ))
               "\n")
    ;;"\n@endwbs\n"
    "\n@endmindmap\n"
-   )
-  )
+   ))
 
 ;;(garid/org-ql-plantuml-body-prepper-on-current-buffer)
 (defun garid/create-plantuml-using-temp-file (outFname)
@@ -2060,11 +2043,10 @@ Similar to vim-signify.
                                         ));;outDir
 
     (my/org-attach-dir outFname)
-    )
-  )
+    ))
 #+end_src
 
-** Remove equal sign from both sides in string
+** Remove equal sign from both sides in string                                :customFunc:
 #+begin_src emacs-lisp
 (defun remove-equal-from-both-sides (str)
   "Remove the tilde (~) character from the beginning and end of STR."
@@ -2076,7 +2058,7 @@ Similar to vim-signify.
     str))
 #+end_src
 
-** Kill ring and garbage collect
+** Kill ring and garbage collect                                              :customFunc:
 #+begin_src emacs-lisp
 (defun garid/clear-kill-ring-and-garbage-collect ()
   (interactive)
@@ -2093,7 +2075,7 @@ Similar to vim-signify.
 (use-package focus                :ensure t)
 #+end_src
 
-** Writing Distraction free                                                  :customFunc:
+** Writing Distraction free                                                   :customFunc:
 #+begin_src emacs-lisp
 (defun garid/distraction-free-on ()
   (interactive)
@@ -3127,7 +3109,7 @@ and later sets cursor at that point when you open that file.
   :config
   (recentf-mode 1))
 #+end_src
-** shell script to open terminal                                           :shell_script:
+** shell script to open terminal                                            :shell_script:
 #+begin_src bash :tangle garid/open_external_term.sh :shebang "#!/bin/bash"
 # Open System termianl $TERMINAL at $1:
 # nohup for exitting terminal that executed this script
@@ -3285,7 +3267,7 @@ fi
   (gif-screencast-args '("-m" "window" "-m" "active" "-o" "/" "-f")))
 ;; this is configured to be on wayland/hyprland
 #+end_src
-** test karthinks consult reftex                                                   :test:
+** test karthinks consult reftex                                                    :test:
 #+begin_src emacs-lisp
 (use-package consult-reftex
   :straight (consult-reftex
