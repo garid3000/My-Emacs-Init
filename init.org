@@ -457,17 +457,9 @@ but it feels slow when navigating.
               :pin nil)
   :delight " org"
   :bind (:map org-mode-map
-              ;; ("C-k"       . org-backward-heading-same-level )
-              ;; ("C-j"       . org-forward-heading-same-level  )
               ("C-S-k"     . org-previous-visible-heading    )
               ("C-S-j"     . org-next-visible-heading        )
-              ;;:map evil-normal-state-map
-              ;;("[ ["         . org-previous-visible-heading    )
               :repeat-map garid/org-repeat
-              ;; ("k"       . org-backward-heading-same-level )
-              ;; ("j"       . org-forward-heading-same-level  )
-              ;; ("K"       . org-previous-visible-heading    )
-              ;; ("J"       . org-next-visible-heading        )
               ("["         . org-previous-visible-heading    )
               ("]"         . org-next-visible-heading        )
               ("u"         . org-up-heading                  )
@@ -480,8 +472,7 @@ but it feels slow when navigating.
               ("p"         . org-previous-block              )
               ("c"         . org-ctrl-c-ctrl-c               )
               :exit
-              ("'"         . org-edit-special                )
-              )
+              ("'"         . org-edit-special                ))
 
   :custom
   ;; ---------------- theme/styling ------------------------------------------------------
@@ -661,31 +652,23 @@ but it feels slow when navigating.
   (org-attach-id-to-path-function-list '(my/org-attach-dir-calculator
                                          org-attach-id-ts-folder-format
                                          org-attach-id-uuid-folder-format))
-   :config
-   (defun my/org-attach-dir-calculator (id)
-     "id"
-     (let ((possible-denote-id
-            (car                     ;; 4. "20241002T190027"
-             (split-string           ;; 3. ("20241002T190027" "denote-getting-id-of-current-file__elisp_org")
-              (file-name-base        ;; 2. "20241002T190027--denote-getting-id-of-current-file__elisp_org.org"
-               (buffer-file-name))   ;; 1. "/home/garid/BrainDump/denote/20241002T190027--denote-getting-id-of-current-file__elisp_org.org"
-              "--"))))
+  :config
+  (defun my/org-attach-dir-calculator (id)
+    "id"
+    (let ((possible-denote-id (car                     ;; 4. "20241002T190027"
+                               (split-string           ;; 3. ("20241002T190027" "denote-getting-id-of-current-file__elisp_org")
+                                (file-name-base        ;; 2. "20241002T190027--denote-getting-id-of-current-file__elisp_org.org"
+                                 (buffer-file-name))   ;; 1. "/home/garid/BrainDump/denote/20241002T190027--denote-getting-id-of-current-file__elisp_org.org"
+                                "--"))))
 
-       (if (length= possible-denote-id 15)
-           possible-denote-id
-         id)))
+      (if (length= possible-denote-id 15)
+          possible-denote-id
+        id)))
 
-   (defun my/org-attach-dir (input-fname)
-     ""
-     (concat "data/"
-             ;;(file-name-as-directory (my/org-attach-dir-calculator (org-id-get-create)))
-             (file-name-as-directory (my/org-attach-dir-calculator input-fname))
-             ;;input-fname
-             ))
-
-
-  ;;(add-to-list org-attach-id-to-path-function-list 'my/org-attach-dir-calculator)
-
+  (defun my/org-attach-dir (input-fname)
+    (concat "data/"
+            (file-name-as-directory (my/org-attach-dir-calculator input-fname))
+            input-fname))
   )
 #+end_src
 
@@ -694,16 +677,14 @@ but it feels slow when navigating.
 (use-package plantuml-mode)
 (use-package ob-plantuml
   :ensure nil
-  :after (org plantuml-mode)
-  :config
-  ;;(org-plantuml-jar-path        "/home/garid/.config/emacs/plantuml.jar" )
-  (setq org-plantuml-executable-path "plantuml")
-  (setq org-plantuml-exec-mode 'plantuml))
+  :after (org  plantuml-mode)
+  :custom
+  (org-plantuml-executable-path  "plantuml")
+  (org-plantuml-exec-mode        'plantuml))
 
 (use-package ob-nim       :after org)
 (use-package ob-go        :after org)
 ;; (use-package ob-asymptote :after org)
-;; (use-package ob-nix       :after org)
 #+end_src
 
 ** COMMENT =org-bullet=: changing bullets in org file
@@ -716,7 +697,7 @@ but it feels slow when navigating.
            '("Ⅰ" "Ⅱ" "Ⅲ" "Ⅳ" "Ⅴ" "Ⅵ" "Ⅶ")))
 #+end_src
 
-** =org-tidy=: hiding the properties
+** COMMENT =org-tidy=: hiding the properties
 #+begin_src emacs-lisp
 (use-package org-tidy
   :ensure t
@@ -743,6 +724,7 @@ but it feels slow when navigating.
   (denote-known-keywords               '("phd"  "code"  "python"))
   (denote-templates                    '((biblio . "* Abstract\n\n* Review")
                                          (plain  . nil)))
+  (denote-file-type 'org)
 
   :config
   (when (not (assoc 'python denote-file-types))
@@ -775,21 +757,7 @@ but it feels slow when navigating.
                       (format-time-string "%Y%m%dT%H%M%S" tmp-cur-time-of-this-note)
                       tmp-str-marked
                       ))))
-
-  (defun garid/choose-denote-directory ()
-    ""
-    (interactive)
-    (setq denote-directory
-          (completing-read
-           "Choose: "
-           (mapcar
-            (lambda (xx) (f-join "~/BrainDump/" xx)) ;; re-apply root dir
-            (seq-filter
-             (lambda (x) (string-match "denote.*" x))         ;; filter only starting with roam
-             (directory-files "~/BrainDump/")))   ;; list sub dirs
-           ))
-
-    (message "Now denote-directory = %s" denote-directory))
+  
 
   )
 #+end_src
@@ -851,8 +819,8 @@ but it feels slow when navigating.
     (call-process (completing-read "Application"
                                    '("sioyek" "okular" "xournalpp"))
                   nil 0 nil
-                  file)
-    ))
+                  file))
+  )
 #+end_src
 ** =org-roam=
 #+begin_src emacs-lisp
@@ -1450,7 +1418,6 @@ I publish first from org to md in the local dir. Then using that local dir to cr
   (org-download-display-inline-images  nil)
   (org-download-edit-cmd (concat user-emacs-directory "garid/edit_img.sh %s"))
   (org-download-heading-lvl nil)                                                                            ;;
-  ;;:hook ((org-mode . my-org-download-set-dir))
 
   :config
   (org-download-enable))
@@ -1466,21 +1433,15 @@ I publish first from org to md in the local dir. Then using that local dir to cr
              :repo "Stefanomarton/org-ipe"))
 #+end_src
 
-** test
+** org odt libreoffice-draw
 #+begin_src emacs-lisp
-(defun garid/odt-edit-open  (path &optional _) ;;(path)
+(defun garid/odt-edit-open  (path &optional _)
   (interactive)
-  (let (
-        (outdir      (file-name-directory      path)) ;; path of the output
-        ;;(path_no_ext (file-name-sans-extension path)) ;; filename without extension
-        )
-
-    (message (format "lodraw %s && libreoffice --headless --convert-to %s --outdir %s %s" path "svg" outdir path))
+  (let ((outdir (file-name-directory path)))
     (async-shell-command
-     (format "lodraw %s && libreoffice --headless --convert-to %s --outdir %s %s" path "svg" outdir path)
-     nil nil
-     ;;t t
-     )))
+     (format "lodraw %s && libreoffice --headless --convert-to %s --outdir %s %s"
+             path "svg" outdir path)
+     nil nil)))
 
 (add-to-list 'org-file-apps '("\\ode.svg\\'" . garid/odt-edit-open))
 #+end_src
@@ -1493,8 +1454,7 @@ I publish first from org to md in the local dir. Then using that local dir to cr
   :after org
   :delight " oat"
   :custom (org-auto-tangle-default    nil)
-  :hook   (org-mode . org-auto-tangle-mode)
-  )
+  :hook   (org-mode . org-auto-tangle-mode))
 #+end_src
 
 ** =org-contacts=
@@ -1513,52 +1473,34 @@ I publish first from org to md in the local dir. Then using that local dir to cr
 #+begin_src emacs-lisp
 (use-package prog-mode
   :ensure nil
-  :bind (:map prog-mode-map
-              ("M-q" .  nil))
+  :bind (:map
+         prog-mode-map ("M-q" .  nil) ;; I use M-q for delete-window
+         )
   ;; :config
   ;; (evil-define-key 'normal 'prog-mode-map  (kbd "K")   'eldoc)      ;; or 'eldoc-box-help-at-point
-  ) ;; I use M-q for delete-window
+  )
 #+end_src
 ** =eldoc=
 #+begin_src emacs-lisp
 (use-package eldoc-box
   :config
-  ;; (evil-define-key 'normal 'prog-mode-map  (kbd "K")
-  ;;   (lambda ()
-  ;;     (interactive)
-  ;;     (if (eglot-current-server)
-  ;;         (eldoc-box-eglot-help-at-point)
-  ;;       ;;(eldoc-box-help-at-point)
-  ;;       (eldoc))))
   (evil-define-key 'normal 'prog-mode-map  (kbd "K") 'eldoc)
-      
   )
 #+end_src
 ** =python=
 #+begin_src emacs-lisp
 (use-package python
-  :bind (
-         ;; ;("["  . python-nav-backward-defun     )
-         ;; ;("]"  . python-nav-forward-defun      )
-         ("M-["  . python-nav-backward-defun )
-         ("M-]"  . python-nav-forward-defun  )
+  :bind (("M-["  . python-nav-backward-defun     )
+         ("M-]"  . python-nav-forward-defun      )
          :repeat-map my/python-repeat-map
-         ("e"    . python-nav-forward-block  )
-         ("a"    . python-nav-backward-block )
-         ("["    . python-nav-backward-defun )
-         ("]"    . python-nav-forward-defun  )
-         ;; ;;("["  . evil-backward-section-begin )
-         ;; ;;("]"  . evil-forward-section-begin  )
-         ("p"  . python-nav-backward-statement )
-         ("n"  . python-nav-forward-statement  )
-         ("b"  . python-nav-backward-sexp      )
-         ("f"  . python-nav-forward-sexp       )
-         ;; ("j"  . evil-next-line     )
-         ;; ("k"  . evil-previous-line )
-         ;; ("h"  . evil-backward-char )
-         ;; ("l"  . evil-forward-char  )
-         ;;("r"  . xref-find-references  )
-         ;;("d"  . xref-find-definitions  )
+         ("e"    . python-nav-forward-block      )
+         ("a"    . python-nav-backward-block     )
+         ("["    . python-nav-backward-defun     )
+         ("]"    . python-nav-forward-defun      )
+         ("p"    . python-nav-backward-statement )
+         ("n"    . python-nav-forward-statement  )
+         ("b"    . python-nav-backward-sexp      )
+         ("f"    . python-nav-forward-sexp       )
          :map inferior-python-mode-map
          ("C-l" . comint-clear-buffer))
   :hook (inferior-python-mode  . (lambda () (interactive)(setq comint-ptyp nil)))
@@ -1567,7 +1509,6 @@ I publish first from org to md in the local dir. Then using that local dir to cr
     ""
     (interactive)
     (run-python "/home/garid/.local/pydev/bin/python"))
-
   )
 #+end_src
 ** =code-cells-mode=
@@ -1575,48 +1516,28 @@ I publish first from org to md in the local dir. Then using that local dir to cr
 (use-package code-cells
   :hook (python-base-mode . code-cells-mode)
   :bind (:map code-cells-mode-map
-              ;;("M-[" . code-cells-backward-cell     )
-              ;;("M-]" . code-cells-forward-cell      )
-              ;;("M-{" . code-cells-move-cell-up      )
-              ;;("M-}" . code-cells-move-cell-down    )
-              ("M-<RET>" . code-cells-eval          )
-
-              ;; ("C-p" . code-cells-backward-cell     )
-              ;; ("C-n" . code-cells-forward-cell      )
-              ("C-k" . code-cells-backward-cell     )
-              ("C-j" . code-cells-forward-cell      )
-              ("M-k" . code-cells-move-cell-up      )
-              ("M-j" . code-cells-move-cell-down    )
-              ("S-<return>" . code-cells-eval-and-step )
+              ("M-<RET>"    . code-cells-eval           )
+              ("C-k"        . code-cells-backward-cell  )
+              ("C-j"        . code-cells-forward-cell   )
+              ("M-k"        . code-cells-move-cell-up   )
+              ("M-j"        . code-cells-move-cell-down )
+              ("S-<return>" . code-cells-eval-and-step  )
               ("C-<return>" . (lambda () (interactive)
                                 (code-cells-forward-cell)
                                 (insert "\n# %%\n\n")
                                 (previous-line)))
-
-              ("M-v" . code-cells-mark-cell)
-              ("M-d" . code-cells-kill)
-              ("M-D" . code-cells-duplicate)
-              ("M-;" . code-cells-comment-or-uncomment)
-              ("M-l" . (lambda () (interactive) (insert "\n# %%\n"))))
-  )
+              ("M-v"        . code-cells-mark-cell            )
+              ("M-d"        . code-cells-kill                 )
+              ("M-D"        . code-cells-duplicate            )
+              ("M-;"        . code-cells-comment-or-uncomment )
+              ("M-l"        . (lambda () (interactive) (insert "\n# %%\n")))
+              ))
 #+end_src
 
 ** =jupyter=
 #+begin_src emacs-lisp
 (use-package jupyter
-  :custom
-  (jupyter-repl-echo-eval-p t)
-
-  ;; :config
-  ;; ;; following is from  https://github.com/emacs-jupyter/jupyter/issues/366
-  ;; ;; the key issue was that, org-bullets or org-superstar
-  ;; ;; conflicting with the result of the jupyter output making
-  ;; ;; the jupyter output's rendering unreadable hex codes instead of colored text
-  ;; (defun display-ansi-colors ()
-  ;;   (ansi-color-apply-on-region (point-min) (point-max)))
-  ;; (add-hook 'org-babel-after-execute-hook #'display-ansi-colors)
-  ;; I stopped using the jupter in the org mode after update org-elements
-  )
+  :custom (jupyter-repl-echo-eval-p t))
 #+end_src
 ** =graphviz-dot-mode=
 #+begin_src emacs-lisp
@@ -1994,30 +1915,13 @@ Similar to vim-signify.
 (defun garid/open-org-link-at-point-with-dired (&optional arg)
   "Extract URL from org-mode link and add it to kill ring." ;;;
   (interactive "P")
-  (let* (
-         (link (org-element-lineage (org-element-context) '(link) t))
+  (let* ((link (org-element-lineage (org-element-context) '(link) t))
          (type (org-element-property :type link))
-         (url (org-element-property :path link))
-         ;;(url (concat type ":" url))
-         )
-    ;; (kill-new url)
+         (url (org-element-property  :path link)))
     (message (concat "Copied URL: " url))
     (dired-jump t (file-name-directory url))
     )
   )
-
-
-;;(defun code-from-internet/org-link-copy-at-point (&optional arg)
-;;  "Extract URL from org-mode link and add it to kill ring." ;;;https://emacs.stackexchange.com/a/60555/38482
-;;  (interactive "P")
-;;  (let* (
-;;         (link (org-element-lineage (org-element-context) '(link) t))
-;;         (type (org-element-property :type link))
-;;         (url (org-element-property :path link))
-;;         (url (concat type ":" url)))
-;;    (kill-new url)
-;;    (message (concat "Copied URL: " url)))
-;;  )
 #+end_src
 ** Jumping ref-label in org or latex                                         :customFunc:
 #+begin_src emacs-lisp
@@ -2265,7 +2169,6 @@ Similar to vim-signify.
   :straight (edraw-mode
              :type git
              :host github
-             ;;:brach "garidslatex"
              :brach "master"
              :repo "misohena/el-easydraw")
 
@@ -2671,7 +2574,6 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | =nlB=    | =denote-backlinks=                     | backlink                     | -    |        |
 | =nlF=    | =denote-link=                          | forward-link                 | -    |        |
 | =nla=    | =denote-add-links=                     | add-links regex              | -    |        |
-| =nc=     | =garid/choose-denote-directory=        | change denote                | -    |        |
 
 **** Roam related
 #+attr_latex: :placement [H]
@@ -2862,13 +2764,6 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
     :keymaps '(org-mode-map)
     :prefix        "SPC"
     :global-prefix "C-SPC")
-
-  
-  (general-create-definer garids-keybind/in-prog-mode
-    :states '(normal visual)
-    :keymaps '(prog-mode-map)
-    :prefix        "M-SPC"
-    :global-prefix "C-M-n")
   )
 #+end_src
 **** Script that converts previous org-tables into actual emacs configuration
@@ -3022,7 +2917,6 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "nlB" '(denote-backlinks :which-key "backlink")
   "nlF" '(denote-link :which-key "forward-link")
   "nla" '(denote-add-links :which-key "add-links regex")
-  "nc" '(garid/choose-denote-directory :which-key "change denote")
   "h" '(:ignore t :which-key "help...........................")
   "hh" '(describe-symbol :which-key "help symbol (elisp)")
   "hH" '(describe-key :which-key "help keybinding")
@@ -3211,22 +3105,6 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 )
 #+end_src
 
-**** manual progmode
-#+begin_src emacs-lisp
-(garids-keybind/in-prog-mode
-  "SPC" '(execute-extended-command      :which-key "")
-  ;;  "a" '(python-nav-backward-block       :which-key "block-prev")
-  ;;  "e" '(python-nav-forward-block        :which-key "block-next")
-  ;;  "[" '(python-nav-backward-defun       :which-key "defun-prev")
-  ;;  "]" '(python-nav-forward-defun        :which-key "defun-next")
-  ;;  "p" '(python-nav-backward-statement   :which-key "state-prev")
-  ;;  "n" '(python-nav-forward-statement    :which-key "state-next")
-  ;;  "b" '(python-nav-backward-sexp        :which-key "sexp-prev")
-  ;;  "f" '(python-nav-forward-sexp         :which-key "sexp-next")
-
-  )
-#+end_src
-
 * System:
 ** =dired= - Directory
 #+begin_src emacs-lisp
@@ -3395,6 +3273,7 @@ fi
                                    "\\*lsp-bridge-doc\\*"
                                    "\\*git-gutter:diff\\*"
                                    "\\*Org Select\\*"
+                                   "\\*Org Attach\\*"
                                    "\\*Org Lint\\*"
                                    "\\*git-gutter:.*\\*"
                                    "\\* Merriam-Webster Thesaurus \\*"

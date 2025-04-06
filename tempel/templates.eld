@@ -461,7 +461,7 @@ org-mode
                           '("verbatim" "value" "output" "table" "file xxx :output-dir .../"
                             "list" "scalar" "code" "drawer" "html" "latex" "link" "org" "pp")))
 (vardown      "#+header: :var outputVar=" :post (insert (concat org-download-image-dir "/filename.svg") ))
-(file         ":file "                    :post (insert (concat org-download-image-dir "/tempFile") ))
+(file         "file (my/org-attach-dir \"" p "\") ")
 (cache        "cache "                    :post (garid/choose-from-list-and-insert-it '("yes" "no")))
 (wrap         "wrap "                     :post (garid/choose-from-list-and-insert-it '("example" "src python" "src sh" "src bash")))
 (mkdirp       "mkdirp "                   :post (garid/choose-from-list-and-insert-it '("yes" "no")))
@@ -499,7 +499,7 @@ org-mode
 (initcontacts        ":EMAIL: %(org-contacts-template-email) " r n ":PHONE:" r n ":ALIAS:" r n ":NICKNAME:" r n ":IGNORE:" r n ":ICON:" r n ":NOTE:" r n ":ADDRESS:" r n ":BIRTHDAY:")
 
 
-(pySess1 "#+begin_src python :session pySess1 :results output :exports both :eval no-export :async yes :comments link :dir (my/org-attach-dir \"\")" n "# %%" n "#+end_src")
+(pySess1    "#+begin_src python :session pySess1 :results output :exports both :eval no-export :async yes :comments link :dir (my/org-attach-dir \"\")" n "# %%" n "#+end_src")
 
 ;; Local Variables:
 ;; mode: lisp-data
