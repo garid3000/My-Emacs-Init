@@ -656,32 +656,36 @@ but it feels slow when navigating.
   :after org
   :ensure nil
   :custom
+  ;;(org-id-method                       'org)
   (org-id-method                       'ts)
   (org-attach-id-to-path-function-list '(my/org-attach-dir-calculator
                                          org-attach-id-ts-folder-format
                                          org-attach-id-uuid-folder-format))
-  :config
-  (defun my/org-attach-dir-calculator (id)
-    "id"
-    (and (< 9 (length id))
-         ;;(buffer-file-name)
-         ;;(format "%s/subtree_id_%s"     <---- i longer want each heading to have separate dir
-         (car                     ;; 4. "20241002T190027"
-          (split-string           ;; 3. ( "20241002T190027"  "denote-getting-id-of-current-file__elisp_org" )
-           (file-name-base        ;; 2. "20241002T190027--denote-getting-id-of-current-file__elisp_org.org"
-            (buffer-file-name))   ;; 1. "/home/garid/BrainDump/denote/20241002T190027--denote-getting-id-of-current-file__elisp_org.org"
-           "--"))                 ;;     3. split-string related
-         ;;id)))
-         ))
+   :config
+   (defun my/org-attach-dir-calculator (id)
+     "id"
+     (let ((possible-denote-id
+            (car                     ;; 4. "20241002T190027"
+             (split-string           ;; 3. ("20241002T190027" "denote-getting-id-of-current-file__elisp_org")
+              (file-name-base        ;; 2. "20241002T190027--denote-getting-id-of-current-file__elisp_org.org"
+               (buffer-file-name))   ;; 1. "/home/garid/BrainDump/denote/20241002T190027--denote-getting-id-of-current-file__elisp_org.org"
+              "--"))))
+
+       (if (length= possible-denote-id 15)
+           possible-denote-id
+         id)))
+
+   (defun my/org-attach-dir (input-fname)
+     ""
+     (concat "data/"
+             ;;(file-name-as-directory (my/org-attach-dir-calculator (org-id-get-create)))
+             (file-name-as-directory (my/org-attach-dir-calculator input-fname))
+             ;;input-fname
+             ))
 
 
-  (defun my/org-attach-dir (input-fname)
-    ""
-    (concat
-     "data/"
-     (file-name-as-directory
-      (my/org-attach-dir-calculator (org-id-get-create)))
-     input-fname))
+  ;;(add-to-list org-attach-id-to-path-function-list 'my/org-attach-dir-calculator)
+
   )
 #+end_src
 
@@ -1460,6 +1464,25 @@ I publish first from org to md in the local dir. Then using that local dir to cr
              :host github
              :brach "master"
              :repo "Stefanomarton/org-ipe"))
+#+end_src
+
+** test
+#+begin_src emacs-lisp
+(defun garid/odt-edit-open  (path &optional _) ;;(path)
+  (interactive)
+  (let (
+        (outdir      (file-name-directory      path)) ;; path of the output
+        ;;(path_no_ext (file-name-sans-extension path)) ;; filename without extension
+        )
+
+    (message (format "lodraw %s && libreoffice --headless --convert-to %s --outdir %s %s" path "svg" outdir path))
+    (async-shell-command
+     (format "lodraw %s && libreoffice --headless --convert-to %s --outdir %s %s" path "svg" outdir path)
+     nil nil
+     ;;t t
+     )))
+
+(add-to-list 'org-file-apps '("\\ode.svg\\'" . garid/odt-edit-open))
 #+end_src
 
 ** =org-auto-tangle=
@@ -2428,15 +2451,15 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 #+attr_latex: :placement [H]
 #+caption: File and directory related commands
 #+name: tbl-kbinding-file-n-dired
-| key(s) | function                     | short description   | mode | lambda |
-|--------+------------------------------+---------------------+------+--------|
-| =SPC=    | =execute-extended-command=     | M-x                 | -    |        |
-| =f=      | =find-file=                    | find-file           | -    |        |
-| =d=      | =dired-jump=                   | directory           | -    |        |
-| =D=      | =:ignore t=                    | Dired.............. | -    |        |
-| =Ds=     | =dired=                        | simple              | -    |        |
-| =Dp=     | =dired-preview-mode=           | preview             | -    |        |
-| =Dw=     | =wdired-change-to-wdired-mode= | wdired              | -    |        |
+| key(s) | function                                                                    | short description   | mode | lambda |
+|--------+-----------------------------------------------------------------------------+---------------------+------+--------|
+| =SPC=    | =execute-extended-command=                                                    | M-x                 | -    |        |
+| =f=      | =(if (project-current) (project-find-file) (call-interactively #'find-file))= | find-file           | -    | y      |
+| =d=      | =dired-jump=                                                                  | directory           | -    |        |
+| =D=      | =:ignore t=                                                                   | Dired.............. | -    |        |
+| =Ds=     | =dired=                                                                       | simple              | -    |        |
+| =Dp=     | =dired-preview-mode=                                                          | preview             | -    |        |
+| =Dw=     | =wdired-change-to-wdired-mode=                                                | wdired              | -    |        |
 
 **** Buffer and operations on buffer
 #+attr_latex: :placement [H]
@@ -2927,7 +2950,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 #+begin_src emacs-lisp
 (garids-keybind/for-all-modes
   "SPC" '(execute-extended-command :which-key "M-x")
-  "f" '(find-file :which-key "find-file")
+  "f" '((lambda () (interactive) (if (project-current) (project-find-file) (call-interactively #'find-file)) ) :which-key "find-file")
   "d" '(dired-jump :which-key "directory")
   "D" '(:ignore t :which-key "Dired..............")
   "Ds" '(dired :which-key "simple")
