@@ -1507,6 +1507,13 @@ I publish first from org to md in the local dir. Then using that local dir to cr
     ""
     (interactive)
     (run-python "/home/garid/.local/pydev/bin/python"))
+
+  ;;(defun garid/set-python-send-buffer ()
+  ;;  ""
+  ;;  (interactive)
+  ;; must list python buffers
+  ;; and interactively set python-shell-buffer-name
+  ;;  )
   )
 #+end_src
 ** =code-cells-mode=
