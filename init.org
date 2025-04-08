@@ -662,9 +662,12 @@ but it feels slow when navigating.
         id)))
 
   (defun my/org-attach-dir (input-fname)
-    (concat "data/"
-            (file-name-as-directory (my/org-attach-dir-calculator input-fname))
-            input-fname))
+    (let ((my-attach-dir
+           (concat "data/"
+                   (file-name-as-directory (my/org-attach-dir-calculator input-fname)))))
+      (unless (file-directory-p my-attach-dir) (mkdir my-attach-dir))
+      (concat my-attach-dir input-fname))
+    )
   )
 #+end_src
 
