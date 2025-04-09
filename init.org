@@ -9,7 +9,10 @@
 #+options:      toc:t tags:nil  todo:t  tasks:t
 #+html_head:    <link rel="stylesheet" type="text/css" href="https://unpkg.com/chota"/>
 
-* From shell you can run make run:
+* From shell you can run make run:                                                :ATTACH:
+:PROPERTIES:
+:ID:       20250409T155759.106525
+:END:
 #+begin_src makefile :eval no :tangle Makefile
 # make run to extract init.el from init.org from shell
 run:
@@ -21,6 +24,21 @@ run:
 refresh-packages:
 	emacs --batch --eval "(setq package-archives '((\"melpa\" . \"https://melpa.org/packages/\") (\"elpa\" . \"https://elpa.gnu.org/packages/\") (\"nongnu\" . \"https://elpa.nongnu.org/nongnu/\")))" --eval "(package-refresh-contents)"
 #+end_src
+
+#+begin_src dot :file (my/org-attach-dir "diagram.svg") :eval never-export
+digraph {
+    a[label="init.org"];
+    b[label="init.el"];
+    a -> b [label="org-babel-tangle"]
+}
+#+end_src
+
+Test1 normal link:
+[[file:data/diagram.svg/diagram.svg]]
+
+Test2 attachment link:
+[[attachment:diagram.svg]]
+
 
 * Package manager:
 ** Package Repositories
