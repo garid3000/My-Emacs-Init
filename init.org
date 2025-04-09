@@ -98,6 +98,7 @@ I'm pulling packages from following 3 places (not sure that I need all three):
 (use-package evil-collection
   :ensure t
   :after evil
+  :delight ""
   :config
   (evil-collection-init))
 #+end_src
@@ -292,7 +293,7 @@ but it feels slow when navigating.
   )
 #+end_src
 
-** =pulsar= pulses on certain functions                                         :by_prot:
+** =pulsar= pulses on certain functions                                           :by_prot:
 #+begin_src emacs-lisp
 (use-package pulsar
   :custom
@@ -451,7 +452,7 @@ but it feels slow when navigating.
                    (format "(defun org-git-version () \"The truncate git commit hash of Org mode.\" %S)\n" git-version)
                    "(provide 'org-version)\n")))
               :pin nil)
-  :delight " org"
+  :delight "org"
   :bind (:map org-mode-map
               ("C-S-k"     . org-previous-visible-heading    )
               ("C-S-j"     . org-next-visible-heading        )
@@ -620,6 +621,18 @@ but it feels slow when navigating.
               ("P"  . org-previous-link ))
   )
 #+end_src
+** =org-indent=
+#+begin_src emacs-lisp
+(use-package org-indent
+  :ensure nil
+  :delight "")
+#+end_src
+** =org-num=
+#+begin_src emacs-lisp
+(use-package org-num
+  :ensure nil
+  :delight "")
+#+end_src
 ** =org-modern=
 #+begin_src emacs-lisp
 (use-package org-modern
@@ -713,7 +726,7 @@ but it feels slow when navigating.
 #+end_src
 
 * Org zettelkasten notes
-** =denote=: Note taking package                                                :by_prot:
+** =denote=: Note taking package                                                  :by_prot:
 #+begin_src emacs-lisp
 (use-package denote
   :ensure t
@@ -761,16 +774,16 @@ but it feels slow when navigating.
 
   )
 #+end_src
-** =denote-journal= denote journal                                              :by_prot:
+** =denote-journal= denote journal                                                :by_prot:
 #+begin_src emacs-lisp
 (use-package denote-journal
   :custom (denote-journal-extras-title-format 'day))
 #+end_src
-** =denote-org=                                                                 :by_prot:
+** =denote-org=                                                                   :by_prot:
 #+begin_src emacs-lisp
 (use-package denote-org)
 #+end_src
-** =denote-silo=                                                                :by_prot:
+** =denote-silo=                                                                  :by_prot:
 #+begin_src emacs-lisp
 (use-package denote-silo
   :custom
@@ -779,7 +792,7 @@ but it feels slow when navigating.
                             "~/BrainDump/denote_proj_grape/"))
   )
 #+end_src
-** =consult-denote=: consulting with denote                                     :by_prot:
+** =consult-denote=: consulting with denote                                       :by_prot:
 #+begin_src emacs-lisp
 (use-package consult-denote
   :ensure t
@@ -934,6 +947,7 @@ but it feels slow when navigating.
 (use-package consult-org-roam
    :ensure t
    :after org-roam
+   :delight ""
    :init (require 'consult-org-roam)
    ;; Activate the minor mode
    (consult-org-roam-mode 1)
@@ -958,7 +972,7 @@ but it feels slow when navigating.
 (use-package citar-org-roam
   :after citar org-roam
   :no-require
-  :delight " cor"
+  :delight "" ; " cor"
   :custom
   (citar-org-roam-subdir                      "g_paper")
   (citar-org-roam-note-title-template (concat "${=key=}\n"
@@ -1450,7 +1464,7 @@ I publish first from org to md in the local dir. Then using that local dir to cr
   :ensure t
   :defer  t
   :after org
-  :delight " oat"
+  :delight "" ;; " oat"
   :custom (org-auto-tangle-default    nil)
   :hook   (org-mode . org-auto-tangle-mode))
 #+end_src
@@ -1768,7 +1782,7 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
 ** =abbrev=
 #+begin_src emacs-lisp
 (use-package abbrev
-  :delight " abb"
+  :delight "" ;;" abb"
   :defer 1
   :ensure nil
   ;;:custom
@@ -2085,7 +2099,7 @@ Similar to vim-signify.
 (use-package focus                :ensure t)
 #+end_src
 
-** Writing Distraction free                                                   :customFunc:
+** Writing Distraction free                                                    :customFunc:
 #+begin_src emacs-lisp
 (defun garid/distraction-free-on ()
   (interactive)
@@ -2219,7 +2233,7 @@ Similar to vim-signify.
 ** =captain=
 #+begin_src emacs-lisp
 (use-package captain
-  :delight " cap"
+  :delight "" ;; " cap"
   :after org
   :custom
   (sentence-end-double-space nil)
@@ -3119,7 +3133,7 @@ and later sets cursor at that point when you open that file.
   :config
   (recentf-mode 1))
 #+end_src
-** shell script to open terminal                                            :shell_script:
+** shell script to open terminal                                             :shell_script:
 #+begin_src bash :tangle garid/open_external_term.sh :shebang "#!/bin/bash"
 # Open System termianl $TERMINAL at $1:
 # nohup for exitting terminal that executed this script
@@ -3277,7 +3291,7 @@ fi
   (gif-screencast-args '("-m" "window" "-m" "active" "-o" "/" "-f")))
 ;; this is configured to be on wayland/hyprland
 #+end_src
-** test karthinks consult reftex                                                    :test:
+** test karthinks consult reftex                                                     :test:
 #+begin_src emacs-lisp
 (use-package consult-reftex
   :straight (consult-reftex
@@ -3294,11 +3308,11 @@ fi
              :branch "master"
              :repo "karthink/reftex-xref"))
 #+end_src
-** test garbage-collect
+** garbage-collect
 #+begin_src emacs-lisp
 (use-package gcmh
-  :config
-  (gcmh-mode 1))
+  :config (gcmh-mode 1)
+  :delight " gb")
 #+end_src
 * Daemon
 #+begin_src emacs-lisp
