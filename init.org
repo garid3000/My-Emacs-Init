@@ -2502,7 +2502,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | key(s) | function               | short description              | mode | lambda |
 |--------+------------------------+--------------------------------+------+--------|
 | =c=      | =:ignore t=              | consult....................... | -    |        |
-| =co=     | =consult-org-heading=    | consult-org-heading    [ ofh ] | -    |        |
+| =co=     | =consult-outline=        | consult-outline    [ outline ] | -    |        |
 | =ci=     | =consult-imenu=          | consult-imenu                  | -    |        |
 | =cm=     | =consult-man=            | consult-man                    | -    |        |
 | =cr=     | =consult-ripgrep=        | consult-ripgrep         [ ps ] | -    |        |
@@ -2670,7 +2670,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | key(s) | function                        | short description         | mode | lambda |
 |--------+---------------------------------+---------------------------+------+--------|
 | =of=     | =:ignore t=                       | find..................... | org  |        |
-| =ofh=    | =(consult-org-heading)=           | heading                   | org  | y      |
+| =ofh=    | =consult-org-heading=             | heading                   | org  |        |
 | =ofn=    | =(consult-line "^#+name"   )=     | named table/eq/src        | org  | y      |
 | =ofr=    | =(consult-line "^#+result" )=     | result        /src        | org  | y      |
 | =ofs=    | =(consult-line "^#+begin_" )=     | source src-block          | org  | y      |
@@ -2940,7 +2940,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "B5" '(harpoon-go-to-5 :which-key "")
   "Ba" '(harpoon-add-file :which-key "add-file")
   "c" '(:ignore t :which-key "consult.......................")
-  "co" '(consult-org-heading :which-key "consult-org-heading    [ ofh ]")
+  "co" '(consult-outline :which-key "consult-outline    [ outline ]")
   "ci" '(consult-imenu :which-key "consult-imenu")
   "cm" '(consult-man :which-key "consult-man")
   "cr" '(consult-ripgrep :which-key "consult-ripgrep         [ ps ]")
@@ -3049,7 +3049,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "oac" '(org-clock-in :which-key "clock in")
   "oaC" '(org-clock-out :which-key "clock in")
   "of" '(:ignore t :which-key "find.....................")
-  "ofh" '((lambda () (interactive) (consult-org-heading) ) :which-key "heading")
+  "ofh" '(consult-org-heading :which-key "heading")
   "ofn" '((lambda () (interactive) (consult-line "^#+name"   ) ) :which-key "named table/eq/src")
   "ofr" '((lambda () (interactive) (consult-line "^#+result" ) ) :which-key "result        /src")
   "ofs" '((lambda () (interactive) (consult-line "^#+begin_" ) ) :which-key "source src-block")
@@ -3212,7 +3212,7 @@ fi
                            ))
 #+end_src
 
-** consulting
+** consulting notmuch
 #+begin_src emacs-lisp
 (use-package consult-notmuch)
 #+end_src
@@ -3331,6 +3331,11 @@ fi
 (use-package gcmh
   :config (gcmh-mode 1)
   :delight " gb")
+#+end_src
+** google
+#+begin_src emacs-lisp
+(use-package google-translate)
+(use-package google-this)
 #+end_src
 * Daemon
 #+begin_src emacs-lisp

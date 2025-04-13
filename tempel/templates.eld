@@ -449,6 +449,9 @@ org-mode
              :post (garid/choose-from-list-and-insert-it
                     '("black" "white" "league" "beige" "night" "serif"
                       "solarized" "moon" "dracula" "sky" "blood")))
+
+(oxsplit     "#+REVEAL: split")
+
 (oxt         "#+setupfile: ~/.config/emacs/org-templates/level-0-xelatex-fonts-conf.org")
 (oxh         "#+setupfile: ~/.config/emacs/org-templates/level-0-html-export-template.org")
 (ox2r        "#+reveal_html: <div class=\"column\" style=\"float:left; width:50%\">" n
