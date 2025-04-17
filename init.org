@@ -33,12 +33,7 @@ digraph {
 }
 #+end_src
 
-Test1 normal link:
 [[file:data/diagram.svg/diagram.svg]]
-
-Test2 attachment link:
-[[attachment:diagram.svg]]
-
 
 * Package manager:
 ** Package Repositories
@@ -251,10 +246,10 @@ but it feels slow when navigating.
   (fixed-pitch    ((t (:family "Monospace"       :height 120))))
   (default        ((t (:family "Monospace"       :height 120))))
 
-  :hook
-  (emacs-startup . (lambda ()
-                     (set-face-background 'mode-line          "#2B3260")
-                     (set-face-background 'mode-line-inactive "#1B1B1B")))
+  ;; :hook
+  ;; (emacs-startup . (lambda ()
+  ;;                    (set-face-background 'mode-line          "#2B3260")
+  ;;                    (set-face-background 'mode-line-inactive "#1B1B1B")))
   )
 #+end_src
 ** theme
@@ -287,13 +282,6 @@ but it feels slow when navigating.
   :ensure t)
 #+end_src
 
-** =evil-terminal-cursor-changer=:
-#+begin_src emacs-lisp :results none
-(use-package evil-terminal-cursor-changer
-  :ensure t
-  :config (evil-terminal-cursor-changer-activate))
-#+end_src
-
 ** =display-line-numbers=: displaying number
 #+begin_src emacs-lisp
 ;; setting line
@@ -301,17 +289,20 @@ but it feels slow when navigating.
   :ensure t
   :custom
   (display-line-numbers-type 'relative)
-  (visible-bell               nil) ;; too much distracting
   (ring-bell-function        'ignore)
-  ;;(setq display-line-numbers-type 'relative)
-  ;; (setq visible-bell t)
   :config
   (global-display-line-numbers-mode -1)
-  (global-hl-line-mode               1)
   )
 #+end_src
 
-** =pulsar= pulses on certain functions                                           :by_prot:
+** Line visibility
+#+begin_src emacs-lisp
+(use-package hl-line
+  :ensure nil
+  :config (global-hl-line-mode 1))
+#+end_src
+
+** =pulsar= pulses on certain functions                                            :by_prot:
 #+begin_src emacs-lisp
 (use-package pulsar
   :custom
@@ -717,34 +708,8 @@ but it feels slow when navigating.
 ;; (use-package ob-asymptote :after org)
 #+end_src
 
-** COMMENT =org-bullet=: changing bullets in org file
-#+begin_src emacs-lisp
-(use-package org-bullets
-  :ensure t
-  :after  org
-  :hook   (org-mode . org-bullets-mode)
-  :custom (org-bullets-bullet-list
-           '("Ⅰ" "Ⅱ" "Ⅲ" "Ⅳ" "Ⅴ" "Ⅵ" "Ⅶ")))
-#+end_src
-
-** COMMENT =org-tidy=: hiding the properties
-#+begin_src emacs-lisp
-(use-package org-tidy
-  :ensure t
-  :hook   (org-mode . org-tidy-mode))
-#+end_src
-** COMMENT =ob-sagemath=
-#+begin_src emacs-lisp
-(use-package ob-sagemath
-  :after org
-  :config
-  (setq org-babel-default-header-args:sage '((:session . t)
-                                             (:results . "output")))
-  )
-#+end_src
-
 * Org zettelkasten notes
-** =denote=: Note taking package                                                  :by_prot:
+** =denote=: Note taking package                                                   :by_prot:
 #+begin_src emacs-lisp
 (use-package denote
   :ensure t
@@ -792,16 +757,16 @@ but it feels slow when navigating.
 
   )
 #+end_src
-** =denote-journal= denote journal                                                :by_prot:
+** =denote-journal= denote journal                                                 :by_prot:
 #+begin_src emacs-lisp
 (use-package denote-journal
   :custom (denote-journal-extras-title-format 'day))
 #+end_src
-** =denote-org=                                                                   :by_prot:
+** =denote-org=                                                                    :by_prot:
 #+begin_src emacs-lisp
 (use-package denote-org)
 #+end_src
-** =denote-silo=                                                                  :by_prot:
+** =denote-silo=                                                                   :by_prot:
 #+begin_src emacs-lisp
 (use-package denote-silo
   :custom
@@ -810,7 +775,7 @@ but it feels slow when navigating.
                             "~/BrainDump/denote_proj_grape/"))
   )
 #+end_src
-** =consult-denote=: consulting with denote                                       :by_prot:
+** =consult-denote=: consulting with denote                                        :by_prot:
 #+begin_src emacs-lisp
 (use-package consult-denote
   :ensure t
@@ -1212,218 +1177,6 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   )
 #+end_src
 
-** COMMENT =ox-publish=
-
-*** Helper publisher function
-#+begin_src emacs-lisp
-(defun garid/publish-to-epnet-via-rsync (tmp)
-  ""
-  (interactive)
-  (call-process-shell-command "notify-send \"ox-phd-publish\" \"HTML export finished\"")
-  (f-write (concat "AuthType Basic\n"
-                   "AuthName The-T-Directory\n"
-                   "AuthUserFile /home/zgarid/.users\n"
-                   "<Limit GET POST >\n"
-                   "require user zgarid\n"
-                   "</Limit>\n")
-           'utf-8
-           "~/BrainDump/denote/phd/website/.htaccess")
-
-  (call-process-shell-command
-   "rsync --recursive --delete  --copy-links --verbose ~/BrainDump/denote/phd/website/ zgarid@www.ep.sci.hokudai.ac.jp:public_html/phd"
-   )
-
-  (call-process-shell-command "notify-send \"ox-phd-publish\" \"Published-on-epnet\"")
-  )
-#+end_src
-
-*** Helper to create stork db
-I publish first from org to md in the local dir. Then using that local dir to create stork db.
-
-#+begin_src emacs-lisp
-(defun garid/get-title-of-denote-filepath-trimmed-org (x)
-  (string-trim
-   (string-trim-left
-    (denote-retrieve-front-matter-title-line x 'org)
-    (regexp-quote "#+title:"))))
-
-
-(defun garid/get-md-converted-path-from-org-path (path)
-  ""
-  (replace-regexp-in-string
-   (regexp-quote ".org")                    ;; replace the extension
-   ".md"
-   (replace-regexp-in-string
-    (regexp-quote "/home/garid/BrainDump/denote/phd/") ;; replace the dir
-    "/home/garid/BrainDump/denote/phd/website-md/"
-    path nil 'literal)
-   nil 'literal))
-
-(defun garid/get-html-url-from-org-path (path)
-  ""
-  (replace-regexp-in-string
-   (regexp-quote ".org")                    ;; replace the extension
-   ".html"
-   (replace-regexp-in-string
-    (regexp-quote "/home/garid/BrainDump/denote/phd/") ;; replace the dir
-    ""
-    path nil 'literal)
-   nil 'literal))
-
-(defun garid/prepare-stork-toml ()
-  ""
-  (concat
-   ;; pre header
-   "[input]\n"
-   ;;"base_directory = \"/home/garid/BrainDump/denote/phd/website-md/\"\n"
-   "base_directory = \"\"\n"
-   "url_prefix = \"https://www.ep.sci.hokudai.ac.jp/~zgarid/phd/\"\n"
-   "files = [\n"
-
-   ;; main contents
-   (mapconcat
-    (lambda (x)
-      (format
-       "{path=\"%s\", url = \"%s\", title = \"%s\"},\n"
-       (garid/get-md-converted-path-from-org-path      x)
-       (garid/get-html-url-from-org-path               x)
-       (garid/get-title-of-denote-filepath-trimmed-org x)
-       )
-      )
-
-    (directory-files-recursively "/home/garid/BrainDump/denote/phd/"           ;; 0.list of files
-                                 ".*.org$")
-    )
-
-   ;; ending
-   "]\n"))
-
-(defun garid/re-create-stork-db-from-md-exports (x) ;; completion-function requires arguemtns, so a x arguemtns that won't used
-  (interactive)
-  (f-write (garid/prepare-stork-toml)
-           'utf-8
-           "/tmp/stork-from-emacs.toml")
-
-  (call-process-shell-command "notify-send \"stork\" \"toml created /tmp/stork-from-emacs.toml\"")
-  (call-process-shell-command "stork build --input /tmp/stork-from-emacs.toml --output /home/garid/BrainDump/denote/phd/website/stork-db.st")
-  (call-process-shell-command "notify-send \"stork\" \"stork-db.st re-created\n/home/garid/BrainDump/denote/phd/website/stork-db.st\"")
-  )
-
-
-
-#+end_src
-
-*** Helper to create better navbar
-#+begin_src emacs-lisp
-(garid/get-html-url-from-org-path (denote-get-path-by-id "20240814T122254"))
-#+end_src
-
-#+RESULTS:
-: 20240814T122254--70-acknowledgements__future.html
-
-*** Actual conf
-#+begin_src emacs-lisp :exports code :results verbatim
-(use-package ox-publish
-  :ensure nil
-  :after org
-  :custom
-  (org-publish-project-alist
-   `(("denote: org -> html"
-      :base-directory ,(denote-directory)
-      :recursive t
-      :publishing-function   org-html-publish-to-html
-      :publishing-directory ,(concat (denote-directory) "website")
-      :exclude ".*daily/.*org"  ;;; for excluding -daily
-      ;; :section-numbers nil
-      :section-numbers  org-export-with-section-numbers
-      :with-toc         t
-      :html_link_home  "index.html"
-      ;;                                 :html-preamble "<div id=\"navbar\"> <ul>
-      ;;   <div class=\"stork-wrapper\">
-      ;;     <a href=\"/~zgarid/index.html\">Home</a>             &nbsp;
-      ;;     <a href=\"..\">Up/Back</a>                           &nbsp;
-      ;;     <a href=\"/~zgarid/meta-research.html\">Research</a> &nbsp;
-      ;;     <a href=\"/~zgarid/meta-python.html\">Python</a>     &nbsp;
-      ;;     <a href=\"/~zgarid/meta-cli.html\">CLI</a>           &nbsp;
-      ;;     <a href=\"/~zgarid/meta-org.html\">Org-Mode</a>      &nbsp;
-      ;;     <a href=\"/~zgarid/search.html\">Search</a>          &nbsp;
-      ;;     <input data-stork=\"federalist\" class=\"stork-input\" />
-      ;;     <div data-stork=\"federalist-output\" class=\"stork-output\"></div>
-      ;;   </div>
-      ;; </ul>
-      ;; <hr>
-      ;; </div>
-      ;; <script src=\"https://files.stork-search.net/releases/v1.6.0/stork.js\"></script>
-      ;; <script>
-      ;; stork.register(
-      ;;     'federalist', 'https://www.ep.sci.hokudai.ac.jp/~zgarid/garid_stork.st'
-      ;; )
-      ;; </script>
-      ;; "
-      )
-     ("phd-website"
-      :base-directory ,(concat (denote-directory) "phd")
-      :recursive t
-      :publishing-function   org-html-publish-to-html
-      :publishing-directory ,(concat (denote-directory) "phd" "/website")
-      :exclude ".*daily/.*org"
-      :completion-function garid/publish-to-epnet-via-rsync
-      :section-numbers     org-export-with-section-numbers
-      :with-toc         t
-      :html_link_home  "index.html"
-      :html-preamble ,(concat
-                       "<div id=\"navbar\"> <ul>"
-                       "<div class=\"stork-wrapper\">"
-                       "<a href=\"/~zgarid/phd/" (garid/get-html-url-from-org-path (denote-get-path-by-id "20241109T014358")) "\"> Info </a> &nbsp;"
-                       "<a href=\"/~zgarid/phd/" (garid/get-html-url-from-org-path (denote-get-path-by-id "20240814T113502")) "\"> Home </a> &nbsp;"
-                       "<a href=\"/~zgarid/phd/" (garid/get-html-url-from-org-path (denote-get-path-by-id "20241109T130751")) "\"> 1.Introduction </a> &nbsp;"
-                       "<a href=\"/~zgarid/phd/" (garid/get-html-url-from-org-path (denote-get-path-by-id "20241109T133612")) "\"> 2.Developments </a> &nbsp;"
-                       "<a href=\"/~zgarid/phd/" (garid/get-html-url-from-org-path (denote-get-path-by-id "20241109T133644")) "\"> 3.Methods </a> &nbsp;"
-                       "<a href=\"/~zgarid/phd/" (garid/get-html-url-from-org-path (denote-get-path-by-id "20241109T133718")) "\"> 4.Results </a> &nbsp;"
-                       "<a href=\"/~zgarid/phd/" (garid/get-html-url-from-org-path (denote-get-path-by-id "20241109T133803")) "\"> 5.Discussion </a> &nbsp;"
-                       "<a href=\"/~zgarid/search.html\">Search</a>          &nbsp;"
-                       "<input data-stork=\"federalist\" class=\"stork-input\" />"
-                       "<div data-stork=\"federalist-output\" class=\"stork-output\"></div>"
-                       "</div>"
-                       "</ul>"
-                       "<hr>"
-                       "</div>"
-                       "<script src=\"https://files.stork-search.net/releases/v1.6.0/stork.js\"></script>"
-                       "<script>"
-                       "stork.register('federalist', 'https://www.ep.sci.hokudai.ac.jp/~zgarid/phd/stork-db.st')"
-                       "</script>"
-                       "<link"
-                       "  rel=\"stylesheet\""
-                       "  href=\"https://files.stork-search.net/releases/v1.6.0/basic.css\""
-                       "/>"
-                       )
-      )
-
-     ("phd-2-md"
-      :base-directory ,(concat (denote-directory) "phd")
-      :recursive t
-      :publishing-function  org-md-publish-to-md
-      :publishing-directory ,(concat (denote-directory) "phd" "/website-md")
-      :exclude ".*daily/.*org"
-      :section-numbers     org-export-with-section-numbers
-      :completion-function garid/re-create-stork-db-from-md-exports
-      )
-
-
-     ;; good but doesn't expot caption
-     ;; ("phd-2-text"
-     ;;  :base-directory ,(concat (denote-directory) "phd")
-     ;;  :recursive t
-     ;;  :publishing-function  org-ascii-publish-to-ascii
-     ;;  :publishing-directory ,(concat (denote-directory) "phd" "/website-text")
-     ;;  :exclude ".*daily/.*org"
-     ;;  :section-numbers     org-export-with-section-numbers
-     ;;  )
-
-
-     )))
-#+end_src
-
 ** =htmlize= - source code syntax in html export
 #+begin_src emacs-lisp
 (use-package htmlize
@@ -1551,6 +1304,9 @@ I publish first from org to md in the local dir. Then using that local dir to cr
 ** =code-cells-mode=
 #+begin_src emacs-lisp
 (use-package code-cells
+  :custom
+  (code-cells-boundary-regexp
+   "^\\s<+\\(?:\\s-*%\\(?1:%+\\)\\| In\\[[[:space:][:digit:]]*]:\\| \\[\\[\\)")
   :hook (python-base-mode . code-cells-mode)
   :bind (:map code-cells-mode-map
               ("M-<RET>"    . code-cells-eval           )
@@ -1813,21 +1569,6 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
   (setq-default abbrev-mode t)
   )
 #+end_src
-** COMMENT completion preview mode
-#+begin_src emacs-lisp
-(use-package completion-preview
-  :bind (:map
-         completion-preview-active-mode-map
-         ("C-i" . completion-preview-insert    )  ;; default bind
-         ("M-n" . completion-preview-next-candidate)
-         ("M-p" . completion-preview-prev-candidate)
-         ("M-i" . completion-preview-complete  )  ;; default bind
-         ("M-h" . completion-preview-insert    )) ;; my preferred bind
-  ;;:config (global-completion-preview-mode)
-  :hook (prog-mode . completion-preview-mode)
-  )
-#+end_src
-
 * Coding convenient
 ** =rg=: ripgrep in Emacs
 Probably requires external =rg= command.
@@ -1899,7 +1640,7 @@ Similar to vim-signify.
 #+end_src
 
 * Bunch of functions
-** Open PDF/HMTL exported by LaTeX externally                                 :customFunc:
+** Open PDF/HMTL exported by LaTeX externally                                :customFunc:
 #+begin_src emacs-lisp
 (defun replace-in-string (what with in)
   (replace-regexp-in-string (regexp-quote what) with in nil 'literal))
@@ -1926,7 +1667,7 @@ Similar to vim-signify.
            )))
 #+end_src
 
-** My Custom LaTeX writing system (aka TeQ)                                   :customFunc:
+** My Custom LaTeX writing system (aka TeQ)                                  :customFunc:
 #+begin_src emacs-lisp
 (add-to-list 'load-path (expand-file-name "~/.config/emacs/Emacs-TeQ"))
 (register-input-method "TeQ-Math" "Emacs-Teq-Latex" 'quail-use-package
@@ -1946,7 +1687,7 @@ Similar to vim-signify.
       (kmacro-lambda-form [?v ?t tab ?v ?t ?| ?v ?t] 0 "%d"))
 #+end_src
 
-** Custom Aligner function (with untabify)                                    :customFunc:
+** Custom Aligner function (with untabify)                                   :customFunc:
 #+begin_src emacs-lisp
 (defun garid/align-regexp-and-untabify (beg end)
   (interactive "r")
@@ -1954,7 +1695,7 @@ Similar to vim-signify.
                 (concat "\\(\\s-*\\)" (read-string "Align regexp: ")))
   (untabify beg end))
 #+end_src
-** copy link in org at point                                                  :customFunc:
+** copy link in org at point                                                 :customFunc:
 [[https://emacs.stackexchange.com/a/60555/38482][stack exchange]]
 
 #+begin_src emacs-lisp
@@ -1967,7 +1708,7 @@ Similar to vim-signify.
     (message (concat "Copied URL: " url))
     (dired-jump t (file-name-directory url))))
 #+end_src
-** Jumping ref-label in org or latex                                          :customFunc:
+** Jumping ref-label in org or latex                                         :customFunc:
 #+begin_src emacs-lisp
 (defun garid/jump-label-def-of-ref-at-point-word ()
   ""
@@ -1986,7 +1727,7 @@ Similar to vim-signify.
           )
       (message "No matching braces found."))))
 #+end_src
-** Org toggle hide/shot hyperlink                                             :customFunc:
+** Org toggle hide/shot hyperlink                                            :customFunc:
 #+begin_src emacs-lisp
 (defun garid/org-toggle-link-n-emphasis ()
   (interactive)
@@ -1997,7 +1738,7 @@ Similar to vim-signify.
   (font-lock-update))
 #+end_src
 
-** Custom opening external terminal at current buffer                         :customFunc:
+** Custom opening external terminal at current buffer                        :customFunc:
 #+begin_src emacs-lisp
 (defun garid/open-external-term-here ()
   (interactive)
@@ -2007,7 +1748,7 @@ Similar to vim-signify.
 ;;(shell-command (concat user-emacs-directory "garid/open_external_term.sh" " " buffer-file-name)))
 #+end_src
 
-** Org toggle hide/shot display images                                        :customFunc:
+** Org toggle hide/shot display images                                       :customFunc:
 #+begin_src emacs-lisp
 (defun garid/org-toggle-display-images-n-edraw ()
   (interactive)
@@ -2018,7 +1759,7 @@ Similar to vim-signify.
     ))
 #+end_src
 
-** Org structure in the denote dire                                           :customFunc:
+** Org structure in the denote dire                                          :customFunc:
 #+begin_src emacs-lisp
 (defun garid/org-ql-function-on-each-heading (INCLUDE_PROGRESS)
   ""
@@ -2088,7 +1829,7 @@ Similar to vim-signify.
     ))
 #+end_src
 
-** Remove equal sign from both sides in string                                :customFunc:
+** Remove equal sign from both sides in string                               :customFunc:
 #+begin_src emacs-lisp
 (defun remove-equal-from-both-sides (str)
   "Remove the tilde (~) character from the beginning and end of STR."
@@ -2100,7 +1841,7 @@ Similar to vim-signify.
     str))
 #+end_src
 
-** Kill ring and garbage collect                                              :customFunc:
+** Kill ring and garbage collect                                             :customFunc:
 #+begin_src emacs-lisp
 (defun garid/clear-kill-ring-and-garbage-collect ()
   (interactive)
@@ -2117,7 +1858,7 @@ Similar to vim-signify.
 (use-package focus                :ensure t)
 #+end_src
 
-** Writing Distraction free                                                    :customFunc:
+** Writing Distraction free                                                  :customFunc:
 #+begin_src emacs-lisp
 (defun garid/distraction-free-on ()
   (interactive)
@@ -2181,14 +1922,6 @@ Similar to vim-signify.
 ** =tmr=: timer may ring
 #+begin_src emacs-lisp
 (use-package tmr :ensure t)
-#+end_src
-** COMMENT =spray=: spraying texts
-#+begin_src emacs-lisp
-(use-package spray
-    :ensure t
-    :bind (("<f6>"  . spray-mode))
-    :hook ((spray-mode . garid/distraction-free-on))
-)
 #+end_src
 ** =edraw= svg drawing inline in org
 #+begin_src emacs-lisp
@@ -3151,7 +2884,7 @@ and later sets cursor at that point when you open that file.
   :config
   (recentf-mode 1))
 #+end_src
-** shell script to open terminal                                             :shell_script:
+** shell script to open terminal                                           :shell_script:
 #+begin_src bash :tangle garid/open_external_term.sh :shebang "#!/bin/bash"
 # Open System termianl $TERMINAL at $1:
 # nohup for exitting terminal that executed this script
@@ -3309,7 +3042,7 @@ fi
   (gif-screencast-args '("-m" "window" "-m" "active" "-o" "/" "-f")))
 ;; this is configured to be on wayland/hyprland
 #+end_src
-** test karthinks consult reftex                                                     :test:
+** test karthinks consult reftex                                                   :test:
 #+begin_src emacs-lisp
 (use-package consult-reftex
   :straight (consult-reftex
