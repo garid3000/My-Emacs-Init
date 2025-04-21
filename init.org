@@ -777,9 +777,12 @@ but it feels slow when navigating.
 #+begin_src emacs-lisp
 (use-package denote-silo
   :custom
-  (denote-silo-directories '("~/BrainDump/denote"
-                            "~/BrainDump/denote_bps/"
-                            "~/BrainDump/denote_proj_grape/"))
+  (denote-silo-directories
+   '("~/BrainDump/denote"
+     "~/BrainDump/denote_bps/"
+     "~/BrainDump/denote_proj_grape/"
+     "~/BrainDump/marscury/"
+     ))
   )
 #+end_src
 ** =consult-denote=: consulting with denote                                        :by_prot:
@@ -1357,6 +1360,12 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 ** =json-mode=
 #+begin_src emacs-lisp
 (use-package json-mode :ensure t)
+#+end_src
+
+** =elixir= 
+#+begin_src emacs-lisp
+(use-package elixir-mode)
+(use-package ob-elixir)
 #+end_src
 
 * Coding input
