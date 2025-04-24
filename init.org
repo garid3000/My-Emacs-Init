@@ -245,11 +245,6 @@ but it feels slow when navigating.
   (variable-pitch ((t (:family "Serif"           :height 120))))
   (fixed-pitch    ((t (:family "Monospace"       :height 120))))
   (default        ((t (:family "Monospace"       :height 120))))
-
-  ;; :hook
-  ;; (emacs-startup . (lambda ()
-  ;;                    (set-face-background 'mode-line          "#2B3260")
-  ;;                    (set-face-background 'mode-line-inactive "#1B1B1B")))
   )
 #+end_src
 ** theme
@@ -1314,9 +1309,6 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 ** =code-cells-mode=
 #+begin_src emacs-lisp
 (use-package code-cells
-  :custom
-  (code-cells-boundary-regexp
-   "^\\s<+\\(?:\\s-*%\\(?1:%+\\)\\| In\\[[[:space:][:digit:]]*]:\\| \\[\\[\\)")
   :hook (python-base-mode . code-cells-mode)
   :bind (:map code-cells-mode-map
               ("M-<RET>"    . code-cells-eval           )
@@ -1334,7 +1326,12 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
               ("M-D"        . code-cells-duplicate            )
               ("M-;"        . code-cells-comment-or-uncomment )
               ("M-l"        . (lambda () (interactive) (insert "\n# %%\n")))
-              ))
+              )
+
+  :config
+  (setq code-cells-boundary-regexp
+        "^\\s<+\\(?:\\s-*%\\(?1:%+\\)\\| In\\[[[:space:][:digit:]]*]:\\| \\[\\[\\)")
+  )
 #+end_src
 
 ** =jupyter=
