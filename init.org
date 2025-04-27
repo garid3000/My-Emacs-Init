@@ -25,7 +25,7 @@ refresh-packages:
 	emacs --batch --eval "(setq package-archives '((\"melpa\" . \"https://melpa.org/packages/\") (\"elpa\" . \"https://elpa.gnu.org/packages/\") (\"nongnu\" . \"https://elpa.nongnu.org/nongnu/\")))" --eval "(package-refresh-contents)"
 #+end_src
 
-#+begin_src dot :file (my/org-attach-dir "diagram.svg") :eval never-export
+#+begin_src dot :file (my/org-attach-dir "diagram.svg") :eval never-export :tangle no
 digraph {
     a[label="init.org"];
     b[label="init.el"];
@@ -301,8 +301,8 @@ but it feels slow when navigating.
 #+begin_src emacs-lisp
 (use-package pulsar
   :custom
-  (pulsar-delay 0.015)
-  (pulsar-iterations 10)
+  (pulsar-delay 0.05)
+  (pulsar-iterations 2)
   :config (pulsar-global-mode))
 #+end_src
 
@@ -326,7 +326,7 @@ but it feels slow when navigating.
   :config
   (vertico-mode))
 #+end_src
-** =vertico-posframe=
+** COMMENT =vertico-posframe=
 #+begin_src emacs-lisp
 (use-package vertico-posframe
   :custom
@@ -638,7 +638,7 @@ but it feels slow when navigating.
   :ensure nil
   :delight "")
 #+end_src
-** =org-modern=
+** COMMENT =org-modern=
 #+begin_src emacs-lisp
 (use-package org-modern
   :after org
@@ -1309,6 +1309,9 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 ** =code-cells-mode=
 #+begin_src emacs-lisp
 (use-package code-cells
+  :init
+  (setq code-cells-boundary-regexp
+        "^\\s<+\\(?:\\s-*%\\(?1:%+\\)\\| In\\[[[:space:][:digit:]]*]:\\| \\[\\[\\)")
   :hook (python-base-mode . code-cells-mode)
   :bind (:map code-cells-mode-map
               ("M-<RET>"    . code-cells-eval           )
@@ -1327,10 +1330,6 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
               ("M-;"        . code-cells-comment-or-uncomment )
               ("M-l"        . (lambda () (interactive) (insert "\n# %%\n")))
               )
-
-  :config
-  (setq code-cells-boundary-regexp
-        "^\\s<+\\(?:\\s-*%\\(?1:%+\\)\\| In\\[[[:space:][:digit:]]*]:\\| \\[\\[\\)")
   )
 #+end_src
 
