@@ -520,7 +520,7 @@ but it feels slow when navigating.
                             ("CNCL"  . (:foreground "gray30" :weight bold))))
 
   (org-log-done            'time)
-  (org-tags-column         -90)   ;; how many spaces left padding for tags
+  (org-tags-column         -100)   ;; how many spaces left padding for tags
   (org-tag-alist           '((:startgroup . nil)
                              ("@rsch" . ?r) ("@bps" . ?w) ("@home" . ?h)
                              (:endgroup . nil)
@@ -2155,7 +2155,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | key(s) | function                                                                                   | short description             | mode | lambda |
 |--------+--------------------------------------------------------------------------------------------+-------------------------------+------+--------|
 | =s=      | =:ignore t=                                                                                  | system....................... | -    |        |
-| =srf=    | =recentf-open-files=                                                                         | recent-f.iles                 | -    |        |
+| =srf=    | =consult-recent-file=                                                                      | recent-f.iles                 | -    |        |
 |--------+--------------------------------------------------------------------------------------------+-------------------------------+------+--------|
 | =sl=     | =:ignore t=                                                                                  | line......................... | -    |        |
 | =slm=    | =scroll-lock-mode=                                                                           | scroll-lock-mode              | -    |        |
@@ -2605,7 +2605,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "zsT" '(mw-thesaurus-lookup :which-key "thesaurus")
   "ZQ" '(kill-emacs :which-key "kill Emacs")
   "s" '(:ignore t :which-key "system.......................")
-  "srf" '(recentf-open-files :which-key "recent-f.iles")
+  "srf" '(consult-recent-file :which-key "recent-f.iles")
   "sl" '(:ignore t :which-key "line.........................")
   "slm" '(scroll-lock-mode :which-key "scroll-lock-mode")
   "slv" '(global-display-fill-column-indicator-mode :which-key "vertical-line")
