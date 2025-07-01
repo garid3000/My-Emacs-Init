@@ -379,7 +379,8 @@ python-mode
 (pv.save_graph    "pl.save_graphic(\"\")"     )
 (hh     "# -------------------------------------------------------------------------------------------------------- # "
         :post (progn (backward-char 95) (evil-enter-replace-state 0) ))
-(pyright_ignore "pyright: ignore["  "]")
+(pyright_ignore_1 "pyright: ignore["  "]")
+(pyright_ignore "pyright: ignore")
 
 
 graphviz-dot-mode
@@ -502,7 +503,9 @@ org-mode
 (initcontacts        ":EMAIL: %(org-contacts-template-email) " r n ":PHONE:" r n ":ALIAS:" r n ":NICKNAME:" r n ":IGNORE:" r n ":ICON:" r n ":NOTE:" r n ":ADDRESS:" r n ":BIRTHDAY:")
 
 
-(pySess1    "#+begin_src python :session pySess1 :results output :exports both :eval no-export :async yes :comments link :dir (my/org-attach-dir \"\")" n "# %%" n "#+end_src")
+;; (pySess1    "#+begin_src python :session pySess1 :results output :exports both :eval no-export :async yes :comments link :dir (my/org-attach-dir \"\")" n "# %%" n "#+end_src")
+
+(py "#+begin_src python :async yes"  n n "#+end_src")
 
 ;; Local Variables:
 ;; mode: lisp-data

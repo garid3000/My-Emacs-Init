@@ -509,7 +509,7 @@ but it feels slow when navigating.
 
   ;; ---------------- TODO tabs ----------------------------------------------------------
   (org-todo-keywords      '((sequence "TODO(t)" "NEXT(n)" "WAIT(w)" "PRJT(p)" "VAGUE(v)"
-                                      "|"       "DONE(d)" "CNCL(c)")))
+                                      "|"      "NEAR(N)" "DONE(d)" "DONE(d)" "CNCL(c)")))
 
   (org-todo-keyword-faces '(("TODO"  . org-warning      )       ;; org-faces?
                             ("PRJT"  . "tomato"         )
@@ -626,6 +626,13 @@ but it feels slow when navigating.
               ("P"  . org-previous-link ))
   )
 #+end_src
+** =org-tidy=: hiding the properties
+#+begin_src emacs-lisp
+(use-package org-tidy
+  :ensure t
+  :hook   (org-mode . org-tidy-mode))
+#+end_src
+
 ** =org-indent=
 #+begin_src emacs-lisp
 (use-package org-indent
@@ -680,6 +687,7 @@ but it feels slow when navigating.
         id)))
 
   (defun my/org-attach-dir (input-fname)
+    (interactive)
     (let ((my-attach-dir
            (concat "data/"
                    (file-name-as-directory (my/org-attach-dir-calculator input-fname)))))
@@ -1469,7 +1477,9 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
   ;; (add-to-list 'eglot-stay-out-of 'eldoc)
   (add-to-list 'eglot-server-programs
                '(python-mode . ("pyright-langserver" "--stdio")))
-               ;;'(python-mode . ("basedpyright"))) ;; not working not sure why
+  ;;(add-to-list 'eglot-server-programs
+  ;;             '(python-mode . ("ty" "server")))
+  ;;'(python-mode . ("basedpyright"))) ;; not working not sure why
   (evil-define-key 'normal 'prog-mode-map  (kbd "g o") 'eglot-find-typeDefinition)
   (evil-define-key 'normal 'prog-mode-map  (kbd "] d") 'flymake-goto-next-error)
   (evil-define-key 'normal 'prog-mode-map  (kbd "[ d") 'flymake-goto-prev-error)
@@ -1862,6 +1872,13 @@ Similar to vim-signify.
 #+end_src
 
 * Writing & Reading
+** ispell config
+#+begin_src emacs-lisp
+(use-package ispell
+  :ensure t
+  :custom (ispell-alternate-dictionary "/home/garid/.config/emacs/ispell-wl.txt")
+  )
+#+end_src
 ** Writing packages
 #+begin_src emacs-lisp
 (use-package selectric-mode       :ensure t)
