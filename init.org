@@ -2309,8 +2309,8 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 |--------+--------------------------------------+------------------------------+------+--------|
 | =n=      | =:ignore t=                            | note........................ | -    |        |
 | =nr=     | =denote-rename-file=                   | rename                       | -    |        |
-| =nf=     | =denote-silo-open-or-create=         | find                         | -    |        |
-| =nd=     | =(dired denote-directory)=             | dired                        | -    | y      |
+| =nf=     | =denote-silo-open-or-create=           | find                         | -    |        |
+| =nd=     | =denote-silo-dired=                    | dired                        | -    |        |
 | =nj=     | =denote-journal-new-entry=             | journal                      | -    |        |
 | =nJ=     | =denote-journal-new-or-existing-entry= | Journal-find                 | -    |        |
 | =nil=    | =denote-insert-link=                   | insert-link                  | -    |        |
@@ -2653,7 +2653,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "n" '(:ignore t :which-key "note........................")
   "nr" '(denote-rename-file :which-key "rename")
   "nf" '(denote-silo-open-or-create :which-key "find")
-  "nd" '((lambda () (interactive) (dired denote-directory) ) :which-key "dired")
+  "nd" '(denote-silo-dired :which-key "dired")
   "nj" '(denote-journal-new-entry :which-key "journal")
   "nJ" '(denote-journal-new-or-existing-entry :which-key "Journal-find")
   "nil" '(denote-insert-link :which-key "insert-link")
