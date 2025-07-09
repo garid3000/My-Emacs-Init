@@ -294,7 +294,10 @@ but it feels slow when navigating.
 #+begin_src emacs-lisp
 (use-package hl-line
   :ensure nil
-  :config (global-hl-line-mode 1))
+  :config
+  (global-hl-line-mode 1)
+  (global-hl-todo-mode 1)
+  )
 #+end_src
 
 ** =pulsar= pulses on certain functions                                            :by_prot:
@@ -326,18 +329,6 @@ but it feels slow when navigating.
   :config
   (vertico-mode))
 #+end_src
-** COMMENT =vertico-posframe=
-#+begin_src emacs-lisp
-(use-package vertico-posframe
-  :custom
-  (vertico-posframe-width        180)
-  (vertico-posframe-border-width 2)
-  (vertico-posframe-height       16)
-  :config
-  (vertico-posframe-mode 1)
-  )
-#+end_src
-
 ** =marginalia=
 #+begin_src emacs-lisp
 (use-package marginalia
@@ -354,8 +345,8 @@ but it feels slow when navigating.
   :ensure t
   :custom
   ;;(consult-preview-key nil)
-  (consult-preview-key 'any)
-  ;;(consult-preview-key (list :debounce 0.5 'any))
+  ;;(consult-preview-key 'any)
+  (consult-preview-key (list :debounce 0.5 'any))
   :bind
   ("M-y" . consult-yank-from-kill-ring)
   ("M-f" . consult-line)
@@ -1440,7 +1431,7 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
 
 (setf (alist-get "python" org-src-lang-modes nil nil #'equal) 'python-ts)
 #+end_src
-** =indent-bars=
+** COMMENT =indent-bars=
 #+begin_src emacs-lisp
 (use-package indent-bars
   ;;:load-path "~/code/emacs/indent-bars"
@@ -1876,66 +1867,15 @@ Similar to vim-signify.
 #+begin_src emacs-lisp
 (use-package ispell
   :ensure t
-  :custom (ispell-alternate-dictionary "/home/garid/.config/emacs/ispell-wl.txt")
-  )
+  :custom (ispell-alternate-dictionary "/home/garid/.config/emacs/ispell-wl.txt"))
 #+end_src
 ** Writing packages
 #+begin_src emacs-lisp
-(use-package selectric-mode       :ensure t)
-(use-package typewriter-roll-mode :ensure t)
+;; (use-package selectric-mode       :ensure t)
+;; (use-package typewriter-roll-mode :ensure t)
 (use-package darkroom             :ensure t)
 (use-package focus                :ensure t)
 #+end_src
-
-** Writing Distraction free                                                   :customFunc:
-#+begin_src emacs-lisp
-(defun garid/distraction-free-on ()
-  (interactive)
-  ;;(turn-off-evil-mode)
-  (global-set-key (kbd "M-f") 'forward-word)
-  (evil-mode -1)
-  (darkroom-mode             +1)
-  (typewriter-roll-mode      +1)
-  (display-line-numbers-mode  -1)
-  (which-key-mode             -1)
-  (focus-mode                 +1)
-
-  (cond
-   ((member "Iosevka Aile"      (font-family-list)) (set-face-attribute 'default nil :font "Iosevka Aile"      :height 120))
-   ((member "Libre Baskerville" (font-family-list)) (set-face-attribute 'default nil :font "Libre Baskerville" :height 120))
-   ((member "Liberation Sans"   (font-family-list)) (set-face-attribute 'default nil :font "Liberation Sans"   :height 120))
-   ((member "Courier New"       (font-family-list)) (set-face-attribute 'default nil :font "Courier New"       :height 140))
-   ))
-
-(defun garid/distraction-free-off ()
-  (interactive)
-
-  (global-set-key (kbd "M-f") 'consult-line)
-  (darkroom-mode         -1)
-  (evil-mode +1)
-  (typewriter-roll-mode  -1)
-  (global-corfu-mode     +1)
-  (which-key-mode        +1)
-  (focus-mode            -1)
-
-  (cond
-   ((member "Iosevka Term SS06" (font-family-list)) (set-face-attribute 'default nil :font "Iosevka Term SS06" :height 120))
-   ((member "Iosevka"           (font-family-list)) (set-face-attribute 'default nil :font "Iosevka"           :height 150))
-   ))
-
-(setq gry-toggle-distraction-free-writing-state t)
-
-(defun garid/toggle-distraction-free-writing ()
-  (interactive)
-  (setq gry-toggle-distraction-free-writing-state
-        (not gry-toggle-distraction-free-writing-state))
-  (if gry-toggle-distraction-free-writing-state
-      (garid/distraction-free-on)
-    (garid/distraction-free-off)))
-#+end_src
-
-#+RESULTS:
-: garid/toggle-distraction-free-writing
 
 ** =pdf-tools=: reading pdf in Emacs
 #+begin_src emacs-lisp
@@ -1948,10 +1888,6 @@ Similar to vim-signify.
   (pdf-tools-install))
 #+end_src
 
-** =tmr=: timer may ring
-#+begin_src emacs-lisp
-(use-package tmr :ensure t)
-#+end_src
 ** =edraw= svg drawing inline in org
 #+begin_src emacs-lisp
 (use-package edraw-mode
@@ -2002,14 +1938,6 @@ Similar to vim-signify.
     (edraw-org-setup-exporter))
   )
 #+end_src
-** checking (could be useful)
-#+begin_src emacs-lisp
-;; (use-package langtool   :ensure t) it required external jar / java  someday i will try
-(use-package jinx          :ensure t)
-(use-package mw-thesaurus  :ensure t :after org)
-;;(use-package org-wc        :ensure t :after org)
-#+end_src
-
 ** =captain=
 #+begin_src emacs-lisp
 (use-package captain
@@ -2039,6 +1967,68 @@ Similar to vim-signify.
   (add-hook 'latex-mode-hook (lambda () (captain-mode -1)))
   (global-captain-mode t)
   )
+#+end_src
+
+** COMMENT Writing Distraction free                                                   :customFunc:
+#+begin_src emacs-lisp
+(defun garid/distraction-free-on ()
+  (interactive)
+  ;;(turn-off-evil-mode)
+  (global-set-key (kbd "M-f") 'forward-word)
+  (evil-mode -1)
+  (darkroom-mode             +1)
+  (typewriter-roll-mode      +1)
+  (display-line-numbers-mode  -1)
+  (which-key-mode             -1)
+  (focus-mode                 +1)
+
+  (cond
+   ((member "Iosevka Aile"      (font-family-list)) (set-face-attribute 'default nil :font "Iosevka Aile"      :height 120))
+   ((member "Libre Baskerville" (font-family-list)) (set-face-attribute 'default nil :font "Libre Baskerville" :height 120))
+   ((member "Liberation Sans"   (font-family-list)) (set-face-attribute 'default nil :font "Liberation Sans"   :height 120))
+   ((member "Courier New"       (font-family-list)) (set-face-attribute 'default nil :font "Courier New"       :height 140))
+   ))
+
+(defun garid/distraction-free-off ()
+  (interactive)
+
+  (global-set-key (kbd "M-f") 'consult-line)
+  (darkroom-mode         -1)
+  (evil-mode +1)
+  (typewriter-roll-mode  -1)
+  (global-corfu-mode     +1)
+  (which-key-mode        +1)
+  (focus-mode            -1)
+
+  (cond
+   ((member "Iosevka Term SS06" (font-family-list)) (set-face-attribute 'default nil :font "Iosevka Term SS06" :height 120))
+   ((member "Iosevka"           (font-family-list)) (set-face-attribute 'default nil :font "Iosevka"           :height 150))
+   ))
+
+(setq gry-toggle-distraction-free-writing-state t)
+
+(defun garid/toggle-distraction-free-writing ()
+  (interactive)
+  (setq gry-toggle-distraction-free-writing-state
+        (not gry-toggle-distraction-free-writing-state))
+  (if gry-toggle-distraction-free-writing-state
+      (garid/distraction-free-on)
+    (garid/distraction-free-off)))
+#+end_src
+
+#+RESULTS:
+: garid/toggle-distraction-free-writing
+
+** COMMENT =tmr=: timer may ring
+#+begin_src emacs-lisp
+(use-package tmr :ensure t)
+#+end_src
+** COMMENT checking (could be useful)
+#+begin_src emacs-lisp
+;; (use-package langtool   :ensure t) it required external jar / java  someday i will try
+(use-package jinx          :ensure t)
+(use-package mw-thesaurus  :ensure t :after org)
+;;(use-package org-wc        :ensure t :after org)
 #+end_src
 
 * Keybinding
