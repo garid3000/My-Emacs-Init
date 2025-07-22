@@ -265,6 +265,7 @@ but it feels slow when navigating.
 
   (setq-default indent-tabs-mode nil)
   ;; Align with spaces only
+  ;;(define-advice align-regexp (around align-regexp-with-spaces)
   (defadvice align-regexp (around align-regexp-with-spaces)
     "Never use tabs for alignment."
     (let ((indent-tabs-mode nil)) ad-do-it))
@@ -476,7 +477,7 @@ but it feels slow when navigating.
   (org-src-fontify-natively          t      )
   (org-startup-with-inline-images    t      )
   (org-startup-with-latex-preview    nil    )
-  (org-startup-numerated             t      )
+  ;;(org-startup-numerated             t      )
   (org-highlight-latex-and-related    '(latex entities native))
 
   ;; ---------------- source code in org -------------------------------------------------
@@ -1468,8 +1469,10 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
   ;; (add-to-list 'eglot-stay-out-of 'eldoc)
   (add-to-list 'eglot-server-programs
                '(python-mode . ("pyright-langserver" "--stdio")))
-  ;;(add-to-list 'eglot-server-programs
-  ;;             '(python-mode . ("ty" "server")))
+
+  (add-to-list 'eglot-server-programs
+               '(org-mode . ("harper-ls" "--stdio")))
+
   ;;'(python-mode . ("basedpyright"))) ;; not working not sure why
   (evil-define-key 'normal 'prog-mode-map  (kbd "g o") 'eglot-find-typeDefinition)
   (evil-define-key 'normal 'prog-mode-map  (kbd "] d") 'flymake-goto-next-error)
@@ -1582,6 +1585,16 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
   (setq-default abbrev-mode t)
   )
 #+end_src
+
+** gpt
+#+begin_src emacs-lisp
+(use-package gptel
+  :config
+  (setq gptel-default-mode 'org-mode)
+
+  )
+#+end_src
+
 * Coding convenient
 ** =rg=: ripgrep in Emacs
 Probably requires external =rg= command.
@@ -2038,10 +2051,10 @@ Similar to vim-signify.
   :delight
   :ensure t
   :custom
-  ;;(which-key-popup-type              'side-window             )
-  ;;(which-key-side-window-location    'right                   )
+  (which-key-popup-type              'side-window             )
+  (which-key-side-window-location    'right                   )
   ;;(which-key-side-window-max-width    0.5                     )
-  (which-key-popup-type              'minibuffer                )
+  ;;(which-key-popup-type              'minibuffer              )
   (which-key-idle-delay               0.8                       )
   (which-key-idle-secondary-delay     0.01                      )
   (which-key-sort-order              'which-key-key-order-alpha )
