@@ -104,7 +104,12 @@ I'm pulling packages from following 3 places (not sure that I need all three):
   ;;(evil-define-key 'normal  org-mode-map   (kbd "TAB") #'org-cycle) ;; for org-cycle (tab) working for terminal
   ;;(setq evil-want-C-i-jump       t)
   ;; (evil-define-key 'normal  org-mode-map   (kbd "TAB") #'org-cycle)
-  (evil-mode 1))
+  (evil-mode 1)
+
+  (define-key evil-normal-state-map (kbd "SPC a") 'evil-avy-goto-char-2)
+  (define-key evil-normal-state-map (kbd "<f2>") 'evil-avy-goto-char-2)
+
+  )
 #+end_src
 ** =evil-collection=: vi-movements everywhere
 #+begin_src emacs-lisp
@@ -1186,8 +1191,9 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 #+begin_src emacs-lisp
 (use-package htmlize
   :ensure t
-  :config
-  (add-hook 'htmlize-before-hook (lambda () (indent-bars-mode -1))))
+  ;;:config
+  ;;(add-hook 'htmlize-before-hook (lambda () (indent-bars-mode -1)))
+  )
 #+end_src
 ** =ox-reveal=
 #+begin_src emacs-lisp
