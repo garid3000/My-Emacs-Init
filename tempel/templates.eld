@@ -444,12 +444,24 @@ org-mode
                       "show2levels" "show3levels" "show4levels" "show5levels")))
 (imgw        "#+attr_latex: :width 0.9\\textwidth" n
              "#+attr_html:  :width 100% :height 100%")
-(oxr         "#+reveal_root: https://cdn.jsdelivr.net/npm/reveal.js" n
-             "#+reveal_init_options: width:1920, height:1080" n
-             "#+reveal_theme: "
-             :post (garid/choose-from-list-and-insert-it
-                    '("black" "white" "league" "beige" "night" "serif"
-                      "solarized" "moon" "dracula" "sky" "blood")))
+(oxr
+ "#+reveal_root:          https://cdn.jsdelivr.net/npm/reveal.js"                                n
+ "#+reveal_version:       4"                                                                     n
+ "#+options:              reveal_center:t reveal_progress:t reveal_history:nil reveal_control:t" n
+ "#+options:              reveal_rolling_links:t reveal_keyboard:t reveal_overview:t num:nil"    n
+ "#+options:              reveal_width:1920 reveal_height:1080"                                  n
+ "#+options:              toc:1"                                                                 n
+ "#+options:              reveal_klipsify_src:t"                                                 n
+ "#+reveal_min_scale:     1.0"                                                                   n
+ "#+reveal_max_scale:     1.0"                                                                   n
+ "#+reveal_plugins:       (notes search zoom markdown)"                                          n
+ "#+reveal_margin:        0.1"                                                                   n
+ "#+reveal_extra_css:     ./local.css"                                                           n
+ "#+reveal_trans:         fade"                                                                  n
+ "#+reveal_hlevel:        2"                                                                     n
+ "#+reveal_theme:         "
+ :post (garid/choose-from-list-and-insert-it '("black" "white" "league" "beige" "night" "serif"
+                                               "solarized" "moon" "dracula" "sky" "blood")))
 
 (oxsplit     "#+REVEAL: split")
 

@@ -9,7 +9,7 @@
 #+options:      toc:t tags:nil  todo:t  tasks:t
 #+html_head:    <link rel="stylesheet" type="text/css" href="https://unpkg.com/chota"/>
 
-* From shell you can run make run:                                                :ATTACH:
+* From shell you can run make run:                                                          :ATTACH:
 :PROPERTIES:
 :ID:       20250409T155759.106525
 :END:
@@ -107,7 +107,7 @@ I'm pulling packages from following 3 places (not sure that I need all three):
   (evil-mode 1)
 
   (define-key evil-normal-state-map (kbd "SPC a") 'evil-avy-goto-char-2)
-  (define-key evil-normal-state-map (kbd "<f2>") 'evil-avy-goto-char-2)
+  (define-key evil-normal-state-map (kbd "<f3>") 'evil-avy-goto-char-2)
 
   )
 #+end_src
@@ -271,10 +271,10 @@ but it feels slow when navigating.
   (setq-default indent-tabs-mode nil)
   ;; Align with spaces only
   ;;(define-advice align-regexp (around align-regexp-with-spaces)
-  (defadvice align-regexp (around align-regexp-with-spaces)
-    "Never use tabs for alignment."
-    (let ((indent-tabs-mode nil)) ad-do-it))
-  (ad-activate 'align-regexp)
+  ;; (defadvice align-regexp (around align-regexp-with-spaces)
+  ;;   "Never use tabs for alignment."
+  ;;   (let ((indent-tabs-mode nil)) ad-do-it))
+  ;; (ad-activate 'align-regexp)
   )
 #+end_src
 ** =delight=
@@ -306,7 +306,7 @@ but it feels slow when navigating.
   )
 #+end_src
 
-** =pulsar= pulses on certain functions                                            :by_prot:
+** =pulsar= pulses on certain functions                                                     :by_prot:
 #+begin_src emacs-lisp
 (use-package pulsar
   :custom
@@ -716,7 +716,7 @@ but it feels slow when navigating.
 #+end_src
 
 * Org zettelkasten notes
-** =denote=: Note taking package                                                   :by_prot:
+** =denote=: Note taking package                                                            :by_prot:
 #+begin_src emacs-lisp
 (use-package denote
   :ensure t
@@ -764,16 +764,16 @@ but it feels slow when navigating.
 
   )
 #+end_src
-** =denote-journal= denote journal                                                 :by_prot:
+** =denote-journal= denote journal                                                          :by_prot:
 #+begin_src emacs-lisp
 (use-package denote-journal
   :custom (denote-journal-extras-title-format 'day))
 #+end_src
-** =denote-org=                                                                    :by_prot:
+** =denote-org=                                                                             :by_prot:
 #+begin_src emacs-lisp
 (use-package denote-org)
 #+end_src
-** =denote-silo=                                                                   :by_prot:
+** =denote-silo=                                                                            :by_prot:
 #+begin_src emacs-lisp
 (use-package denote-silo
   :custom
@@ -785,7 +785,7 @@ but it feels slow when navigating.
      ))
   )
 #+end_src
-** =consult-denote=: consulting with denote                                        :by_prot:
+** =consult-denote=: consulting with denote                                                 :by_prot:
 #+begin_src emacs-lisp
 (use-package consult-denote
   :ensure t
@@ -1069,17 +1069,32 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   :ensure nil
   :after org
   :config
-  (defvar org-export-output-directory-prefix "export_" "prefix of directory used for org-mode export")
 
-  (defadvice org-export-output-file-name (before org-add-export-dir activate)
-    "Modifies org-export to place exported files in a different directory"
-    (when (not pub-dir)
-      (setq pub-dir (concat org-export-output-directory-prefix (substring extension 1)))
-      (when (not (file-directory-p pub-dir))
-        (progn
-          (make-directory pub-dir)
-          (make-symbolic-link "../data" (concat (file-name-as-directory pub-dir) "data")))
-        )))
+  ;;(defadvice org-export-output-file-name (before org-add-export-dir activate)
+  ;;  "Modifies org-export to place exported files in a different directory"
+  ;;  (when (not pub-dir)
+  ;;    (setq pub-dir (concat org-export-output-directory-prefix (substring extension 1)))
+  ;;    (when (not (file-directory-p pub-dir))
+  ;;      (progn
+  ;;        (make-directory pub-dir)
+  ;;        (make-symbolic-link "../data" (concat (file-name-as-directory pub-dir) "data")))
+  ;;      )))
+
+  (defun org-export-output-file-name-modified (orig-fun extension &optional subtreep pub-dir)
+    (unless pub-dir
+      ;; (setq pub-dir "exported-org-files")
+      ;; (defvar org-export-output-directory-prefix "export_" "prefix of directory used for org-mode export")
+      ;; (setq pub-dir (concat org-export-output-directory-prefix (substring extension 1)))
+      ;; (setq pub-dir (my/org-attach-dir (substring extension 1)))
+      (setq pub-dir (concat "export_" (substring extension 1)))
+      (unless (file-directory-p pub-dir)
+        (make-directory pub-dir)
+        (make-symbolic-link "../data" (concat (file-name-as-directory pub-dir) "./data"))
+        )
+      )
+    (apply orig-fun extension subtreep pub-dir nil))
+  (advice-add 'org-export-output-file-name :around #'org-export-output-file-name-modified)
+
   )
 #+end_src
 
@@ -1183,7 +1198,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   (org-html-validation-link              nil) ;; Don't show validation link
   ;; (org-html-head-include-scripts         nil) ;; Use our own scripts
   ;; (org-html-head-include-default-style   nil) ;; Use our own styles
-  (org-html-head "<link rel=\"stylesheet\" type=\"text/css\" href=\"https://orgmode.org/worg/style/worg.css\"/>" )
+  ;; (org-html-head "<link rel=\"stylesheet\" type=\"text/css\" href=\"https://orgmode.org/worg/style/worg.css\"/>" )
   )
 #+end_src
 
@@ -1195,7 +1210,14 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   ;;(add-hook 'htmlize-before-hook (lambda () (indent-bars-mode -1)))
   )
 #+end_src
-** =ox-reveal=
+** =org-re-reveal=
+#+begin_src emacs-lisp
+(use-package org-re-reveal
+  :after org
+  :ensure t)
+#+end_src
+
+** COMMENT =ox-reveal=
 #+begin_src emacs-lisp
 (use-package ox-reveal
   :after org
@@ -1592,12 +1614,11 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
   )
 #+end_src
 
-** gpt
+** =gptel= : gpt.el by karthinks 
 #+begin_src emacs-lisp
 (use-package gptel
-  :config
-  (setq gptel-default-mode 'org-mode)
-
+  :custom
+  (gptel-default-mode 'org-mode)
   )
 #+end_src
 
@@ -1672,7 +1693,7 @@ Similar to vim-signify.
 #+end_src
 
 * Bunch of functions
-** Open PDF/HMTL exported by LaTeX externally                                 :customFunc:
+** Open PDF/HMTL exported by LaTeX externally                                          :customFunc:
 #+begin_src emacs-lisp
 (defun replace-in-string (what with in)
   (replace-regexp-in-string (regexp-quote what) with in nil 'literal))
@@ -1690,16 +1711,20 @@ Similar to vim-signify.
 (defun garid/org-open-html ()
   (interactive)
   (call-process-shell-command
-   ;; (concat "xdg-open "                               ;; try to open default PDF viewer
    (concat "$BROWSER "                                  ;; try to open default PDF viewer
-           (file-name-directory buffer-file-name)       ;; directory of current file/buffer
-           "/export_html/"                              ;; adds export directory name
-           (file-name-base)                             ;; filaname (of current file/buffer) without extension
-           ".html &"                                    ;; adds extension
+           (file-name-directory buffer-file-name)    ;; directory of current file/buffer
+           "/export_html/"                           ;; adds export directory name
+           (file-name-base)                          ;; filaname (of current file/buffer) without extension
+           ".html &"                                 ;; adds extension
+
+           ;; (file-name-directory buffer-file-name)
+           ;; (my/org-attach-dir "")
+           ;; (file-name-base)
+           ;; ".html &"                                 ;; adds extension
            )))
 #+end_src
 
-** My Custom LaTeX writing system (aka TeQ)                                   :customFunc:
+** My Custom LaTeX writing system (aka TeQ)                                            :customFunc:
 #+begin_src emacs-lisp
 (add-to-list 'load-path (expand-file-name "~/.config/emacs/Emacs-TeQ"))
 (register-input-method "TeQ-Math" "Emacs-Teq-Latex" 'quail-use-package
@@ -1719,7 +1744,7 @@ Similar to vim-signify.
       (kmacro-lambda-form [?v ?t tab ?v ?t ?| ?v ?t] 0 "%d"))
 #+end_src
 
-** Custom Aligner function (with untabify)                                    :customFunc:
+** COMMENT Custom Aligner function (with untabify)                                     :customFunc:
 #+begin_src emacs-lisp
 (defun garid/align-regexp-and-untabify (beg end)
   (interactive "r")
@@ -1727,7 +1752,7 @@ Similar to vim-signify.
                 (concat "\\(\\s-*\\)" (read-string "Align regexp: ")))
   (untabify beg end))
 #+end_src
-** copy link in org at point                                                  :customFunc:
+** copy link in org at point                                                           :customFunc:
 [[https://emacs.stackexchange.com/a/60555/38482][stack exchange]]
 
 #+begin_src emacs-lisp
@@ -1740,7 +1765,7 @@ Similar to vim-signify.
     (message (concat "Copied URL: " url))
     (dired-jump t (file-name-directory url))))
 #+end_src
-** Jumping ref-label in org or latex                                          :customFunc:
+** Jumping ref-label in org or latex                                                   :customFunc:
 #+begin_src emacs-lisp
 (defun garid/jump-label-def-of-ref-at-point-word ()
   ""
@@ -1759,7 +1784,7 @@ Similar to vim-signify.
           )
       (message "No matching braces found."))))
 #+end_src
-** Org toggle hide/shot hyperlink                                             :customFunc:
+** Org toggle hide/shot hyperlink                                                      :customFunc:
 #+begin_src emacs-lisp
 (defun garid/org-toggle-link-n-emphasis ()
   (interactive)
@@ -1770,7 +1795,7 @@ Similar to vim-signify.
   (font-lock-update))
 #+end_src
 
-** Custom opening external terminal at current buffer                         :customFunc:
+** Custom opening external terminal at current buffer                                  :customFunc:
 #+begin_src emacs-lisp
 (defun garid/open-external-term-here ()
   (interactive)
@@ -1780,7 +1805,7 @@ Similar to vim-signify.
 ;;(shell-command (concat user-emacs-directory "garid/open_external_term.sh" " " buffer-file-name)))
 #+end_src
 
-** Org toggle hide/shot display images                                        :customFunc:
+** Org toggle hide/shot display images                                                 :customFunc:
 #+begin_src emacs-lisp
 (defun garid/org-toggle-display-images-n-edraw ()
   (interactive)
@@ -1791,7 +1816,7 @@ Similar to vim-signify.
     ))
 #+end_src
 
-** Org structure in the denote dire                                           :customFunc:
+** Org structure in the denote dire                                                    :customFunc:
 #+begin_src emacs-lisp
 (defun garid/org-ql-function-on-each-heading (INCLUDE_PROGRESS)
   ""
@@ -1861,7 +1886,7 @@ Similar to vim-signify.
     ))
 #+end_src
 
-** Remove equal sign from both sides in string                                :customFunc:
+** Remove equal sign from both sides in string                                         :customFunc:
 #+begin_src emacs-lisp
 (defun remove-equal-from-both-sides (str)
   "Remove the tilde (~) character from the beginning and end of STR."
@@ -1873,7 +1898,7 @@ Similar to vim-signify.
     str))
 #+end_src
 
-** Kill ring and garbage collect                                              :customFunc:
+** Kill ring and garbage collect                                                       :customFunc:
 #+begin_src emacs-lisp
 (defun garid/clear-kill-ring-and-garbage-collect ()
   (interactive)
@@ -1988,7 +2013,7 @@ Similar to vim-signify.
   )
 #+end_src
 
-** COMMENT Writing Distraction free                                                   :customFunc:
+** COMMENT Writing Distraction free                                                    :customFunc:
 #+begin_src emacs-lisp
 (defun garid/distraction-free-on ()
   (interactive)
@@ -2155,7 +2180,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | key(s) | function                          | short description                 | mode | lambda |
 |--------+-----------------------------------+-----------------------------------+------+--------|
 | =z=      | =:ignore t=                         | conveniences....................  | -    |        |
-| =za=     | =garid/align-regexp-and-untabify=   | align                             | -    |        |
+| =za=     | =align-regexp=                      | align                             | -    |        |
 | =zr=     | =replace-regexp=                    | replace                           | -    |        |
 | =zh=     | =highlight-symbol-at-point=         | highlight-on                      | -    |        |
 | =zH=     | =unhighlight-regexp=                | highlight-off                     | -    |        |
@@ -2173,6 +2198,11 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | =zsT=    | =mw-thesaurus-lookup=               | thesaurus                         | -    |        |
 |--------+-----------------------------------+-----------------------------------+------+--------|
 | =ZQ=     | =kill-emacs=                        | kill Emacs                        | -    |        |
+
+
+
+Older
+| =za=     | =garid/align-regexp-and-untabify=   | align                             | -    |        |
 
 **** System
 #+attr_latex: :placement [H]
@@ -2463,7 +2493,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | =oxH=    | =(org-html-export-to-html nil t)=  | Html                 subtree  | org  | y      |
 | =oxB=    | =(org-beamer-export-to-pdf nil t)= | beamer               subtree  | org  | y      |
 | =oxP=    | =(org-latex-export-to-pdf nil t)=  | pdf latex            subtree  | org  | y      |
-| =oxr=    | =org-reveal-export-to-html=        | reveal js                     | org  |        |
+| =oxr=    | =org-re-reveal-export-to-html=   | reveal js                     | org  |        |
 | =oxo=    | =garid/org-open-pdf=               | pdf open                      | org  |        |
 | =oxO=    | =garid/org-open-html=              | html open                     | org  |        |
 | =op=     | =org-latex-preview=                | preview                       | org  |        |
@@ -2525,6 +2555,11 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
     :keymaps '(org-mode-map)
     :prefix        "SPC"
     :global-prefix "C-SPC")
+
+  (general-create-definer garids-keybind/easier-window-surfing
+    :keymaps  '(normal visual emacs insert)
+    :prefix         "<f2>"
+    :global-prefix  "C-<f2>")
   )
 #+end_src
 **** Script that converts previous org-tables into actual emacs configuration
@@ -2614,7 +2649,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "Dw" '(wdired-change-to-wdired-mode :which-key "wdired")
   "o" '(:ignore t :which-key "org............................")
   "z" '(:ignore t :which-key "conveniences....................")
-  "za" '(garid/align-regexp-and-untabify :which-key "align")
+  "za" '(align-regexp :which-key "align")
   "zr" '(replace-regexp :which-key "replace")
   "zh" '(highlight-symbol-at-point :which-key "highlight-on")
   "zH" '(unhighlight-regexp :which-key "highlight-off")
@@ -2835,7 +2870,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "oxH" '((lambda () (interactive) (org-html-export-to-html nil t) ) :which-key "Html                 subtree")
   "oxB" '((lambda () (interactive) (org-beamer-export-to-pdf nil t) ) :which-key "beamer               subtree")
   "oxP" '((lambda () (interactive) (org-latex-export-to-pdf nil t) ) :which-key "pdf latex            subtree")
-  "oxr" '(org-reveal-export-to-html :which-key "reveal js")
+  "oxr" '(org-re-reveal-export-to-html :which-key "reveal js")
   "oxo" '(garid/org-open-pdf :which-key "pdf open")
   "oxO" '(garid/org-open-html :which-key "html open")
   "op" '(org-latex-preview :which-key "preview")
@@ -2863,6 +2898,18 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "oisn" '((lambda () (interactive) (setq org-image-actual-width 1.0) ) :which-key "normal 800px")
   "oisb" '((lambda () (interactive) (setq org-image-actual-width 2.0) ) :which-key "big    1500px")
   "oiss" '((lambda () (interactive) (setq org-image-actual-width 0.5) ) :which-key "small  400px")
+)
+#+end_src
+
+**** addon
+#+begin_src emacs-lisp
+(garids-keybind/easier-window-surfing
+  "l" '( windmove-right :which-key "windmove-right")
+  "h" '( windmove-left :which-key "windmove-left")
+  "j" '( windmove-down :which-key "windmove-down")
+  "k" '( windmove-down :which-key "windmove-up")
+  "v" '( evil-window-vsplit :which-key "evil-window-vsplit")
+  "s" '( evil-window-hsplit :which-key "evil-window-hsplit")
 )
 #+end_src
 
@@ -2922,7 +2969,7 @@ and later sets cursor at that point when you open that file.
   :config
   (recentf-mode 1))
 #+end_src
-** shell script to open terminal                                            :shell_script:
+** shell script to open terminal                                                     :shell_script:
 #+begin_src bash :tangle garid/open_external_term.sh :shebang "#!/bin/bash"
 # Open System termianl $TERMINAL at $1:
 # nohup for exitting terminal that executed this script
@@ -3080,7 +3127,7 @@ fi
   (gif-screencast-args '("-m" "window" "-m" "active" "-o" "/" "-f")))
 ;; this is configured to be on wayland/hyprland
 #+end_src
-** test karthinks consult reftex                                                    :test:
+** test karthinks consult reftex                                                             :test:
 #+begin_src emacs-lisp
 (use-package consult-reftex
   :straight (consult-reftex
