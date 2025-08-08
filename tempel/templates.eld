@@ -467,10 +467,20 @@ org-mode
 
 (oxt         "#+setupfile: ~/.config/emacs/org-templates/level-0-xelatex-fonts-conf.org")
 (oxh         "#+setupfile: ~/.config/emacs/org-templates/level-0-html-export-template.org")
-(ox2r        "#+reveal_html: <div class=\"column\" style=\"float:left; width:50%\">" n
+;; (ox2r        "#+reveal_html: <div class=\"column\" style=\"float:left; width:50%\">" n
+;;              "#+reveal_html: </div>" n n n
+;;              "#+reveal_html: <div class=\"column\" style=\"float:right; width:50%\">" n
+;;              "#+reveal_html: </div>"n)
+(ox2r        "#+reveal_html: <div style=\"float:left; width:50%\">" n
              "#+reveal_html: </div>" n n n
-             "#+reveal_html: <div class=\"column\" style=\"float:right; width:50%\">" n
+             "#+reveal_html: <div style=\"float:right; width:50%\">" n
              "#+reveal_html: </div>"n)
+
+(notes       "#+begin_notes" n n n
+             "#+end_notes" n)
+
+
+
 (printbibliograph  "#+print_bibliography:")
 (results           "results "
                    :post (garid/choose-from-list-and-insert-it

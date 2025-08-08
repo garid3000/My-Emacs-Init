@@ -623,7 +623,7 @@ but it feels slow when navigating.
               ("P"  . org-previous-link ))
   )
 #+end_src
-** =org-tidy=: hiding the properties
+** COMMENT =org-tidy=: hiding the properties
 #+begin_src emacs-lisp
 (use-package org-tidy
   :ensure t
@@ -1261,6 +1261,26 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 
 (add-to-list 'org-file-apps '("\\ode.svg\\'" . garid/odt-edit-open))
 #+end_src
+
+** COMMENT org drawio
+#+begin_src emacs-lisp
+(defun garid/drawio-edit-open  (path &optional _)
+  (interactive)
+  (let ((outdir       (file-name-directory      path))
+        (path_no_ext  (file-name-sans-extension path)))
+    (async-shell-command
+     (format
+       "drawio %s.drawio  && drawio %s.drawio -x -f svg -o %s.svg --svg-theme light"
+       ;;"libreoffice --headless --convert-to %s --outdir %s %s.odg"
+      path_no_ext path_no_ext path_no_ext)
+     nil nil)
+    
+    ))
+
+(add-to-list 'org-file-apps '("\\.drawio.svg\\'" . garid/drawio-edit-open))
+#+end_src
+
+
 
 ** =org-auto-tangle=
 #+begin_src emacs-lisp
@@ -1943,6 +1963,7 @@ Similar to vim-signify.
 
 
   :after (org ox ox-latex ox-html)
+  ;; :hook (edraw-property-editor-mode . turn-off-evil-mode) test
   :custom
   (edraw-editor-default-grid-interval 10)
   (edraw-default-shape-properties '((rect (fill            . #1="#f8f8f8")
@@ -1956,9 +1977,10 @@ Similar to vim-signify.
                                           (stroke-width    . 2) ;;(marker-end . "arrow")   p > or p <
                                           )
                                     (text (fill            . #2#)
-                                          (font-size       . 20)
+                                          ;; (font-size       . 20)
+                                          (font-size       . 24)
                                           ;;(font-family     . "sans-serif")
-                                          (font-family     . "Linux Libertine")
+                                          ;; (font-family     . "Linux Libertine")
                                           ;;(font-family     . "xkcd Script")
                                           (text-anchor     . "middle"))
                                     (image)))
@@ -1980,6 +2002,7 @@ Similar to vim-signify.
   (with-eval-after-load "ox"
     (require 'edraw-org)
     (edraw-org-setup-exporter))
+
   )
 #+end_src
 ** =captain=
@@ -2432,7 +2455,6 @@ Older
 | =osm=    | =org-refile=                                      | move/refile                  | org  |        |
 | =osd=    | =org-cut-subtree=                                 | delete (aka cut)             | org  |        |
 | =ost=    | =org-toggle-narrow-to-subtree=                    | toggle narrow                | org  |        |
-| =osT=    | =org-tidy-mode=                                   | tidy-mode                    | org  |        |
 | =osn=    | =org-num-mode=                                    | num-mode                     | org  |        |
 | =oss=    | =org-sort=                                        | sort                         | org  |        |
 | =osp=    | =org-set-property=                                | property                     | org  |        |
@@ -2446,6 +2468,9 @@ Older
 | =osiH=   | =org-insert-todo-heading=                         | heading         todo M-S-RET | org  |        |
 | =osiA=   | =org-insert-todo-heading-respect-content=         | After           todo C-S-RET | org  |        |
 | =osiS=   | =org-insert-todo-subheading=                      | subheading      todo         | org  |        |
+
+
+| =osT= | =org-tidy-mode= | tidy-mode | org |   |
 
 **** org-agenda/calendar/todo related
 #+attr_latex: :placement [H]
@@ -2836,7 +2861,6 @@ Older
   "osm" '(org-refile :which-key "move/refile")
   "osd" '(org-cut-subtree :which-key "delete (aka cut)")
   "ost" '(org-toggle-narrow-to-subtree :which-key "toggle narrow")
-  "osT" '(org-tidy-mode :which-key "tidy-mode")
   "osn" '(org-num-mode :which-key "num-mode")
   "oss" '(org-sort :which-key "sort")
   "osp" '(org-set-property :which-key "property")
