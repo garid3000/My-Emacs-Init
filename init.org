@@ -258,8 +258,8 @@ This is test.
 
 #+RESULTS:
 
-** Modus theme tests
-Modus themes this n
+** Modus
+
 #+begin_src emacs-lisp
 (use-package modus-themes
   :ensure nil
@@ -284,7 +284,6 @@ Modus themes this n
                                 (agenda-date . (1.1))
                                 (agenda-structure . (variable-pitch light 1.1))
                                 (t . (medium variable-pitch 1.0))))
-  ;; (setq modus-themes-common-palette-overrides '((fringe bg-active)))
 
 
   (customize-set-variable 'modus-themes-common-palette-overrides
@@ -296,17 +295,8 @@ Modus themes this n
                             (fg-mode-line-active        fg-dim)
                             (border-mode-line-active    bg-inactive)
                             (border-mode-line-inactive  bg-main)
-			    (fringe                     bg-main)
-
-                            ;; macOS Selection colors
-                            ;;(bg-region "mac:selectedTextBackgroundColor")
-                            ;;(fg-region "mac:selectedTextColor")
+                            (fringe                     bg-main)
                             ))
-
-  ;; (customize-set-variable 'modus-operandi-deuteranopia-palette-overrides
-  ;;                           `(;; More subtle gray for the inactive window and modeline
-  ;;                             (bg-inactive "#efefef")))
-
 
 
 
@@ -322,7 +312,6 @@ Modus themes this n
     (column-number-mode      )
 
     (setq-default indent-tabs-mode nil)
-
     )
 
   :bind ("<f5>" . modus-themes-toggle)
