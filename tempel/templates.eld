@@ -522,7 +522,12 @@ org-mode
 (jupyter-inline-svg  "%config InlineBackend.figure_formats = ['svg']")
 (challenge           "challenge: I can't do ")
 
+(python_header "#+property:   header-args:python :tangle (my/org-attach-dir \"0000_main.py\") :dir (my/org-attach-dir \"\") :comments link :eval no-export :results output :exports both  :async yes
+"
+ )
+
 (initcontacts        ":EMAIL: %(org-contacts-template-email) " r n ":PHONE:" r n ":ALIAS:" r n ":NICKNAME:" r n ":IGNORE:" r n ":ICON:" r n ":NOTE:" r n ":ADDRESS:" r n ":BIRTHDAY:")
+
 
 
 ;; (pySess1    "#+begin_src python :session pySess1 :results output :exports both :eval no-export :async yes :comments link :dir (my/org-attach-dir \"\")" n "# %%" n "#+end_src")
