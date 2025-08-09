@@ -275,7 +275,7 @@ This is test.
   (setq modus-themes-prompts '(bold))
   (setq modus-themes-completions nil)
   (setq modus-themes-org-blocks 'tinted-background) ;'gray-background)
-  (setq modus-themes-org-blocks  'gray-background)
+  ;(setq modus-themes-org-blocks  'gray-background)
 
   (setq modus-themes-headings '((0 . (medium variable-pitch 1.2))
                                 (1 . (medium variable-pitch 1.2))
@@ -297,7 +297,6 @@ This is test.
                             (border-mode-line-inactive  bg-main)
                             (fringe                     bg-main)
                             ))
-
 
 
   (defun ct/modus-themes-init ()
@@ -528,6 +527,7 @@ This is test.
   (org-startup-with-inline-images    t      )
   (org-startup-with-latex-preview    nil    )
   ;;(org-startup-numerated             t      )
+  (org-hide-leading-stars t)
   (org-highlight-latex-and-related    '(latex entities native))
 
   ;; ---------------- source code in org -------------------------------------------------
@@ -679,6 +679,8 @@ This is test.
 #+begin_src emacs-lisp
 (use-package org-indent
   :ensure nil
+  :custom
+  (org-indent-mode-turns-on-hiding-stars t)
   :delight "")
 #+end_src
 ** =org-num=
