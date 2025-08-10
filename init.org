@@ -249,7 +249,7 @@ but it feels slow when navigating.
 
 #+begin_src emacs-lisp
 (use-package modus-themes
-  :ensure nil
+  :ensure t
   :config
   ;; (setq modus-themes-to-toggle '(modus-operandi-tinted modus-vivendi-tinted))
   (setq modus-themes-to-toggle '(modus-vivendi-tinted modus-operandi-tinted ))
@@ -356,6 +356,11 @@ but it feels slow when navigating.
   :ensure nil
   :config
   (global-hl-line-mode 1)
+  )
+
+(use-package hl-todo
+  :ensure t
+  :config
   (global-hl-todo-mode 1)
   )
 #+end_src
