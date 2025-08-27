@@ -1750,6 +1750,13 @@ Similar to vim-signify.
   )
 #+end_src
 
+** =direnv.el=
+#+begin_src emacs-lisp
+(use-package direnv
+ :config
+ (direnv-mode))
+#+end_src
+
 * Bunch of functions
 ** Open PDF/HMTL exported by LaTeX externally                                          :customFunc:
 #+begin_src emacs-lisp
