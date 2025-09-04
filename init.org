@@ -640,6 +640,8 @@ but it feels slow when navigating.
 
   (setq org-inline-image-background "white")
 
+  (evil-define-key 'normal org-mode-map
+    (kbd "M-S-<return>") 'org-insert-todo-heading-respect-content)
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; setting latex preview
