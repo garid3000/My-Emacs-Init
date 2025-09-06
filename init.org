@@ -2994,7 +2994,8 @@ Older
   :custom ((dired-listing-switches "-agho --group-directories-first")
            (dired-kill-when-opening-new-dired-buffer t))
   :hook     ((dired-mode . denote-dired-mode)
-             (dired-mode . dired-omit-mode  ))
+             (dired-mode . dired-omit-mode  )
+             (dired-mode . auto-revert-mode ))
   :config
   (evil-collection-define-key 'normal 'dired-mode-map
     "h"          'dired-up-directory
