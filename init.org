@@ -727,7 +727,10 @@ but it feels slow when navigating.
     (interactive)
     (let ((my-attach-dir
            (concat "data/"
-                   (file-name-as-directory (my/org-attach-dir-calculator input-fname)))))
+                   (file-name-as-directory
+                    (my/org-attach-dir-calculator input-fname)
+                    ;; (denote-retrieve-filename-identifier (buffer-file-name)) <= basically same but, not deependent on it
+                    ))))
       (unless (file-directory-p my-attach-dir) (mkdir my-attach-dir))
       (concat my-attach-dir input-fname))
     )
