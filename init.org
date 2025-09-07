@@ -821,11 +821,21 @@ but it feels slow when navigating.
 (use-package denote-silo
   :custom
   (denote-silo-directories
-   '("~/BrainDump/denote"
-     "~/BrainDump/denote_bps/"
-     "~/BrainDump/denote_proj_grape/"
-     "~/BrainDump/marscury/"
-     ))
+   (mapcar
+    (lambda (y) (concat "~/BrainDump/" y))
+    (seq-filter
+     (lambda (x) (string-match "denote.*" x))
+     (directory-files "~/BrainDump/")))
+   )
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; (denote-silo-directories            ;;
+  ;;  '("~/BrainDump/denote"             ;;
+  ;;    "~/BrainDump/denote_bps/"        ;;
+  ;;    "~/BrainDump/denote_proj_grape/" ;;
+  ;;    "~/BrainDump/marscury/"          ;;
+  ;;    ))                               ;;
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   )
 #+end_src
 ** =consult-denote=: consulting with denote                                                 :by_prot:
@@ -833,10 +843,20 @@ but it feels slow when navigating.
 (use-package consult-denote
   :ensure t
   :custom
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; (consult-denote-silo-source            ;;
+  ;;  '("~/BrainDump/denote"                ;;
+  ;;    "~/BrainDump/denote_bps/"           ;;
+  ;;    "~/BrainDump/denote_proj_grape//")) ;;
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
   (consult-denote-silo-source
-   '("~/BrainDump/denote"
-     "~/BrainDump/denote_bps/"
-     "~/BrainDump/denote_proj_grape//"))
+   (mapcar
+    (lambda (y) (concat "~/BrainDump/" y))
+    (seq-filter
+     (lambda (x) (string-match "denote.*" x))
+     (directory-files "~/BrainDump/")))
+   )
   :config
   (consult-denote-mode 1))
 #+end_src
@@ -854,22 +874,93 @@ but it feels slow when navigating.
   (citar-bibliography            org-cite-global-bibliography )
   (bibtex-dialect               'biblatex                     )
   (citar-library-paths           (list (concat (file-name-as-directory denote-directory) "lit/")) )
-  (citar-file-open-functions '(("html" . citar-file-open-external)
-                               ("pdf" . garid/ask-pdf-openner)
-                               (t . find-file)))
+  (citar-file-open-functions '(("html" . citar-file-open-external )
+                               ("pdf" . garid/ask-pdf-openner     )
+                               (t . find-file                     )))
   :hook
   (org-mode   . citar-capf-setup)
   (LaTeX-mode . citar-capf-setup)
   :config
   (defun garid/ask-pdf-openner (file)
     (interactive)
-    (call-process (completing-read "Application"
-                                   '("sioyek" "okular" "xournalpp"))
-                  nil 0 nil
-                  file))
+    (call-process (completing-read "Application" '("sioyek" "okular" "xournalpp")) nil 0 nil file))
   )
 #+end_src
-** =org-roam=
+** =citar-denote= citation
+#+begin_src emacs-lisp
+;;(use-package citar-denote
+;;  :after (:any citar denote)
+;;  :no-require
+;;  :delight ""
+;;  :custom
+;;  ;;(citar-org-roam-subdir                      "g_paper")
+;;
+;;  ;; Package defaults
+;;  (citar-denote-file-type             'org                )
+;;  (citar-denote-keyword               "bib"               )
+;;  (citar-denote-signature             nil                 )
+;;  ;; (citar-denote-subdir              nil                )
+;;  (citar-denote-subdir                "lit"               )
+;;  ;;(citar-denote-template              'biblio           )
+;;  (citar-denote-title-format          "author-year"       )
+;;  (citar-denote-title-format-andstr   "and"               )
+;;  (citar-denote-title-format-authors  1                   )
+;;  (citar-denote-use-bib-keywords      nil                 )
+;;
+;;  ;; (citar-denote-subdir "")
+;;  ;; (citar-denote-template
+;;  ;;  (concat "${=key=}\n"
+;;  ;;          "#+subtitle: ${=type=}: ${title}\n"
+;;  ;;          "#+author:   author(s): ${author}\n"
+;;  ;;          "#+filetags: :paper:\n\n"
+;;  ;;          "[cite:@${=key=}]\n\n"
+;;  ;;          "* Notes\n\n"
+;;  ;;          ))
+;;  :config
+;;  (citar-denote-mode)
+;;  :bind (("C-c w d" . citar-denote-dwim                 )
+;;         ("C-c w e" . citar-denote-open-reference-entry )
+;;         ("C-c w a" . citar-denote-add-citekey          )
+;;         ("C-c w k" . citar-denote-remove-citekey       )
+;;         ("C-c w r" . citar-denote-find-reference       )
+;;         ("C-c w l" . citar-denote-link-reference       )
+;;         ("C-c w f" . citar-denote-find-citation        )
+;;         ("C-c w x" . citar-denote-nocite               )
+;;         ("C-c w y" . citar-denote-cite-nocite          )
+;;         ("C-c w z" . citar-denote-nobib                )))
+
+(use-package citar-denote
+  :ensure t
+  :demand t ;; Ensure minor mode loads
+  :after (:any citar denote)
+  :custom
+  (citar-denote-file-type             'org          )
+  (citar-denote-keyword               "bib"         )
+  (citar-denote-signature             nil           )
+  (citar-denote-subdir                "lit"         )
+  (citar-denote-template              nil           )
+  (citar-denote-title-format          "author-year" )
+  (citar-denote-title-format-andstr   "and"         )
+  (citar-denote-title-format-authors  1             )
+  (citar-denote-use-bib-keywords      nil           )
+  :preface
+  (bind-key "C-c w n" #'citar-denote-open-note)
+  :init
+  (citar-denote-mode)
+  ;; Bind all available commands
+  :bind (("C-c w d" . citar-denote-dwim)
+         ("C-c w e" . citar-denote-open-reference-entry)
+         ("C-c w a" . citar-denote-add-citekey)
+         ("C-c w k" . citar-denote-remove-citekey)
+         ("C-c w r" . citar-denote-find-reference)
+         ("C-c w l" . citar-denote-link-reference)
+         ("C-c w f" . citar-denote-find-citation)
+         ("C-c w x" . citar-denote-nocite)
+         ("C-c w y" . citar-denote-cite-nocite)
+         ("C-c w z" . citar-denote-nobib)))
+#+end_src
+
+** COMMENT =org-roam=
 #+begin_src emacs-lisp
 (use-package org-roam
   ;; :requires org-roam-dailies ??
@@ -973,12 +1064,12 @@ but it feels slow when navigating.
   )
 #+end_src
 
-** =org-roam-ui=: graphing of org-roam in web browser
+** COMMENT =org-roam-ui=: graphing of org-roam in web browser
 #+begin_src emacs-lisp
 (use-package org-roam-ui :ensure t)
 #+end_src
 
-** =consult-org-roam=
+** COMMENT =consult-org-roam=
 #+begin_src emacs-lisp
 (use-package consult-org-roam
    :ensure t
@@ -1003,7 +1094,7 @@ but it feels slow when navigating.
    ("C-c n r" . consult-org-roam-search))
 #+end_src
 
-** =citar-org-roam=
+** COMMENT =citar-org-roam=
 #+begin_src emacs-lisp
 (use-package citar-org-roam
   :after citar org-roam
@@ -1037,7 +1128,8 @@ but it feels slow when navigating.
   :ensure   nil
   :custom
   (org-agenda-files '("~/BrainDump/gtd/main.org"))
-  (org-agenda-span   90)
+  ;;(org-agenda-span   90)
+  (org-agenda-span   3)
   (org-agenda-custom-commands
    '(("i" "Inbox"                tags-todo "+TODO=\"VAGUE\"" ((org-agenda-files (file-expand-wildcards "~/BrainDump/gtd/inbox.org"))))
      ("n" "Next actions"         tags-todo "+TODO=\"TODO\"")
@@ -1102,6 +1194,17 @@ but it feels slow when navigating.
 #+begin_src emacs-lisp
 (use-package org-timeblock
   :after compat-macs)
+#+end_src
+** =org-caldav=: 
+#+begin_src emacs-lisp
+(use-package org-caldav
+  :custom
+  (org-caldav-url          "https://forgetfulfishfunctions.xyz/remote.php/dav/calendars/admin/" )
+  (org-caldav-calendar-id  "org-caldav"                                                         )
+  (org-caldav-inbox        "~/BrainDump/gtd/main.org"                                           )
+  (org-caldav-files        nil                                                                  )
+  (org-icalendar-timezone  "Asia/Tokyo"                                                         )
+  )
 #+end_src
 * Org Exporting related
 ** =ox=
@@ -3085,7 +3188,7 @@ fi
   :ensure nil
   :custom
   (send-mail-function              'sendmail-send-it )
-  (sendmail-program                "/usr/bin/msmtp"  )
+  ;;:w (sendmail-program                "/usr/bin/msmtp"  ) < removed cause of nixos
   (mail-specify-envelope-from      t                 )
   (message-sendmail-envelope-from  'header           )
   (mail-envelope-from              'header           )

@@ -735,37 +735,37 @@ esac
 
 * COMMENT =citar-denote=: citation in denote
 #+begin_src emacs-lisp
-;;(use-package citar-denote
-;;  :ensure t
-;;  :demand t ;; Ensure minor mode loads
-;;  :after (:any citar denote)
-;;  :custom
-;;  ;; Package defaults
-;;  (citar-denote-file-type             'org                )
-;;  (citar-denote-keyword               "bib"               )
-;;  (citar-denote-signature             nil                 )
-;;  ;;(citar-denote-subdir              nil                 )
-;;  (citar-denote-subdir                "litnotes"          )  ;; usefull
-;;  (citar-denote-template              'biblio             )  ;; 'biblio is defined at denote
-;;  (citar-denote-title-format          "author-year-title" )
-;;  (citar-denote-title-format-andstr   "and"               )
-;;  (citar-denote-title-format-authors  1                   )
-;;  (citar-denote-use-bib-keywords      nil                 )
-;;  :preface
-;;  (bind-key "C-c w n" #'citar-denote-open-note)
-;;  :init
-;;  (citar-denote-mode)
-;;  ;; Bind all available commands
-;;  :bind (("C-c w d" . citar-denote-dwim                 )
-;;         ("C-c w e" . citar-denote-open-reference-entry )
-;;         ("C-c w a" . citar-denote-add-citekey          )
-;;         ("C-c w k" . citar-denote-remove-citekey       )
-;;         ("C-c w r" . citar-denote-find-reference       )
-;;         ("C-c w l" . citar-denote-link-reference       )
-;;         ("C-c w f" . citar-denote-find-citation        )
-;;         ("C-c w x" . citar-denote-nocite               )
-;;         ("C-c w y" . citar-denote-cite-nocite          )
-;;         ("C-c w z" . citar-denote-nobib                )))
+(use-package citar-denote
+ :ensure t
+ :demand t ;; Ensure minor mode loads
+ :after (:any citar denote)
+ :custom
+ ;; Package defaults
+ (citar-denote-file-type             'org                )
+ (citar-denote-keyword               "bib"               )
+ (citar-denote-signature             nil                 )
+ ;;(citar-denote-subdir              nil                 )
+ (citar-denote-subdir                "litnotes"          )  ;; usefull
+ (citar-denote-template              'biblio             )  ;; 'biblio is defined at denote
+ (citar-denote-title-format          "author-year-title" )
+ (citar-denote-title-format-andstr   "and"               )
+ (citar-denote-title-format-authors  1                   )
+ (citar-denote-use-bib-keywords      nil                 )
+ :preface
+ (bind-key "C-c w n" #'citar-denote-open-note)
+ :init
+ (citar-denote-mode)
+ ;; Bind all available commands
+ :bind (("C-c w d" . citar-denote-dwim                 )
+        ("C-c w e" . citar-denote-open-reference-entry )
+        ("C-c w a" . citar-denote-add-citekey          )
+        ("C-c w k" . citar-denote-remove-citekey       )
+        ("C-c w r" . citar-denote-find-reference       )
+        ("C-c w l" . citar-denote-link-reference       )
+        ("C-c w f" . citar-denote-find-citation        )
+        ("C-c w x" . citar-denote-nocite               )
+        ("C-c w y" . citar-denote-cite-nocite          )
+        ("C-c w z" . citar-denote-nobib                )))
 #+end_src
 
 
