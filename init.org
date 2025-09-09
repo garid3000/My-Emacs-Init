@@ -2524,6 +2524,7 @@ Older
 |--------+--------------------------------------+------------------------------+------+--------|
 | =n=      | =:ignore t=                            | note........................ | -    |        |
 | =nr=     | =denote-rename-file=                   | rename                       | -    |        |
+| =nR=     | =denote-rename-file-date=              | rename with date             | -    |        |
 | =nf=     | =denote-silo-open-or-create=           | find                         | -    |        |
 | =nd=     | =denote-silo-dired=                    | dired                        | -    |        |
 | =nj=     | =denote-journal-new-entry=             | journal                      | -    |        |
@@ -2874,6 +2875,7 @@ Older
   "ut" '(vundo :which-key "vundo")
   "n" '(:ignore t :which-key "note........................")
   "nr" '(denote-rename-file :which-key "rename")
+  "nR" '(denote-rename-file-date :which-key "rename with date")
   "nf" '(denote-silo-open-or-create :which-key "find")
   "nd" '(denote-silo-dired :which-key "dired")
   "nj" '(denote-journal-new-entry :which-key "journal")
