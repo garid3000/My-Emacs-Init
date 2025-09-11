@@ -1175,7 +1175,8 @@ but it feels slow when navigating.
   :custom
   (org-caldav-url          "https://forgetfulfishfunctions.xyz/remote.php/dav/calendars/admin/" )
   (org-caldav-calendar-id  "org-caldav"                                                         )
-  (org-caldav-inbox        "~/BrainDump/gtd/main.org"                                           )
+  ;;(org-caldav-inbox        "~/BrainDump/gtd/main.org"                                         )
+  (org-caldav-inbox        "~/BrainDump/denote_bps/20250911T174108--bps__gtd.org"               )
   (org-caldav-files        nil                                                                  )
   (org-icalendar-timezone  "Asia/Tokyo"                                                         )
   )
