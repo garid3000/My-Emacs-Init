@@ -1101,7 +1101,8 @@ but it feels slow when navigating.
   :after    org
   :ensure   nil
   :custom
-  (org-agenda-files '("~/BrainDump/gtd/main.org"))
+  (org-agenda-files '("~/BrainDump/denote/20250911T175810--personal__gtd.org"
+                      "~/BrainDump/denote_bps/20250911T174108--bps__gtd.org"))
   ;;(org-agenda-span   90)
   (org-agenda-span   3)
   (org-agenda-custom-commands
@@ -1133,7 +1134,6 @@ but it feels slow when navigating.
   (org-outline-path-complete-in-steps      'nil)
 
   ;; (refile-targets                          (file-expand-wildcards "~/BrainDump/gtd/*.org"))
-  ;; (org-refile-targets '(( refile-targets :todo . "PRJT" )))
   (org-refile-targets '( (nil :maxlevel . 6) ;; aka the current file
                          ("~/BrainDump/gtd/main.org"      :maxlevel . 3)
                          ("~/BrainDump/gtd/someday.org"   :level    . 1)
@@ -1164,7 +1164,7 @@ but it feels slow when navigating.
          :map dired-mode-map      ("<f7>" . casual-dired-tmenu))
   )
 #+end_src
-** =org-timeblock=: agenda to SVG
+** COMMENT =org-timeblock=: agenda to SVG
 #+begin_src emacs-lisp
 (use-package org-timeblock
   :after compat-macs)
