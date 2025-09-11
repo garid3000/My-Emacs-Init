@@ -1067,3 +1067,28 @@ I publish first from org to md in the local dir. Then using that local dir to cr
   )
 #+end_src
 
+** COMMENT theme
+#+begin_src emacs-lisp :results none
+(use-package uwu-theme
+  :ensure t
+  :config
+  (enable-theme 'uwu)
+
+  ;; not related with this theme itself but generally relates to generally
+  (scroll-bar-mode       -1)        ; Disable visible scrollbar
+  (tool-bar-mode         -1)        ; Disable the toolbar
+  (tooltip-mode          -1)        ; Disable tooltips
+  (menu-bar-mode         -1)        ; Disable the menu bar
+  (setq-default tab-width 4)
+  (set-fringe-mode       10)        ; Give some breathing room
+  (column-number-mode      )
+
+  (setq-default indent-tabs-mode nil)
+  ;; Align with spaces only
+  ;;(define-advice align-regexp (around align-regexp-with-spaces)
+  ;; (defadvice align-regexp (around align-regexp-with-spaces)
+  ;;   "Never use tabs for alignment."
+  ;;   (let ((indent-tabs-mode nil)) ad-do-it))
+  ;; (ad-activate 'align-regexp)
+  )
+#+end_src

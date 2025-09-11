@@ -306,31 +306,6 @@ but it feels slow when navigating.
 #+RESULTS:
 : modus-themes-toggle
 
-** COMMENT theme
-#+begin_src emacs-lisp :results none
-(use-package uwu-theme
-  :ensure t
-  :config
-  (enable-theme 'uwu)
-
-  ;; not related with this theme itself but generally relates to generally
-  (scroll-bar-mode       -1)        ; Disable visible scrollbar
-  (tool-bar-mode         -1)        ; Disable the toolbar
-  (tooltip-mode          -1)        ; Disable tooltips
-  (menu-bar-mode         -1)        ; Disable the menu bar
-  (setq-default tab-width 4)
-  (set-fringe-mode       10)        ; Give some breathing room
-  (column-number-mode      )
-
-  (setq-default indent-tabs-mode nil)
-  ;; Align with spaces only
-  ;;(define-advice align-regexp (around align-regexp-with-spaces)
-  ;; (defadvice align-regexp (around align-regexp-with-spaces)
-  ;;   "Never use tabs for alignment."
-  ;;   (let ((indent-tabs-mode nil)) ad-do-it))
-  ;; (ad-activate 'align-regexp)
-  )
-#+end_src
 ** =delight=
 #+begin_src emacs-lisp
 (use-package delight
@@ -544,9 +519,10 @@ but it feels slow when navigating.
   (org-todo-keywords      '((sequence "TODO(t)" "NEXT(n)" "WAIT(w)" "PRJT(p)" "VAGUE(v)"
                                       "|"      "NEAR(N)" "DONE(d)" "DONE(d)" "CNCL(c)")))
 
-  (org-todo-keyword-faces '(("TODO"  . org-warning      )       ;; org-faces?
+  (org-todo-keyword-faces '(
+                            ("TODO"  . org-todo         )       ;; org-faces?
                             ("PRJT"  . "tomato"         )
-                            ("NEXT"  . "orange"         )
+                            ("NEXT"  . org-warning      )
                             ("WAIT"  . "gold"           )
                             ("DONE"  . "dim gray"       )
                             ("VAGUE" . "medium purple"  )
@@ -610,9 +586,7 @@ but it feels slow when navigating.
                                (awk        . t) (go         . t)
                                (asymptote  . t) (ditaa      . t)
                                (nix        . t) (lua        . t)
-                               ;;(jupyter    . t)
-                               (mermaid    . t)
-                               ))
+                               (mermaid    . t) )) ;;(jupyter    . t)
 
   (font-lock-add-keywords 'org-mode
                           '(("\\(\\(?:\\\\\\(?:label\\|ref\\|eqref\\)\\)\\){\\(.+?\\)}"
