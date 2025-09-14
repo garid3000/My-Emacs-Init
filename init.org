@@ -1763,6 +1763,15 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
   )
 #+end_src
 
+** gptel commit
+#+begin_src emacs-lisp
+(use-package gptel-commit
+  :ensure t
+  :after (gptel magit)
+  :custom
+  (gptel-commit-stream t))
+#+end_src
+
 * Coding convenient
 ** =rg=: ripgrep in Emacs
 Probably requires external =rg= command.
