@@ -1277,6 +1277,31 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
                   (mapconcat #'org-latex--protect-text tags ":")))))
   )
 #+end_src
+** =ox-odt=
+#+begin_src emacs-lisp
+(use-package ox-odt
+  :ensure nil
+  :after org
+  :config
+  (defun my-org-odt-timestamp-unstyled (timestamp _contents info)
+    (let ((use-fields (plist-get info :odt-use-date-fields)))
+      (if (not use-fields)
+          (org-odt-plain-text (org-timestamp-translate timestamp) info)
+        ;; Keep the textual decorations but no style span
+        (pcase (org-element-property :type timestamp)
+          ('active         (format "&lt;%s&gt;" (org-odt--format-timestamp timestamp)))
+          ('inactive       (format "[%s]"      (org-odt--format-timestamp timestamp)))
+          ('active-range   (format "&lt;%s&gt;&#x2013;&lt;%s&gt;"
+                                   (org-odt--format-timestamp timestamp)
+                                   (org-odt--format-timestamp timestamp 'end)))
+          ('inactive-range (format "[%s]&#x2013;[%s]"
+                                   (org-odt--format-timestamp timestamp)
+                                   (org-odt--format-timestamp timestamp 'end)))
+          (_               (org-odt-plain-text (org-timestamp-translate timestamp) info)))))
+    )
+  (advice-add 'org-odt-timestamp :override #'my-org-odt-timestamp-unstyled)
+  )
+#+end_src
 ** =org-latex-preview=
 #+begin_src emacs-lisp
 (use-package org-latex-preview
@@ -1322,7 +1347,6 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   ;; (org-html-head "<link rel=\"stylesheet\" type=\"text/css\" href=\"https://orgmode.org/worg/style/worg.css\"/>" )
   )
 #+end_src
-
 ** =htmlize= - source code syntax in html export
 #+begin_src emacs-lisp
 (use-package htmlize
