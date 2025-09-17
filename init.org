@@ -1135,9 +1135,11 @@ but it feels slow when navigating.
 
   ;; (refile-targets                          (file-expand-wildcards "~/BrainDump/gtd/*.org"))
   (org-refile-targets '( (nil :maxlevel . 6) ;; aka the current file
-                         ("~/BrainDump/gtd/main.org"      :maxlevel . 3)
+                         ;("~/BrainDump/gtd/main.org"      :maxlevel . 3)
+                         ("~/BrainDump/denote_bps/20250911T174108--bps__gtd.org"      :maxlevel . 3)
                          ("~/BrainDump/gtd/someday.org"   :level    . 1)
-                         ("~/BrainDump/gtd/reference.org" :maxlevel . 1)))
+                         ("~/BrainDump/gtd/reference.org" :maxlevel . 1)
+                         ))
 
 
   (org-capture-templates
@@ -1176,8 +1178,8 @@ but it feels slow when navigating.
   (org-caldav-url          "https://forgetfulfishfunctions.xyz/remote.php/dav/calendars/admin/" )
   (org-caldav-calendar-id  "org-caldav"                                                         )
   ;;(org-caldav-inbox        "~/BrainDump/gtd/main.org"                                         )
-  (org-caldav-inbox        "~/BrainDump/denote_bps/20250911T174108--bps__gtd.org"               )
-  (org-caldav-files        nil                                                                  )
+  (org-caldav-inbox        "~/BrainDump/denote_bps/20250915T233100--bps-inbox__gtd.org"         )
+  (org-caldav-files        '("~/BrainDump/denote_bps/20250911T174108--bps__gtd.org")            )
   (org-icalendar-timezone  "Asia/Tokyo"                                                         )
   )
 #+end_src
@@ -1424,8 +1426,6 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 
 (add-to-list 'org-file-apps '("\\.drawio.svg\\'" . garid/drawio-edit-open))
 #+end_src
-
-
 
 ** =org-auto-tangle=
 #+begin_src emacs-lisp
