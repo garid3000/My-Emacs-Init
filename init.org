@@ -617,6 +617,14 @@ but it feels slow when navigating.
   (evil-define-key 'normal org-mode-map
     (kbd "M-S-<return>") 'org-insert-todo-heading-respect-content)
 
+
+  (defun garid/new-org-scratch ()
+    "Create a new scratch buffer in Org mode."
+    (interactive)
+    (let ((buf (generate-new-buffer "*org-scratch*")))
+      (switch-to-buffer buf)
+      (org-mode)))
+
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; setting latex preview
   ;;(setq org-preview-latex-default-process 'imagemagick)
@@ -1783,17 +1791,23 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
 #+begin_src emacs-lisp
 (use-package gptel
   :custom
-  (gptel-default-mode 'org-mode)
-  )
+  (gptel-default-mode 'org-mode))
 #+end_src
 
-** gptel commit
+** =gptel-commit=
 #+begin_src emacs-lisp
 (use-package gptel-commit
   :ensure t
   :after (gptel magit)
   :custom
-  (gptel-commit-stream t))
+  (gptel-commit-stream t)
+  :bind (:map git-commit-mode-map
+              ("C-c g" .  gptel-commit)
+              ("C-c G" . gptel-commit-rationale)
+              )
+
+
+  )
 #+end_src
 
 * Coding convenient
@@ -2351,6 +2365,8 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | =Ld=     | =crux-delete-file-and-buffer= | delete                      | -    |        |
 | =Lc=     | =clone-indirect-buffer=       | clone                       | -    |        |
 | =Ls=     | =crux-create-scratch-buffer=  | scratch-buffer              | -    |        |
+| =Lo=     | =garid/new-org-scratch=       | org-scratch-buffer          | -    |        |
+| =Lg=     | =gptel=                     | gptel buffer                | -    |        |
 | =Lh=     | =buf-move-left=               | move left                   | -    |        |
 | =Lj=     | =buf-move-down=               | move down                   | -    |        |
 | =Lk=     | =buf-move-up=                 | move up                     | -    |        |
@@ -2957,6 +2973,8 @@ Older
   "Ld" '(crux-delete-file-and-buffer :which-key "delete")
   "Lc" '(clone-indirect-buffer :which-key "clone")
   "Ls" '(crux-create-scratch-buffer :which-key "scratch-buffer")
+  "Lo" '(garid/new-org-scratch :which-key "org-scratch-buffer")
+  "Lg" '(gptel :which-key "gptel buffer")
   "Lh" '(buf-move-left :which-key "move left")
   "Lj" '(buf-move-down :which-key "move down")
   "Lk" '(buf-move-up :which-key "move up")
@@ -3088,6 +3106,9 @@ Older
 )
 #+end_src
 
+#+RESULTS:
+
+
 **** addon
 #+begin_src emacs-lisp
 (garids-keybind/easier-window-surfing
@@ -3202,6 +3223,29 @@ fi
   (mail-specify-envelope-from      t                 )
   (message-sendmail-envelope-from  'header           )
   (mail-envelope-from              'header           )
+  :config
+  ;; Use msmtp for sending
+  (setq message-send-mail-function 'message-send-mail-with-sendmail
+        sendmail-program "msmtp"
+        mail-specify-envelope-from t
+        message-sendmail-envelope-from 'header
+        mail-envelope-from 'header)
+
+  ;; Identity
+  (setq user-full-name "Garid Zorigoo"
+        user-mail-address "garid@bpsensing.com")
+
+  ;; Tell Emacs where the Maildir tree lives (matches mbsync config)
+  (setq message-directory "~/Maildir/posteo/")
+
+  ;; Save sent mail in IMAP Sent (relative to message-directory)
+  (setq message-sent-folder "Sent")
+
+  ;; Optional signature
+  (setq message-signature
+        "Best regards,\nGarid")
+
+
   )
 #+end_src
 
@@ -3221,6 +3265,14 @@ fi
 ** consulting notmuch
 #+begin_src emacs-lisp
 (use-package consult-notmuch)
+#+end_src
+
+** notmuch ol
+#+begin_src emacs-lisp
+(use-package ol-notmuch
+  :config
+  (define-key global-map "\C-c l" 'org-store-link)
+  )
 #+end_src
 
 * Misc Packages
