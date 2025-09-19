@@ -1811,10 +1811,7 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
   :bind (:map git-commit-mode-map
               ("C-c g" .  gptel-commit)
               ("C-c G" . gptel-commit-rationale)
-              )
-
-
-  )
+              ))
 #+end_src
 
 * Coding convenient
