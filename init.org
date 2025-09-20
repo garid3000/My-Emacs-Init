@@ -94,8 +94,8 @@ I'm pulling packages from following 3 places (not sure that I need all three):
   (evil-mode 1)
 
   (define-key evil-normal-state-map (kbd "SPC a") 'evil-avy-goto-char-2)
-  (define-key evil-normal-state-map (kbd "<f3>") 'evil-avy-goto-char-2)
-
+  ;;(define-key evil-normal-state-map (kbd "<f3>") )
+  (define-key evil-normal-state-map (kbd "<f3>") 'evil-visual-mark-mode) ;; 'evil-avy-goto-char-2
   )
 #+end_src
 ** =evil-collection=: vi-movements everywhere
@@ -154,6 +154,11 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   (define-key evil-inner-text-objects-map "c" (evil-textobj-tree-sitter-get-textobj "class.inner"    ))
   (define-key evil-outer-text-objects-map "c" (evil-textobj-tree-sitter-get-textobj "class.inner"    ))
   (define-key evil-outer-text-objects-map "a" (evil-textobj-tree-sitter-get-textobj ("conditional.outer" "loop.outer"))))
+#+end_src
+
+** visualizing the marker?
+#+begin_src emacs-lisp
+(use-package evil-visual-mark-mode)
 #+end_src
 
 ** repeat
@@ -2777,6 +2782,8 @@ Older
     :global-prefix  "C-<f2>")
   )
 #+end_src
+
+
 **** Script that converts previous org-tables into actual emacs configuration
 :PROPERTIES:
 :header-args:  :var tbl_01=tbl-kbinding-file-n-dired
@@ -3125,9 +3132,6 @@ Older
   "oiss" '((lambda () (interactive) (setq org-image-actual-width 0.5) ) :which-key "small  400px")
 )
 #+end_src
-
-#+RESULTS:
-
 
 **** addon
 #+begin_src emacs-lisp
