@@ -2471,6 +2471,8 @@ Older
 | =tm=     | =tmr-with-description=                                                                       | timer                         | -    |        |
 | =u=      | =:ignore=                                                                                    | undo ........................ | -    |        |
 | =ut=     | =vundo=                                                                                      | vundo                         | -    |        |
+|--------+--------------------------------------------------------------------------------------------+-------------------------------+------+--------|
+| =ma=     | =notmuch=                                                                                    | mail nomtuch                  | -    |        |
 
 **** Bookmark
 #+attr_latex: :placement [H]
@@ -2776,6 +2778,8 @@ Older
 | =oisb=   | =(setq org-image-actual-width 2.0)=       | big    1500px                | org  | y      |
 | =oiss=   | =(setq org-image-actual-width 0.5)=       | small  400px                 | org  | y      |
 
+
+
 *** Converting tables actual keybinding
 **** General.el config
 #+begin_src emacs-lisp
@@ -2935,6 +2939,7 @@ Older
   "tm" '(tmr-with-description :which-key "timer")
   "u" '(:ignore :which-key "undo ........................")
   "ut" '(vundo :which-key "vundo")
+  "ma" '(notmuch :which-key "mail nomtuch")
   "n" '(:ignore t :which-key "note........................")
   "nr" '(denote-rename-file :which-key "rename")
   "nR" '(denote-rename-file-date :which-key "rename with date")
@@ -3151,6 +3156,8 @@ Older
   "oiss" '((lambda () (interactive) (setq org-image-actual-width 0.5) ) :which-key "small  400px")
 )
 #+end_src
+
+#+RESULTS:
 
 **** addon
 #+begin_src emacs-lisp
