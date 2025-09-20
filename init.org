@@ -2549,28 +2549,35 @@ Older
 #+attr_latex: :placement [H]
 #+caption: Denote
 #+name: tbl-global-general-keybindings-denote
-| key(s) | function                             | short description            | mode | lambda |
-|--------+--------------------------------------+------------------------------+------+--------|
-| =n=      | =:ignore t=                            | note........................ | -    |        |
-| =nr=     | =denote-rename-file=                   | rename                       | -    |        |
-| =nR=     | =denote-rename-file-date=              | rename with date             | -    |        |
-| =nf=     | =denote-silo-open-or-create=           | find                         | -    |        |
-| =nd=     | =denote-silo-dired=                    | dired                        | -    |        |
-| =nj=     | =denote-journal-new-entry=             | journal                      | -    |        |
-| =nJ=     | =denote-journal-new-or-existing-entry= | Journal-find                 | -    |        |
-| =nil=    | =denote-insert-link=                   | insert-link                  | -    |        |
-| =nij=    | =denote-journal-link-or-create-entry=  | insert-journal-link          | -    |        |
-| =nt=     | =denote-template=                      | template                     | -    |        |
-| =nI=     | =garid/denote-node-insert-immediate=   | Insert-note                  | -    |        |
-| =ns=     | =consult-denote-grep=                  | live-grep                    | -    |        |
-| =nF=     | =consult-denote-find=                  | consult-denote-find          | -    |        |
-| =nl=     | =:ignore t=                            | denote link................. | -    |        |
-| =nli=    | =denote-insert-link=                   | link insert                  | -    |        |
-| =nlb=    | =denote-find-backlink=                 | find-backlink                | -    |        |
-| =nlf=    | =denote-find-link=                     | find-forward-link            | -    |        |
-| =nlB=    | =denote-backlinks=                     | backlink                     | -    |        |
-| =nlF=    | =denote-link=                          | forward-link                 | -    |        |
-| =nla=    | =denote-add-links=                     | add-links regex              | -    |        |
+| key(s) | function                               | short description            | mode | lambda |
+|--------+----------------------------------------+------------------------------+------+--------|
+| =n=    | =:ignore t=                            | note........................ | -    |        |
+| =nr=   | =denote-rename-file=                   | rename                       | -    |        |
+| =nR=   | =denote-rename-file-date=              | rename with date             | -    |        |
+| =nf=   | =denote-open-or-create=                | find-or-create               | -    |        |
+| =nd=   | =denote-dired=                         | dired-sort                   | -    |        |
+| =Nf=   | =denote-silo-open-or-create=           | dn-silo-find                 | -    |        |
+| =Nd=   | =denote-silo-dired=                    | dn-silo-find                 | -    |        |
+| =nj=   | =denote-journal-new-entry=             | journal                      | -    |        |
+| =nJ=   | =denote-journal-new-or-existing-entry= | Journal-find                 | -    |        |
+| =nil=  | =denote-insert-link=                   | insert-link                  | -    |        |
+| =nij=  | =denote-journal-link-or-create-entry=  | insert-journal-link          | -    |        |
+| =nn=   | :ignore t                              | new....                      | -    |        |
+| =nnt=  | =denote-type=                          | new note, by type            | -    |        |
+| =nnd=  | =denote-date=                          | new note, by date            | -    |        |
+| =nns=  | =denote-subdirectory=                  | new note, by subdirectory    | -    |        |
+| =nnt=  | =denote-template=                      | new note, by template        | -    |        |
+| =nnS=  | =denote-singature=                     | new note, by singature       | -    |        |
+| =nI=   | =garid/denote-node-insert-immediate=   | Insert-note                  | -    |        |
+| =ns=   | =consult-denote-grep=                  | live-grep                    | -    |        |
+| =nF=   | =consult-denote-find=                  | consult-denote-find          | -    |        |
+| =nl=   | =:ignore t=                            | denote link................. | -    |        |
+| =nli=  | =denote-insert-link=                   | link insert                  | -    |        |
+| =nlb=  | =denote-find-backlink=                 | find-backlink                | -    |        |
+| =nlf=  | =denote-find-link=                     | find-forward-link            | -    |        |
+| =nlB=  | =denote-backlinks=                     | backlink                     | -    |        |
+| =nlF=  | =denote-link=                          | forward-link                 | -    |        |
+| =nla=  | =denote-add-links=                     | add-links regex              | -    |        |
 
 **** Roam related
 #+attr_latex: :placement [H]
@@ -2905,13 +2912,20 @@ Older
   "n" '(:ignore t :which-key "note........................")
   "nr" '(denote-rename-file :which-key "rename")
   "nR" '(denote-rename-file-date :which-key "rename with date")
-  "nf" '(denote-silo-open-or-create :which-key "find")
-  "nd" '(denote-silo-dired :which-key "dired")
+  "nf" '(denote-open-or-create :which-key "find-or-create")
+  "nd" '(denote-dired :which-key "dired-sort")
+  "Nf" '(denote-silo-open-or-create :which-key "dn-silo-find")
+  "Nd" '(denote-silo-dired :which-key "dn-silo-find")
   "nj" '(denote-journal-new-entry :which-key "journal")
   "nJ" '(denote-journal-new-or-existing-entry :which-key "Journal-find")
   "nil" '(denote-insert-link :which-key "insert-link")
   "nij" '(denote-journal-link-or-create-entry :which-key "insert-journal-link")
-  "nt" '(denote-template :which-key "template")
+  "nn" '(:ignore t :which-key "new....")
+  "nnt" '(denote-type :which-key "new note, by type")
+  "nnd" '(denote-date :which-key "new note, by date")
+  "nns" '(denote-subdirectory :which-key "new note, by subdirectory")
+  "nnt" '(denote-template :which-key "new note, by template")
+  "nnS" '(denote-singature :which-key "new note, by singature")
   "nI" '(garid/denote-node-insert-immediate :which-key "Insert-note")
   "ns" '(consult-denote-grep :which-key "live-grep")
   "nF" '(consult-denote-find :which-key "consult-denote-find")
@@ -3251,6 +3265,7 @@ fi
   (setq message-signature
         "Best regards,\nGarid")
 
+  (setq message-default-mail-headers "Bcc: garid@bpsensing.com")
 
   )
 #+end_src
