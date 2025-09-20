@@ -521,8 +521,10 @@ but it feels slow when navigating.
                    ("\\.xopp\\'"               . "xournalpp \"%s\""          )))
 
   ;; ---------------- TODO tabs ----------------------------------------------------------
-  (org-todo-keywords      '((sequence "TODO(t)" "NEXT(n)" "WAIT(w)" "PRJT(p)" "VAGUE(v)"
-                                      "|"      "NEAR(N)" "DONE(d)" "DONE(d)" "CNCL(c)")))
+  (org-todo-keywords      '((sequence
+                             "TODO(t)" "NEXT(n)" "WAIT(w)" "PRJT(p)" "VAGUE(v)"
+                             "|"
+                             "NEAR(N)" "DONE(d)" "DONE(d)" "CNCL(c)")))
 
   (org-todo-keyword-faces '(
                             ("TODO"  . org-todo         )       ;; org-faces?
@@ -575,8 +577,13 @@ but it feels slow when navigating.
      ("v"     . "verse")
      ("ju"    . "src jupyter-python :session juSess1 :async yes :eval never-export :exports both")
      ))
+
+  ;; ---------------- Personal vars ----------------------------------------------------------
+  (garid-orgvar-is-img-shown nil "Personal variable that control both inline-image and edraw")
+
   :config
   (require 'org-tempo)
+  (make-variable-buffer-local 'garid-orgvar-is-img-shown)
   (plist-put    org-format-latex-options   :scale 1.7      )    ;; latex equation previewing
   (add-to-list 'org-latex-packages-alist   '("" "listings" ))
   (add-to-list 'org-latex-packages-alist   '("" "color"    ))
@@ -629,6 +636,14 @@ but it feels slow when navigating.
     (let ((buf (generate-new-buffer "*org-scratch*")))
       (switch-to-buffer buf)
       (org-mode)))
+
+  ;;(defvar garid-orgvar-is-img-shown nil "A buffer-local variable for Org mode.")
+  ;;(make-variable-buffer-local 'garid-orgvar-is-img-shown)
+
+  ;;(add-hook 'org-mode-hook
+  ;;          (lambda ()
+  ;;            (setq garid-orgvar-is-img-shown "This is buffer-local for Org mode.")))
+
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; setting latex preview
@@ -2013,11 +2028,15 @@ Similar to vim-signify.
 #+begin_src emacs-lisp
 (defun garid/org-toggle-display-images-n-edraw ()
   (interactive)
-  (org-toggle-inline-images)
-  (if org-inline-image-overlays
-      (edraw-org-link-image-mode +1)
-    (edraw-org-link-image-mode -1)
-    ))
+  ;;(org-toggle-inline-images)
+  (if garid-orgvar-is-img-shown
+      (progn (edraw-org-link-image-mode -1)
+             (org-remove-inline-images))
+    (progn (edraw-org-link-image-mode +1)
+           (org-display-inline-images)))
+
+  (setq garid-orgvar-is-img-shown (not garid-orgvar-is-img-shown))
+  )
 #+end_src
 
 ** Org structure in the denote dire                                                    :customFunc:
