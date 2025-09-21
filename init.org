@@ -1522,6 +1522,7 @@ Slighty different version.
 ** =python=
 #+begin_src emacs-lisp
 (use-package python
+  :straight t
   :bind (("M-["  . python-nav-backward-defun     )
          ("M-]"  . python-nav-forward-defun      )
          :repeat-map my/python-repeat-map
@@ -1560,6 +1561,7 @@ Slighty different version.
 ** =code-cells-mode=
 #+begin_src emacs-lisp
 (use-package code-cells
+  :straight t
   :init
   (setq code-cells-boundary-regexp
         "^\\s<+\\(?:\\s-*%\\(?1:%+\\)\\| In\\[[[:space:][:digit:]]*]:\\| \\[\\[\\)")
@@ -1719,8 +1721,14 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
 #+end_src
 ** =project.el=
 #+begin_src emacs-lisp
+(setq straight-built-in-pseudo-packages '(project xref))
+
+(use-package xref
+    :straight nil
+    :demand t)
+
 (use-package project
-  :straight nil
+:straight nil
   :demand t
   :custom
   (project-switch-commands
