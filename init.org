@@ -23,28 +23,6 @@ refresh-packages:
 #+end_src
 
 * Package manager:
-** COMMENT Package Repositories
-I'm pulling packages from following 3 places (not sure that I need all three):
-
-1. [[https://melpa.org/packages/]]
-2. [[https://elpa.gnu.org/packages/]]
-3. [[https://elpa.nongnu.org/nongnu/]]
-
-#+begin_src emacs-lisp
-;; Package repos
-(require 'package)
-(setq package-archives
-      '(("melpa"   . "https://melpa.org/packages/"     )
-        ("elpa"    . "https://elpa.gnu.org/packages/"  )
-        ("nongnu"  . "https://elpa.nongnu.org/nongnu/" )))
-#+end_src
-
-** COMMENT Initialize use-package manager
-#+begin_src emacs-lisp
-(package-initialize)
-(setq use-package-always-ensure t)
-#+end_src
-
 ** Straight.el initialization
 #+begin_src emacs-lisp
   (defvar bootstrap-version)
@@ -57,7 +35,7 @@ I'm pulling packages from following 3 places (not sure that I need all three):
     (unless (file-exists-p bootstrap-file)
       (with-current-buffer
           (url-retrieve-synchronously
-nn           "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+           "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
            'silent 'inhibit-cookies)
         (goto-char (point-max))
         (eval-print-last-sexp)))
@@ -169,8 +147,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 #+begin_src emacs-lisp
 (use-package repeat
   :straight nil  ;; built in
-  :config (repeat-mode +1)
-  )
+  :config (repeat-mode +1))
 #+end_src
 
 *** COMMENT Karthink
@@ -349,14 +326,12 @@ but it feels slow when navigating.
 (use-package hl-line
   :straight nil
   :config
-  (global-hl-line-mode 1)
-  )
+  (global-hl-line-mode 1))
 
 (use-package hl-todo
   :straight t
   :config
-  (global-hl-todo-mode 1)
-  )
+  (global-hl-todo-mode 1))
 #+end_src
 
 ** =pulsar= pulses on certain functions                                                     :by_prot:
@@ -681,13 +656,6 @@ but it feels slow when navigating.
               ("P"  . org-previous-link ))
   )
 #+end_src
-** COMMENT =org-tidy=: hiding the properties
-#+begin_src emacs-lisp
-(use-package org-tidy
-  :straight t
-  :hook   (org-mode . org-tidy-mode))
-#+end_src
-
 ** =org-indent=
 #+begin_src emacs-lisp
 (use-package org-indent
@@ -701,13 +669,6 @@ but it feels slow when navigating.
 (use-package org-num
   :straight nil
   :delight "")
-#+end_src
-** COMMENT =org-modern=
-#+begin_src emacs-lisp
-(use-package org-modern
-  :after org
-  :config
-  (global-org-modern-mode 1))
 #+end_src
 ** =org-appear=
 #+begin_src emacs-lisp
@@ -884,7 +845,7 @@ but it feels slow when navigating.
   :config
   (consult-denote-mode 1))
 #+end_src
-**  =citar=: citation
+** =citar=: citation
 #+begin_src emacs-lisp
 (use-package citar
   :straight t
@@ -913,6 +874,35 @@ but it feels slow when navigating.
 #+end_src
 ** =citar-denote= citation
 #+begin_src emacs-lisp
+(use-package citar-denote
+  :straight t
+  :demand t ;; Ensure minor mode loads
+  :after (:any citar denote)
+  :custom
+  (citar-denote-file-type             'org          )
+  (citar-denote-keyword               "bib"         )
+  (citar-denote-signature             nil           )
+  (citar-denote-subdir                "lit"         )
+  (citar-denote-template              nil           )
+  (citar-denote-title-format          "author-year" )
+  (citar-denote-title-format-andstr   "and"         )
+  (citar-denote-title-format-authors  1             )
+  (citar-denote-use-bib-keywords      nil           )
+  :preface
+  (bind-key "C-c w n" #'citar-denote-open-note)
+  :init
+  (citar-denote-mode)
+  :bind (("C-c w d" . citar-denote-dwim)
+         ("C-c w e" . citar-denote-open-reference-entry)
+         ("C-c w a" . citar-denote-add-citekey)
+         ("C-c w k" . citar-denote-remove-citekey)
+         ("C-c w r" . citar-denote-find-reference)
+         ("C-c w l" . citar-denote-link-reference)
+         ("C-c w f" . citar-denote-find-citation)
+         ("C-c w x" . citar-denote-nocite)
+         ("C-c w y" . citar-denote-cite-nocite)
+         ("C-c w z" . citar-denote-nobib)))
+
 ;;(use-package citar-denote
 ;;  :after (:any citar denote)
 ;;  :no-require
@@ -953,189 +943,6 @@ but it feels slow when navigating.
 ;;         ("C-c w x" . citar-denote-nocite               )
 ;;         ("C-c w y" . citar-denote-cite-nocite          )
 ;;         ("C-c w z" . citar-denote-nobib                )))
-
-(use-package citar-denote
-  :straight t
-  :demand t ;; Ensure minor mode loads
-  :after (:any citar denote)
-  :custom
-  (citar-denote-file-type             'org          )
-  (citar-denote-keyword               "bib"         )
-  (citar-denote-signature             nil           )
-  (citar-denote-subdir                "lit"         )
-  (citar-denote-template              nil           )
-  (citar-denote-title-format          "author-year" )
-  (citar-denote-title-format-andstr   "and"         )
-  (citar-denote-title-format-authors  1             )
-  (citar-denote-use-bib-keywords      nil           )
-  :preface
-  (bind-key "C-c w n" #'citar-denote-open-note)
-  :init
-  (citar-denote-mode)
-  ;; Bind all available commands
-  :bind (("C-c w d" . citar-denote-dwim)
-         ("C-c w e" . citar-denote-open-reference-entry)
-         ("C-c w a" . citar-denote-add-citekey)
-         ("C-c w k" . citar-denote-remove-citekey)
-         ("C-c w r" . citar-denote-find-reference)
-         ("C-c w l" . citar-denote-link-reference)
-         ("C-c w f" . citar-denote-find-citation)
-         ("C-c w x" . citar-denote-nocite)
-         ("C-c w y" . citar-denote-cite-nocite)
-         ("C-c w z" . citar-denote-nobib)))
-#+end_src
-
-** COMMENT =org-roam=
-#+begin_src emacs-lisp
-(use-package org-roam
-  ;; :requires org-roam-dailies ??
-  :straight t
-  :custom
-  (org-roam-node-display-template (concat "${title:100} "
-                                          (propertize "${tags:50}"
-                                                      'face 'org-tag)))
-
-  (org-roam-v2-ack                   t                 )
-  (org-roam-directory                "~/BrainDump/roam_research")
-  (org-roam-db-location              "~/BrainDump/roam_research/0000_database.db")
-
-  (org-roam-completion-everywhere    nil               ) ;;  do I need this?
-  (org-roam-dailies-capture-templates
-   `(("d" "default" entry "* %<%I:%M %p>: %?"
-      :if-new (file+head "g_journal/%<%Y%m%dT%H%M%S>--${slug}.org"
-                         ,(concat ":PROPERTIES:\n"
-                                  ":ID: %<%Y%m%dT%H%M%S>\n"
-                                  ":END:\n"
-                                  "#+title: %<%Y-%m-%d>\n"
-                                  "#+auto_tangle: nil\n"
-                                  "#+startup: show2levels\n"
-                                  "#+filetags: :nohtmlexport:\n"
-                                  "#+setupfile: ~/.config/emacs/org-templates/level-0-html-export-template.org\n")))
-     ))
-
-  (org-roam-capture-templates
-   `(("d" "Default" plain "* %?"
-      :if-new (file+head "%<%Y%m%dT%H%M%S>--${slug}.org"
-                         ,(concat ":PROPERTIES:\n"
-                                  ":ID: %<%Y%m%dT%H%M%S>\n"
-                                  ":END:\n"
-                                  "#+title:    ${title}\n"
-                                  "#+filetags: :notag:\n"
-                                  "#+date:     %U\n"
-                                  "#+setupfile: ~/.config/emacs/org-templates/level-0-html-export-template.org\n"))
-      :unnarrowed t)
-     ("r" "Research" plain "* %?"
-      :if-new (file+head "g_research/%<%Y%m%dT%H%M%S>--${slug}__rsch.org"
-                         ,(concat ":PROPERTIES:\n"
-                                  ":ID: %<%Y%m%dT%H%M%S>\n"
-                                  ":END:\n"
-                                  "#+title:    ${title}\n"
-                                  "#+filetags: :rsch:\n"
-                                  "#+date:     %U\n"
-                                  "#+setupfile: ~/.config/emacs/org-templates/level-0-html-export-template.org\n"
-                                  ))
-      :unnarrowed t)
-
-     ("k" "Kanji" plain "* %?"
-      :if-new (file+head "g_kanji/%<%Y%m%dT%H%M%S>--${slug}.org"
-                         ,(concat ":PROPERTIES:\n"
-                                  ":ID: %<%Y%m%dT%H%M%S>\n"
-                                  ":END:\n"
-                                  "#+title:     ${title}\n"
-                                  "#+filetags: :kanji:\n"
-                                  "#+date:      %U\n"
-                                  "#+setupfile: ~/.config/emacs/org-templates/level-0-html-export-template.org\n"
-                                  ))
-      :unnarrowed t)
-     ))
-
-  :config
-  (org-roam-db-autosync-enable)
-
-  ;; Change the slug (aka filename to be same format as from denote)
-  ;; https://github.com/org-roam/org-roam/pull/1544#issuecomment-2211801343
-  (cl-defmethod org-roam-node-slug :around ((node org-roam-node))
-    (string-replace "_" "-" (cl-call-next-method)))
-
-
-  (defun garid/org-roam-node-insert-immediate (arg &rest args)
-    (interactive "P")
-    (let ((args (cons arg args))
-          (org-roam-capture-templates
-	       (list (append (car org-roam-capture-templates)
-		                 '(:immediate-finish t)))))
-      (apply #'org-roam-node-insert args)))
-
-
-  (defun garid/choose-roam-directory ()
-    (interactive)
-    (setq org-roam-directory
-          (completing-read "Choose: "
-                           (mapcar
-                            (lambda (xx) (f-join "~/BrainDump/" xx)) ;; re-apply root dir
-                            (seq-filter
-                             (lambda (x) (string-match "roam.*" x))         ;; filter only starting with roam
-                             (directory-files "~/BrainDump/")))   ;; list sub dirs
-                           ))
-
-    (setq org-roam-db-location
-          (f-join org-roam-directory "0000_database.db" ))
-
-    (message "Now org-roam-directory = %s" org-roam-directory)
-    (if (string= "yes"
-                 (completing-read "Update DB: " '("no" "yes")))
-        (org-roam-db-sync)))
-
-  )
-#+end_src
-
-** COMMENT =org-roam-ui=: graphing of org-roam in web browser
-#+begin_src emacs-lisp
-(use-package org-roam-ui :straight t)
-#+end_src
-
-** COMMENT =consult-org-roam=
-#+begin_src emacs-lisp
-(use-package consult-org-roam
-   :straight t
-   :after org-roam
-   :delight ""
-   :init (require 'consult-org-roam)
-   ;; Activate the minor mode
-   (consult-org-roam-mode 1)
-   :custom
-   (consult-org-roam-grep-func #'consult-ripgrep)
-   (consult-org-roam-buffer-narrow-key ?r)
-   (consult-org-roam-buffer-after-buffers t)
-   :config
-   ;; Eventually suppress previewing for certain functions
-   (consult-customize consult-org-roam-forward-links :preview-key "M-.")
-   :bind
-   ;; Define some convenient keybindings as an addition
-   ("C-c n e" . consult-org-roam-file-find)
-   ("C-c n b" . consult-org-roam-backlinks)
-   ("C-c n B" . consult-org-roam-backlinks-recursive)
-   ("C-c n l" . consult-org-roam-forward-links)
-   ("C-c n r" . consult-org-roam-search))
-#+end_src
-
-** COMMENT =citar-org-roam=
-#+begin_src emacs-lisp
-(use-package citar-org-roam
-  :after citar org-roam
-  :no-require
-  :delight "" ; " cor"
-  :custom
-  (citar-org-roam-subdir                      "g_paper")
-  (citar-org-roam-note-title-template (concat "${=key=}\n"
-                                              "#+subtitle: ${=type=}: ${title}\n"
-                                              "#+author:   author(s): ${author}\n"
-                                              "#+filetags: :paper:\n\n"
-                                              "[cite:@${=key=}]\n\n"
-                                              "* Notes\n\n"
-                                              ))
-  :config
-  (citar-org-roam-mode))
 
 #+end_src
 
@@ -1396,14 +1203,14 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   ;; (org-html-head "<link rel=\"stylesheet\" type=\"text/css\" href=\"https://orgmode.org/worg/style/worg.css\"/>" )
   )
 #+end_src
-** COMMENT =htmlize= - source code syntax in html export
+** =htmlize= - source code syntax in html export
 #+begin_src emacs-lisp
 (use-package htmlize
   :straight t
   :config
   ;;(add-hook 'htmlize-before-hook (lambda () (indent-bars-mode -1)))
-  (add-hook 'htmlize-before-hook (lambda () (modus-themes-select 'modus-operandi-tinted)))
-  (add-hook 'htmlize-after-hook (lambda () (modus-themes-select 'modus-vivendi-tinted)))
+  ;;(add-hook 'htmlize-before-hook (lambda () (modus-themes-select 'modus-operandi-tinted)))
+  ;;(add-hook 'htmlize-after-hook (lambda () (modus-themes-select 'modus-vivendi-tinted)))
   )
 #+end_src
 ** =org-re-reveal=
@@ -1413,13 +1220,6 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   :straight t)
 #+end_src
 
-*** COMMENT =ox-reveal=
-Slighty different version.
-#+begin_src emacs-lisp
-(use-package ox-reveal
-  :after org
-  :straight t)
-#+end_src
 * Org Misc:
 ** =org-download= package itself
 #+begin_src emacs-lisp
@@ -1459,24 +1259,6 @@ Slighty different version.
 (add-to-list 'org-file-apps '("\\ode.svg\\'" . garid/odt-edit-open))
 #+end_src
 
-** COMMENT org drawio
-#+begin_src emacs-lisp
-(defun garid/drawio-edit-open  (path &optional _)
-  (interactive)
-  (let ((outdir       (file-name-directory      path))
-        (path_no_ext  (file-name-sans-extension path)))
-    (async-shell-command
-     (format
-       "drawio %s.drawio  && drawio %s.drawio -x -f svg -o %s.svg --svg-theme light"
-       ;;"libreoffice --headless --convert-to %s --outdir %s %s.odg"
-      path_no_ext path_no_ext path_no_ext)
-     nil nil)
-    
-    ))
-
-(add-to-list 'org-file-apps '("\\.drawio.svg\\'" . garid/drawio-edit-open))
-#+end_src
-
 ** =org-auto-tangle=
 #+begin_src emacs-lisp
 (use-package org-auto-tangle
@@ -1493,8 +1275,13 @@ Slighty different version.
 (use-package org-contacts
   :straight t
   :after (org denote)
-  :config
-  (setq org-contacts-files
+  ;; :config
+  ;; (setq org-contacts-files
+  ;;       '("~/BrainDump/denote/20240802T185223--contacts__info.org"
+  ;;         "~/BrainDump/denote_bps/20250306T114521--contacts__info.org"))
+
+  :custom
+  (org-contacts-files
         '("~/BrainDump/denote/20240802T185223--contacts__info.org"
           "~/BrainDump/denote_bps/20250306T114521--contacts__info.org"))
   )
@@ -1692,33 +1479,7 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
 
 (setf (alist-get "python" org-src-lang-modes nil nil #'equal) 'python-ts)
 #+end_src
-** COMMENT =indent-bars=
-#+begin_src emacs-lisp
-(use-package indent-bars
-  ;;:load-path "~/code/emacs/indent-bars"
-  :straight t
-  :straight (indent-bars :type git :host github :repo "jdtsmith/indent-bars")
-  :custom
-  (indent-bars-treesit-support   t)
-  (indent-bars-no-descend-string nil)
-  (indent-bars-prefer-character  "|")
-  (indent-bars-treesit-ignore-blank-lines-types '("module"))
-  (indent-bars-treesit-wrap '((python argument_list parameters ; for python, as an example
-				      list list_comprehension
-				      dictionary dictionary_comprehension
-				      parenthesized_expression subscript)))
-  ;;:hook ((python-base-mode yaml-mode) . indent-bars-mode)
-  ;;:hook ((python-base-mode yaml-mode) . indent-bars--ts-mode)
-  )
-#+end_src
 * Coding lsp & jumping around
-** COMMENT asdf
-#+begin_src emacs-lisp
-(use-package project
-  :straight nil
-  :demand t
-  )
-#+end_src
 ** =project.el=
 #+begin_src emacs-lisp
 (setq straight-built-in-pseudo-packages '(project xref))
@@ -2015,14 +1776,6 @@ Similar to vim-signify.
       (kmacro-lambda-form [?v ?t tab ?v ?t ?| ?v ?t] 0 "%d"))
 #+end_src
 
-** COMMENT Custom Aligner function (with untabify)                                     :customFunc:
-#+begin_src emacs-lisp
-(defun garid/align-regexp-and-untabify (beg end)
-  (interactive "r")
-  (align-regexp beg end
-                (concat "\\(\\s-*\\)" (read-string "Align regexp: ")))
-  (untabify beg end))
-#+end_src
 ** copy link in org at point                                                           :customFunc:
 [[https://emacs.stackexchange.com/a/60555/38482][stack exchange]]
 
@@ -2480,11 +2233,6 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | =zsT=    | =mw-thesaurus-lookup=               | thesaurus                         | -    |        |
 |--------+-----------------------------------+-----------------------------------+------+--------|
 | =ZQ=     | =kill-emacs=                        | kill Emacs                        | -    |        |
-
-
-
-Older
-| =za=     | =garid/align-regexp-and-untabify=   | align                             | -    |        |
 
 **** System
 #+attr_latex: :placement [H]
@@ -3394,6 +3142,7 @@ fi
 ** =format-all=
 #+begin_src emacs-lisp
 (use-package format-all
+  :straight t
   :commands format-all-mode
   ;;:hook (prog-mode . format-all-mode)
   :config
