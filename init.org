@@ -23,7 +23,7 @@ refresh-packages:
 #+end_src
 
 * Package manager:
-** Package Repositories
+** COMMENT Package Repositories
 I'm pulling packages from following 3 places (not sure that I need all three):
 
 1. [[https://melpa.org/packages/]]
@@ -32,13 +32,14 @@ I'm pulling packages from following 3 places (not sure that I need all three):
 
 #+begin_src emacs-lisp
 ;; Package repos
+(require 'package)
 (setq package-archives
       '(("melpa"   . "https://melpa.org/packages/"     )
         ("elpa"    . "https://elpa.gnu.org/packages/"  )
         ("nongnu"  . "https://elpa.nongnu.org/nongnu/" )))
 #+end_src
 
-** Initialize use-package manager
+** COMMENT Initialize use-package manager
 #+begin_src emacs-lisp
 (package-initialize)
 (setq use-package-always-ensure t)
@@ -46,32 +47,35 @@ I'm pulling packages from following 3 places (not sure that I need all three):
 
 ** Straight.el initialization
 #+begin_src emacs-lisp
-(defvar bootstrap-version)
-(let ((bootstrap-file
-      (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-      (bootstrap-version 5))
-  (unless (file-exists-p bootstrap-file)
-    (with-current-buffer
-        (url-retrieve-synchronously
-        "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-        'silent 'inhibit-cookies)
-      (goto-char (point-max))
-      (eval-print-last-sexp)))
-  (load bootstrap-file nil 'nomessage))
+  (defvar bootstrap-version)
+  (let ((bootstrap-file
+         (expand-file-name
+          "straight/repos/straight.el/bootstrap.el"
+          (or (bound-and-true-p straight-base-dir)
+              user-emacs-directory)))
+        (bootstrap-version 7))
+    (unless (file-exists-p bootstrap-file)
+      (with-current-buffer
+          (url-retrieve-synchronously
+nn           "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+           'silent 'inhibit-cookies)
+        (goto-char (point-max))
+        (eval-print-last-sexp)))
+    (load bootstrap-file nil 'nomessage))
 
-;;(straight-use-package 'org)
+  (straight-use-package 'use-package)
 #+end_src
 
 * Vi-movement and its friends
 ** =vundo=: visual undo
 #+begin_src emacs-lisp
-(use-package vundo :ensure t)
+(use-package vundo :straight t)
 #+end_src
 ** =evil=: vi-movements
 #+begin_src emacs-lisp
 ;; Vim Bindings
 (use-package evil
-  :ensure t
+  :straight t
   :init
   (setq evil-want-keybinding     nil) ;;  these
   (setq evil-want-integration      t) ;;  are for the evil-collection
@@ -100,7 +104,7 @@ I'm pulling packages from following 3 places (not sure that I need all three):
 ** =evil-collection=: vi-movements everywhere
 #+begin_src emacs-lisp
 (use-package evil-collection
-  :ensure t
+  :straight t
   :after evil
   :delight ""
   :config
@@ -112,7 +116,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 
 #+begin_src emacs-lisp
 (use-package evil-surround
-  :ensure t
+  :straight t
   :after evil
   :hook
   (LaTeX-mode . (lambda ()  ;; adds to latex-mode-hook
@@ -145,7 +149,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 ** =evil-textobj-tree-sitter=: tree-sitter based visual selection:
 #+begin_src emacs-lisp
 (use-package evil-textobj-tree-sitter
-  :ensure t
+  :straight t
   :after evil
   :config
   (define-key evil-outer-text-objects-map "f" (evil-textobj-tree-sitter-get-textobj "function.outer" ))
@@ -157,13 +161,14 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 
 ** visualizing the marker?
 #+begin_src emacs-lisp
-(use-package evil-visual-mark-mode)
+(use-package evil-visual-mark-mode
+  :straight t)
 #+end_src
 
 ** repeat
 #+begin_src emacs-lisp
 (use-package repeat
-  :ensure nil  ;; built in
+  :straight nil  ;; built in
   :config (repeat-mode +1)
   )
 #+end_src
@@ -230,8 +235,14 @@ but it feels slow when navigating.
 * Theme & colors
 ** faces
 #+begin_src emacs-lisp
+;;(use-package font-core
+;;  :straight nil
+;;  :hook 
+;;  (after-init . (lambda () (global-font-lock-mode 1)))
+;;  )
+
 (use-package faces
-  :ensure nil
+  :straight nil
   :custom
   (face-font-family-alternatives
    '(("Monospace" "Aporetic Sans Mono" "Iosevka SS06" "Iosevka Term SS06" "Liberation Mono" "courier" "fixed")
@@ -245,15 +256,19 @@ but it feels slow when navigating.
   )
 
 (use-package faces-remap
-  :ensure nil
+  :straight nil
   :hook (org-mode . variable-pitch-mode))
+
 #+end_src
+
+#+RESULTS:
 
 ** modus theme                                                                            :by_prot:
 
 #+begin_src emacs-lisp
 (use-package modus-themes
-  :ensure t
+  :straight t
+  :demand t
   :config
   ;; (setq modus-themes-to-toggle '(modus-operandi-tinted modus-vivendi-tinted))
   (setq modus-themes-to-toggle '(modus-vivendi-tinted modus-operandi-tinted ))
@@ -313,14 +328,14 @@ but it feels slow when navigating.
 ** =delight=
 #+begin_src emacs-lisp
 (use-package delight
-  :ensure t)
+  :straight t)
 #+end_src
 
 ** =display-line-numbers=: displaying number
 #+begin_src emacs-lisp
 ;; setting line
 (use-package display-line-numbers
-  :ensure t
+  :straight t
   :custom
   (display-line-numbers-type 'relative)
   (ring-bell-function        'ignore)
@@ -332,13 +347,13 @@ but it feels slow when navigating.
 ** Line visibility
 #+begin_src emacs-lisp
 (use-package hl-line
-  :ensure nil
+  :straight nil
   :config
   (global-hl-line-mode 1)
   )
 
 (use-package hl-todo
-  :ensure t
+  :straight t
   :config
   (global-hl-todo-mode 1)
   )
@@ -347,6 +362,7 @@ but it feels slow when navigating.
 ** =pulsar= pulses on certain functions                                                     :by_prot:
 #+begin_src emacs-lisp
 (use-package pulsar
+  :straight t
   :custom
   (pulsar-delay 0.05)
   (pulsar-iterations 2)
@@ -357,7 +373,7 @@ but it feels slow when navigating.
 ** =vertico=
 #+begin_src emacs-lisp
 (use-package vertico
-  :ensure t
+  :straight t
   :bind (:map vertico-map
               ("M-p" . vertico-previous     )
               ("M-n" . vertico-next         )
@@ -377,7 +393,7 @@ but it feels slow when navigating.
 #+begin_src emacs-lisp
 (use-package marginalia
   :after vertico
-  :ensure t
+  :straight t
   :custom
   (marginalia-annotators '(marginalia-annotators-heavy
                            marginalia-annotators-light nil))
@@ -386,7 +402,7 @@ but it feels slow when navigating.
 ** =consult=: consulting
 #+begin_src emacs-lisp
 (use-package consult
-  :ensure t
+  :straight t
   :custom
   ;;(consult-preview-key nil)
   ;;(consult-preview-key 'any)
@@ -410,7 +426,7 @@ but it feels slow when navigating.
 ** =orderless=: orderless completion
 #+begin_src emacs-lisp
 (use-package orderless
-  :ensure t
+  :straight t
   :custom
   (completion-styles '(orderless flex))
   '((file (styles basic partial-completion))))
@@ -421,7 +437,7 @@ but it feels slow when navigating.
 ** =embark=: interacting with completion entries
 #+begin_src emacs-lisp
 (use-package embark
-  :ensure t
+  :straight t
   :bind (("C-."    . embark-act                                     )
          ("M-."    . embark-dwim                                    )
          ("C-h B"  . embark-bindings                                )
@@ -457,7 +473,7 @@ but it feels slow when navigating.
 ** =savehist=:
 #+begin_src emacs-lisp
 (use-package savehist
-  :ensure t
+  :straight t
   :config (savehist-mode))
 #+end_src
 * Org
@@ -466,6 +482,7 @@ but it feels slow when navigating.
 #+name: lst_org
 #+begin_src emacs-lisp :eval no
 (use-package org
+  :straight t
   :demand t
   :delight "org"
   :bind (:map org-mode-map
@@ -592,17 +609,19 @@ but it feels slow when navigating.
                                (latex      . t) (shell      . t)
                                (dot        . t) (makefile   . t)
                                (sqlite     . t) (gnuplot    . t)
-                               (nim        . t) (plantuml   . t)
+                               ;;#(nim        . t) #(plantuml   . t)
                                (maxima     . t) (calc       . t)
-                               (awk        . t) (go         . t)
-                               (asymptote  . t) (ditaa      . t)
-                               (nix        . t) (lua        . t)
-                               (mermaid    . t) )) ;;(jupyter    . t)
+                               (awk        . t) ;; (go         . t)
+                               ;;(asymptote  . t) (ditaa      . t)
+                               ;;(nix        . t) (lua        . t)
+                               ;;(mermaid    . t)
+                               )
+   ) ;;(jupyter    . t)
 
-  (font-lock-add-keywords 'org-mode
-                          '(("\\(\\(?:\\\\\\(?:label\\|ref\\|eqref\\)\\)\\){\\(.+?\\)}"
-                             (1 font-lock-keyword-face)
-                             (2 font-lock-constant-face))))
+  ;; (font-lock-add-keywords 'org-mode
+  ;;                         '(("\\(\\(?:\\\\\\(?:label\\|ref\\|eqref\\)\\)\\){\\(.+?\\)}"
+  ;;                            (1 font-lock-keyword-face)
+  ;;                            (2 font-lock-constant-face))))
   ;; image backgroud for transparent images
   (defcustom org-inline-image-background nil
     "The color used as the default background for inline images. When nil, use the default face background."
@@ -654,7 +673,7 @@ but it feels slow when navigating.
 ** =org-link=
 #+begin_src emacs-lisp
 (use-package ol
-  :ensure nil
+  :straight nil
   :after org
   :bind (:map org-mode-map
               :repeat-map garid/org-repeat
@@ -665,14 +684,14 @@ but it feels slow when navigating.
 ** COMMENT =org-tidy=: hiding the properties
 #+begin_src emacs-lisp
 (use-package org-tidy
-  :ensure t
+  :straight t
   :hook   (org-mode . org-tidy-mode))
 #+end_src
 
 ** =org-indent=
 #+begin_src emacs-lisp
 (use-package org-indent
-  :ensure nil
+  :straight nil
   :custom
   (org-indent-mode-turns-on-hiding-stars t)
   :delight "")
@@ -680,7 +699,7 @@ but it feels slow when navigating.
 ** =org-num=
 #+begin_src emacs-lisp
 (use-package org-num
-  :ensure nil
+  :straight nil
   :delight "")
 #+end_src
 ** COMMENT =org-modern=
@@ -693,6 +712,7 @@ but it feels slow when navigating.
 ** =org-appear=
 #+begin_src emacs-lisp
 (use-package org-appear
+  :straight t
   :hook (org-mode . org-appear-mode)
   :custom
   (org-appear-autolinks t)
@@ -704,7 +724,7 @@ but it feels slow when navigating.
 #+begin_src emacs-lisp
 (use-package org-attach
   :after org
-  :ensure nil
+  :straight nil
   :custom
   ;;(org-id-method                       'org)
   (org-id-method                       'ts)
@@ -740,22 +760,23 @@ but it feels slow when navigating.
 
 ** org-babel languages related
 #+begin_src emacs-lisp
-(use-package plantuml-mode)
-(use-package ob-plantuml
-  :ensure nil
-  :after (org  plantuml-mode)
-  :custom
-  (org-plantuml-executable-path  "plantuml")
-  (org-plantuml-exec-mode        'plantuml))
+(use-package plantuml-mode :straight t)
+;;(use-package ob-plantuml
+;;  :straight t
+;;  :after (org  plantuml-mode)
+;;  :custom
+;;  (org-plantuml-executable-path  "plantuml")
+;;  (org-plantuml-exec-mode        'plantuml))
 
-(use-package ob-nim       :after org)
-(use-package ob-go        :after org)
-(use-package ob-asymptote :after org)
+(use-package ob-nim       :after org :straight t)
+(use-package ob-go        :after org :straight t)
+(use-package ob-asymptote :after org :straight t)
 
 
-(use-package mermaid-mode)
+(use-package mermaid-mode :straight t)
 (use-package ob-mermaid
   :after org
+  :straight t
   :custom (ob-mermaid-cli-path "/usr/bin/mmdc"))
 #+end_src
 
@@ -763,7 +784,7 @@ but it feels slow when navigating.
 ** =denote=: Note taking package                                                            :by_prot:
 #+begin_src emacs-lisp
 (use-package denote
-  :ensure t
+  :straight t
   :custom
   (denote-excluded-directories-regexp  ".*export_.*\\|.*website.*")
   (denote-directory                    "~/BrainDump/denote")
@@ -811,15 +832,17 @@ but it feels slow when navigating.
 ** =denote-journal= denote journal                                                          :by_prot:
 #+begin_src emacs-lisp
 (use-package denote-journal
+  :straight t
   :custom (denote-journal-extras-title-format 'day))
 #+end_src
 ** =denote-org=                                                                             :by_prot:
 #+begin_src emacs-lisp
-(use-package denote-org)
+(use-package denote-org :straight t)
 #+end_src
 ** =denote-silo=                                                                            :by_prot:
 #+begin_src emacs-lisp
 (use-package denote-silo
+  :straight t
   :custom
   (denote-silo-directories
    (mapcar
@@ -842,7 +865,7 @@ but it feels slow when navigating.
 ** =consult-denote=: consulting with denote                                                 :by_prot:
 #+begin_src emacs-lisp
 (use-package consult-denote
-  :ensure t
+  :straight t
   :custom
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; (consult-denote-silo-source            ;;
@@ -861,9 +884,10 @@ but it feels slow when navigating.
   :config
   (consult-denote-mode 1))
 #+end_src
-** =citar=: citation
+**  =citar=: citation
 #+begin_src emacs-lisp
 (use-package citar
+  :straight t
   :after org
   :no-require
   :custom
@@ -931,7 +955,7 @@ but it feels slow when navigating.
 ;;         ("C-c w z" . citar-denote-nobib                )))
 
 (use-package citar-denote
-  :ensure t
+  :straight t
   :demand t ;; Ensure minor mode loads
   :after (:any citar denote)
   :custom
@@ -965,7 +989,7 @@ but it feels slow when navigating.
 #+begin_src emacs-lisp
 (use-package org-roam
   ;; :requires org-roam-dailies ??
-  :ensure t
+  :straight t
   :custom
   (org-roam-node-display-template (concat "${title:100} "
                                           (propertize "${tags:50}"
@@ -1067,13 +1091,13 @@ but it feels slow when navigating.
 
 ** COMMENT =org-roam-ui=: graphing of org-roam in web browser
 #+begin_src emacs-lisp
-(use-package org-roam-ui :ensure t)
+(use-package org-roam-ui :straight t)
 #+end_src
 
 ** COMMENT =consult-org-roam=
 #+begin_src emacs-lisp
 (use-package consult-org-roam
-   :ensure t
+   :straight t
    :after org-roam
    :delight ""
    :init (require 'consult-org-roam)
@@ -1119,14 +1143,14 @@ but it feels slow when navigating.
 ** =calendar=
 #+begin_src emacs-lisp
 (use-package calendar
-  :ensure nil
+  :straight nil
   :custom (calendar-week-start-day 1))
 #+end_src
 ** =org-agenda=: the agenda
 #+begin_src emacs-lisp :results none
 (use-package org-agenda
   :after    org
-  :ensure   nil
+  :straight   nil
   :custom
   (org-agenda-files '("~/BrainDump/denote/20250911T175810--personal__gtd.org"
                       "~/BrainDump/denote_bps/20250911T174108--bps__gtd.org"))
@@ -1185,7 +1209,7 @@ but it feels slow when navigating.
 ** =casual-agenda=: casual agenda based on transient
 #+begin_src emacs-lisp
 (use-package casual-suite
-  :ensure t
+  :straight t
   :after org-agenda
   :bind (:map org-agenda-mode-map ("<f7>" . casual-agenda-tmenu)
          :map ibuffer-mode-map    ("<f7>" . casual-ibuffer-tmenu)
@@ -1196,6 +1220,7 @@ but it feels slow when navigating.
 ** =org-caldav=: 
 #+begin_src emacs-lisp
 (use-package org-caldav
+  :straight t
   :custom
   (org-caldav-url          "https://forgetfulfishfunctions.xyz/remote.php/dav/calendars/admin/" )
   (org-caldav-calendar-id  "org-caldav"                                                         )
@@ -1211,7 +1236,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 
 #+begin_src emacs-lisp
 (use-package ox
-  :ensure nil
+  :straight nil
   :after org
   :config
 
@@ -1245,8 +1270,8 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 
 ** =latex=
 #+begin_src emacs-lisp
-(use-package latex
-  :ensure nil
+(use-package tex-mode
+  :straight nil
   ;; :config
   ;;(add-hook 'LaTeX-mode-hook (function (lambda() (set-input-method "TeQ-Math"))))
   ;;(add-hook 'latex-mode-hook (function (lambda() (set-input-method "TeQ-Math"))))
@@ -1255,13 +1280,13 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 
 ** Latex related
 #+begin_src emacs-lisp
-(use-package auctex)
-(use-package cdlatex)
+(use-package auctex  :straight t)
+(use-package cdlatex :straight t)
 #+end_src
 ** =ox-latex=
 #+begin_src emacs-lisp
 (use-package ox-latex
-  :ensure nil
+  :straight nil
   :after org
   :custom
   (org-latex-src-block-backend              'listings                                             )
@@ -1304,7 +1329,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 ** =ox-odt=
 #+begin_src emacs-lisp
 (use-package ox-odt
-  :ensure nil
+  :straight nil
   :after org
   :config
   (defun my-org-odt-timestamp-unstyled (timestamp _contents info)
@@ -1329,7 +1354,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 ** =org-latex-preview=
 #+begin_src emacs-lisp
 (use-package org-latex-preview
-  :ensure nil
+  :straight nil
   :after org-mode
   :hook (org-mode . org-latex-preview-auto-mode)
   :config
@@ -1362,7 +1387,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 ** =ox-html=
 #+begin_src emacs-lisp
 (use-package ox-html
-  :ensure nil
+  :straight nil
   :after org
   :custom
   (org-html-validation-link              nil) ;; Don't show validation link
@@ -1374,7 +1399,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 ** COMMENT =htmlize= - source code syntax in html export
 #+begin_src emacs-lisp
 (use-package htmlize
-  :ensure t
+  :straight t
   :config
   ;;(add-hook 'htmlize-before-hook (lambda () (indent-bars-mode -1)))
   (add-hook 'htmlize-before-hook (lambda () (modus-themes-select 'modus-operandi-tinted)))
@@ -1385,7 +1410,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 #+begin_src emacs-lisp
 (use-package org-re-reveal
   :after org
-  :ensure t)
+  :straight t)
 #+end_src
 
 *** COMMENT =ox-reveal=
@@ -1393,13 +1418,13 @@ Slighty different version.
 #+begin_src emacs-lisp
 (use-package ox-reveal
   :after org
-  :ensure t)
+  :straight t)
 #+end_src
 * Org Misc:
 ** =org-download= package itself
 #+begin_src emacs-lisp
 (use-package org-download
-  :ensure t
+  :straight t
   :after org
   :custom
   (org-download-display-inline-images  nil)
@@ -1455,7 +1480,7 @@ Slighty different version.
 ** =org-auto-tangle=
 #+begin_src emacs-lisp
 (use-package org-auto-tangle
-  :ensure t
+  :straight t
   :defer  t
   :after org
   :delight "" ;; " oat"
@@ -1466,7 +1491,7 @@ Slighty different version.
 ** =org-contacts=
 #+begin_src emacs-lisp
 (use-package org-contacts
-  :ensure t
+  :straight t
   :after (org denote)
   :config
   (setq org-contacts-files
@@ -1478,7 +1503,7 @@ Slighty different version.
 ** =prog-mode=
 #+begin_src emacs-lisp
 (use-package prog-mode
-  :ensure nil
+  :straight nil
   :bind (:map
          prog-mode-map ("M-q" .  nil) ;; I use M-q for delete-window
          )
@@ -1489,6 +1514,7 @@ Slighty different version.
 ** =eldoc=
 #+begin_src emacs-lisp
 (use-package eldoc-box
+  :straight t
   :config
   (evil-define-key 'normal 'prog-mode-map  (kbd "K") 'eldoc)
   )
@@ -1561,45 +1587,46 @@ Slighty different version.
 ** =jupyter=
 #+begin_src emacs-lisp
 (use-package jupyter
+  :straight t
   :custom (jupyter-repl-echo-eval-p t))
 #+end_src
 ** =graphviz-dot-mode=
 #+begin_src emacs-lisp
-(use-package graphviz-dot-mode :ensure t)
+(use-package graphviz-dot-mode :straight t)
 #+end_src
 
 ** =scad-mode=
 #+begin_src emacs-lisp
-(use-package scad-mode :ensure t)
+(use-package scad-mode :straight t)
 #+end_src
 
 ** =lua-mode=
 #+begin_src emacs-lisp
-(use-package lua-mode :ensure t)
+(use-package lua-mode :straight t)
 #+end_src
 
 ** =json-mode=
 #+begin_src emacs-lisp
-(use-package json-mode :ensure t)
+(use-package json-mode :straight t)
 #+end_src
 
 ** =elixir= 
 #+begin_src emacs-lisp
-(use-package elixir-mode)
-(use-package ob-elixir)
+(use-package elixir-mode :straight t)
+(use-package ob-elixir :straight t)
 #+end_src
 
 ** =nix= 
 #+begin_src emacs-lisp
-(use-package nix-mode)
-(use-package ob-nix)
+(use-package nix-mode :straight t)
+(use-package ob-nix :straight t)
 #+end_src
 
 * Coding input
 ** =tempel=: snippet system
 #+begin_src emacs-lisp
 (use-package tempel
-  :ensure t
+  :straight t
   ;; Require trigger prefix before template name when completing.
   ;; :custom
   ;; (tempel-trigger-prefix "<")
@@ -1643,7 +1670,7 @@ Slighty different version.
 ** =elec-pair=: auto parenthesis pair
 #+begin_src emacs-lisp
 (use-package elec-pair
-  :ensure nil
+  :straight nil
   ;; :custom
   ;; (electric-pair-inhibit-predicate
   ;;  (lambda (c)
@@ -1667,7 +1694,7 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
 #+begin_src emacs-lisp
 (use-package indent-bars
   ;;:load-path "~/code/emacs/indent-bars"
-  :ensure t
+  :straight t
   :straight (indent-bars :type git :host github :repo "jdtsmith/indent-bars")
   :custom
   (indent-bars-treesit-support   t)
@@ -1683,12 +1710,41 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
   )
 #+end_src
 * Coding lsp & jumping around
+** COMMENT asdf
+#+begin_src emacs-lisp
+(use-package project
+  :straight nil
+  :demand t
+  )
+#+end_src
+** =project.el=
+#+begin_src emacs-lisp
+(use-package project
+  :straight nil
+  :demand t
+  :custom
+  (project-switch-commands
+   '(
+     (project-find-file    "Find file"      )
+     (project-find-regexp  "Find regexp"    )
+     (project-find-dir     "Find directory" )
+     (magit-project-status "Magit"          )
+     (project-eshell       "Eshell"         )
+     (project-any-command  "Other"          ))
+   )
+
+  :config
+  (keymap-set project-prefix-map "m" #'magit-project-status)
+  )
+#+end_src
+
 ** =eglot=: lsp
 #+begin_src emacs-lisp
 (use-package eglot
   ;;:custom (eglot-report-progress nil)   ;
   ;; :custom (eglot-report-progress t)   ;
   ;; ;;:config (add-to-list 'eglot-server-programs '(nix-ts-mode . ("nil")))
+  :after project
   :hook
   (python-base-mode . eglot-ensure)
   ;; :config
@@ -1724,16 +1780,19 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
 #+end_src
 ** =consult-eglot=: consulting with lsp
 #+begin_src emacs-lisp
-(use-package consult-eglot :ensure t)
+(use-package consult-eglot
+  :straight t
+  :after eglot
+  )
 #+end_src
 ** =eglot-booster=: faster eglot
 #+begin_src emacs-lisp
 (use-package eglot-booster
-  :ensure t
   :straight (eglot-booster
              :type git
              :host github
              :repo "jdtsmith/eglot-booster")
+  :after eglot
   :config
   (eglot-booster-mode +1)
   )
@@ -1743,7 +1802,7 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
 #+begin_src emacs-lisp
 (use-package corfu
   ;; Optional customizations
-  :ensure t
+  :straight t
   :custom
   (corfu-cycle            t          ) ;; Allows cycling through candidates
   (corfu-auto             t          ) ;; Enable auto completion nov23 C-M-i?
@@ -1781,7 +1840,7 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
 (use-package cape
   ;; Bind prefix keymap providing all Cape commands under a mnemonic key.
   ;; Press C-c p ? to for help.
-  :ensure t
+  :straight t
   :bind ("C-c p" . cape-prefix-map) ;; Alternative keys: M-p, M-+, ...
   ;; Alternatively bind Cape commands individually.
   ;; :bind (("C-c p d" . cape-dabbrev)
@@ -1805,7 +1864,7 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
 (use-package abbrev
   :delight "" ;;" abb"
   :defer 1
-  :ensure nil
+  :straight nil
   ;;:custom
   ;;(abbrev-file-name (expand-file-name "abbrev_defs" user-emacs-directory))
   :config
@@ -1820,6 +1879,7 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
 ** =gptel= : gpt.el by karthinks 
 #+begin_src emacs-lisp
 (use-package gptel
+  :straight t
   :custom
   (gptel-default-mode 'org-mode))
 #+end_src
@@ -1827,7 +1887,7 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
 ** =gptel-commit=
 #+begin_src emacs-lisp
 (use-package gptel-commit
-  :ensure t
+  :straight t
   :after (gptel magit)
   :custom
   (gptel-commit-stream t)
@@ -1843,13 +1903,13 @@ Probably requires external =rg= command.
 
 #+begin_src emacs-lisp
 (use-package rg
-  :ensure t)
+  :straight t)
 #+end_src
 
 ** =magit=: git control
 #+begin_src emacs-lisp
 (use-package magit
-  :ensure t)
+  :straight t)
 #+end_src
 
 ** =git-gutter=: git diff shows on the side
@@ -1857,7 +1917,7 @@ Similar to vim-signify.
 #+begin_src emacs-lisp
 (use-package git-gutter
   :delight  " git"
-  :ensure t
+  :straight t
   :bind (:repeat-map git-gutter:repeat-map
                      ("n" . git-gutter:next-hunk)
                      ("p" . git-gutter:previous-hunk)
@@ -1875,7 +1935,7 @@ Similar to vim-signify.
 ** =harpoon=
 #+begin_src emacs-lisp
 (use-package harpoon
-  :ensure t
+  :straight t
   :bind
   ("M-1"   .  harpoon-go-to-1           )
   ("M-2"   .  harpoon-go-to-2           )
@@ -1887,29 +1947,10 @@ Similar to vim-signify.
   )
 #+end_src
 
-** =project.el=
-#+begin_src emacs-lisp
-(use-package project
-  :ensure nil
-  :custom
-  (project-switch-commands
-   '(
-     (project-find-file    "Find file"      )
-     (project-find-regexp  "Find regexp"    )
-     (project-find-dir     "Find directory" )
-     (magit-project-status "Magit"          )
-     (project-eshell       "Eshell"         )
-     (project-any-command  "Other"          ))
-   )
-
-  :config
-  (keymap-set project-prefix-map "m" #'magit-project-status)
-  )
-#+end_src
-
 ** =direnv.el=
 #+begin_src emacs-lisp
 (use-package direnv
+ :straight t
  :config
  (direnv-mode))
 #+end_src
@@ -2136,21 +2177,21 @@ Similar to vim-signify.
 ** ispell config
 #+begin_src emacs-lisp
 (use-package ispell
-  :ensure t
+  :straight t
   :custom (ispell-alternate-dictionary "/home/garid/.config/emacs/ispell-wl.txt"))
 #+end_src
 ** Writing packages
 #+begin_src emacs-lisp
-;; (use-package selectric-mode       :ensure t)
-;; (use-package typewriter-roll-mode :ensure t)
-(use-package darkroom             :ensure t)
-(use-package focus                :ensure t)
+;; (use-package selectric-mode       :straight t)
+;; (use-package typewriter-roll-mode :straight t)
+(use-package darkroom             :straight t)
+(use-package focus                :straight t)
 #+end_src
 
 ** =pdf-tools=: reading pdf in Emacs
 #+begin_src emacs-lisp
 (use-package pdf-tools
-  :ensure t
+  :straight t
   :bind (:map pdf-view-mode-map
               ("t" . pdf-outline))
   :mode  ("\\.pdf\\'" . pdf-view-mode)
@@ -2214,6 +2255,7 @@ Similar to vim-signify.
 ** =captain= Capitalizes first word of sentences.
 #+begin_src emacs-lisp
 (use-package captain
+  :straight t
   :delight "" ;; " cap"
   :after org
   :custom
@@ -2294,14 +2336,14 @@ Similar to vim-signify.
 
 ** COMMENT =tmr=: timer may ring
 #+begin_src emacs-lisp
-(use-package tmr :ensure t)
+(use-package tmr :straight t)
 #+end_src
 ** COMMENT checking (could be useful)
 #+begin_src emacs-lisp
-;; (use-package langtool   :ensure t) it required external jar / java  someday i will try
-(use-package jinx          :ensure t)
-(use-package mw-thesaurus  :ensure t :after org)
-;;(use-package org-wc        :ensure t :after org)
+;; (use-package langtool   :straight t) it required external jar / java  someday i will try
+(use-package jinx          :straight t)
+(use-package mw-thesaurus  :straight t :after org)
+;;(use-package org-wc        :straight t :after org)
 #+end_src
 
 * Keybinding
@@ -2309,7 +2351,7 @@ Similar to vim-signify.
 #+begin_src emacs-lisp
 (use-package which-key
   :delight
-  :ensure t
+  :straight t
   :custom
   (which-key-popup-type              'side-window               )
   (which-key-side-window-location    'right                     )
@@ -2787,6 +2829,7 @@ Older
 **** General.el config
 #+begin_src emacs-lisp
 (use-package general
+  :straight t
   :config (general-evil-setup t)
 
   ;; Keybindings for everywhere
@@ -3178,7 +3221,7 @@ Older
 ** =dired= - Directory
 #+begin_src emacs-lisp
 (use-package dired
-  :ensure   nil
+  :straight   nil
   :demand   t
   :commands (dired dired-jump)
   :custom ((dired-listing-switches "-agho --group-directories-first")
@@ -3205,7 +3248,7 @@ Older
 I don't use these not much
 #+begin_src emacs-lisp
 (use-package dired-preview
-  :ensure t
+  :straight t
   :bind (:map dired-preview-mode-map
               ("J" . dired-preview-page-down)
               ("K" . dired-preview-page-up))
@@ -3217,13 +3260,13 @@ and later sets cursor at that point when you open that file.
 
 #+begin_src emacs-lisp
 (use-package saveplace
-  :ensure nil
+  :straight nil
   :config (save-place-mode 1))
 #+end_src
 ** =recentf= - Recent files
 #+begin_src emacs-lisp
 (use-package recentf
-  :ensure nil
+  :straight nil
   :demand t
   :custom
   (recentf-max-menu-items   30)
@@ -3262,14 +3305,14 @@ fi
 ** reading
 #+begin_src emacs-lisp
 (use-package notmuch
-  :ensure t
+  :straight t
   :defer t)
 #+end_src
 
 ** writting
 #+begin_src emacs-lisp
 (use-package sendmail
-  :ensure nil
+  :straight nil
   :custom
   (send-mail-function              'sendmail-send-it )
   ;;:w (sendmail-program                "/usr/bin/msmtp"  ) < removed cause of nixos
@@ -3306,6 +3349,7 @@ fi
 ** writting with org mode
 #+begin_src emacs-lisp
 (use-package org-mime
+    :straight t
   :custom
   (org-mime-library 'mml)
   (org-mime-export-options '(
@@ -3318,12 +3362,13 @@ fi
 
 ** consulting notmuch
 #+begin_src emacs-lisp
-(use-package consult-notmuch)
+(use-package consult-notmuch :straight t)
 #+end_src
 
 ** notmuch ol
 #+begin_src emacs-lisp
 (use-package ol-notmuch
+  :straight t
   :config
   (define-key global-map "\C-c l" 'org-store-link)
   )
@@ -3332,11 +3377,11 @@ fi
 * Misc Packages
 ** =crux=
 #+begin_src emacs-lisp
-(use-package crux :ensure t)
+(use-package crux :straight t)
 #+end_src
 ** =command-log-mode=
 #+begin_src emacs-lisp
-(use-package command-log-mode)
+(use-package command-log-mode :straight t)
 #+end_src
 ** =format-all=
 #+begin_src emacs-lisp
@@ -3353,7 +3398,7 @@ fi
 ** =popper=
 #+begin_src emacs-lisp
 (use-package popper
-  :ensure t ; or :straight t
+  :straight t ; or :straight t
   :bind (("C-`"   . popper-toggle      )
          ("M-`"   . popper-cycle       )
          ("C-M-`" . popper-toggle-type )
@@ -3390,6 +3435,7 @@ fi
 ** =hydra=
 #+begin_src emacs-lisp
 (use-package hydra
+    :straight t
   ;; :config
   ;; (defhydra hydra-org-link-jumper ()
   ;;   "zoom"
@@ -3400,7 +3446,7 @@ fi
 
 ** =exercism=
 #+begin_src emacs-lisp
-(use-package exercism)
+(use-package exercism :straight t)
 #+end_src
 ** =zoom-window=
 #+begin_src emacs-lisp
@@ -3416,6 +3462,7 @@ fi
 ** screen
 #+begin_src emacs-lisp
 (use-package gif-screencast
+  :straight t
   :custom
   (gif-screencast-program "hyprshot")
   (gif-screencast-args '("-m" "window" "-m" "active" "-o" "/" "-f")))
@@ -3441,18 +3488,19 @@ fi
 ** garbage-collect
 #+begin_src emacs-lisp
 (use-package gcmh
+  :straight t
   :config (gcmh-mode 1)
   :delight " gb")
 #+end_src
 ** google
 #+begin_src emacs-lisp
-(use-package google-translate)
-(use-package google-this)
+(use-package google-translate :straight t)
+(use-package google-this :straight t)
 #+end_src
 * Daemon
 #+begin_src emacs-lisp
 (use-package server
-  :ensure nil
+  :straight nil
   :hook
   (emacs-startup . (lambda ()
                      (server-start)
