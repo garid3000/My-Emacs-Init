@@ -1912,10 +1912,10 @@ Similar to vim-signify.
 #+end_src
 
 * Bunch of functions
-** Open PDF/HMTL exported by LaTeX externally                                          :customFunc:
+** Open PDF/HMTL exported from org mode externally                                     :customFunc:
 #+begin_src emacs-lisp
-(defun replace-in-string (what with in)
-  (replace-regexp-in-string (regexp-quote what) with in nil 'literal))
+;; (defun replace-in-string (what with in)
+;;   (replace-regexp-in-string (regexp-quote what) with in nil 'literal))
 
 (defun garid/org-open-pdf ()
   (interactive)
@@ -1943,7 +1943,7 @@ Similar to vim-signify.
            )))
 #+end_src
 
-** My Custom LaTeX writing system (aka TeQ)                                            :customFunc:
+** COMMENT My Custom LaTeX writing system (aka TeQ)                                    :customFunc:
 #+begin_src emacs-lisp
 (add-to-list 'load-path (expand-file-name "~/.config/emacs/Emacs-TeQ"))
 (register-input-method "TeQ-Math" "Emacs-Teq-Latex" 'quail-use-package
@@ -2014,7 +2014,7 @@ Similar to vim-signify.
   (font-lock-update))
 #+end_src
 
-** Custom opening external terminal at current buffer                                  :customFunc:
+** COMMENT Custom opening external terminal at current buffer                          :customFunc:
 #+begin_src emacs-lisp
 (defun garid/open-external-term-here ()
   (interactive)
@@ -2039,7 +2039,7 @@ Similar to vim-signify.
   )
 #+end_src
 
-** Org structure in the denote dire                                                    :customFunc:
+** COMMENT Org structure in the denote dire                                            :customFunc:
 #+begin_src emacs-lisp
 (defun garid/org-ql-function-on-each-heading (INCLUDE_PROGRESS)
   ""
@@ -2208,7 +2208,7 @@ Similar to vim-signify.
 
   )
 #+end_src
-** =captain=
+** =captain= Capitalizes first word of sentences.
 #+begin_src emacs-lisp
 (use-package captain
   :delight "" ;; " cap"
@@ -2308,8 +2308,8 @@ Similar to vim-signify.
   :delight
   :ensure t
   :custom
-  (which-key-popup-type              'side-window             )
-  (which-key-side-window-location    'right                   )
+  (which-key-popup-type              'side-window               )
+  (which-key-side-window-location    'right                     )
   ;;(which-key-side-window-max-width    0.5                     )
   ;;(which-key-popup-type              'minibuffer              )
   (which-key-idle-delay               0.8                       )
