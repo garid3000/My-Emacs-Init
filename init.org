@@ -64,9 +64,8 @@ I'm pulling packages from following 3 places (not sure that I need all three):
 
 * Vi-movement and its friends
 ** =vundo=: visual undo
-
 #+begin_src emacs-lisp
-(use-package vundo)
+(use-package vundo :ensure t)
 #+end_src
 ** =evil=: vi-movements
 #+begin_src emacs-lisp
@@ -751,7 +750,7 @@ but it feels slow when navigating.
 
 (use-package ob-nim       :after org)
 (use-package ob-go        :after org)
-;; (use-package ob-asymptote :after org)
+(use-package ob-asymptote :after org)
 
 
 (use-package mermaid-mode)
@@ -1194,11 +1193,6 @@ but it feels slow when navigating.
          :map dired-mode-map      ("<f7>" . casual-dired-tmenu))
   )
 #+end_src
-** COMMENT =org-timeblock=: agenda to SVG
-#+begin_src emacs-lisp
-(use-package org-timeblock
-  :after compat-macs)
-#+end_src
 ** =org-caldav=: 
 #+begin_src emacs-lisp
 (use-package org-caldav
@@ -1377,12 +1371,14 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   ;; (org-html-head "<link rel=\"stylesheet\" type=\"text/css\" href=\"https://orgmode.org/worg/style/worg.css\"/>" )
   )
 #+end_src
-** =htmlize= - source code syntax in html export
+** COMMENT =htmlize= - source code syntax in html export
 #+begin_src emacs-lisp
 (use-package htmlize
   :ensure t
-  ;;:config
+  :config
   ;;(add-hook 'htmlize-before-hook (lambda () (indent-bars-mode -1)))
+  (add-hook 'htmlize-before-hook (lambda () (modus-themes-select 'modus-operandi-tinted)))
+  (add-hook 'htmlize-after-hook (lambda () (modus-themes-select 'modus-vivendi-tinted)))
   )
 #+end_src
 ** =org-re-reveal=
@@ -1392,7 +1388,8 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   :ensure t)
 #+end_src
 
-** COMMENT =ox-reveal=
+*** COMMENT =ox-reveal=
+Slighty different version.
 #+begin_src emacs-lisp
 (use-package ox-reveal
   :after org
@@ -1590,6 +1587,12 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 #+begin_src emacs-lisp
 (use-package elixir-mode)
 (use-package ob-elixir)
+#+end_src
+
+** =nix= 
+#+begin_src emacs-lisp
+(use-package nix-mode)
+(use-package ob-nix)
 #+end_src
 
 * Coding input
@@ -3307,10 +3310,10 @@ fi
   (org-mime-library 'mml)
   (org-mime-export-options '(
                              :with-latex imagemagick
+                             ;;:with-latex dvisvgm <-- don't work because SVG is bad on mail clients
                              :section-numbers nil
                              :with-author nil
-                             :with-toc nil)
-                           ))
+                             :with-toc nil)))
 #+end_src
 
 ** consulting notmuch

@@ -1,3 +1,217 @@
+* COMMENT =ox-publish=
+
+** Helper publisher function
+#+begin_src emacs-lisp
+(defun garid/publish-to-epnet-via-rsync (tmp)
+  ""
+  (interactive)
+  (call-process-shell-command "notify-send \"ox-phd-publish\" \"HTML export finished\"")
+  (f-write (concat "AuthType Basic\n"
+                   "AuthName The-T-Directory\n"
+                   "AuthUserFile /home/zgarid/.users\n"
+                   "<Limit GET POST >\n"
+                   "require user zgarid\n"
+                   "</Limit>\n")
+           'utf-8
+           "~/BrainDump/denote/phd/website/.htaccess")
+
+  (call-process-shell-command
+   "rsync --recursive --delete  --copy-links --verbose ~/BrainDump/denote/phd/website/ zgarid@www.ep.sci.hokudai.ac.jp:public_html/phd"
+   )
+
+  (call-process-shell-command "notify-send \"ox-phd-publish\" \"Published-on-epnet\"")
+  )
+#+end_src
+
+** Helper to create stork db
+I publish first from org to md in the local dir. Then using that local dir to create stork db.
+
+#+begin_src emacs-lisp
+(defun garid/get-title-of-denote-filepath-trimmed-org (x)
+  (string-trim
+   (string-trim-left
+    (denote-retrieve-front-matter-title-line x 'org)
+    (regexp-quote "#+title:"))))
+
+
+(defun garid/get-md-converted-path-from-org-path (path)
+  ""
+  (replace-regexp-in-string
+   (regexp-quote ".org")                    ;; replace the extension
+   ".md"
+   (replace-regexp-in-string
+    (regexp-quote "/home/garid/BrainDump/denote/phd/") ;; replace the dir
+    "/home/garid/BrainDump/denote/phd/website-md/"
+    path nil 'literal)
+   nil 'literal))
+
+(defun garid/get-html-url-from-org-path (path)
+  ""
+  (replace-regexp-in-string
+   (regexp-quote ".org")                    ;; replace the extension
+   ".html"
+   (replace-regexp-in-string
+    (regexp-quote "/home/garid/BrainDump/denote/phd/") ;; replace the dir
+    ""
+    path nil 'literal)
+   nil 'literal))
+
+(defun garid/prepare-stork-toml ()
+  ""
+  (concat
+   ;; pre header
+   "[input]\n"
+   ;;"base_directory = \"/home/garid/BrainDump/denote/phd/website-md/\"\n"
+   "base_directory = \"\"\n"
+   "url_prefix = \"https://www.ep.sci.hokudai.ac.jp/~zgarid/phd/\"\n"
+   "files = [\n"
+
+   ;; main contents
+   (mapconcat
+    (lambda (x)
+      (format
+       "{path=\"%s\", url = \"%s\", title = \"%s\"},\n"
+       (garid/get-md-converted-path-from-org-path      x)
+       (garid/get-html-url-from-org-path               x)
+       (garid/get-title-of-denote-filepath-trimmed-org x)
+       )
+      )
+
+    (directory-files-recursively "/home/garid/BrainDump/denote/phd/"           ;; 0.list of files
+                                 ".*.org$")
+    )
+
+   ;; ending
+   "]\n"))
+
+(defun garid/re-create-stork-db-from-md-exports (x) ;; completion-function requires arguemtns, so a x arguemtns that won't used
+  (interactive)
+  (f-write (garid/prepare-stork-toml)
+           'utf-8
+           "/tmp/stork-from-emacs.toml")
+
+  (call-process-shell-command "notify-send \"stork\" \"toml created /tmp/stork-from-emacs.toml\"")
+  (call-process-shell-command "stork build --input /tmp/stork-from-emacs.toml --output /home/garid/BrainDump/denote/phd/website/stork-db.st")
+  (call-process-shell-command "notify-send \"stork\" \"stork-db.st re-created\n/home/garid/BrainDump/denote/phd/website/stork-db.st\"")
+  )
+
+
+
+#+end_src
+
+** Helper to create better navbar
+#+begin_src emacs-lisp
+(garid/get-html-url-from-org-path (denote-get-path-by-id "20240814T122254"))
+#+end_src
+
+#+RESULTS:
+: 20240814T122254--70-acknowledgements__future.html
+
+** Actual conf
+#+begin_src emacs-lisp :exports code :results verbatim
+(use-package ox-publish
+  :ensure nil
+  :after org
+  :custom
+  (org-publish-project-alist
+   `(("denote: org -> html"
+      :base-directory ,(denote-directory)
+      :recursive t
+      :publishing-function   org-html-publish-to-html
+      :publishing-directory ,(concat (denote-directory) "website")
+      :exclude ".*daily/.*org"  ;;; for excluding -daily
+      ;; :section-numbers nil
+      :section-numbers  org-export-with-section-numbers
+      :with-toc         t
+      :html_link_home  "index.html"
+      ;;                                 :html-preamble "<div id=\"navbar\"> <ul>
+      ;;   <div class=\"stork-wrapper\">
+      ;;     <a href=\"/~zgarid/index.html\">Home</a>             &nbsp;
+      ;;     <a href=\"..\">Up/Back</a>                           &nbsp;
+      ;;     <a href=\"/~zgarid/meta-research.html\">Research</a> &nbsp;
+      ;;     <a href=\"/~zgarid/meta-python.html\">Python</a>     &nbsp;
+      ;;     <a href=\"/~zgarid/meta-cli.html\">CLI</a>           &nbsp;
+      ;;     <a href=\"/~zgarid/meta-org.html\">Org-Mode</a>      &nbsp;
+      ;;     <a href=\"/~zgarid/search.html\">Search</a>          &nbsp;
+      ;;     <input data-stork=\"federalist\" class=\"stork-input\" />
+      ;;     <div data-stork=\"federalist-output\" class=\"stork-output\"></div>
+      ;;   </div>
+      ;; </ul>
+      ;; <hr>
+      ;; </div>
+      ;; <script src=\"https://files.stork-search.net/releases/v1.6.0/stork.js\"></script>
+      ;; <script>
+      ;; stork.register(
+      ;;     'federalist', 'https://www.ep.sci.hokudai.ac.jp/~zgarid/garid_stork.st'
+      ;; )
+      ;; </script>
+      ;; "
+      )
+     ("phd-website"
+      :base-directory ,(concat (denote-directory) "phd")
+      :recursive t
+      :publishing-function   org-html-publish-to-html
+      :publishing-directory ,(concat (denote-directory) "phd" "/website")
+      :exclude ".*daily/.*org"
+      :completion-function garid/publish-to-epnet-via-rsync
+      :section-numbers     org-export-with-section-numbers
+      :with-toc         t
+      :html_link_home  "index.html"
+      :html-preamble ,(concat
+                       "<div id=\"navbar\"> <ul>"
+                       "<div class=\"stork-wrapper\">"
+                       "<a href=\"/~zgarid/phd/" (garid/get-html-url-from-org-path (denote-get-path-by-id "20241109T014358")) "\"> Info </a> &nbsp;"
+                       "<a href=\"/~zgarid/phd/" (garid/get-html-url-from-org-path (denote-get-path-by-id "20240814T113502")) "\"> Home </a> &nbsp;"
+                       "<a href=\"/~zgarid/phd/" (garid/get-html-url-from-org-path (denote-get-path-by-id "20241109T130751")) "\"> 1.Introduction </a> &nbsp;"
+                       "<a href=\"/~zgarid/phd/" (garid/get-html-url-from-org-path (denote-get-path-by-id "20241109T133612")) "\"> 2.Developments </a> &nbsp;"
+                       "<a href=\"/~zgarid/phd/" (garid/get-html-url-from-org-path (denote-get-path-by-id "20241109T133644")) "\"> 3.Methods </a> &nbsp;"
+                       "<a href=\"/~zgarid/phd/" (garid/get-html-url-from-org-path (denote-get-path-by-id "20241109T133718")) "\"> 4.Results </a> &nbsp;"
+                       "<a href=\"/~zgarid/phd/" (garid/get-html-url-from-org-path (denote-get-path-by-id "20241109T133803")) "\"> 5.Discussion </a> &nbsp;"
+                       "<a href=\"/~zgarid/search.html\">Search</a>          &nbsp;"
+                       "<input data-stork=\"federalist\" class=\"stork-input\" />"
+                       "<div data-stork=\"federalist-output\" class=\"stork-output\"></div>"
+                       "</div>"
+                       "</ul>"
+                       "<hr>"
+                       "</div>"
+                       "<script src=\"https://files.stork-search.net/releases/v1.6.0/stork.js\"></script>"
+                       "<script>"
+                       "stork.register('federalist', 'https://www.ep.sci.hokudai.ac.jp/~zgarid/phd/stork-db.st')"
+                       "</script>"
+                       "<link"
+                       "  rel=\"stylesheet\""
+                       "  href=\"https://files.stork-search.net/releases/v1.6.0/basic.css\""
+                       "/>"
+                       )
+      )
+
+     ("phd-2-md"
+      :base-directory ,(concat (denote-directory) "phd")
+      :recursive t
+      :publishing-function  org-md-publish-to-md
+      :publishing-directory ,(concat (denote-directory) "phd" "/website-md")
+      :exclude ".*daily/.*org"
+      :section-numbers     org-export-with-section-numbers
+      :completion-function garid/re-create-stork-db-from-md-exports
+      )
+
+
+     ;; good but doesn't expot caption
+     ;; ("phd-2-text"
+     ;;  :base-directory ,(concat (denote-directory) "phd")
+     ;;  :recursive t
+     ;;  :publishing-function  org-ascii-publish-to-ascii
+     ;;  :publishing-directory ,(concat (denote-directory) "phd" "/website-text")
+     ;;  :exclude ".*daily/.*org"
+     ;;  :section-numbers     org-export-with-section-numbers
+     ;;  )
+
+
+     )))
+#+end_src
+
+
+
 * COMMENT citar-org-roam
 #+begin_src emacs-lisp
 (use-package citar-org-roam
@@ -816,220 +1030,6 @@ undo-tree is Emacs's undo & redo helper with built-in tree graph of versions.
   )
 #+end_src
 
-* COMMENT =ox-publish=
-
-** Helper publisher function
-#+begin_src emacs-lisp
-(defun garid/publish-to-epnet-via-rsync (tmp)
-  ""
-  (interactive)
-  (call-process-shell-command "notify-send \"ox-phd-publish\" \"HTML export finished\"")
-  (f-write (concat "AuthType Basic\n"
-                   "AuthName The-T-Directory\n"
-                   "AuthUserFile /home/zgarid/.users\n"
-                   "<Limit GET POST >\n"
-                   "require user zgarid\n"
-                   "</Limit>\n")
-           'utf-8
-           "~/BrainDump/denote/phd/website/.htaccess")
-
-  (call-process-shell-command
-   "rsync --recursive --delete  --copy-links --verbose ~/BrainDump/denote/phd/website/ zgarid@www.ep.sci.hokudai.ac.jp:public_html/phd"
-   )
-
-  (call-process-shell-command "notify-send \"ox-phd-publish\" \"Published-on-epnet\"")
-  )
-#+end_src
-
-** Helper to create stork db
-I publish first from org to md in the local dir. Then using that local dir to create stork db.
-
-#+begin_src emacs-lisp
-(defun garid/get-title-of-denote-filepath-trimmed-org (x)
-  (string-trim
-   (string-trim-left
-    (denote-retrieve-front-matter-title-line x 'org)
-    (regexp-quote "#+title:"))))
-
-
-(defun garid/get-md-converted-path-from-org-path (path)
-  ""
-  (replace-regexp-in-string
-   (regexp-quote ".org")                    ;; replace the extension
-   ".md"
-   (replace-regexp-in-string
-    (regexp-quote "/home/garid/BrainDump/denote/phd/") ;; replace the dir
-    "/home/garid/BrainDump/denote/phd/website-md/"
-    path nil 'literal)
-   nil 'literal))
-
-(defun garid/get-html-url-from-org-path (path)
-  ""
-  (replace-regexp-in-string
-   (regexp-quote ".org")                    ;; replace the extension
-   ".html"
-   (replace-regexp-in-string
-    (regexp-quote "/home/garid/BrainDump/denote/phd/") ;; replace the dir
-    ""
-    path nil 'literal)
-   nil 'literal))
-
-(defun garid/prepare-stork-toml ()
-  ""
-  (concat
-   ;; pre header
-   "[input]\n"
-   ;;"base_directory = \"/home/garid/BrainDump/denote/phd/website-md/\"\n"
-   "base_directory = \"\"\n"
-   "url_prefix = \"https://www.ep.sci.hokudai.ac.jp/~zgarid/phd/\"\n"
-   "files = [\n"
-
-   ;; main contents
-   (mapconcat
-    (lambda (x)
-      (format
-       "{path=\"%s\", url = \"%s\", title = \"%s\"},\n"
-       (garid/get-md-converted-path-from-org-path      x)
-       (garid/get-html-url-from-org-path               x)
-       (garid/get-title-of-denote-filepath-trimmed-org x)
-       )
-      )
-
-    (directory-files-recursively "/home/garid/BrainDump/denote/phd/"           ;; 0.list of files
-                                 ".*.org$")
-    )
-
-   ;; ending
-   "]\n"))
-
-(defun garid/re-create-stork-db-from-md-exports (x) ;; completion-function requires arguemtns, so a x arguemtns that won't used
-  (interactive)
-  (f-write (garid/prepare-stork-toml)
-           'utf-8
-           "/tmp/stork-from-emacs.toml")
-
-  (call-process-shell-command "notify-send \"stork\" \"toml created /tmp/stork-from-emacs.toml\"")
-  (call-process-shell-command "stork build --input /tmp/stork-from-emacs.toml --output /home/garid/BrainDump/denote/phd/website/stork-db.st")
-  (call-process-shell-command "notify-send \"stork\" \"stork-db.st re-created\n/home/garid/BrainDump/denote/phd/website/stork-db.st\"")
-  )
-
-
-
-#+end_src
-
-** Helper to create better navbar
-#+begin_src emacs-lisp
-(garid/get-html-url-from-org-path (denote-get-path-by-id "20240814T122254"))
-#+end_src
-
-#+RESULTS:
-: 20240814T122254--70-acknowledgements__future.html
-
-** Actual conf
-#+begin_src emacs-lisp :exports code :results verbatim
-(use-package ox-publish
-  :ensure nil
-  :after org
-  :custom
-  (org-publish-project-alist
-   `(("denote: org -> html"
-      :base-directory ,(denote-directory)
-      :recursive t
-      :publishing-function   org-html-publish-to-html
-      :publishing-directory ,(concat (denote-directory) "website")
-      :exclude ".*daily/.*org"  ;;; for excluding -daily
-      ;; :section-numbers nil
-      :section-numbers  org-export-with-section-numbers
-      :with-toc         t
-      :html_link_home  "index.html"
-      ;;                                 :html-preamble "<div id=\"navbar\"> <ul>
-      ;;   <div class=\"stork-wrapper\">
-      ;;     <a href=\"/~zgarid/index.html\">Home</a>             &nbsp;
-      ;;     <a href=\"..\">Up/Back</a>                           &nbsp;
-      ;;     <a href=\"/~zgarid/meta-research.html\">Research</a> &nbsp;
-      ;;     <a href=\"/~zgarid/meta-python.html\">Python</a>     &nbsp;
-      ;;     <a href=\"/~zgarid/meta-cli.html\">CLI</a>           &nbsp;
-      ;;     <a href=\"/~zgarid/meta-org.html\">Org-Mode</a>      &nbsp;
-      ;;     <a href=\"/~zgarid/search.html\">Search</a>          &nbsp;
-      ;;     <input data-stork=\"federalist\" class=\"stork-input\" />
-      ;;     <div data-stork=\"federalist-output\" class=\"stork-output\"></div>
-      ;;   </div>
-      ;; </ul>
-      ;; <hr>
-      ;; </div>
-      ;; <script src=\"https://files.stork-search.net/releases/v1.6.0/stork.js\"></script>
-      ;; <script>
-      ;; stork.register(
-      ;;     'federalist', 'https://www.ep.sci.hokudai.ac.jp/~zgarid/garid_stork.st'
-      ;; )
-      ;; </script>
-      ;; "
-      )
-     ("phd-website"
-      :base-directory ,(concat (denote-directory) "phd")
-      :recursive t
-      :publishing-function   org-html-publish-to-html
-      :publishing-directory ,(concat (denote-directory) "phd" "/website")
-      :exclude ".*daily/.*org"
-      :completion-function garid/publish-to-epnet-via-rsync
-      :section-numbers     org-export-with-section-numbers
-      :with-toc         t
-      :html_link_home  "index.html"
-      :html-preamble ,(concat
-                       "<div id=\"navbar\"> <ul>"
-                       "<div class=\"stork-wrapper\">"
-                       "<a href=\"/~zgarid/phd/" (garid/get-html-url-from-org-path (denote-get-path-by-id "20241109T014358")) "\"> Info </a> &nbsp;"
-                       "<a href=\"/~zgarid/phd/" (garid/get-html-url-from-org-path (denote-get-path-by-id "20240814T113502")) "\"> Home </a> &nbsp;"
-                       "<a href=\"/~zgarid/phd/" (garid/get-html-url-from-org-path (denote-get-path-by-id "20241109T130751")) "\"> 1.Introduction </a> &nbsp;"
-                       "<a href=\"/~zgarid/phd/" (garid/get-html-url-from-org-path (denote-get-path-by-id "20241109T133612")) "\"> 2.Developments </a> &nbsp;"
-                       "<a href=\"/~zgarid/phd/" (garid/get-html-url-from-org-path (denote-get-path-by-id "20241109T133644")) "\"> 3.Methods </a> &nbsp;"
-                       "<a href=\"/~zgarid/phd/" (garid/get-html-url-from-org-path (denote-get-path-by-id "20241109T133718")) "\"> 4.Results </a> &nbsp;"
-                       "<a href=\"/~zgarid/phd/" (garid/get-html-url-from-org-path (denote-get-path-by-id "20241109T133803")) "\"> 5.Discussion </a> &nbsp;"
-                       "<a href=\"/~zgarid/search.html\">Search</a>          &nbsp;"
-                       "<input data-stork=\"federalist\" class=\"stork-input\" />"
-                       "<div data-stork=\"federalist-output\" class=\"stork-output\"></div>"
-                       "</div>"
-                       "</ul>"
-                       "<hr>"
-                       "</div>"
-                       "<script src=\"https://files.stork-search.net/releases/v1.6.0/stork.js\"></script>"
-                       "<script>"
-                       "stork.register('federalist', 'https://www.ep.sci.hokudai.ac.jp/~zgarid/phd/stork-db.st')"
-                       "</script>"
-                       "<link"
-                       "  rel=\"stylesheet\""
-                       "  href=\"https://files.stork-search.net/releases/v1.6.0/basic.css\""
-                       "/>"
-                       )
-      )
-
-     ("phd-2-md"
-      :base-directory ,(concat (denote-directory) "phd")
-      :recursive t
-      :publishing-function  org-md-publish-to-md
-      :publishing-directory ,(concat (denote-directory) "phd" "/website-md")
-      :exclude ".*daily/.*org"
-      :section-numbers     org-export-with-section-numbers
-      :completion-function garid/re-create-stork-db-from-md-exports
-      )
-
-
-     ;; good but doesn't expot caption
-     ;; ("phd-2-text"
-     ;;  :base-directory ,(concat (denote-directory) "phd")
-     ;;  :recursive t
-     ;;  :publishing-function  org-ascii-publish-to-ascii
-     ;;  :publishing-directory ,(concat (denote-directory) "phd" "/website-text")
-     ;;  :exclude ".*daily/.*org"
-     ;;  :section-numbers     org-export-with-section-numbers
-     ;;  )
-
-
-     )))
-#+end_src
-
-
-
 * COMMENT completion preview mode
 #+begin_src emacs-lisp
 (use-package completion-preview
@@ -1067,7 +1067,7 @@ I publish first from org to md in the local dir. Then using that local dir to cr
   )
 #+end_src
 
-** COMMENT theme
+* COMMENT theme
 #+begin_src emacs-lisp :results none
 (use-package uwu-theme
   :ensure t
@@ -1091,4 +1091,10 @@ I publish first from org to md in the local dir. Then using that local dir to cr
   ;;   (let ((indent-tabs-mode nil)) ad-do-it))
   ;; (ad-activate 'align-regexp)
   )
+#+end_src
+
+* COMMENT =org-timeblock=: agenda to SVG
+#+begin_src emacs-lisp
+(use-package org-timeblock
+  :after compat-macs)
 #+end_src
