@@ -8,6 +8,8 @@
 #+LATEX_HEADER: \babelfont{rm}{Linux Libertine O}
 #+LATEX_HEADER: \babelfont[japanese]{rm}{IPAMincho}
 
+#+LATEX_HEADER: \setmonofont[Scale=MatchLowercase]{Aporetic Serif}
+
 #+LATEX_HEADER: \usepackage{svg}        % for svg images my need \usepackage[inkscapelatex=false]{svg}
 
 #+LATEX_HEADER: \usepackage{float}  % for float \begin{figure}[H]

@@ -1045,12 +1045,13 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   :after org
   :custom
   (org-latex-compiler "lualatex")
-  (org-latex-src-block-backend              'listings                                             )
-  (org-latex-format-headline-function       'garid/latex-formattig-headings                )
-  (org-latex-active-timestamp-format         "\\textcolor{Brown}{%s}"                             )
-  (org-latex-inactive-timestamp-format       "\\textcolor{Brown}{%s}"                             )
-  ;;(org-latex-pdf-process
-  ;;'("lualatex  --shell-escape -interaction nonstopmode -output-directory=%o %f"))
+  (org-latex-src-block-backend           'listings                      )
+  (org-latex-format-headline-function    'garid/latex-formattig-headings)
+  (org-latex-active-timestamp-format      "\\textcolor{Brown}{%s}"      )
+  (org-latex-inactive-timestamp-format    "\\textcolor{Brown}{%s}"      )
+  (org-latex-pdf-process
+   '("latexmk -shell-escape -f -pdf -%latex -interaction=nonstopmode -output-directory=%o %f"))
+
   :config
   (defun garid/latex-formattig-headings
       (todo todo-type priority text tags _info)
@@ -1903,7 +1904,7 @@ Similar to vim-signify.
                                           ;; (font-size       . 20)
                                           (font-size       . 24)
                                           ;;(font-family     . "sans-serif")
-                                          ;; (font-family     . "Linux Libertine")
+                                          (font-family     . "Linux Libertine")
                                           ;;(font-family     . "xkcd Script")
                                           (text-anchor     . "middle"))
                                     (image)))
