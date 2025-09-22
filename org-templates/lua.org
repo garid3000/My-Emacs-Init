@@ -1,7 +1,13 @@
 #+LATEX_COMPILER: lualatex
-#+LATEX_HEADER: \usepackage{fontspec}
-#+LATEX_HEADER: \usepackage{color}
-#+LATEX_HEADER: \usepackage{cancel}
-#+LATEX_HEADER: \usepackage[dvipsnames]{xcolor}
-#+LATEX_HEADER: \setmainfont{Linux Libertine O}
 
+#+LATEX_HEADER: \usepackage[english]{babel}
+#+LATEX_HEADER: \babelprovide[import, onchar=ids fonts]{japanese}
+#+LATEX_HEADER: \babelprovide[import, onchar=ids fonts]{mongolian}
+#+LATEX_HEADER: \babelfont{rm}{Linux Libertine O}
+#+LATEX_HEADER: \babelfont[japanese]{rm}{IPAMincho}
+
+#+LATEX_HEADER: \usepackage{svg}        % for svg images my need \usepackage[inkscapelatex=false]{svg}
+
+
+#+LATEX_HEADER: \usepackage{xcolor}   % for coddes
+#+LATEX_HEADER: \usepackage{listings}   % for coddes

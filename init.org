@@ -1090,7 +1090,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 (use-package auctex  :straight t)
 (use-package cdlatex :straight t)
 #+end_src
-** =ox-latex=
+** COMMENT =ox-latex=
 #+begin_src emacs-lisp
 (use-package ox-latex
   :straight nil
@@ -1115,6 +1115,38 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
                                     ("\\subparagraph{%s}"  . "\\subparagraph*{%s}")))
 
   ;; function -------------------------------------------------------------------------------------
+  (defun garid/latex-formattig-headings
+      (todo todo-type priority text tags _info)
+    "Default format function for a headline.
+  See `org-latex-format-headline-function' for details."
+    (concat
+     (and todo
+          (format "{\\framebox{\\bfseries\\color{%s} %s}} "
+                  (pcase todo-type
+                    ('todo "olive") ('done "teal")
+                    ;;('todo "Black") ('done "Brown")
+                    )
+                  todo))
+     (and priority (format "\\framebox{\\#%c} " priority)) text
+     (and tags
+          (format "\\hfill{}\\textsc{%s}"
+                  (mapconcat #'org-latex--protect-text tags ":")))))
+  )
+#+end_src
+** oxlatex
+#+begin_src emacs-lisp
+(use-package ox-latex
+  :straight nil
+  :after org
+  :custom
+  (org-latex-compiler "lualatex")
+  (org-latex-src-block-backend              'listings                                             )
+  (org-latex-format-headline-function       'garid/latex-formattig-headings                )
+  (org-latex-active-timestamp-format         "\\textcolor{Brown}{%s}"                             )
+  (org-latex-inactive-timestamp-format       "\\textcolor{Brown}{%s}"                             )
+  (org-latex-pdf-process
+   '("lualatex  --shell-escape -interaction nonstopmode -output-directory=%o %f"))
+  :config
   (defun garid/latex-formattig-headings
       (todo todo-type priority text tags _info)
     "Default format function for a headline.
