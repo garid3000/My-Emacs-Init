@@ -1,5 +1,7 @@
 #+LATEX_COMPILER: lualatex
 
+#+LATEX_HEADER: \usepackage[margin=1.01in]{geometry} % margin
+
 #+LATEX_HEADER: \usepackage[english]{babel}
 #+LATEX_HEADER: \babelprovide[import, onchar=ids fonts]{japanese}
 #+LATEX_HEADER: \babelprovide[import, onchar=ids fonts]{mongolian}
@@ -8,6 +10,196 @@
 
 #+LATEX_HEADER: \usepackage{svg}        % for svg images my need \usepackage[inkscapelatex=false]{svg}
 
+#+LATEX_HEADER: \usepackage{float}  % for float \begin{figure}[H]
 
-#+LATEX_HEADER: \usepackage{xcolor}   % for coddes
+#+LATEX_HEADER: \usepackage[dvipsnames]{xcolor} % \usepackage{xcolor}   % for coddes
 #+LATEX_HEADER: \usepackage{listings}   % for coddes
+
+
+#+LATEX_HEADER: \usepackage{caption}
+
+#+LATEX_HEADER: \usepackage{multicol}                   % multicols
+#+LATEX_HEADER: \setlength{\columnsep}{1cm}
+
+#+LATEX_HEADER: \DeclareCaptionFont{white}{\color{white}}
+#+LATEX_HEADER: \DeclareCaptionFormat{listing}{\colorbox{gray}{\parbox{\textwidth}{#1#2#3}}}
+#+LATEX_HEADER: \captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white}
+
+#+LATEX_HEADER: \usepackage{fancyvrb} %https://emacs.stackexchange.com/a/53645/38482
+#+LATEX_HEADER: \DefineVerbatimEnvironment{verbatim}{Verbatim}{frame=single,fontsize=\small,formatcom = {\color[rgb]{0.5,0,0}}}
+
+#+LATEX_HEADER: \definecolor{customgreen}{rgb}{0,0.6,0}
+#+LATEX_HEADER: \definecolor{customgray}{rgb}{0.5,0.5,0.5}
+#+LATEX_HEADER: \definecolor{custommauve}{rgb}{0.6,0,0.8}
+
+
+
+#+LATEX_HEADER: \lstdefinelanguage{calc}{        % new calc language
+#+LATEX_HEADER:     % alsodigit = {-},           % I don't need this
+#+LATEX_HEADER:     keywords = {taylor, sin}
+#+LATEX_HEADER: }                                % it from from https://tex.stackexchange.com/a/317276/292504 
+
+
+#+LATEX_HEADER: \lstdefinelanguage{nim}{         % new nim language
+#+LATEX_HEADER:     % alsodigit = {-},           % I don't need this
+#+LATEX_HEADER:     keywords = {echo, import}
+#+LATEX_HEADER: }                                % it from from https://tex.stackexchange.com/a/317276/292504 
+
+
+#+LATEX_HEADER: \lstdefinelanguage{shell}{       % new makefile -> shell language
+#+LATEX_HEADER:     keywords = {if, fi, case, esac, echo, convert},
+#+LATEX_HEADER:     comment=[l]{\#},
+#+LATEX_HEADER:     commentstyle=\color{Gray}\ttfamily,
+#+LATEX_HEADER:     stringstyle=\color{ForestGreen}\ttfamily,
+#+LATEX_HEADER:     morestring=[b]",
+#+LATEX_HEADER: }                                % it from from https://tex.stackexchange.com/a/317276/292504 
+
+#+LATEX_HEADER: \lstdefinelanguage{text}{       % new makefile -> shell language
+#+LATEX_HEADER: }                                % it from from https://tex.stackexchange.com/a/317276/292504 
+
+#+LATEX_HEADER: \lstdefinelanguage{Lisp}{        % new Lip language
+#+LATEX_HEADER:     % alsodigit = {-},           
+#+LATEX_HEADER:     otherkeywords = {use\-package, \:delight, \:demand, \:init, \:hook, \:custom, \:map, \:bind, \:config, \:ensure, \:after, add\-to\-list, defcustom, defun, lambda, interactive},           
+#+LATEX_HEADER:     comment=[l]{;},
+#+LATEX_HEADER:     commentstyle=\color{Gray}\ttfamily,
+#+LATEX_HEADER:     stringstyle=\color{ForestGreen}\ttfamily,
+#+LATEX_HEADER:     morestring=[b]",
+#+LATEX_HEADER:     keywords = {setq, require}
+#+LATEX_HEADER: }                                % it from from https://tex.stackexchange.com/a/317276/292504 
+
+
+#+LATEX_HEADER: \lstdefinelanguage{plantuml}{        % new Lip language
+#+LATEX_HEADER:     keywords = {as}
+#+LATEX_HEADER: }                                % it from from https://tex.stackexchange.com/a/317276/292504 
+
+
+
+#+LATEX_HEADER: \lstdefinelanguage{org}{         % new org language
+#+LATEX_HEADER:     keywords = {file, transclude}
+#+LATEX_HEADER: }                                % modified from from https://tex.stackexchange.com/a/317276/292504 
+
+#+LATEX_HEADER: \lstdefinelanguage{Python}{         % new org language
+#+LATEX_HEADER:   comment=[l]{\#},
+#+LATEX_HEADER:   morekeywords=[1]{,as,assert,nonlocal,with,yield,self,True,False,None,for,while,def,import,}, % Python builtin
+#+LATEX_HEADER:   morekeywords=[2]{,__init__,__add__,__mul__,__div__,__sub__,__call__,__getitem__,__setitem__,__eq__,__ne__,__nonzero__,__rmul__,__radd__,__repr__,__str__,__get__,__truediv__,__pow__,__name__,__future__,__all__,}, % magic methods
+#+LATEX_HEADER:   morekeywords=[3]{,object,type,isinstance,copy,deepcopy,zip,enumerate,reversed,list,set,len,dict,tuple,range,xrange,append,execfile,real,imag,reduce,str,repr,}, % common functions
+#+LATEX_HEADER:   morekeywords=[4]{,Exception,NameError,IndexError,SyntaxError,TypeError,ValueError,OverflowError,ZeroDivisionError,}, % errors
+#+LATEX_HEADER:   morekeywords=[5]{,ode,fsolve,sqrt,exp,sin,cos,arctan,arctan2,arccos,pi, array,norm,solve,dot,arange,isscalar,max,sum,flatten,shape,find,any,all,abs,plot,linspace,legend,quad,polyval,polyfit,hstack,concatenate,vstack,column_stack,empty,zeros,ones,rand,vander,grid,pcolor,eig,eigs,eigvals,svd,qr,tan,det,logspace,roll,min,mean,cumsum,cumprod,diff,vectorize,lstsq,cla,eye,xlabel,ylabel,squeeze,}, % numpy / math
+#+LATEX_HEADER:   morestring=[b]",
+#+LATEX_HEADER:   morestring=[b]',
+#+LATEX_HEADER: }                                % modified from from https://tex.stackexchange.com/a/317276/292504 
+
+
+#+LATEX_HEADER: \lstdefinelanguage{jupyter-python}{         % new org language
+#+LATEX_HEADER:   comment=[l]{\#},
+#+LATEX_HEADER:   morekeywords=[1]{,as,assert,nonlocal,with,yield,self,True,False,None,for,while,def,import,}, % Python builtin
+#+LATEX_HEADER:   morekeywords=[2]{,__init__,__add__,__mul__,__div__,__sub__,__call__,__getitem__,__setitem__,__eq__,__ne__,__nonzero__,__rmul__,__radd__,__repr__,__str__,__get__,__truediv__,__pow__,__name__,__future__,__all__,}, % magic methods
+#+LATEX_HEADER:   morekeywords=[3]{,object,type,isinstance,copy,deepcopy,zip,enumerate,reversed,list,set,len,dict,tuple,range,xrange,append,execfile,real,imag,reduce,str,repr,}, % common functions
+#+LATEX_HEADER:   morekeywords=[4]{,Exception,NameError,IndexError,SyntaxError,TypeError,ValueError,OverflowError,ZeroDivisionError,}, % errors
+#+LATEX_HEADER:   morekeywords=[5]{,ode,fsolve,sqrt,exp,sin,cos,arctan,arctan2,arccos,pi, array,norm,solve,dot,arange,isscalar,max,sum,flatten,shape,find,any,all,abs,plot,linspace,legend,quad,polyval,polyfit,hstack,concatenate,vstack,column_stack,empty,zeros,ones,rand,vander,grid,pcolor,eig,eigs,eigvals,svd,qr,tan,det,logspace,roll,min,mean,cumsum,cumprod,diff,vectorize,lstsq,cla,eye,xlabel,ylabel,squeeze,}, % numpy / math
+#+LATEX_HEADER:   morestring=[b]",
+#+LATEX_HEADER:   morestring=[b]',
+#+LATEX_HEADER: }                                % modified from from https://tex.stackexchange.com/a/317276/292504 
+
+
+
+
+#+LATEX_HEADER: \lstdefinelanguage{sage}{         % new org language
+#+LATEX_HEADER:   morekeywords=[1]{,as,assert,nonlocal,with,yield,self,True,False,None,for,while,def,import,}, % Python builtin
+#+LATEX_HEADER:   morekeywords=[2]{,__init__,__add__,__mul__,__div__,__sub__,__call__,__getitem__,__setitem__,__eq__,__ne__,__nonzero__,__rmul__,__radd__,__repr__,__str__,__get__,__truediv__,__pow__,__name__,__future__,__all__,}, % magic methods
+#+LATEX_HEADER:   morekeywords=[3]{,object,type,isinstance,copy,deepcopy,zip,enumerate,reversed,list,set,len,dict,tuple,range,xrange,append,execfile,real,imag,reduce,str,repr,}, % common functions
+#+LATEX_HEADER:   morekeywords=[4]{,Exception,NameError,IndexError,SyntaxError,TypeError,ValueError,OverflowError,ZeroDivisionError,}, % errors
+#+LATEX_HEADER:   morekeywords=[5]{,ode,fsolve,sqrt,exp,sin,cos,arctan,arctan2,arccos,pi, array,norm,solve,dot,arange,isscalar,max,sum,flatten,shape,reshape,find,any,all,abs,plot,linspace,legend,quad,polyval,polyfit,hstack,concatenate,vstack,column_stack,empty,zeros,ones,rand,vander,grid,pcolor,eig,eigs,eigvals,svd,qr,tan,det,logspace,roll,min,mean,cumsum,cumprod,diff,vectorize,lstsq,cla,eye,xlabel,ylabel,squeeze,}, % numpy / math
+#+LATEX_HEADER:   morestring=[b]",
+#+LATEX_HEADER:   morestring=[b]',
+#+LATEX_HEADER: }                                % modified from from https://tex.stackexchange.com/a/317276/292504 
+
+
+#+LATEX_HEADER: \lstdefinelanguage{lua} {
+#+LATEX_HEADER:   morekeywords={and,break,do,else,elseif,end,false,for,function,if,in,local,
+#+LATEX_HEADER:     nil,not,or,repeat,return,then,true,until,while},
+#+LATEX_HEADER:   morekeywords={[2]arg,assert,collectgarbage,dofile,error,_G,getfenv,
+#+LATEX_HEADER:     getmetatable,ipairs,load,loadfile,loadstring,next,pairs,pcall,print,
+#+LATEX_HEADER:     rawequal,rawget,rawset,select,setfenv,setmetatable,tonumber,tostring,
+#+LATEX_HEADER:     type,unpack,_VERSION,xpcall},
+#+LATEX_HEADER:   morekeywords={[2]coroutine.create,coroutine.resume,coroutine.running,
+#+LATEX_HEADER:     coroutine.status,coroutine.wrap,coroutine.yield},
+#+LATEX_HEADER:   morekeywords={[2]module,require,package.cpath,package.load,package.loaded,
+#+LATEX_HEADER:     package.loaders,package.loadlib,package.path,package.preload,
+#+LATEX_HEADER:     package.seeall},
+#+LATEX_HEADER:   morekeywords={[2]string.byte,string.char,string.dump,string.find,
+#+LATEX_HEADER:     string.format,string.gmatch,string.gsub,string.len,string.lower,
+#+LATEX_HEADER:     string.match,string.rep,string.reverse,string.sub,string.upper},
+#+LATEX_HEADER:   morekeywords={[2]table.concat,table.insert,table.maxn,table.remove,
+#+LATEX_HEADER:     table.sort},
+#+LATEX_HEADER:   morekeywords={[2]math.abs,math.acos,math.asin,math.atan,math.atan2,
+#+LATEX_HEADER:     math.ceil,math.cos,math.cosh,math.deg,math.exp,math.floor,math.fmod,
+#+LATEX_HEADER:     math.frexp,math.huge,math.ldexp,math.log,math.log10,math.max,math.min,
+#+LATEX_HEADER:     math.modf,math.pi,math.pow,math.rad,math.random,math.randomseed,math.sin,
+#+LATEX_HEADER:     math.sinh,math.sqrt,math.tan,math.tanh},
+#+LATEX_HEADER:   morekeywords={[2]io.close,io.flush,io.input,io.lines,io.open,io.output,
+#+LATEX_HEADER:     io.popen,io.read,io.tmpfile,io.type,io.write,file:close,file:flush,
+#+LATEX_HEADER:     file:lines,file:read,file:seek,file:setvbuf,file:write},
+#+LATEX_HEADER:   morekeywords={[2]os.clock,os.date,os.difftime,os.execute,os.exit,os.getenv,
+#+LATEX_HEADER:     os.remove,os.rename,os.setlocale,os.time,os.tmpname},
+#+LATEX_HEADER:     sensitive=true, morecomment=[l]{--}, morecomment=[s]{--[[}{]]},
+#+LATEX_HEADER:     morestring=[b]", morestring=[d]' }
+
+
+#+LATEX_HEADER: \definecolor{codegreen}{rgb}{0,0.6,0}
+#+LATEX_HEADER: \definecolor{codegray}{rgb}{0.5,0.5,0.5}
+#+LATEX_HEADER: \definecolor{codepurple}{rgb}{0.58,0,0.82}
+#+LATEX_HEADER: \definecolor{backcolour}{rgb}{0.97,0.97,0.93}
+#+LATEX_HEADER: 
+#+LATEX_HEADER: \lstdefinestyle{mystyle}{
+#+LATEX_HEADER:     backgroundcolor=\color{backcolour},   
+#+LATEX_HEADER:     commentstyle=\color{Gray}\ttfamily,
+#+LATEX_HEADER:     keywordstyle=\color{magenta},
+#+LATEX_HEADER:     numberstyle=\tiny\color{codegray}, %\noncopynumber,
+#+LATEX_HEADER:     stringstyle=\color{codepurple},
+#+LATEX_HEADER:     %basicstyle=\ttfamily\footnotesize,
+#+LATEX_HEADER:     basicstyle=\ttfamily\scriptsize,
+#+LATEX_HEADER:     breakatwhitespace=false,         
+#+LATEX_HEADER:     breaklines=true,                 
+#+LATEX_HEADER:     captionpos=b,                    
+#+LATEX_HEADER:     keepspaces=true,                 
+#+LATEX_HEADER:     numbers=left,                    
+#+LATEX_HEADER:     numbersep=5pt,                  
+#+LATEX_HEADER:     showspaces=false,                
+#+LATEX_HEADER:     showstringspaces=false,
+#+LATEX_HEADER:     showtabs=false,                  
+#+LATEX_HEADER:     tabsize=4,
+#+LATEX_HEADER:     frame=single,	                   
+#+LATEX_HEADER: }
+#+LATEX_HEADER: 
+#+LATEX_HEADER: \lstset{style=mystyle}
+
+#+LATEX_HEADER: %\lstset{
+#+LATEX_HEADER: %  %keywordstyle=\color{blue},
+#+LATEX_HEADER: %  %commentstyle=\color{red},
+#+LATEX_HEADER: %  %stringstyle=\color{cyan},
+#+LATEX_HEADER: %  stringstyle=\color{RedViolet}, %custommauve
+#+LATEX_HEADER: %  keywordstyle=\color{RoyalPurple},
+#+LATEX_HEADER: %  commentstyle=\color{OliveGreen},
+#+LATEX_HEADER: %  %basicstyle=\ttfamily\footnotesize,
+#+LATEX_HEADER: %  basicstyle=\ttfamily\scriptsize,
+#+LATEX_HEADER: %  breaklines=true,             %firstnumber=1000,
+#+LATEX_HEADER: %  keepspaces=true,                 
+#+LATEX_HEADER: %  numbers=left,                    
+#+LATEX_HEADER: %  numbersep=5pt,                   
+#+LATEX_HEADER: %  numberstyle=\tiny\color{customgray},    
+#+LATEX_HEADER: %  showspaces=false,                
+#+LATEX_HEADER: %  showstringspaces=false,       %showtabs=true,                  
+#+LATEX_HEADER: %  stepnumber=1,                    
+#+LATEX_HEADER: %}
+
+
+
+
+
+#+LATEX_HEADER: \hypersetup{   %using answer https://tex.stackexchange.com/a/847/292504
+#+LATEX_HEADER:     colorlinks,
+#+LATEX_HEADER:     linkcolor={red!50!black},
+#+LATEX_HEADER:     citecolor={blue!50!black},
+#+LATEX_HEADER:     urlcolor={blue!80!black}
+#+LATEX_HEADER: }

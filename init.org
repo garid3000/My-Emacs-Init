@@ -5,7 +5,7 @@
 #+email:        garidzorigoo@gmail.com
 #+auto_tangle:  t
 #+property:     header-args :tangle init.el
-#+setupfile:    ~/.config/emacs/org-templates/level-0-xelatex-fonts-conf.org
+#+setupfile:    ~/.config/emacs/org-templates/lua.org
 #+options:      toc:t tags:nil  todo:t  tasks:t
 #+html_head:    <link rel="stylesheet" type="text/css" href="https://unpkg.com/chota"/>
 
@@ -242,10 +242,10 @@ but it feels slow when navigating.
   (modus-themes-prompts           '(bold             ))
   (modus-themes-completions         nil              )
   (modus-themes-org-blocks        'tinted-background )
-  (modus-themes-headings          '((0                . (medium variable-pitch 1.2 ))
-                                    (1                . (medium variable-pitch 1.2 ))
-                                    (2                . (medium variable-pitch 1.1 ))
-                                    (3                . (medium variable-pitch 1.1 ))
+  (modus-themes-headings          '((0                . (medium variable-pitch 1.15 ))
+                                    (1                . (medium variable-pitch 1.10 ))
+                                    (2                . (medium variable-pitch 1.05 ))
+                                    (3                . (medium variable-pitch 1.05 ))
                                     (agenda-date      . (                      1.1 ))
                                     (agenda-structure . (variable-pitch light  1.1 ))
                                     (t                . (medium variable-pitch 1.0 ))))
@@ -455,7 +455,6 @@ but it feels slow when navigating.
 
   :custom
   ;; ---------------- theme/styling ------------------------------------------------------
-  ;; (org-ellipsis                     " ▼" )
   (org-hide-emphasis-markers         t      )
   (org-image-actual-width            1.0    )
   (org-startup-folded         "show2levels" ) ;; fold
@@ -1050,8 +1049,8 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   (org-latex-format-headline-function       'garid/latex-formattig-headings                )
   (org-latex-active-timestamp-format         "\\textcolor{Brown}{%s}"                             )
   (org-latex-inactive-timestamp-format       "\\textcolor{Brown}{%s}"                             )
-  (org-latex-pdf-process
-   '("lualatex  --shell-escape -interaction nonstopmode -output-directory=%o %f"))
+  ;;(org-latex-pdf-process
+  ;;'("lualatex  --shell-escape -interaction nonstopmode -output-directory=%o %f"))
   :config
   (defun garid/latex-formattig-headings
       (todo todo-type priority text tags _info)
@@ -2042,8 +2041,8 @@ Similar to vim-signify.
 
 ** Non sequential keybindings
 *** Global keybinding table
-#+caption: Global (aka from anywhere) non-sequential keybinding
 #+name: tbl-global-keybindings
+#+caption: Global (aka from anywhere) non-sequential keybinding
 | key     | function                               | description                       | state                 |
 |---------+----------------------------------------+-----------------------------------+-----------------------|
 | =M-q=     | =delete-window=                          | delete window                     | =evil-normal-state-map= |
@@ -2056,8 +2055,8 @@ Similar to vim-signify.
 Note to myself: after changing Table-[[tbl-global-keybindings]], I need to update [[convert-global-keybindings]]
 
 *** Convert global keybinding table into elisp
-#+caption: adsf
 #+name: convert-global-keybindings
+#+caption: adsf
 #+begin_src elisp :var tab=tbl-global-keybindings :wrap src emacs-lisp :tangle no
 (concat
  (mapconcat
