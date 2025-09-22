@@ -1348,3 +1348,38 @@ Slighty different version.
                 (concat "\\(\\s-*\\)" (read-string "Align regexp: ")))
   (untabify beg end))
 #+end_src
+
+* removing org tempo
+#+begin_src emacs-lisp
+
+;; (require 'org-tempo)
+
+;; (org-structure-template-alist
+;;  '(("ba"    . "abstract")
+;;    ("mk"    . "src makefile :tangle no")
+;;    ("sq"    . "sqlite")
+;;    ("py2"   . "src python :session pySess2 :results output :exports both :eval no-export")
+;;    ("py1"   . "src python :session pySess1 :results output :exports both :eval no-export")
+;;    ("py"    . "src python")
+;;    ("do1"   . "src src dot :file (concat org-download-image-dir \"/tmp.svg\") :exports results :eval no-export")
+;;    ("do"    . "src dot")
+;;    ("te"    . "src text")
+;;    ("sh"    . "src sh :eval no-export :shebang \"#!/bin/sh\"")
+;;    ("go1"   . "src go :exports both :eval never-export")
+;;    ("go"    . "src go")
+;;    ("el"    . "src emacs-lisp")
+;;    ("a"     . "export ascii")
+;;    ("c"     . "center")
+;;    ("C"     . "comment")
+;;    ("e"     . "example")
+;;    ("E"     . "export")
+;;    ("h"     . "export html")
+;;    ("l"     . "export latex")
+;;    ("q"     . "quote")
+;;    ("s"     . "src")
+;;    ("sage"  . "src sage")
+;;    ("sage1" . "src sage :session foo :results drawer :exports both :post equation_wrapper_equation_aligned(data=*this*)  :eval never-export")
+;;    ("v"     . "verse")
+;;    ("ju"    . "src jupyter-python :session juSess1 :async yes :eval never-export :exports both")
+;;    ))
+#+end_src

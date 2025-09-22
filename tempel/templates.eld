@@ -424,8 +424,8 @@ org-mode
 (verse       "#+begin_verse"        n> r> n "#+end_verse")
 (src         "#+begin_src "         q n r n "#+end_src")
 (conf        "#+begin_src conf"     q n r n "#+end_src")
-(gnuplot     "#+begin_src gnuplot :var data=" (p "table") " :file " (p "plot.png") n r n "#+end_src" :post (org-edit-src-code))
-(elisp       "#+begin_src emacs-lisp" n r n "#+end_src" :post (org-edit-src-code))
+(gnuplot     "#+begin_src gnuplot :var data=" (p "table") " :file " (p "plot.png") n r n "#+end_src") ;;  :post (org-edit-src-code))
+(elisp       "#+begin_src emacs-lisp" n r n "#+end_src") ;; :post (org-edit-src-code)  
 (inlsrc      "src_" p "[:exports code]{" q "}")
 (title       "#+title: " p n
              "#+author: Garid Zorigoo" n
@@ -436,8 +436,7 @@ org-mode
              :post (garid/choose-from-list-and-insert-it '("toc:t" "toc:2" "toc:nil")))
 (shell       "#+begin_src sh :eval no-export :results verbatim :exports both" n
              "#!/bin/sh" n r n
-             "#+end_src"
-             :post (org-edit-src-code))
+             "#+end_src") ;; :post (org-edit-src-code))
 (startup     "#+startup: "
              :post (garid/choose-from-list-and-insert-it
                     '("overview" "content" "showall" "showeverything"
