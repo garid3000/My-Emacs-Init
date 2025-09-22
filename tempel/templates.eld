@@ -492,7 +492,7 @@ org-mode
 (async        "session "                  :post (garid/choose-from-list-and-insert-it '("yes" "no")))
 (tangle       "tangle ~/")
 (tangle_iff   "tangle (if (not file-exists-p \"foo\") \"foo\" \"no\")")
-(shebang      "shebang #!/bin/bash")
+(shebang      "shebang #!/usr/bin/env bash") ;; (shebang      "shebang #!/bin/bash")
 
 
 (eqin1               "\\(" r> "\\)")
