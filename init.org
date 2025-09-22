@@ -70,7 +70,6 @@ run:
 
   (define-key evil-normal-state-map (kbd "SPC a") 'evil-avy-goto-char-2)
   ;;(define-key evil-normal-state-map (kbd "<f3>") )
-  (define-key evil-normal-state-map (kbd "<f3>") 'evil-visual-mark-mode) ;; 'evil-avy-goto-char-2
   )
 #+end_src
 ** =evil-collection=: vi-movements everywhere
@@ -131,16 +130,20 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   (define-key evil-outer-text-objects-map "a" (evil-textobj-tree-sitter-get-textobj ("conditional.outer" "loop.outer"))))
 #+end_src
 
-** visualizing the marker?
+** =evil-visual-mark-mode= for visualizing evil marker
 #+begin_src emacs-lisp
 (use-package evil-visual-mark-mode
-  :straight t)
+  :straight t
+  :after evil
+  :config
+  (define-key evil-normal-state-map
+              (kbd "<f3>") 'evil-visual-mark-mode))
 #+end_src
 
 ** repeat
 #+begin_src emacs-lisp
 (use-package repeat
-  :straight nil  ;; built in
+  :straight nil  ;; <- built in
   :config (repeat-mode +1))
 #+end_src
 
@@ -204,21 +207,14 @@ but it feels slow when navigating.
 #+end_src
 
 * Theme & colors
-** faces
+** font related
 #+begin_src emacs-lisp
-;;(use-package font-core
-;;  :straight nil
-;;  :hook 
-;;  (after-init . (lambda () (global-font-lock-mode 1)))
-;;  )
-
 (use-package faces
   :straight nil
   :custom
   (face-font-family-alternatives
    '(("Monospace" "Aporetic Sans Mono" "Iosevka SS06" "Iosevka Term SS06" "Liberation Mono" "courier" "fixed")
-     ("Serif" "Aporetic Serif Mono" "Iosevka etoile" "Linux Libertine"  "CMU Serif" "Georgia"  "DejaVu Serif" "serif")
-     ))
+     ("Serif" "Aporetic Serif Mono" "Iosevka etoile" "Linux Libertine"  "CMU Serif" "Georgia"  "DejaVu Serif")))
 
   :custom-face
   (variable-pitch ((t (:family "Serif"           :height 120))))
@@ -229,38 +225,31 @@ but it feels slow when navigating.
 (use-package faces-remap
   :straight nil
   :hook (org-mode . variable-pitch-mode))
-
 #+end_src
 
-#+RESULTS:
-
-** modus theme                                                                            :by_prot:
+** =modus= theme                                                                            :by_prot:
 
 #+begin_src emacs-lisp
 (use-package modus-themes
   :straight t
   :demand t
+  :custom
+  (modus-themes-to-toggle '(modus-vivendi-tinted modus-operandi-tinted ))
+  (modus-themes-italic-constructs  t                 )
+  (modus-themes-bold-constructs    t                 )
+  (modus-themes-variable-pitch-ui  t                 )
+  (modus-themes-mixed-fonts        t                 )
+  (modus-themes-prompts           '(bold             ))
+  (modus-themes-completions         nil              )
+  (modus-themes-org-blocks        'tinted-background )
+  (modus-themes-headings          '((0                . (medium variable-pitch 1.2 ))
+                                    (1                . (medium variable-pitch 1.2 ))
+                                    (2                . (medium variable-pitch 1.1 ))
+                                    (3                . (medium variable-pitch 1.1 ))
+                                    (agenda-date      . (                      1.1 ))
+                                    (agenda-structure . (variable-pitch light  1.1 ))
+                                    (t                . (medium variable-pitch 1.0 ))))
   :config
-  ;; (setq modus-themes-to-toggle '(modus-operandi-tinted modus-vivendi-tinted))
-  (setq modus-themes-to-toggle '(modus-vivendi-tinted modus-operandi-tinted ))
-
-  (setq modus-themes-italic-constructs t
-        modus-themes-bold-constructs t
-        modus-themes-variable-pitch-ui t
-        modus-themes-mixed-fonts t)
-
-  (setq modus-themes-prompts '(bold))
-  (setq modus-themes-completions nil)
-  (setq modus-themes-org-blocks 'tinted-background) ;'gray-background)
-  ;(setq modus-themes-org-blocks  'gray-background)
-
-  (setq modus-themes-headings '((0 . (medium variable-pitch 1.2))
-                                (1 . (medium variable-pitch 1.2))
-                                (2 . (medium variable-pitch 1.1))
-                                (3 . (medium variable-pitch 1.1))
-                                (agenda-date . (1.1))
-                                (agenda-structure . (variable-pitch light 1.1))
-                                (t . (medium variable-pitch 1.0))))
 
 
   (customize-set-variable 'modus-themes-common-palette-overrides
@@ -298,34 +287,29 @@ but it feels slow when navigating.
 
 ** =delight=
 #+begin_src emacs-lisp
-(use-package delight
-  :straight t)
+(use-package delight :straight t)
 #+end_src
 
 ** =display-line-numbers=: displaying number
 #+begin_src emacs-lisp
-;; setting line
 (use-package display-line-numbers
-  :straight t
+  :straight nil
   :custom
   (display-line-numbers-type 'relative)
   (ring-bell-function        'ignore)
   :config
-  (global-display-line-numbers-mode -1)
-  )
+  (global-display-line-numbers-mode -1))
 #+end_src
 
 ** Line visibility
 #+begin_src emacs-lisp
 (use-package hl-line
   :straight nil
-  :config
-  (global-hl-line-mode 1))
+  :config (global-hl-line-mode 1))
 
 (use-package hl-todo
   :straight t
-  :config
-  (global-hl-todo-mode 1))
+  :config (global-hl-todo-mode 1))
 #+end_src
 
 ** =pulsar= pulses on certain functions                                                     :by_prot:
@@ -333,8 +317,8 @@ but it feels slow when navigating.
 (use-package pulsar
   :straight t
   :custom
-  (pulsar-delay 0.05)
-  (pulsar-iterations 2)
+  (pulsar-delay      0.05)
+  (pulsar-iterations    2)
   :config (pulsar-global-mode))
 #+end_src
 
@@ -378,7 +362,7 @@ but it feels slow when navigating.
   (consult-preview-key (list :debounce 0.5 'any))
   :bind
   ("M-y" . consult-yank-from-kill-ring)
-  ("M-f" . consult-line)
+  ("M-f" . consult-line               )
   :config
   (defun garid/consult-preview-change ()
     (interactive)
@@ -387,10 +371,7 @@ but it feels slow when navigating.
       (when (string= "nil" tmp-chose)    (setq consult-preview-key nil))
       (when (string= "any" tmp-chose)    (setq consult-preview-key 'any))
       (when (string= "0.5sec" tmp-chose) (setq consult-preview-key (list :debounce 0.5 'any)))
-      )
-
-    )
-  )
+      )))
 #+end_src
 ** =orderless=: orderless completion
 #+begin_src emacs-lisp
@@ -400,7 +381,7 @@ but it feels slow when navigating.
   (completion-styles '(orderless flex))
   '((file (styles basic partial-completion))))
 
-;;(completion-styles '(orderless basic))
+;; (completion-styles '(orderless basic))
 ;; (completion-category-overrides
 #+end_src
 ** =embark=: interacting with completion entries
@@ -641,8 +622,7 @@ but it feels slow when navigating.
   :hook (org-mode . org-appear-mode)
   :custom
   (org-appear-autolinks t)
-  (org-appear-delay 0.25)
-  )
+  (org-appear-delay     0.25))
 #+end_src
 
 ** =org-attach=
@@ -651,8 +631,7 @@ but it feels slow when navigating.
   :after org
   :straight nil
   :custom
-  ;;(org-id-method                       'org)
-  (org-id-method                       'ts)
+  (org-id-method                       'ts) ;;'org)
   (org-attach-id-to-path-function-list '(my/org-attach-dir-calculator
                                          org-attach-id-ts-folder-format
                                          org-attach-id-uuid-folder-format))
@@ -710,6 +689,7 @@ but it feels slow when navigating.
 #+begin_src emacs-lisp
 (use-package denote
   :straight t
+  :after org
   :custom
   (denote-excluded-directories-regexp  ".*export_.*\\|.*website.*")
   (denote-directory                    "~/BrainDump/denote")
@@ -758,16 +738,20 @@ but it feels slow when navigating.
 #+begin_src emacs-lisp
 (use-package denote-journal
   :straight t
+  :after denote
   :custom (denote-journal-extras-title-format 'day))
 #+end_src
 ** =denote-org=                                                                             :by_prot:
 #+begin_src emacs-lisp
-(use-package denote-org :straight t)
+(use-package denote-org
+  :after denote
+  :straight t)
 #+end_src
 ** =denote-silo=                                                                            :by_prot:
 #+begin_src emacs-lisp
 (use-package denote-silo
   :straight t
+  :after denote
   :custom
   (denote-silo-directories
    (mapcar
@@ -791,6 +775,7 @@ but it feels slow when navigating.
 #+begin_src emacs-lisp
 (use-package consult-denote
   :straight t
+  :after denote
   :custom
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; (consult-denote-silo-source            ;;
@@ -1054,50 +1039,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 (use-package auctex  :straight t)
 (use-package cdlatex :straight t)
 #+end_src
-** COMMENT =ox-latex=
-#+begin_src emacs-lisp
-(use-package ox-latex
-  :straight nil
-  :after org
-  :custom
-  (org-latex-src-block-backend              'listings                                             )
-  (org-latex-format-headline-function       'garid/latex-formattig-headings                )
-  (org-latex-active-timestamp-format         "\\textcolor{Brown}{%s}"                             )
-  (org-latex-inactive-timestamp-format       "\\textcolor{Brown}{%s}"                             )
-  (org-latex-pdf-process
-   '("latexmk -shell-escape -f -xelatex -%latex -interaction=nonstopmode -output-directory=%o %f" ))
-  ;; -output-driver=\"xdvipdfmx -z 0\"
-  ;;'("latexmk -shell-escape -f -pdf -%latex -interaction=nonstopmode -output-directory=%o %f" ))
-  ;; (org-highlight-latex-and-related     '(latex script entities))
-  ;; (org-highlight-latex-and-related      nil)
-  :config
-  (add-to-list 'org-latex-classes '("extarticle" "\\documentclass{extarticle}"
-                                    ("\\section{%s}"       . "\\section*{%s}")
-                                    ("\\subsection{%s}"    . "\\subsection*{%s}")
-                                    ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-                                    ("\\paragraph{%s}"     . "\\paragraph*{%s}")
-                                    ("\\subparagraph{%s}"  . "\\subparagraph*{%s}")))
-
-  ;; function -------------------------------------------------------------------------------------
-  (defun garid/latex-formattig-headings
-      (todo todo-type priority text tags _info)
-    "Default format function for a headline.
-  See `org-latex-format-headline-function' for details."
-    (concat
-     (and todo
-          (format "{\\framebox{\\bfseries\\color{%s} %s}} "
-                  (pcase todo-type
-                    ('todo "olive") ('done "teal")
-                    ;;('todo "Black") ('done "Brown")
-                    )
-                  todo))
-     (and priority (format "\\framebox{\\#%c} " priority)) text
-     (and tags
-          (format "\\hfill{}\\textsc{%s}"
-                  (mapconcat #'org-latex--protect-text tags ":")))))
-  )
-#+end_src
-** oxlatex
+** =ox-latex= org export latex
 #+begin_src emacs-lisp
 (use-package ox-latex
   :straight nil
@@ -1129,7 +1071,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
                   (mapconcat #'org-latex--protect-text tags ":")))))
   )
 #+end_src
-** =ox-odt=
+** =ox-odt= org export odt
 #+begin_src emacs-lisp
 (use-package ox-odt
   :straight nil
@@ -1154,7 +1096,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   (advice-add 'org-odt-timestamp :override #'my-org-odt-timestamp-unstyled)
   )
 #+end_src
-** =org-latex-preview=
+** TODO =org-latex-preview=
 #+begin_src emacs-lisp
 (use-package org-latex-preview
   :straight nil
@@ -1225,7 +1167,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   :custom
   (org-download-display-inline-images  nil)
   (org-download-edit-cmd (concat user-emacs-directory "garid/edit_img.sh %s"))
-  (org-download-heading-lvl nil)                                                                            ;;
+  (org-download-heading-lvl nil)
 
   :config
   (org-download-enable))
@@ -1287,11 +1229,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 #+begin_src emacs-lisp
 (use-package prog-mode
   :straight nil
-  :bind (:map
-         prog-mode-map ("M-q" .  nil) ;; I use M-q for delete-window
-         )
-  ;; :config
-  ;; (evil-define-key 'normal 'prog-mode-map  (kbd "K")   'eldoc)      ;; or 'eldoc-box-help-at-point
+  :bind (:map prog-mode-map ("M-q" .  nil))
   )
 #+end_src
 ** =eldoc=
@@ -1302,7 +1240,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   (evil-define-key 'normal 'prog-mode-map  (kbd "K") 'eldoc)
   )
 #+end_src
-** =python=
+** TODO =python=
 #+begin_src emacs-lisp
 (use-package python
   :straight t
@@ -1341,6 +1279,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
       (python-mode)))
   )
 #+end_src
+*** TODO Need to write each python buffer (or org mode) to connect to another python shell buffers
 ** =code-cells-mode=
 #+begin_src emacs-lisp
 (use-package code-cells
@@ -1456,10 +1395,10 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 #+begin_src emacs-lisp
 (use-package elec-pair
   :straight nil
-  ;; :custom
-  ;; (electric-pair-inhibit-predicate
-  ;;  (lambda (c)
-  ;;    (if (char-equal c ?\<) t (electric-pair-default-inhibit c))))
+  :custom
+  (electric-pair-inhibit-predicate
+   (lambda (c)
+     (if (char-equal c ?\<) t (electric-pair-default-inhibit c))))
 
   :config
   (electric-pair-mode 1))
@@ -1481,11 +1420,11 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
 (setq straight-built-in-pseudo-packages '(project xref))
 
 (use-package xref
-    :straight nil
-    :demand t)
+  :straight nil
+  :demand t)
 
 (use-package project
-:straight nil
+  :straight nil
   :demand t
   :custom
   (project-switch-commands
@@ -1506,26 +1445,17 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
 ** =eglot=: lsp
 #+begin_src emacs-lisp
 (use-package eglot
-  ;;:custom (eglot-report-progress nil)   ;
-  ;; :custom (eglot-report-progress t)   ;
-  ;; ;;:config (add-to-list 'eglot-server-programs '(nix-ts-mode . ("nil")))
   :after project
   :hook
   (python-base-mode . eglot-ensure)
-  ;; :config
-  ;; ;; (add-to-list 'eglot-stay-out-of 'eldoc)
-  ;; (add-to-list 'eglot-server-programs
-  ;;              '(python-mode . ("pyright")))
 
   :config
-  ;; (add-to-list 'eglot-stay-out-of 'eldoc)
   (add-to-list 'eglot-server-programs
                '(python-mode . ("pyright-langserver" "--stdio")))
 
   (add-to-list 'eglot-server-programs
                '(org-mode . ("harper-ls" "--stdio")))
 
-  ;;'(python-mode . ("basedpyright"))) ;; not working not sure why
   (evil-define-key 'normal 'prog-mode-map  (kbd "g o") 'eglot-find-typeDefinition)
   (evil-define-key 'normal 'prog-mode-map  (kbd "] d") 'flymake-goto-next-error)
   (evil-define-key 'normal 'prog-mode-map  (kbd "[ d") 'flymake-goto-prev-error)
@@ -1533,22 +1463,14 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
   (add-hook
    'eglot-managed-mode-hook
    (lambda ()
-     ;; we want eglot to setup callbacks from eldoc, but we don't want eldoc
-     ;; running after every command. As a workaround, we disable it after we just
-     ;; enabled it. Now calling `M-x eldoc` will put the help we want in the eldoc
-     ;; buffer. Alternatively we could tell eglot to stay out of eldoc, and add
-     ;; the hooks manually, but that seems fragile to updates in eglot.
      (eldoc-mode -1)))
-
   )
-;;"--flag=value"))))
 #+end_src
 ** =consult-eglot=: consulting with lsp
 #+begin_src emacs-lisp
 (use-package consult-eglot
   :straight t
-  :after eglot
-  )
+  :after eglot)
 #+end_src
 ** =eglot-booster=: faster eglot
 #+begin_src emacs-lisp
@@ -1559,8 +1481,7 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
              :repo "jdtsmith/eglot-booster")
   :after eglot
   :config
-  (eglot-booster-mode +1)
-  )
+  (eglot-booster-mode +1))
 #+end_src
 
 ** =corfu=: completion
@@ -1640,7 +1561,7 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
   (setq-default abbrev-mode t)
   )
 #+end_src
-
+* AI helpers:
 ** =gptel= : gpt.el by karthinks 
 #+begin_src emacs-lisp
 (use-package gptel
@@ -1657,9 +1578,8 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
   :custom
   (gptel-commit-stream t)
   :bind (:map git-commit-mode-map
-              ("C-c g" .  gptel-commit)
-              ("C-c G" . gptel-commit-rationale)
-              ))
+              ("C-c g" . gptel-commit)
+              ("C-c G" . gptel-commit-rationale)))
 #+end_src
 
 * Coding convenient
@@ -1752,26 +1672,6 @@ Similar to vim-signify.
            )))
 #+end_src
 
-** COMMENT My Custom LaTeX writing system (aka TeQ)                                    :customFunc:
-#+begin_src emacs-lisp
-(add-to-list 'load-path (expand-file-name "~/.config/emacs/Emacs-TeQ"))
-(register-input-method "TeQ-Math" "Emacs-Teq-Latex" 'quail-use-package
-                       "TeQ-"     "TeQ-Math input"
-                       "Emacs-TeQ.el")
-
-(defun garid/toggle-eng-mon-teq-input-methods ()
-  (interactive)
-  (if (string= default-input-method nil )
-      (set-input-method "cyrillic-mongolian")
-    (if (string= default-input-method "TeQ-Math")
-	(set-input-method "cyrillic-mongolian")
-      (if (string= default-input-method "cyrillic-mongolian")
-	  (set-input-method "TeQ-Math")))))
-
-(fset 'gry-calc-horizontal-concat
-      (kmacro-lambda-form [?v ?t tab ?v ?t ?| ?v ?t] 0 "%d"))
-#+end_src
-
 ** copy link in org at point                                                           :customFunc:
 [[https://emacs.stackexchange.com/a/60555/38482][stack exchange]]
 
@@ -1815,16 +1715,6 @@ Similar to vim-signify.
   (font-lock-update))
 #+end_src
 
-** COMMENT Custom opening external terminal at current buffer                          :customFunc:
-#+begin_src emacs-lisp
-(defun garid/open-external-term-here ()
-  (interactive)
-  (call-process-shell-command
-   (concat
-    user-emacs-directory "garid/open_external_term.sh" " " buffer-file-name)))
-;;(shell-command (concat user-emacs-directory "garid/open_external_term.sh" " " buffer-file-name)))
-#+end_src
-
 ** Org toggle hide/shot display images                                                 :customFunc:
 #+begin_src emacs-lisp
 (defun garid/org-toggle-display-images-n-edraw ()
@@ -1838,6 +1728,46 @@ Similar to vim-signify.
 
   (setq garid-orgvar-is-img-shown (not garid-orgvar-is-img-shown))
   )
+#+end_src
+
+** Remove equal sign from both sides in string                                         :customFunc:
+#+begin_src emacs-lisp
+(defun remove-equal-from-both-sides (str)
+  "Remove the tilde (~) character from the beginning and end of STR."
+  (if (string-match "\\`=\\(.*?\\)=\\'" str)  ;;
+      ;; \\`~ front
+      ;; \\(.*?\\) capture group
+      ;; ~\\'  end?
+      (match-string 1 str)
+    str))
+#+end_src
+
+** Kill ring and garbage collect                                                       :customFunc:
+#+begin_src emacs-lisp
+(defun garid/clear-kill-ring-and-garbage-collect ()
+  (interactive)
+  (setq kill-ring nil)
+  (garbage-collect))
+#+end_src
+
+** COMMENT My Custom LaTeX writing system (aka TeQ)                                    :customFunc:
+#+begin_src emacs-lisp
+(add-to-list 'load-path (expand-file-name "~/.config/emacs/Emacs-TeQ"))
+(register-input-method "TeQ-Math" "Emacs-Teq-Latex" 'quail-use-package
+                       "TeQ-"     "TeQ-Math input"
+                       "Emacs-TeQ.el")
+
+(defun garid/toggle-eng-mon-teq-input-methods ()
+  (interactive)
+  (if (string= default-input-method nil )
+      (set-input-method "cyrillic-mongolian")
+    (if (string= default-input-method "TeQ-Math")
+	(set-input-method "cyrillic-mongolian")
+      (if (string= default-input-method "cyrillic-mongolian")
+	  (set-input-method "TeQ-Math")))))
+
+(fset 'gry-calc-horizontal-concat
+      (kmacro-lambda-form [?v ?t tab ?v ?t ?| ?v ?t] 0 "%d"))
 #+end_src
 
 ** COMMENT Org structure in the denote dire                                            :customFunc:
@@ -1910,24 +1840,14 @@ Similar to vim-signify.
     ))
 #+end_src
 
-** Remove equal sign from both sides in string                                         :customFunc:
+** COMMENT Custom opening external terminal at current buffer                          :customFunc:
 #+begin_src emacs-lisp
-(defun remove-equal-from-both-sides (str)
-  "Remove the tilde (~) character from the beginning and end of STR."
-  (if (string-match "\\`=\\(.*?\\)=\\'" str)  ;;
-      ;; \\`~ front
-      ;; \\(.*?\\) capture group
-      ;; ~\\'  end?
-      (match-string 1 str)
-    str))
-#+end_src
-
-** Kill ring and garbage collect                                                       :customFunc:
-#+begin_src emacs-lisp
-(defun garid/clear-kill-ring-and-garbage-collect ()
+(defun garid/open-external-term-here ()
   (interactive)
-  (setq kill-ring nil)
-  (garbage-collect))
+  (call-process-shell-command
+   (concat
+    user-emacs-directory "garid/open_external_term.sh" " " buffer-file-name)))
+;;(shell-command (concat user-emacs-directory "garid/open_external_term.sh" " " buffer-file-name)))
 #+end_src
 
 * Writing & Reading
@@ -3212,7 +3132,7 @@ fi
          ("n" . zoom-window-next))
   )
 #+end_src
-** screen
+** screencast
 #+begin_src emacs-lisp
 (use-package gif-screencast
   :straight t
