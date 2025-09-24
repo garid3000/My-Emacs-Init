@@ -1257,7 +1257,9 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
          ("f"    . python-nav-forward-sexp       )
          :map inferior-python-mode-map
          ("C-l" . comint-clear-buffer))
-  :hook (inferior-python-mode  . (lambda () (interactive)(setq comint-ptyp nil)))
+  :hook
+  (inferior-python-mode  . (lambda () (interactive)(setq comint-ptyp nil)))
+  (python-base-mode . auto-revert-mode )
   :config
   (defun garid/run-pydev-python ()
     ""
