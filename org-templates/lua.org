@@ -6,21 +6,21 @@
 #+LATEX_HEADER: \babelprovide[import, onchar=ids fonts]{japanese}
 #+LATEX_HEADER: \babelprovide[import, onchar=ids fonts]{mongolian}
 #+LATEX_HEADER: \babelfont{rm}{Linux Libertine O}
-#+LATEX_HEADER: \babelfont[japanese]{rm}{IPAMincho}
+#+LATEX_HEADER: \babelfont[japanese]{rm}{HaranoAjiMincho}
+#+LATEX_HEADER: \babelfont[japanese]{sf}{HaranoAjiGothic}
+#+LATEX_HEADER: \babelfont[japanese]{tt}{HaranoAjiGothic}
 
 #+LATEX_HEADER: \setmonofont[Scale=MatchLowercase]{Aporetic Serif}
 
-#+LATEX_HEADER: \usepackage{svg}        % for svg images my need \usepackage[inkscapelatex=false]{svg}
-
-#+LATEX_HEADER: \usepackage{float}  % for float \begin{figure}[H]
+#+LATEX_HEADER: \usepackage{svg}                % for svg images my need \usepackage[inkscapelatex=false]{svg}
+#+LATEX_HEADER: \usepackage{float}              % for float \begin{figure}[H]
 
 #+LATEX_HEADER: \usepackage[dvipsnames]{xcolor} % \usepackage{xcolor}   % for coddes
-#+LATEX_HEADER: \usepackage{listings}   % for coddes
+#+LATEX_HEADER: \usepackage{listings}           % for coddes
 
 
 #+LATEX_HEADER: \usepackage{caption}
-
-#+LATEX_HEADER: \usepackage{multicol}                   % multicols
+#+LATEX_HEADER: \usepackage{multicol}           % multicols
 #+LATEX_HEADER: \setlength{\columnsep}{1cm}
 
 #+LATEX_HEADER: \DeclareCaptionFont{white}{\color{white}}
@@ -157,7 +157,7 @@
 #+LATEX_HEADER:     backgroundcolor=\color{backcolour},   
 #+LATEX_HEADER:     commentstyle=\color{Gray}\ttfamily,
 #+LATEX_HEADER:     keywordstyle=\color{magenta},
-#+LATEX_HEADER:     numberstyle=\tiny\color{codegray}, %\noncopynumber,
+#+LATEX_HEADER:     numberstyle=\tiny\color{codegray},
 #+LATEX_HEADER:     stringstyle=\color{codepurple},
 #+LATEX_HEADER:     %basicstyle=\ttfamily\footnotesize,
 #+LATEX_HEADER:     basicstyle=\ttfamily\scriptsize,

@@ -1642,6 +1642,19 @@ Similar to vim-signify.
  (direnv-mode))
 #+end_src
 
+** =eshell-atuin=
+#+begin_src emacs-lisp
+(use-package eshell-atuin
+  :straight t
+  :after eshell evil
+  :config
+  (eshell-atuin-mode)
+  (evil-define-key '(normal insert) 'eshell-mode-map  (kbd "C-r") 'eshell-atuin-history)
+  ;; :bind (:map eshell-mode-map
+  ;;         ("C-r"  . eshell-atuin-history))
+  )
+#+end_src
+
 * Bunch of functions
 ** Open PDF/HMTL exported from org mode externally                                     :customFunc:
 #+begin_src emacs-lisp
@@ -2159,7 +2172,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | key(s) | function                                                                                   | short description             | mode | lambda |
 |--------+--------------------------------------------------------------------------------------------+-------------------------------+------+--------|
 | =s=      | =:ignore t=                                                                                  | system....................... | -    |        |
-| =srf=    | =consult-recent-file=                                                                      | recent-f.iles                 | -    |        |
+| =srf=    | =consult-recent-file=                                                                        | recent-f.iles                 | -    |        |
 |--------+--------------------------------------------------------------------------------------------+-------------------------------+------+--------|
 | =sl=     | =:ignore t=                                                                                  | line......................... | -    |        |
 | =slm=    | =scroll-lock-mode=                                                                           | scroll-lock-mode              | -    |        |
