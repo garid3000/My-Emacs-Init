@@ -48,6 +48,7 @@ run:
 ;; Vim Bindings
 (use-package evil
   :straight t
+  :demand t
   :init
   (setq evil-want-keybinding     nil) ;;  these
   (setq evil-want-integration      t) ;;  are for the evil-collection
@@ -72,6 +73,34 @@ run:
   ;;(define-key evil-normal-state-map (kbd "<f3>") )
   )
 #+end_src
+** General.el config
+#+begin_src emacs-lisp
+(use-package general
+  :straight t
+  :demand t
+  :config
+  (general-evil-setup t)
+
+  ;; Keybindings for everywhere
+  (general-create-definer garids-keybind/for-all-modes
+    :keymaps  '(normal visual emacs)
+    :prefix         "SPC"
+    :global-prefix  "C-SPC")
+
+  ;; Keybindings inside Org-mode-map
+  (general-create-definer garids-keybind/in-org-mode
+    :states '(normal visual)
+    :keymaps '(org-mode-map)
+    :prefix        "SPC"
+    :global-prefix "C-SPC")
+
+  (general-create-definer garids-keybind/easier-window-surfing
+    :keymaps  '(normal visual emacs insert)
+    :prefix         "<f2>"
+    :global-prefix  "C-<f2>")
+  )
+#+end_src
+
 ** =evil-collection=: vi-movements everywhere
 #+begin_src emacs-lisp
 (use-package evil-collection
@@ -363,6 +392,19 @@ but it feels slow when navigating.
   :bind
   ("M-y" . consult-yank-from-kill-ring)
   ("M-f" . consult-line               )
+  :general
+  (:states 'normal
+           "SPC c o" 'consult-outline
+           "SPC c i" 'consult-imenu
+           "SPC c m" 'consult-man
+           "SPC c r" 'consult-ripgrep
+           "SPC c f" 'consult-flymake
+           "SPC c p" 'consult-project-buffer
+           "SPC p l" 'consult-project-buffer
+           "SPC c a" 'consult-org-agenda
+           "SPC c g" 'consult-git-grep
+           "SPC c c" 'garid/consult-preview-change)
+
   :config
   (defun garid/consult-preview-change ()
     (interactive)
@@ -371,7 +413,10 @@ but it feels slow when navigating.
       (when (string= "nil" tmp-chose)    (setq consult-preview-key nil))
       (when (string= "any" tmp-chose)    (setq consult-preview-key 'any))
       (when (string= "0.5sec" tmp-chose) (setq consult-preview-key (list :debounce 0.5 'any)))
-      )))
+      ))
+  )
+
+
 #+end_src
 ** =orderless=: orderless completion
 #+begin_src emacs-lisp
@@ -696,6 +741,28 @@ but it feels slow when navigating.
   (denote-templates                    '((biblio . "* Abstract\n\n* Review")
                                          (plain  . nil)))
   (denote-file-type 'org)
+  :general
+  (states 'normal
+          "SPC n r"  'denote-rename-file
+          "SPC n R"  'denote-rename-file-date
+          "SPC n f"  'denote-open-or-create
+          "SPC n d"  'denote-dired
+
+          "SPC n n t"  'denote-type
+          "SPC n n d"  'denote-date
+          "SPC n n s"  'denote-subdirectory
+          "SPC n n t"  'denote-template
+          "SPC n n S"  'denote-singature
+
+          "SPC n l i"  'denote-insert-link
+          "SPC n l b"  'denote-find-backlink
+          "SPC n l f"  'denote-find-link
+          "SPC n l B"  'denote-backlinks
+          "SPC n l F"  'denote-link
+          "SPC n l a"  'denote-add-links
+
+          "SPC n I"  'garid/denote-node-insert-immediate
+          )
 
   :config
   (when (not (assoc 'python denote-file-types))
@@ -738,14 +805,27 @@ but it feels slow when navigating.
 (use-package denote-journal
   :straight t
   :after denote
-  :custom (denote-journal-extras-title-format 'day))
+  :custom (denote-journal-extras-title-format 'day)
+
+  :general
+  (states 'normal
+          "SPC n j n"  'denote-journal-new-entry
+          "SPC n j e"  'denote-journal-new-or-existing-entry
+  )
+)
 #+end_src
+
+#+RESULTS:
+
 ** =denote-org=                                                                             :by_prot:
 #+begin_src emacs-lisp
 (use-package denote-org
   :after denote
   :straight t)
 #+end_src
+
+#+RESULTS:
+
 ** =denote-silo=                                                                            :by_prot:
 #+begin_src emacs-lisp
 (use-package denote-silo
@@ -759,6 +839,11 @@ but it feels slow when navigating.
      (lambda (x) (string-match "denote.*" x))
      (directory-files "~/BrainDump/")))
    )
+  :general
+  (states 'normal
+          "SPC N f"  'denote-silo-open-or-create
+          "SPC N d"  'denote-silo-dired
+          )
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; (denote-silo-directories            ;;
@@ -770,6 +855,9 @@ but it feels slow when navigating.
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   )
 #+end_src
+
+#+RESULTS:
+
 ** =consult-denote=: consulting with denote                                                 :by_prot:
 #+begin_src emacs-lisp
 (use-package consult-denote
@@ -790,14 +878,25 @@ but it feels slow when navigating.
      (lambda (x) (string-match "denote.*" x))
      (directory-files "~/BrainDump/")))
    )
+
+
+  :general
+  (states 'normal
+          "SPC n s"  'consult-denote-grep
+          "SPC n F"  'consult-denote-find
+          )
+
   :config
   (consult-denote-mode 1))
 #+end_src
+
+#+RESULTS:
+
 ** =citar=: citation
 #+begin_src emacs-lisp
 (use-package citar
   :straight t
-  :after org
+  :after org denote
   :no-require
   :custom
   (org-cite-global-bibliography (list (concat (file-name-as-directory denote-directory)
@@ -820,6 +919,9 @@ but it feels slow when navigating.
     (call-process (completing-read "Application" '("sioyek" "okular" "xournalpp")) nil 0 nil file))
   )
 #+end_src
+
+#+RESULTS:
+
 ** =citar-denote= citation
 #+begin_src emacs-lisp
 (use-package citar-denote
@@ -1136,12 +1238,17 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   :after org
   :custom
   (org-html-validation-link              nil) ;; Don't show validation link
+  (org-html-htmlize-output-type 'css)
   ;; (org-html-head-include-scripts         nil) ;; Use our own scripts
   ;; (org-html-head-include-default-style   nil) ;; Use our own styles
-  ;; (org-html-head "<link rel=\"stylesheet\" type=\"text/css\" href=\"https://orgmode.org/worg/style/worg.css\"/>" )
+  ;;(org-html-head "<link rel=\"stylesheet\" type=\"text/css\" href=\"https://orgmode.org/worg/style/worg.css\"/>" )
+  (org-html-head "<link rel=\"stylesheet\" href=\"/home/garid/.config/emacs/org-templates/syntax.css\" type=\"text/css\"/>" )
   )
 #+end_src
-** =htmlize= - source code syntax in html export
+
+#+RESULTS:
+
+** COMMENT =htmlize= - source code syntax in html export
 #+begin_src emacs-lisp
 (use-package htmlize
   :straight t
@@ -1172,10 +1279,12 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   :config
   (org-download-enable))
 #+end_src
-
 ** =org-ipe=
 #+begin_src emacs-lisp
+(use-package f :straight t)
+
 (use-package org-ipe
+  :after f
   :straight (org-ipe
              :type git
              :host github
@@ -1257,6 +1366,14 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
          ("f"    . python-nav-forward-sexp       )
          :map inferior-python-mode-map
          ("C-l" . comint-clear-buffer))
+
+  :general
+  (:states 'normal
+           "SPC P P"  'run-python)
+
+  (:states '(normal inferior-python-mode)
+           "SPC P r"  'python-shell-restart)
+
   :hook
   (inferior-python-mode  . (lambda () (interactive)(setq comint-ptyp nil)))
   (python-base-mode . auto-revert-mode )
@@ -1438,6 +1555,9 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
      (project-eshell       "Eshell"         )
      (project-any-command  "Other"          ))
    )
+  ;; :general
+  ;; (states 'normal
+          ;; )
 
   :config
   (keymap-set project-prefix-map "m" #'magit-project-status)
@@ -1450,6 +1570,12 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
   :after project
   :hook
   (python-base-mode . eglot-ensure)
+  
+  :general
+  (:states '(normal prog-mode)
+           "SPC s e"  'eglot
+           )
+
 
   :config
   (add-to-list 'eglot-server-programs
@@ -1508,6 +1634,10 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
               ("S-<return>" . corfu-insert           )
               ("M-h"        . corfu-insert           )
               ("RET"        . nil                    ))
+  :general
+  (:states 'normal
+           "SPC s c o"  'corfu-mode
+           )
 
   :init
   (setq tab-always-indent 'complete)
@@ -1563,6 +1693,27 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
   (setq-default abbrev-mode t)
   )
 #+end_src
+
+** =compile=
+#+begin_src emacs-lisp
+(use-package compile
+  :straight nil
+  :general
+  (:states 'normal
+           "SPC <"  'recompile)
+  )
+#+end_src
+
+** =comint= 
+#+begin_src emacs-lisp
+(use-package comint
+  :straight nil
+  :general
+  (:states 'normal
+           "SPC P k"  'comint-send-eof)
+  )
+#+end_src
+
 * AI helpers:
 ** =gptel= : gpt.el by karthinks 
 #+begin_src emacs-lisp
@@ -1590,13 +1741,23 @@ Probably requires external =rg= command.
 
 #+begin_src emacs-lisp
 (use-package rg
-  :straight t)
+  :straight t
+  :general
+  (:states 'normal
+           "SPC r g"  'rg)
+  )
 #+end_src
 
 ** =magit=: git control
 #+begin_src emacs-lisp
 (use-package magit
-  :straight t)
+  :straight t
+  :general
+  (:states 'normal
+           "SPC g d"  'magit-ediff-compare
+           "SPC m g"  'magit-status
+           )
+  )
 #+end_src
 
 ** =git-gutter=: git diff shows on the side
@@ -1613,8 +1774,15 @@ Similar to vim-signify.
                      :exit ;; here are available in the repeat, but only once executed
                      ("c" . magit-commit-create)
                      ("C" . magit-commit)
-                     ("b" . magit-blame)
-                     )
+                     ("b" . magit-blame))
+  :general
+  (:states 'normal
+           "SPC g S"  'git-gutter:stage-hunk
+           "SPC g s"  'git-gutter:popup-hunk
+           "SPC g r"  'git-gutter:update-all-windows
+           "SPC g g"  'git-gutter-mode
+           "SPC g n"  'git-gutter:next-hunk
+           "SPC g p"  'git-gutter:previous-hunk)
   :config (global-git-gutter-mode)
   )
 #+end_src
@@ -1631,6 +1799,15 @@ Similar to vim-signify.
   ("M-5"   .  harpoon-go-to-5           )
   ("M-6"   .  harpoon-go-to-6           )
   ("<f9>"  .  harpoon-quick-menu-hydra  )
+  :general
+  (:states 'normal
+           "b"      'harpoon-quick-menu-hydra
+           "B1"     'harpoon-go-to-1
+           "B2"     'harpoon-go-to-2
+           "B3"     'harpoon-go-to-3
+           "B4"     'harpoon-go-to-4
+           "B5"     'harpoon-go-to-5
+           "Ba"     'harpoon-add-file)
   )
 #+end_src
 
@@ -1644,15 +1821,23 @@ Similar to vim-signify.
 
 ** =eshell-atuin=
 #+begin_src emacs-lisp
+(use-package eshell
+  :straight nil
+  :after evil general
+  :general
+  (:states 'insert
+           :keymaps 'eshell-mode-map
+           "C-a" 'eshell-bol
+           "C-r" 'eshell-atuin-history
+           )
+  )
+
 (use-package eshell-atuin
   :straight t
-  :after eshell evil
+  :after eshell
   :config
-  (eshell-atuin-mode)
-  (evil-define-key '(normal insert) 'eshell-mode-map  (kbd "C-r") 'eshell-atuin-history)
-  ;; :bind (:map eshell-mode-map
-  ;;         ("C-r"  . eshell-atuin-history))
-  )
+  (eshell-atuin-mode))
+
 #+end_src
 
 * Bunch of functions
@@ -2107,11 +2292,12 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 |--------+-----------------------------------------------------------------------------+---------------------+------+--------|
 | =SPC=    | =execute-extended-command=                                                    | M-x                 | -    |        |
 | =f=      | =(if (project-current) (project-find-file) (call-interactively #'find-file))= | find-file           | -    | y      |
-| =d=      | =dired-jump=                                                                  | directory           | -    |        |
-| =D=      | =:ignore t=                                                                   | Dired.............. | -    |        |
-| =Ds=     | =dired=                                                                       | simple              | -    |        |
-| =Dp=     | =dired-preview-mode=                                                          | preview             | -    |        |
-| =Dw=     | =wdired-change-to-wdired-mode=                                                | wdired              | -    |        |
+
+| =d=    | =dired-jump=                   | directory           | - |   |
+| =D=    | =:ignore t=                    | Dired.............. | - |   |
+| =Ds=   | =dired=                        | simple              | - |   |
+| =Dp= | =dired-preview-mode=           | preview             | - |   |
+| =Dw=   | =wdired-change-to-wdired-mode= | wdired              | - |   |
 
 **** Buffer and operations on buffer
 #+attr_latex: :placement [H]
@@ -2204,7 +2390,6 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | =u=      | =:ignore=                                                                                    | undo ........................ | -    |        |
 | =ut=     | =vundo=                                                                                      | vundo                         | -    |        |
 |--------+--------------------------------------------------------------------------------------------+-------------------------------+------+--------|
-| =ma=     | =notmuch=                                                                                    | mail nomtuch                  | -    |        |
 
 **** Bookmark
 #+attr_latex: :placement [H]
@@ -2212,14 +2397,6 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 #+name: tbl-kbind-bookmarks
 | key(s) | function                 | short description              | mode | lambda |
 |--------+--------------------------+--------------------------------+------+--------|
-| =b=      | =harpoon-quick-menu-hydra= | bookmark-harpoon               | -    |        |
-| =B=      | =:ignore t=                | bookmark...................... | -    |        |
-| =B1=     | =harpoon-go-to-1=          |                                | -    |        |
-| =B2=     | =harpoon-go-to-2=          |                                | -    |        |
-| =B3=     | =harpoon-go-to-3=          |                                | -    |        |
-| =B4=     | =harpoon-go-to-4=          |                                | -    |        |
-| =B5=     | =harpoon-go-to-5=          |                                | -    |        |
-| =Ba=     | =harpoon-add-file=         | add-file                       | -    |        |
 
 **** Help related
 #+attr_latex: :placement [H]
@@ -2241,23 +2418,26 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 #+name: tbl-kbind-dev
 | key(s) | function                      | short description                | mode | lambda |
 |--------+-------------------------------+----------------------------------+------+--------|
-| =mg=     | =magit-status=                  | magit                            | -    |        |
-| =<=      | =recompile=                     | recompile                        | -    |        |
-| =sco=    | =corfu-mode=                    | corfu-mode                       | -    |        |
-| =se=     | =eglot=                         | eglot                            | -    |        |
-| =rg=     | =rg=                            | ripgrep                          | -    |        |
-| =g=      | =:ignore t=                     | git............................  | -    |        |
-| =gS=     | =git-gutter:stage-hunk=         | stage hunkk                      | -    |        |
-| =gs=     | =git-gutter:popup-hunk=         | popup hunk                       | -    |        |
-| =gr=     | =git-gutter:update-all-windows= | refresh                          | -    |        |
-| =gg=     | =git-gutter-mode=               | gutter-mode                      | -    |        |
-| =gn=     | =git-gutter:next-hunk=          | jump-next                        | -    |        |
-| =gp=     | =git-gutter:previous-hunk=      | jump-prev                        | -    |        |
-| =gd=     | =magit-ediff-compare=           | magit-ediff-compare              | -    |        |
-| =P=      | =:ignore=                       | python (inferior)............... | -    |        |
-| =Pr=     | =python-shell-restart=          | restart                          | -    |        |
-| =PP=     | =run-python=                    | run-python                       | -    |        |
-| =Pk=     | =comint-send-eof=               | kill  (also C-c C-d)             | -    |        |
+
+
+| =Pk=  | =comint-send-eof=               | kill  (also C-c C-d)             | - |   |
+| =<=   | =recompile=                     | recompile                        | - |   |
+| =sco= | =corfu-mode=                    | corfu-mode                       | - |   |
+| =se=  | =eglot=                         | eglot                            | - |   |
+| =gS=  | =git-gutter:stage-hunk=         | stage hunkk                      | - |   |
+| =gs=  | =git-gutter:popup-hunk=         | popup hunk                       | - |   |
+| =gr=  | =git-gutter:update-all-windows= | refresh                          | - |   |
+| =gg=  | =git-gutter-mode=               | gutter-mode                      | - |   |
+| =gn=  | =git-gutter:next-hunk=          | jump-next                        | - |   |
+| =gp=  | =git-gutter:previous-hunk=      | jump-prev                        | - |   |
+| =gd=  | =magit-ediff-compare=           | magit-ediff-compare              | - |   |
+| =rg=  | =rg=                            | ripgrep                          | - |   |
+| =mg=  | =magit-status=                  | magit                            | - |   |
+| =g=   | =:ignore t=                     | git............................  | - |   |
+| =P=   | =:ignore=                       | python (inferior)............... | - |   |
+| =Pr=  | =python-shell-restart=          | restart                          | - |   |
+| =PP=  | =run-python=                    | run-python                       | - |   |
+
 
 **** Consult related (picking & choosing stuff)
 #+attr_latex: :placement [H]
@@ -2266,6 +2446,10 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | key(s) | function               | short description              | mode | lambda |
 |--------+------------------------+--------------------------------+------+--------|
 | =c=      | =:ignore t=              | consult....................... | -    |        |
+| =cF=     | =consult-fd=             | consult-fd               [ F ] | -    |        |
+| =F=      | =consult-fd=             | consult-fd              [ cF ] | -    |        |
+| =cg=     | =consult-git-grep=       | consult-git-grep        [ ps ] | -    |        |
+
 | =co=     | =consult-outline=        | consult-outline    [ outline ] | -    |        |
 | =ci=     | =consult-imenu=          | consult-imenu                  | -    |        |
 | =cm=     | =consult-man=            | consult-man                    | -    |        |
@@ -2273,11 +2457,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | =cR=     | =consult-recent-file=    | consult-recent-files           | -    |        |
 | =cf=     | =consult-flymake=        | consult-flymake                | -    |        |
 | =cp=     | =consult-project-buffer= | consult-project-buffer  [ pl ] | -    |        |
-| =cd=     | =consult-dir=            | consult-dir                    | -    |        |
-| =cF=     | =consult-fd=             | consult-fd               [ F ] | -    |        |
-| =F=      | =consult-fd=             | consult-fd              [ cF ] | -    |        |
 | =ca=     | =consult-org-agenda=     | consult-org-agenda             | -    |        |
-| =cg=     | =consult-git-grep=       | consult-git-grep        [ ps ] | -    |        |
 
 **** Project related
 #+attr_latex: :placement [H]
@@ -2307,35 +2487,30 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 #+attr_latex: :placement [H]
 #+caption: Denote
 #+name: tbl-global-general-keybindings-denote
-| key(s) | function                               | short description            | mode | lambda |
-|--------+----------------------------------------+------------------------------+------+--------|
-| =n=    | =:ignore t=                            | note........................ | -    |        |
-| =nr=   | =denote-rename-file=                   | rename                       | -    |        |
-| =nR=   | =denote-rename-file-date=              | rename with date             | -    |        |
-| =nf=   | =denote-open-or-create=                | find-or-create               | -    |        |
-| =nd=   | =denote-dired=                         | dired-sort                   | -    |        |
-| =Nf=   | =denote-silo-open-or-create=           | dn-silo-find                 | -    |        |
-| =Nd=   | =denote-silo-dired=                    | dn-silo-find                 | -    |        |
-| =nj=   | =denote-journal-new-entry=             | journal                      | -    |        |
-| =nJ=   | =denote-journal-new-or-existing-entry= | Journal-find                 | -    |        |
-| =nil=  | =denote-insert-link=                   | insert-link                  | -    |        |
-| =nij=  | =denote-journal-link-or-create-entry=  | insert-journal-link          | -    |        |
-| =nn=   | :ignore t                              | new....                      | -    |        |
-| =nnt=  | =denote-type=                          | new note, by type            | -    |        |
-| =nnd=  | =denote-date=                          | new note, by date            | -    |        |
-| =nns=  | =denote-subdirectory=                  | new note, by subdirectory    | -    |        |
-| =nnt=  | =denote-template=                      | new note, by template        | -    |        |
-| =nnS=  | =denote-singature=                     | new note, by singature       | -    |        |
-| =nI=   | =garid/denote-node-insert-immediate=   | Insert-note                  | -    |        |
-| =ns=   | =consult-denote-grep=                  | live-grep                    | -    |        |
-| =nF=   | =consult-denote-find=                  | consult-denote-find          | -    |        |
-| =nl=   | =:ignore t=                            | denote link................. | -    |        |
-| =nli=  | =denote-insert-link=                   | link insert                  | -    |        |
-| =nlb=  | =denote-find-backlink=                 | find-backlink                | -    |        |
-| =nlf=  | =denote-find-link=                     | find-forward-link            | -    |        |
-| =nlB=  | =denote-backlinks=                     | backlink                     | -    |        |
-| =nlF=  | =denote-link=                          | forward-link                 | -    |        |
-| =nla=  | =denote-add-links=                     | add-links regex              | -    |        |
+| key(s) | function                             | short description            | mode | lambda |
+|--------+--------------------------------------+------------------------------+------+--------|
+
+| =n=   | =:ignore t=                          | note........................ | - |   |
+| =ns=  | =consult-denote-grep=                | live-grep                    | - |   |
+| =nF=  | =consult-denote-find=                | consult-denote-find          | - |   |
+| =Nf=  | =denote-silo-open-or-create=         | dn-silo-find                 | - |   |
+| =Nd=  | =denote-silo-dired=                  | dn-silo-find                 | - |   |
+| =nI=  | =garid/denote-node-insert-immediate= | Insert-note                  | - |   |
+| =nr=  | =denote-rename-file=                 | rename                       | - |   |
+| =nR=  | =denote-rename-file-date=            | rename with date             | - |   |
+| =nf=  | =denote-open-or-create=              | find-or-create               | - |   |
+| =nd=  | =denote-dired=                       | dired-sort                   | - |   |
+| =nnt= | =denote-type=                        | new note, by type            | - |   |
+| =nnd= | =denote-date=                        | new note, by date            | - |   |
+| =nns= | =denote-subdirectory=                | new note, by subdirectory    | - |   |
+| =nnt= | =denote-template=                    | new note, by template        | - |   |
+| =nnS= | =denote-singature=                   | new note, by singature       | - |   |
+| =nli= | =denote-insert-link=                 | link insert                  | - |   |
+| =nlb= | =denote-find-backlink=               | find-backlink                | - |   |
+| =nlf= | =denote-find-link=                   | find-forward-link            | - |   |
+| =nlB= | =denote-backlinks=                   | backlink                     | - |   |
+| =nlF= | =denote-link=                        | forward-link                 | - |   |
+| =nla= | =denote-add-links=                   | add-links regex              | - |   |
 
 **** Roam related
 #+attr_latex: :placement [H]
@@ -2343,6 +2518,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 #+name: tbl-global-general-keybindings-roam
 | key(s) | function                                                       | short description                    | mode | lambda |
 |--------+----------------------------------------------------------------+--------------------------------------+------+--------|
+
 | =r=      | =:ignore t=                                                      | roam........................         | -    |        |
 | =rr=     | =(message "Current org-roam-directory = %s" org-roam-directory)= | show directory                       | -    | y      |
 | =rc=     | =garid/choose-roam-directory=                                    | roam chande directory                | -    |        |
@@ -2510,36 +2686,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | =oisb=   | =(setq org-image-actual-width 2.0)=       | big    1500px                | org  | y      |
 | =oiss=   | =(setq org-image-actual-width 0.5)=       | small  400px                 | org  | y      |
 
-
-
 *** Converting tables actual keybinding
-**** General.el config
-#+begin_src emacs-lisp
-(use-package general
-  :straight t
-  :config (general-evil-setup t)
-
-  ;; Keybindings for everywhere
-  (general-create-definer garids-keybind/for-all-modes
-    :keymaps  '(normal visual emacs)
-    :prefix         "SPC"
-    :global-prefix  "C-SPC")
-
-  ;; Keybindings inside Org-mode-map
-  (general-create-definer garids-keybind/in-org-mode
-    :states '(normal visual)
-    :keymaps '(org-mode-map)
-    :prefix        "SPC"
-    :global-prefix "C-SPC")
-
-  (general-create-definer garids-keybind/easier-window-surfing
-    :keymaps  '(normal visual emacs insert)
-    :prefix         "<f2>"
-    :global-prefix  "C-<f2>")
-  )
-#+end_src
-
-
 **** Script that converts previous org-tables into actual emacs configuration
 :PROPERTIES:
 :header-args:  :var tbl_01=tbl-kbinding-file-n-dired
@@ -2620,11 +2767,6 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 (garids-keybind/for-all-modes
   "SPC" '(execute-extended-command :which-key "M-x")
   "f" '((lambda () (interactive) (if (project-current) (project-find-file) (call-interactively #'find-file)) ) :which-key "find-file")
-  "d" '(dired-jump :which-key "directory")
-  "D" '(:ignore t :which-key "Dired..............")
-  "Ds" '(dired :which-key "simple")
-  "Dp" '(dired-preview-mode :which-key "preview")
-  "Dw" '(wdired-change-to-wdired-mode :which-key "wdired")
   "o" '(:ignore t :which-key "org............................")
   "z" '(:ignore t :which-key "conveniences....................")
   "za" '(align-regexp :which-key "align")
@@ -2672,34 +2814,6 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "tm" '(tmr-with-description :which-key "timer")
   "u" '(:ignore :which-key "undo ........................")
   "ut" '(vundo :which-key "vundo")
-  "ma" '(notmuch :which-key "mail nomtuch")
-  "n" '(:ignore t :which-key "note........................")
-  "nr" '(denote-rename-file :which-key "rename")
-  "nR" '(denote-rename-file-date :which-key "rename with date")
-  "nf" '(denote-open-or-create :which-key "find-or-create")
-  "nd" '(denote-dired :which-key "dired-sort")
-  "Nf" '(denote-silo-open-or-create :which-key "dn-silo-find")
-  "Nd" '(denote-silo-dired :which-key "dn-silo-find")
-  "nj" '(denote-journal-new-entry :which-key "journal")
-  "nJ" '(denote-journal-new-or-existing-entry :which-key "Journal-find")
-  "nil" '(denote-insert-link :which-key "insert-link")
-  "nij" '(denote-journal-link-or-create-entry :which-key "insert-journal-link")
-  "nn" '(:ignore t :which-key "new....")
-  "nnt" '(denote-type :which-key "new note, by type")
-  "nnd" '(denote-date :which-key "new note, by date")
-  "nns" '(denote-subdirectory :which-key "new note, by subdirectory")
-  "nnt" '(denote-template :which-key "new note, by template")
-  "nnS" '(denote-singature :which-key "new note, by singature")
-  "nI" '(garid/denote-node-insert-immediate :which-key "Insert-note")
-  "ns" '(consult-denote-grep :which-key "live-grep")
-  "nF" '(consult-denote-find :which-key "consult-denote-find")
-  "nl" '(:ignore t :which-key "denote link.................")
-  "nli" '(denote-insert-link :which-key "link insert")
-  "nlb" '(denote-find-backlink :which-key "find-backlink")
-  "nlf" '(denote-find-link :which-key "find-forward-link")
-  "nlB" '(denote-backlinks :which-key "backlink")
-  "nlF" '(denote-link :which-key "forward-link")
-  "nla" '(denote-add-links :which-key "add-links regex")
   "h" '(:ignore t :which-key "help...........................")
   "hh" '(describe-symbol :which-key "help symbol (elisp)")
   "hH" '(describe-key :which-key "help keybinding")
@@ -2724,26 +2838,9 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "v" '(:ignore t :which-key "variables....................")
   "vq" '(format-all-buffer :which-key "format-buffer")
   "vr" '(eglot-rename :which-key "rename variable")
-  "b" '(harpoon-quick-menu-hydra :which-key "bookmark-harpoon")
-  "B" '(:ignore t :which-key "bookmark......................")
-  "B1" '(harpoon-go-to-1 :which-key "")
-  "B2" '(harpoon-go-to-2 :which-key "")
-  "B3" '(harpoon-go-to-3 :which-key "")
-  "B4" '(harpoon-go-to-4 :which-key "")
-  "B5" '(harpoon-go-to-5 :which-key "")
-  "Ba" '(harpoon-add-file :which-key "add-file")
   "c" '(:ignore t :which-key "consult.......................")
-  "co" '(consult-outline :which-key "consult-outline    [ outline ]")
-  "ci" '(consult-imenu :which-key "consult-imenu")
-  "cm" '(consult-man :which-key "consult-man")
-  "cr" '(consult-ripgrep :which-key "consult-ripgrep         [ ps ]")
-  "cR" '(consult-recent-file :which-key "consult-recent-files")
-  "cf" '(consult-flymake :which-key "consult-flymake")
-  "cp" '(consult-project-buffer :which-key "consult-project-buffer  [ pl ]")
-  "cd" '(consult-dir :which-key "consult-dir")
   "cF" '(consult-fd :which-key "consult-fd               [ F ]")
   "F" '(consult-fd :which-key "consult-fd              [ cF ]")
-  "ca" '(consult-org-agenda :which-key "consult-org-agenda")
   "cg" '(consult-git-grep :which-key "consult-git-grep        [ ps ]")
   "l" '(consult-buffer :which-key "list-buffer")
   "L" '(:ignore t :which-key "buffer.....................")
@@ -2764,23 +2861,6 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "Lk" '(buf-move-up :which-key "move up")
   "Ll" '(buf-move-right :which-key "move right")
   "LL" '(tear-off-window :which-key "tear window to frame")
-  "mg" '(magit-status :which-key "magit")
-  "<" '(recompile :which-key "recompile")
-  "sco" '(corfu-mode :which-key "corfu-mode")
-  "se" '(eglot :which-key "eglot")
-  "rg" '(rg :which-key "ripgrep")
-  "g" '(:ignore t :which-key "git............................")
-  "gS" '(git-gutter:stage-hunk :which-key "stage hunkk")
-  "gs" '(git-gutter:popup-hunk :which-key "popup hunk")
-  "gr" '(git-gutter:update-all-windows :which-key "refresh")
-  "gg" '(git-gutter-mode :which-key "gutter-mode")
-  "gn" '(git-gutter:next-hunk :which-key "jump-next")
-  "gp" '(git-gutter:previous-hunk :which-key "jump-prev")
-  "gd" '(magit-ediff-compare :which-key "magit-ediff-compare")
-  "P" '(:ignore :which-key "python (inferior)...............")
-  "Pr" '(python-shell-restart :which-key "restart")
-  "PP" '(run-python :which-key "run-python")
-  "Pk" '(comint-send-eof :which-key "kill  (also C-c C-d)")
   "oT" '(:ignore t :which-key "table.......................")
   "oTm" '(orgtbl-mode :which-key "mode")
   "oTc" '(orgtbl-create-or-convert-from-region :which-key "create")
@@ -2790,21 +2870,6 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "oa" '(:ignore t :which-key "agenda......................")
   "oag" '(org-agenda :which-key "agenda")
   "oab" '(org-timeblock :which-key "block")
-  "r" '(:ignore t :which-key "roam........................")
-  "rr" '((lambda () (interactive) (message "Current org-roam-directory = %s" org-roam-directory) ) :which-key "show directory")
-  "rc" '(garid/choose-roam-directory :which-key "roam chande directory")
-  "rd" '((lambda () (interactive) (dired org-roam-directory) ) :which-key "dired")
-  "rs" '(consult-org-roam-search :which-key "consult-org-roam-search")
-  "rf" '(consult-org-roam-file-find :which-key "consult-org-roam-file-find")
-  "rI" '(garid/org-roam-node-insert-immediate :which-key "garid/org-roam-node-insert-immediate")
-  "rlb" '(consult-org-roam-backlinks :which-key "consult-org-roam-backlinks")
-  "rlf" '(consult-org-roam-forward-links :which-key "consult-org-roam-forward-links")
-  "rlB" '(consult-org-roam-backlinks-recursive :which-key "consult-org-roam-backlinks-recursive")
-  "rli" '(org-roam-node-insert :which-key "org-roam-node-insert")
-  "rui" '(org-roam-ui-open :which-key "org-roam-ui-open")
-  "rta" '(org-roam-tag-add :which-key "org-roam-tag-add")
-  "rtr" '(org-roam-tag-remove :which-key "org-roam-tag-remove")
-  "rbt" '(org-roam-buffer-toggle :which-key "org-roam-buffer-toggle")
 )
 
 (garids-keybind/in-org-mode
@@ -2929,6 +2994,18 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 
   (when (eq system-type 'berkeley-unix)   ;; change the main ls with gnu ls in bsd
     (setq insert-directory-program "gls"))
+
+  :general
+  (:states 'normal
+           "SPC d"    'dired-jump
+           "SPC D s"  'dired)
+  )
+
+(use-package wdired
+  :straight   nil
+  :general
+  (:states 'normal
+           "SPC D w"  'wdired-change-to-wdired-mode)
   )
 #+end_src
 ** =dired= - Additionals
@@ -2939,6 +3016,10 @@ I don't use these not much
   :bind (:map dired-preview-mode-map
               ("J" . dired-preview-page-down)
               ("K" . dired-preview-page-up))
+
+  :general
+  (:states '(normal dired-mode)
+           "SPC D p"    'dired-preview-mode)
   )
 #+end_src
 ** =saveplace= - Save (last) cursor position
@@ -2989,11 +3070,16 @@ else
 fi
 #+end_src
 * email
-** reading
+** notmuch
 #+begin_src emacs-lisp
 (use-package notmuch
   :straight t
-  :defer t)
+  :defer t
+  :general
+   (:states 'normal
+            "SPC m a" 'notmuch
+            "SPC m n" 'notmuch-mua-new-mail)
+  )
 #+end_src
 
 ** writting
@@ -3036,7 +3122,7 @@ fi
 ** writting with org mode
 #+begin_src emacs-lisp
 (use-package org-mime
-    :straight t
+  :straight t
   :custom
   (org-mime-library 'mml)
   (org-mime-export-options '(
@@ -3044,12 +3130,24 @@ fi
                              ;;:with-latex dvisvgm <-- don't work because SVG is bad on mail clients
                              :section-numbers nil
                              :with-author nil
-                             :with-toc nil)))
+                             :with-toc nil))
+  :general
+   (:states '(normal notmuch-message-mode )
+            "SPC m m m" 'org-mime-edit-mail-in-org-mode
+            "SPC m m h" 'org-mime-htmlize
+            )
+
+  )
 #+end_src
 
 ** consulting notmuch
 #+begin_src emacs-lisp
-(use-package consult-notmuch :straight t)
+(use-package consult-notmuch
+  :straight t
+  :general
+  (:states 'normal
+           "SPC m s" 'consult-notmuch)
+  )
 #+end_src
 
 ** notmuch ol
@@ -3062,6 +3160,16 @@ fi
 #+end_src
 
 * Misc Packages
+** tramp sudo edit
+#+begin_src emacs-lisp
+(use-package tramp-cmds
+  :straight nil
+  :general
+  (:states 'normal
+           "SPC L S" 'tramp-revert-buffer-with-sudo)
+ )
+#+end_src
+
 ** =crux=
 #+begin_src emacs-lisp
 (use-package crux :straight t)
@@ -3123,13 +3231,7 @@ fi
 ** =hydra=
 #+begin_src emacs-lisp
 (use-package hydra
-    :straight t
-  ;; :config
-  ;; (defhydra hydra-org-link-jumper ()
-  ;;   "zoom"
-  ;;   ("n" org-next-link     "next")
-  ;;   ("p" org-previous-link "prev"))
-  )
+  :straight t)
 #+end_src
 
 ** =exercism=
