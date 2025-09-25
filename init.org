@@ -73,7 +73,7 @@ run:
   ;;(define-key evil-normal-state-map (kbd "<f3>") )
   )
 #+end_src
-** General.el config
+** =General.el= config
 #+begin_src emacs-lisp
 (use-package general
   :straight t
@@ -202,7 +202,6 @@ but it feels slow when navigating.
 (use-package windmove
   :after (window evil)
   :bind (( "M-q"  . delete-window )
-
          ("M-L" . windmove-right               )
          ("M-H" . windmove-left                )
          ("M-J" . windmove-down                )
@@ -220,9 +219,9 @@ but it feels slow when navigating.
          ("C-j"   . windmove-swap-states-down  )
          ("C-k"   . windmove-swap-states-up    )
 
-         ("s"   . evil-window-split            )
-         ("v"   . evil-window-vsplit           )
-         ("q"   . delete-window                )
+         ;; ("s"   . evil-window-split            )
+         ;; ("v"   . evil-window-vsplit           )
+         ;; ("q"   . delete-window                )
          ("="   . balance-windows              )
 
          ("{"   . shrink-window-horizontally   )
@@ -498,6 +497,36 @@ but it feels slow when navigating.
               :exit
               ("'"         . org-edit-special                ))
 
+  :general
+  (:states '(normal org-mode)
+           "SPC o o"     'org-open-at-point
+           "SPC o O"     'garid/jump-label-def-of-ref-at-point-word
+           "SPC o d"     'garid/open-org-link-at-point-with-dired
+           "SPC ,"       'org-ctrl-c-ctrl-c
+           "SPC o s y"   'org-copy-subtree
+           "SPC o s a"   'org-archive-subtree-default-with-confirmation
+           "SPC o s Y"   'org-id-copy
+           "SPC o s v"   'org-mark-element
+           "SPC o s m"   'org-refile
+           "SPC o s d"   'org-cut-subtree
+           "SPC o s t"   'org-toggle-narrow-to-subtree
+           "SPC o s n"   'org-num-mode
+           "SPC o s s"   'org-sort
+           "SPC o s p"   'org-set-property
+           "SPC o s I"   'org-indent-mode
+           "SPC o s e"   'org-set-effort
+           ;; "SPC o a b"   'org-timeblock
+           "SPC o a s"   'org-schedule
+           "SPC o a d"   'org-deadline
+           "SPC o a c"   'org-clock-in
+           "SPC o a C"   'org-clock-out
+           "SPC o f h"   'consult-org-heading
+           "SPC o t"     'org-todo
+           )
+  (:states 'normal
+           "SPC o c  "   'org-capture
+           "SPC o a g"   'org-agenda
+           )
   :custom
   ;; ---------------- theme/styling ------------------------------------------------------
   (org-hide-emphasis-markers         t      )
@@ -741,8 +770,9 @@ but it feels slow when navigating.
   (denote-templates                    '((biblio . "* Abstract\n\n* Review")
                                          (plain  . nil)))
   (denote-file-type 'org)
+  ;;:bind
   :general
-  (states 'normal
+  (:states 'normal
           "SPC n r"  'denote-rename-file
           "SPC n R"  'denote-rename-file-date
           "SPC n f"  'denote-open-or-create
@@ -808,7 +838,7 @@ but it feels slow when navigating.
   :custom (denote-journal-extras-title-format 'day)
 
   :general
-  (states 'normal
+  (:states 'normal
           "SPC n j n"  'denote-journal-new-entry
           "SPC n j e"  'denote-journal-new-or-existing-entry
   )
@@ -840,7 +870,7 @@ but it feels slow when navigating.
      (directory-files "~/BrainDump/")))
    )
   :general
-  (states 'normal
+  (:states 'normal
           "SPC N f"  'denote-silo-open-or-create
           "SPC N d"  'denote-silo-dired
           )
@@ -881,7 +911,7 @@ but it feels slow when navigating.
 
 
   :general
-  (states 'normal
+  (:states 'normal
           "SPC n s"  'consult-denote-grep
           "SPC n F"  'consult-denote-find
           )
@@ -1154,6 +1184,12 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   (org-latex-pdf-process
    '("latexmk -shell-escape -f -pdf -%latex -interaction=nonstopmode -output-directory=%o %f"))
 
+  :general
+  (:states '(normal org-mode)
+           "SPC x p"   'org-latex-export-to-pdf
+           "SPC x P"   '((lambda () (interactive) (org-latex-export-to-pdf nil t)))
+           "SPC x o"   'garid/org-open-pdf
+           )
   :config
   (defun garid/latex-formattig-headings
       (todo todo-type priority text tags _info)
@@ -1243,6 +1279,13 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   ;; (org-html-head-include-default-style   nil) ;; Use our own styles
   ;;(org-html-head "<link rel=\"stylesheet\" type=\"text/css\" href=\"https://orgmode.org/worg/style/worg.css\"/>" )
   (org-html-head "<link rel=\"stylesheet\" href=\"/home/garid/.config/emacs/org-templates/syntax.css\" type=\"text/css\"/>" )
+
+  :general
+  (:states '(normal org-mode)
+           "SPC x h"   'org-html-export-to-html
+           "SPC x H"   '((lambda () (interactive) (org-html-export-to-html nil t)) :which-key "html export subtree")
+           "SPC x O"   'garid/org-open-html
+           )
   )
 #+end_src
 
@@ -1262,7 +1305,12 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 #+begin_src emacs-lisp
 (use-package org-re-reveal
   :after org
-  :straight t)
+  :straight t
+  :general
+  (:states '(normal org-mode)
+           "SPC x r"   'org-re-reveal-export-to-html
+           )
+  )
 #+end_src
 
 * Org Misc:
@@ -1540,7 +1588,12 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
 
 (use-package xref
   :straight nil
-  :demand t)
+  :demand t
+  :general
+  (:states 'normal
+          "SPC p r" 'xref-find-references
+          )
+  )
 
 (use-package project
   :straight nil
@@ -1555,9 +1608,15 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
      (project-eshell       "Eshell"         )
      (project-any-command  "Other"          ))
    )
-  ;; :general
-  ;; (states 'normal
-          ;; )
+  :general
+  (:states 'normal
+          "SPC p f"     'project-find-file
+          "SPC p z"     'project-switch-project
+          "SPC p S"     'project-find-regexp
+          "SPC p k"     'project-kill-buffers
+          "SPC p c"     'project-recompile
+          "SPC p q r r" 'project-query-replace-regexp
+          )
 
   :config
   (keymap-set project-prefix-map "m" #'magit-project-status)
@@ -1574,6 +1633,7 @@ from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][ma
   :general
   (:states '(normal prog-mode)
            "SPC s e"  'eglot
+           "SPC v r"  'eglot-rename
            )
 
 
@@ -1801,13 +1861,13 @@ Similar to vim-signify.
   ("<f9>"  .  harpoon-quick-menu-hydra  )
   :general
   (:states 'normal
-           "b"      'harpoon-quick-menu-hydra
-           "B1"     'harpoon-go-to-1
-           "B2"     'harpoon-go-to-2
-           "B3"     'harpoon-go-to-3
-           "B4"     'harpoon-go-to-4
-           "B5"     'harpoon-go-to-5
-           "Ba"     'harpoon-add-file)
+           "SPC b"      'harpoon-quick-menu-hydra
+           "SPC B 1"     'harpoon-go-to-1
+           "SPC B 2"     'harpoon-go-to-2
+           "SPC B 3"     'harpoon-go-to-3
+           "SPC B 4"     'harpoon-go-to-4
+           "SPC B 5"     'harpoon-go-to-5
+           "SPC B a"     'harpoon-add-file)
   )
 #+end_src
 
@@ -2055,7 +2115,19 @@ Similar to vim-signify.
 #+begin_src emacs-lisp
 (use-package ispell
   :straight t
-  :custom (ispell-alternate-dictionary "/home/garid/.config/emacs/ispell-wl.txt"))
+  :custom (ispell-alternate-dictionary "/home/garid/.config/emacs/ispell-wl.txt")
+  :general
+  (:states 'normal
+          "SPC z s w"    'ispell-word
+          "SPC z s r"    'ispell-region
+          "SPC z s C"    'ispell-comments-and-strings
+          "SPC z s c"    'ispell-comment-or-string-at-point
+          "SPC z s b"    'ispell-buffer
+          "SPC z s m"    'ispell-message
+          "SPC z s q"    'ispell-kill-ispell
+          "SPC z s l"    'ispell-change-dictionary
+          )
+  )
 #+end_src
 ** Writing packages
 #+begin_src emacs-lisp
@@ -2215,11 +2287,18 @@ Similar to vim-signify.
 #+begin_src emacs-lisp
 (use-package tmr :straight t)
 #+end_src
-** COMMENT checking (could be useful)
+** checking (could be useful)
 #+begin_src emacs-lisp
 ;; (use-package langtool   :straight t) it required external jar / java  someday i will try
 (use-package jinx          :straight t)
-(use-package mw-thesaurus  :straight t :after org)
+(use-package mw-thesaurus
+  :straight t
+  :general
+  (:states 'normal
+          "SPC z s t"    'mw-thesaurus-lookup-at-point
+          "SPC z s T"    'mw-thesaurus-lookup)
+
+  )
 ;;(use-package org-wc        :straight t :after org)
 #+end_src
 
@@ -2337,18 +2416,6 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | =zh=     | =highlight-symbol-at-point=         | highlight-on                      | -    |        |
 | =zH=     | =unhighlight-regexp=                | highlight-off                     | -    |        |
 |--------+-----------------------------------+-----------------------------------+------+--------|
-| =zs=     | =:ignore t=                         | spell............................ | -    |        |
-| =zsw=    | =ispell-word=                       | word                              | -    |        |
-| =zsr=    | =ispell-region=                     | region                            | -    |        |
-| =zsC=    | =ispell-comments-and-strings=       | comment-full                      | -    |        |
-| =zsc=    | =ispell-comment-or-string-at-point= | comment-here                      | -    |        |
-| =zsb=    | =ispell-buffer=                     | buffer                            | -    |        |
-| =zsm=    | =ispell-message=                    | message                           | -    |        |
-| =zsq=    | =ispell-kill-ispell=                | quit                              | -    |        |
-| =zsl=    | =ispell-change-dictionary=          | language en/mn                    | -    |        |
-| =zst=    | =mw-thesaurus-lookup-at-point=      | thesaurus current word            | -    |        |
-| =zsT=    | =mw-thesaurus-lookup=               | thesaurus                         | -    |        |
-|--------+-----------------------------------+-----------------------------------+------+--------|
 | =ZQ=     | =kill-emacs=                        | kill Emacs                        | -    |        |
 
 **** System
@@ -2391,7 +2458,8 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | =ut=     | =vundo=                                                                                      | vundo                         | -    |        |
 |--------+--------------------------------------------------------------------------------------------+-------------------------------+------+--------|
 
-**** Bookmark
+**** DONE Bookmark
+CLOSED: [2025-09-25 Thu 06:13]
 #+attr_latex: :placement [H]
 #+caption: bookmark
 #+name: tbl-kbind-bookmarks
@@ -2412,7 +2480,8 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | =hm=     | =consult-man=              | man                             | -    |        |
 | =hi=     | =Info-goto-node=           | read docs                       | -    |        |
 
-**** Development commands
+**** DONE Development commands
+CLOSED: [2025-09-25 Thu 06:14]
 #+attr_latex: :placement [H]
 #+caption: misc. development related
 #+name: tbl-kbind-dev
@@ -2439,7 +2508,8 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | =PP=  | =run-python=                    | run-python                       | - |   |
 
 
-**** Consult related (picking & choosing stuff)
+**** DONE Consult related (picking & choosing stuff)
+CLOSED: [2025-09-25 Thu 06:14]
 #+attr_latex: :placement [H]
 #+caption: consult
 #+name: tbl-global-general-keybindings-consult
@@ -2459,31 +2529,32 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | =cp=     | =consult-project-buffer= | consult-project-buffer  [ pl ] | -    |        |
 | =ca=     | =consult-org-agenda=     | consult-org-agenda             | -    |        |
 
-**** Project related
+**** TODO Project related
 #+attr_latex: :placement [H]
 #+caption: Project (more like git-repo)
 #+name: tbl-global-general-keybindings-project
-| key(s) | function                     | short description             | mode | lambda |
-|--------+------------------------------+-------------------------------+------+--------|
-| =p=      | =:ignore t=                    | project.....................  | -    |        |
-| =pr=     | =xref-find-references=         | references                    | -    |        |
-| =pR=     | =consult-eglot-symbols=        | references consult            | -    |        |
-| =pd=     | =(consult-flymake nil)=        | diagnostic buffer             | -    | y      |
-| =pD=     | =consult-flymake=              | diagnostic                    | -    |        |
-| =pf=     | =project-find-file=            | find-file                     | -    |        |
-| =pz=     | =project-switch-project=       | jump-to-other-proj            | -    |        |
-| =ps=     | =consult-git-grep=             | search git files              | -    |        |
-| =pS=     | =project-find-regexp=          | search-in-proj                | -    |        |
-| =pk=     | =project-kill-buffers=         | kill-buf-proj                 | -    |        |
-| =pl=     | =consult-project-buffer=       | list-buf-proj                 | -    |        |
-| =pc=     | =project-recompile=            |                               | -    |        |
-| =pqrr=   | =project-query-replace-regexp= |                               | -    |        |
-| =pv=     | =consult-imenu=                | variables                     | -    |        |
-| =v=      | =:ignore t=                    | variables.................... | -    |        |
-| =vq=     | =format-all-buffer=            | format-buffer                 | -    |        |
-| =vr=     | =eglot-rename=                 | rename variable               | -    |        |
+| key(s) | function               | short description            | mode | lambda |
+|--------+------------------------+------------------------------+------+--------|
+| =p=      | =:ignore t=              | project..................... | -    |        |
+| =pR=     | =consult-eglot-symbols=  | references consult           | -    |        |
+| =pd=     | =(consult-flymake nil)=  | diagnostic buffer            | -    | y      |
+| =pD=     | =consult-flymake=        | diagnostic                   | -    |        |
+| =ps=     | =consult-git-grep=       | search git files             | -    |        |
+| =pl=     | =consult-project-buffer= | list-buf-proj                | -    |        |
+| =pv=     | =consult-imenu=          | variables                    | -    |        |
 
-**** Denote related
+| =vr=   | =eglot-rename=               | rename variable    | - |   |
+| =vq=   | =format-all-buffer=            | format-buffer      | - |   |
+| =pr=   | =xref-find-references=         | references         | - |   |
+| =pf=   | =project-find-file=            | find-file          | - |   |
+| =pz=   | =project-switch-project=       | jump-to-other-proj | - |   |
+| =pS=   | =project-find-regexp=          | search-in-proj     | - |   |
+| =pk=   | =project-kill-buffers=         | kill-buf-proj      | - |   |
+| =pc=   | =project-recompile=            |                    | - |   |
+| =pqrr= | =project-query-replace-regexp= |                    | - |   |
+
+**** DONE Denote related
+CLOSED: [2025-09-25 Thu 06:18]
 #+attr_latex: :placement [H]
 #+caption: Denote
 #+name: tbl-global-general-keybindings-denote
@@ -2512,7 +2583,8 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | =nlF= | =denote-link=                        | forward-link                 | - |   |
 | =nla= | =denote-add-links=                   | add-links regex              | - |   |
 
-**** Roam related
+**** DONE Roam related
+CLOSED: [2025-09-25 Thu 06:18]
 #+attr_latex: :placement [H]
 #+caption: Roam
 #+name: tbl-global-general-keybindings-roam
@@ -2535,18 +2607,20 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | =rtr=    | =org-roam-tag-remove=                                            | org-roam-tag-remove                  | -    |        |
 | =rbt=    | =org-roam-buffer-toggle=                                         | org-roam-buffer-toggle               | -    |        |
 
-**** org related
+**** DONE org related
+CLOSED: [2025-09-26 Fri 07:00]
 #+attr_latex: :placement [H]
 #+caption: Org related stuffs
 #+name: tbl-global-general-keybindings-org-mode-related
 | key(s) | function                                  | short description               | mode | lambda |
 |--------+-------------------------------------------+---------------------------------+------+--------|
-| =o=      | =:ignore t=                                 | org............................ | -    |        |
-| =oo=     | =org-open-at-point=                         | open                            | org  |        |
-| =oO=     | =garid/jump-label-def-of-ref-at-point-word= | open ref def                    | org  |        |
-| =od=     | =garid/open-org-link-at-point-with-dired=   | directory-open                  | org  |        |
-| =omm=    | =org-modern-mode=                           | org-modern-mode                 | org  |        |
-| =,=      | =org-ctrl-c-ctrl-c=                         | C-c C-c                         | org  |        |
+
+| =oo=  | =org-open-at-point=                         | open                            | org |   |
+| =o=   | =:ignore t=                                 | org............................ | -   |   |
+| =oO=  | =garid/jump-label-def-of-ref-at-point-word= | open ref def                    | org |   |
+| =od=  | =garid/open-org-link-at-point-with-dired=   | directory-open                  | org |   |
+| =omm= | =org-modern-mode=                           | org-modern-mode                 | org |   |
+| =,=   | =org-ctrl-c-ctrl-c=                         | C-c C-c                         | org |   |
 
 **** org table related
 #+attr_latex: :placement [H]
@@ -2565,26 +2639,31 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | =oTic=   | =org-table-insert-column=              | column                       | org  |        |
 | =oTir=   | =org-table-insert-row=                 | row                          | org  |        |
 
-**** org-subtree operations
+**** DONE org-subtree operations
+CLOSED: [2025-09-26 Fri 07:01]
 #+attr_latex: :placement [H]
 #+caption: in org-file, frequent commands
 #+name: tbl-orgmode-general-keybindings-freq
 | key(s) | function                                        | short description            | mode | lambda |
 |--------+-------------------------------------------------+------------------------------+------+--------|
-| =os=     | =:ignore t=                                       | subtree..................... | org  |        |
-| =osy=    | =org-copy-subtree=                                | yank (verbatim copy)         | org  |        |
-| =osa=    | =(org-archive-subtree-default-with-confirmation)= | archive                      | org  | y      |
-| =osY=    | =org-id-copy=                                     | yank (ID)                    | org  |        |
-| =osv=    | =org-mark-element=                                | visually select element      | org  |        |
-| =osm=    | =org-refile=                                      | move/refile                  | org  |        |
-| =osd=    | =org-cut-subtree=                                 | delete (aka cut)             | org  |        |
-| =ost=    | =org-toggle-narrow-to-subtree=                    | toggle narrow                | org  |        |
-| =osn=    | =org-num-mode=                                    | num-mode                     | org  |        |
-| =oss=    | =org-sort=                                        | sort                         | org  |        |
-| =osp=    | =org-set-property=                                | property                     | org  |        |
-| =osI=    | =org-indent-mode=                                 | indent-mode                  | org  |        |
-| =ose=    | =org-set-effort=                                  | org-set-effort               | org  |        |
 |--------+-------------------------------------------------+------------------------------+------+--------|
+
+
+| =osT= | =org-tidy-mode=                                   | tidy-mode                    | org |   |
+| =os=  | =:ignore t=                                       | subtree..................... | org |   |
+| =osy= | =org-copy-subtree=                                | yank (verbatim copy)         | org |   |
+| =osa= | =(org-archive-subtree-default-with-confirmation)= | archive                      | org | y |
+| =osY= | =org-id-copy=                                     | yank (ID)                    | org |   |
+| =osv= | =org-mark-element=                                | visually select element      | org |   |
+| =osm= | =org-refile=                                      | move/refile                  | org |   |
+| =osd= | =org-cut-subtree=                                 | delete (aka cut)             | org |   |
+| =ost= | =org-toggle-narrow-to-subtree=                    | toggle narrow                | org |   |
+| =osn= | =org-num-mode=                                    | num-mode                     | org |   |
+| =oss= | =org-sort=                                        | sort                         | org |   |
+| =osp= | =org-set-property=                                | property                     | org |   |
+| =osI= | =org-indent-mode=                                 | indent-mode                  | org |   |
+| =ose= | =org-set-effort=                                  | org-set-effort               | org |   |
+
 | =osi=    | =:ignore t=                                       | insert heading.............. | org  |        |
 | =osia=   | =org-insert-heading-after-current=                | after                  C-RET | org  |        |
 | =osih=   | =org-insert-heading=                              | heading                M-RET | org  |        |
@@ -2593,34 +2672,31 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | =osiA=   | =org-insert-todo-heading-respect-content=         | After           todo C-S-RET | org  |        |
 | =osiS=   | =org-insert-todo-subheading=                      | subheading      todo         | org  |        |
 
-
-| =osT= | =org-tidy-mode= | tidy-mode | org |   |
-
-**** org-agenda/calendar/todo related
+**** DONE org-agenda/calendar/todo related
+CLOSED: [2025-09-26 Fri 07:03]
 #+attr_latex: :placement [H]
 #+caption: agenda-todo-schedule
 #+name: tbl-orgmode-general-keybindings-todo
 | key(s) | function      | short description            | mode | lambda |
 |--------+---------------+------------------------------+------+--------|
-| =oc=     | =org-capture=   | capture                      | -    |        |
-| =ot=     | =org-todo=      | todo                         | org  |        |
-|--------+---------------+------------------------------+------+--------|
 | =oa=     | =:ignore t=     | agenda...................... | -    |        |
-| =oag=    | =org-agenda=    | agenda                       | -    |        |
-| =oab=    | =org-timeblock= | block                        | -    |        |
-| =oas=    | =org-schedule=  | schedule                     | org  |        |
-| =oad=    | =org-deadline=  | deadline                     | org  |        |
-| =oac=    | =org-clock-in=  | clock in                     | org  |        |
-| =oaC=    | =org-clock-out= | clock in                     | org  |        |
 
-**** org jumping around or finding things
+| =oc=  | =org-capture=   | capture  | -   |   |
+| =ot=  | =org-todo=      | todo     | org |   |
+| =oag= | =org-agenda=    | agenda   | -   |   |
+| =oab= | =org-timeblock= | block    | -   |   |
+| =oas= | =org-schedule=  | schedule | org |   |
+| =oad= | =org-deadline=  | deadline | org |   |
+| =oac= | =org-clock-in=  | clock in | org |   |
+| =oaC= | =org-clock-out= | clock in | org |   |
+
+**** TODO org jumping around or finding things
 #+attr_latex: :placement [H]
 #+caption: jumping or finding stuff in org file
 #+name: tbl-orgmode-general-keybindings-find
 | key(s) | function                        | short description         | mode | lambda |
 |--------+---------------------------------+---------------------------+------+--------|
 | =of=     | =:ignore t=                       | find..................... | org  |        |
-| =ofh=    | =consult-org-heading=             | heading                   | org  |        |
 | =ofn=    | =(consult-line "^#+name"   )=     | named table/eq/src        | org  | y      |
 | =ofr=    | =(consult-line "^#+result" )=     | result        /src        | org  | y      |
 | =ofs=    | =(consult-line "^#+begin_" )=     | source src-block          | org  | y      |
@@ -2629,25 +2705,28 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 | =j=      | =org-next-block=                  | jump to next src-block    | org  |        |
 | =k=      | =org-previous-block=              | jump to prev src-block    | org  |        |
 
-**** org-export related
+| =ofh= | =consult-org-heading= | heading | org |   |
+
+**** TODO org-export related
 #+attr_latex: :placement [H]
 #+caption: exporting org
 #+name: tbl-orgmode-general-keybindings-export
 | key(s) | function                         | short description             | mode | lambda |
 |--------+----------------------------------+-------------------------------+------+--------|
-| =ox=     | =:ignore t=                        | export....................... | org  |        |
-| =oxh=    | =org-html-export-to-html=          | html                          | org  |        |
-| =oxb=    | =org-beamer-export-to-pdf=         | beamer                        | org  |        |
-| =oxp=    | =org-latex-export-to-pdf=          | pdf latex                     | org  |        |
-| =oxH=    | =(org-html-export-to-html nil t)=  | Html                 subtree  | org  | y      |
-| =oxB=    | =(org-beamer-export-to-pdf nil t)= | beamer               subtree  | org  | y      |
-| =oxP=    | =(org-latex-export-to-pdf nil t)=  | pdf latex            subtree  | org  | y      |
-| =oxr=    | =org-re-reveal-export-to-html=   | reveal js                     | org  |        |
-| =oxo=    | =garid/org-open-pdf=               | pdf open                      | org  |        |
-| =oxO=    | =garid/org-open-html=              | html open                     | org  |        |
 | =op=     | =org-latex-preview=                | preview                       | org  |        |
 
-**** org-link related
+| =ox=  | =:ignore t=                        | export....................... | org |   |
+| =oxp= | =org-latex-export-to-pdf=          | pdf latex                     | org |   |
+| =oxH= | =(org-html-export-to-html nil t)=  | Html                 subtree  | org | y |
+| =oxP= | =(org-latex-export-to-pdf nil t)=  | pdf latex            subtree  | org | y |
+| =oxh= | =org-html-export-to-html=          | html                          | org |   |
+| =oxr= | =org-re-reveal-export-to-html=     | reveal js                     | org |   |
+| =oxO= | =garid/org-open-html=              | html open                     | org |   |
+| =oxo= | =garid/org-open-pdf=               | pdf open                      | org |   |
+| =oxb= | =org-beamer-export-to-pdf=         | beamer                        | org |   |
+| =oxB= | =(org-beamer-export-to-pdf nil t)= | beamer               subtree  | org | y |
+
+**** TODO org-link related
 #+attr_latex: :placement [H]
 #+caption: org-link related
 #+name: tbl-orgmode-general-keybindings-link
@@ -2767,23 +2846,11 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 (garids-keybind/for-all-modes
   "SPC" '(execute-extended-command :which-key "M-x")
   "f" '((lambda () (interactive) (if (project-current) (project-find-file) (call-interactively #'find-file)) ) :which-key "find-file")
-  "o" '(:ignore t :which-key "org............................")
   "z" '(:ignore t :which-key "conveniences....................")
   "za" '(align-regexp :which-key "align")
   "zr" '(replace-regexp :which-key "replace")
   "zh" '(highlight-symbol-at-point :which-key "highlight-on")
   "zH" '(unhighlight-regexp :which-key "highlight-off")
-  "zs" '(:ignore t :which-key "spell............................")
-  "zsw" '(ispell-word :which-key "word")
-  "zsr" '(ispell-region :which-key "region")
-  "zsC" '(ispell-comments-and-strings :which-key "comment-full")
-  "zsc" '(ispell-comment-or-string-at-point :which-key "comment-here")
-  "zsb" '(ispell-buffer :which-key "buffer")
-  "zsm" '(ispell-message :which-key "message")
-  "zsq" '(ispell-kill-ispell :which-key "quit")
-  "zsl" '(ispell-change-dictionary :which-key "language en/mn")
-  "zst" '(mw-thesaurus-lookup-at-point :which-key "thesaurus current word")
-  "zsT" '(mw-thesaurus-lookup :which-key "thesaurus")
   "ZQ" '(kill-emacs :which-key "kill Emacs")
   "s" '(:ignore t :which-key "system.......................")
   "srf" '(consult-recent-file :which-key "recent-f.iles")
@@ -2822,22 +2889,12 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "hm" '(consult-man :which-key "man")
   "hi" '(Info-goto-node :which-key "read docs")
   "p" '(:ignore t :which-key "project.....................")
-  "pr" '(xref-find-references :which-key "references")
   "pR" '(consult-eglot-symbols :which-key "references consult")
   "pd" '((lambda () (interactive) (consult-flymake nil) ) :which-key "diagnostic buffer")
   "pD" '(consult-flymake :which-key "diagnostic")
-  "pf" '(project-find-file :which-key "find-file")
-  "pz" '(project-switch-project :which-key "jump-to-other-proj")
   "ps" '(consult-git-grep :which-key "search git files")
-  "pS" '(project-find-regexp :which-key "search-in-proj")
-  "pk" '(project-kill-buffers :which-key "kill-buf-proj")
   "pl" '(consult-project-buffer :which-key "list-buf-proj")
-  "pc" '(project-recompile :which-key "")
-  "pqrr" '(project-query-replace-regexp :which-key "")
   "pv" '(consult-imenu :which-key "variables")
-  "v" '(:ignore t :which-key "variables....................")
-  "vq" '(format-all-buffer :which-key "format-buffer")
-  "vr" '(eglot-rename :which-key "rename variable")
   "c" '(:ignore t :which-key "consult.......................")
   "cF" '(consult-fd :which-key "consult-fd               [ F ]")
   "F" '(consult-fd :which-key "consult-fd              [ cF ]")
@@ -2866,50 +2923,16 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
   "oTc" '(orgtbl-create-or-convert-from-region :which-key "create")
   "oTT" '(org-table-toggle-column-width :which-key "toggle-hide-column")
   "oTC" '(org-table-toggle-coordinate-overlays :which-key "coordinate")
-  "oc" '(org-capture :which-key "capture")
   "oa" '(:ignore t :which-key "agenda......................")
-  "oag" '(org-agenda :which-key "agenda")
-  "oab" '(org-timeblock :which-key "block")
 )
 
 (garids-keybind/in-org-mode
-  "oo" '(org-open-at-point :which-key "open")
-  "oO" '(garid/jump-label-def-of-ref-at-point-word :which-key "open ref def")
-  "od" '(garid/open-org-link-at-point-with-dired :which-key "directory-open")
-  "omm" '(org-modern-mode :which-key "org-modern-mode")
-  "," '(org-ctrl-c-ctrl-c :which-key "C-c C-c")
   "oTx" '(org-table-export :which-key "export as csv file")
   "oTs" '(org-table-sum :which-key "sum")
   "oTi" '(:ignore t :which-key "insert......................")
   "oTic" '(org-table-insert-column :which-key "column")
   "oTir" '(org-table-insert-row :which-key "row")
-  "os" '(:ignore t :which-key "subtree.....................")
-  "osy" '(org-copy-subtree :which-key "yank (verbatim copy)")
-  "osa" '((lambda () (interactive) (org-archive-subtree-default-with-confirmation) ) :which-key "archive")
-  "osY" '(org-id-copy :which-key "yank (ID)")
-  "osv" '(org-mark-element :which-key "visually select element")
-  "osm" '(org-refile :which-key "move/refile")
-  "osd" '(org-cut-subtree :which-key "delete (aka cut)")
-  "ost" '(org-toggle-narrow-to-subtree :which-key "toggle narrow")
-  "osn" '(org-num-mode :which-key "num-mode")
-  "oss" '(org-sort :which-key "sort")
-  "osp" '(org-set-property :which-key "property")
-  "osI" '(org-indent-mode :which-key "indent-mode")
-  "ose" '(org-set-effort :which-key "org-set-effort")
-  "osi" '(:ignore t :which-key "insert heading..............")
-  "osia" '(org-insert-heading-after-current :which-key "after                  C-RET")
-  "osih" '(org-insert-heading :which-key "heading                M-RET")
-  "osis" '(org-insert-subheading :which-key "subheading")
-  "osiH" '(org-insert-todo-heading :which-key "heading         todo M-S-RET")
-  "osiA" '(org-insert-todo-heading-respect-content :which-key "After           todo C-S-RET")
-  "osiS" '(org-insert-todo-subheading :which-key "subheading      todo")
-  "ot" '(org-todo :which-key "todo")
-  "oas" '(org-schedule :which-key "schedule")
-  "oad" '(org-deadline :which-key "deadline")
-  "oac" '(org-clock-in :which-key "clock in")
-  "oaC" '(org-clock-out :which-key "clock in")
   "of" '(:ignore t :which-key "find.....................")
-  "ofh" '(consult-org-heading :which-key "heading")
   "ofn" '((lambda () (interactive) (consult-line "^#+name"   ) ) :which-key "named table/eq/src")
   "ofr" '((lambda () (interactive) (consult-line "^#+result" ) ) :which-key "result        /src")
   "ofs" '((lambda () (interactive) (consult-line "^#+begin_" ) ) :which-key "source src-block")
@@ -3184,6 +3207,10 @@ fi
   :straight t
   :commands format-all-mode
   ;;:hook (prog-mode . format-all-mode)
+  :general
+  (:states 'normal
+       "SPC v q" 'format-all-buffer )
+
   :config
   (setq-default format-all-formatters
                 '(("C"     (astyle "--mode=c"))
