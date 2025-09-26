@@ -588,9 +588,8 @@ and later sets cursor at that point when you open that file.
 (use-package align
   :straight nil
   :general
-  (:states 'normal
-           "SPC z a"  'align-regexp
-           )
+  (:states '(visual)
+           "SPC z a"  'align-regexp)
   )
 #+end_src
 
@@ -612,6 +611,19 @@ and later sets cursor at that point when you open that file.
   :bind
   ("C-/" . comment-line)
   ;; need few more TODO
+  )
+#+end_src
+
+** bookmark
+#+begin_src emacs-lisp
+(use-package bookmark
+  :straight nil
+  :general
+  (:states 'normal
+           "SPC b b" 'list-bookmarks
+           "SPC b s" 'bookmark-set
+           "SPC b j" 'bookmark-jump
+           )
   )
 #+end_src
 
@@ -703,6 +715,7 @@ fi
            "SPC c a" 'consult-org-agenda
            "SPC c g" 'consult-git-grep
            "SPC c c" 'garid/consult-preview-change
+           "SPC c b" 'consult-bookmark
            "SPC s r f" 'consult-recent-file
            "SPC c R f" 'consult-recent-file
 
@@ -814,76 +827,64 @@ fi
   :general
   (:states 'normal
            :keymaps 'org-mode-map
-           "SPC o o"     'org-open-at-point
-           "SPC o O"     'garid/jump-label-def-of-ref-at-point-word
-           "SPC o d"     'garid/open-org-link-at-point-with-dired
            "SPC ,"       'org-ctrl-c-ctrl-c
-           "SPC o s y"   'org-copy-subtree
-           "SPC o s a"   'org-archive-subtree-default-with-confirmation
-           "SPC o s Y"   'org-id-copy
-           "SPC o s v"   'org-mark-element
-           "SPC o s m"   'org-refile
-           "SPC o s d"   'org-cut-subtree
-           "SPC o s t"   'org-toggle-narrow-to-subtree
-           "SPC o s n"   'org-num-mode
-           "SPC o s s"   'org-sort
-           "SPC o s p"   'org-set-property
-           "SPC o s I"   'org-indent-mode
-           "SPC o s e"   'org-set-effort
-           ;; "SPC o a b"   'org-timeblock
-           "SPC o a s"   'org-schedule
-           "SPC o a d"   'org-deadline
-           "SPC o a c"   'org-clock-in
-           "SPC o a C"   'org-clock-out
-           "SPC o f h"   'consult-org-heading
-           "SPC o t"     'org-todo
-
-           "SPC o p"     'org-latex-preview
-
-           "SPC o l d"     'garid/org-toggle-link-n-emphasis
-           "SPC o l i"     'org-insert-link
-           "SPC o l n"     'org-next-link
-           "SPC o l p"     'org-previous-link
-           "SPC o l o"     'org-open-at-point
-           "SPC o l f"     'org-footnote-new
-           "SPC o l F"     'org-footnote-action
-           "SPC o l c"     'org-cite-insert
-           "SPC o l l"     'org-lint
-
            "SPC j"     'org-next-block
            "SPC k"     'org-previous-block
-
-           "SPC o T m"    'orgtbl-mode
-           "SPC o T c"    'orgtbl-create-or-convert-from-region
-           "SPC o T T"    'org-table-toggle-column-width
+           "SPC o O"     'garid/jump-label-def-of-ref-at-point-word
            "SPC o T C"    'org-table-toggle-coordinate-overlays
-           "SPC o T x"    'org-table-export
-           "SPC o T s"    'org-table-sum
+           "SPC o T T"    'org-table-toggle-column-width
+           "SPC o T c"    'orgtbl-create-or-convert-from-region
            "SPC o T i c"    'org-table-insert-column
            "SPC o T i r"    'org-table-insert-row
-
+           "SPC o T m"    'orgtbl-mode
+           "SPC o T s"    'org-table-sum
+           "SPC o T x"    'org-table-export
+           "SPC o a C"   'org-clock-out
+           "SPC o a c"   'org-clock-in
+           "SPC o a d"   'org-deadline
+           "SPC o a s"   'org-schedule
+           "SPC o d"     'garid/open-org-link-at-point-with-dired
+           "SPC o f h"   'consult-org-heading
            "SPC o i t"       'garid/org-toggle-display-images-n-edraw
-
-
-
-           )
+           "SPC o l F"     'org-footnote-action
+           "SPC o l c"     'org-cite-insert
+           "SPC o l d"     'garid/org-toggle-link-n-emphasis
+           "SPC o l f"     'org-footnote-new
+           "SPC o l i"     'org-insert-link
+           "SPC o l l"     'org-lint
+           "SPC o l n"     'org-next-link
+           "SPC o l o"     'org-open-at-point
+           "SPC o l p"     'org-previous-link
+           "SPC o o"     'org-open-at-point
+           "SPC o p"     'org-latex-preview
+           "SPC o s I"   'org-indent-mode
+           "SPC o s Y"   'org-id-copy
+           "SPC o s a"   'org-archive-subtree-default-with-confirmation
+           "SPC o s d"   'org-cut-subtree
+           "SPC o s e"   'org-set-effort
+           "SPC o s m"   'org-refile
+           "SPC o s n"   'org-num-mode
+           "SPC o s p"   'org-set-property
+           "SPC o s s"   'org-sort
+           "SPC o s t"   'org-toggle-narrow-to-subtree
+           "SPC o s v"   'org-mark-element
+           "SPC o s y"   'org-copy-subtree
+           "SPC o t"     'org-todo)
   (:states 'normal
-           "SPC o c  "   'org-capture
            "SPC o a g"   'org-agenda
-           )
+           "SPC o c  "   'org-capture)
   :custom
   ;; ---------------- theme/styling ------------------------------------------------------
-  (org-hide-emphasis-markers         t      )
-  (org-image-actual-width            1.0    )
-  (org-startup-folded         "show2levels" ) ;; fold
-  (org-startup-indented              t      )
-  (org-src-fontify-natively          t      )
-  (org-startup-with-inline-images    t      )
-  (org-startup-with-latex-preview    nil    )
-  ;;(org-startup-numerated             t      )
-  (org-hide-leading-stars t)
+  (org-hide-emphasis-markers         t                        )
+  (org-hide-leading-stars t                                   )
   (org-highlight-latex-and-related    '(latex entities native))
-  (org-preview-latex-default-process 'dvisvgm)
+  (org-image-actual-width            1.0                      )
+  (org-preview-latex-default-process 'dvisvgm                 )
+  (org-src-fontify-natively          t                        )
+  (org-startup-folded                "show2levels"            ) ;; fold
+  (org-startup-indented              t                        )
+  (org-startup-with-inline-images    t                        )
+  (org-startup-with-latex-preview    nil                      )
 
   ;; ---------------- source code in org -------------------------------------------------
   (org-src-tab-acts-natively         t      ) ;; org-src?
@@ -942,25 +943,29 @@ fi
   (add-to-list 'org-latex-packages-alist   '("" "listings" ))
   (add-to-list 'org-latex-packages-alist   '("" "color"    ))
 
-  (org-babel-do-load-languages
-   'org-babel-load-languages '((python     . t) (emacs-lisp . t)
-                               (latex      . t) (shell      . t)
-                               (dot        . t) (makefile   . t)
-                               (sqlite     . t) (gnuplot    . t)
-                               (maxima     . t) (calc       . t)
-                               (awk        . t)
-                               ;;(nim        . t) #(plantuml   . t)
-                               ;; (go         . t)
-                               ;; (asymptote  . t) (ditaa      . t)
-                               ;; (nix        . t) (lua        . t)
-                               ;; (mermaid    . t) (jupyter    . t)
-                               ))
+  (org-babel-do-load-languages 'org-babel-load-languages
+                               '((awk        . t)
+                                 (calc       . t)
+                                 (dot        . t)
+                                 (emacs-lisp . t)
+                                 (gnuplot    . t)
+                                 (latex      . t)
+                                 (makefile   . t)
+                                 (maxima     . t)
+                                 (python     . t)
+                                 (shell      . t)
+                                 (sqlite     . t)
+                                 ;; (asymptote  . t)
+                                 ;; (ditaa      . t)
+                                 ;; (go         . t)
+                                 ;; (jupyter    . t)
+                                 ;; (lua        . t)
+                                 ;; (mermaid    . t)
+                                 ;; (nim        . t)
+                                 ;; (nix        . t)
+                                 ;; (plantuml   . t)
+                                 ))
 
-  ;; (font-lock-add-keywords 'org-mode
-  ;;                         '(("\\(\\(?:\\\\\\(?:label\\|ref\\|eqref\\)\\)\\){\\(.+?\\)}"
-  ;;                            (1 font-lock-keyword-face)
-  ;;                            (2 font-lock-constant-face))))
-  ;; image backgroud for transparent images
   (defcustom org-inline-image-background nil
     "The color used as the default background for inline images. When nil, use the default face background."
     :group 'org
@@ -1709,15 +1714,14 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   (org-html-htmlize-output-type 'css)
   ;; (org-html-head-include-scripts         nil) ;; Use our own scripts
   ;; (org-html-head-include-default-style   nil) ;; Use our own styles
-  ;;(org-html-head "<link rel=\"stylesheet\" type=\"text/css\" href=\"https://orgmode.org/worg/style/worg.css\"/>" )
-  (org-html-head "<link rel=\"stylesheet\" href=\"/home/garid/.config/emacs/org-templates/syntax.css\" type=\"text/css\"/>" )
-
+  ;; (org-html-head "<link rel=\"stylesheet\" type=\"text/css\" href=\"https://orgmode.org/worg/style/worg.css\"/>" )
+  ;; (org-html-head "<link rel=\"stylesheet\" href=\"/home/garid/.config/emacs/org-templates/syntax.css\" type=\"text/css\"/>" )
   :general
   (:states 'normal
            :keymaps 'org-mode-map
-           "SPC x h"   'org-html-export-to-html
-           "SPC x H"   '((lambda () (interactive) (org-html-export-to-html nil t)) :which-key "html export subtree")
-           "SPC x O"   'garid/org-open-html
+           "SPC o x h"   'org-html-export-to-html
+           "SPC o x H"   '((lambda () (interactive) (org-html-export-to-html nil t)) :which-key "html export subtree")
+           "SPC o x O"   'garid/org-open-html
            )
 
   (defun garid/org-open-html ()
@@ -1762,6 +1766,9 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   ;;(add-hook 'htmlize-after-hook (lambda () (modus-themes-select 'modus-vivendi-tinted)))
   )
 #+end_src
+
+#+RESULTS:
+
 * Org Misc:
 ** =org-download= 
 #+begin_src emacs-lisp
@@ -2389,13 +2396,7 @@ Similar to vim-signify.
   ("<f9>"  .  harpoon-quick-menu-hydra  )
   :general
   (:states 'normal
-           "SPC b"      'harpoon-quick-menu-hydra
-           "SPC B 1"     'harpoon-go-to-1
-           "SPC B 2"     'harpoon-go-to-2
-           "SPC B 3"     'harpoon-go-to-3
-           "SPC B 4"     'harpoon-go-to-4
-           "SPC B 5"     'harpoon-go-to-5
-           "SPC B a"     'harpoon-add-file)
+           "SPC B"      'harpoon-quick-menu-hydra)
   )
 #+end_src
 
