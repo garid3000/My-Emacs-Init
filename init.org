@@ -445,8 +445,8 @@ but it feels slow when navigating.
 
   :general
   (:states 'normal
-           :keymaps 'dired-mode-map
-           "SPC D p"    'dired-preview-mode)
+           :keymaps   'dired-mode-map
+           "SPC D p"  'dired-preview-mode)
   )
 #+end_src
 ** =saveplace= - Save (last) cursor position
@@ -469,11 +469,10 @@ and later sets cursor at that point when you open that file.
   :config
   (recentf-mode 1))
 #+end_src
-** files
+** =files=
 #+begin_src emacs-lisp
 (use-package files
   :straight nil
-
   :custom
   ;; from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][mastering emacs article]].
   (major-mode-remap-alist '((bash-mode   . bash-ts-mode)
@@ -502,17 +501,15 @@ and later sets cursor at that point when you open that file.
            )
   )
 #+end_src
-** whitespace-mode
+** =whitespace-mode=
 #+begin_src emacs-lisp
 (use-package whitespace-mode
   :straight nil
   :general
-  (:states 'normal
-           "SPC s w" 'whitespace-mode)
-  )
+  (:states 'normal "SPC s w" 'whitespace-mode))
 #+end_src
 
-** emacs c codes
+** =emacs= c-codes
 #+begin_src emacs-lisp
 (use-package emacs
   :straight nil
@@ -538,14 +535,15 @@ and later sets cursor at that point when you open that file.
     (let ((buf (generate-new-buffer "*python-scratch*")))
       (switch-to-buffer buf)
       (python-mode)))
-(defun garid/clear-kill-ring-and-garbage-collect ()
-  (interactive)
-  (setq kill-ring nil)
-  (garbage-collect))
+
+  (defun garid/clear-kill-ring-and-garbage-collect ()
+    (interactive)
+    (setq kill-ring nil)
+    (garbage-collect))
   )
 #+end_src
 
-** ibuffer
+** =ibuffer=
 #+begin_src emacs-lisp
 (use-package ibuffer
   :straight nil
@@ -556,7 +554,7 @@ and later sets cursor at that point when you open that file.
   )
 #+end_src
 
-** simple
+** =simple=
 #+begin_src emacs-lisp
 (use-package simple
   :straight nil
@@ -570,7 +568,7 @@ and later sets cursor at that point when you open that file.
   )
 #+end_src
 
-** window
+** =window=
 #+begin_src emacs-lisp
 (use-package window
   :straight nil
@@ -584,7 +582,7 @@ and later sets cursor at that point when you open that file.
   )
 #+end_src
 
-** align
+** =align=
 #+begin_src emacs-lisp
 (use-package align
   :straight nil
@@ -594,7 +592,7 @@ and later sets cursor at that point when you open that file.
   )
 #+end_src
 
-** replace
+** =replace=
 #+begin_src emacs-lisp
 (use-package replace
   :straight nil
@@ -605,7 +603,7 @@ and later sets cursor at that point when you open that file.
   )
 #+end_src
 
-** newcomment
+** =newcomment=
 #+begin_src emacs-lisp
 (use-package newcomment
   :straight nil
@@ -615,7 +613,7 @@ and later sets cursor at that point when you open that file.
   )
 #+end_src
 
-** bookmark
+** =bookmark=
 #+begin_src emacs-lisp
 (use-package bookmark
   :straight nil
@@ -628,16 +626,21 @@ and later sets cursor at that point when you open that file.
   )
 #+end_src
 
-** tramp sudo edit
+** =tramp=
 #+begin_src emacs-lisp
 (use-package tramp-cmds
   :straight nil
   :general
-  (:states 'normal
-           "SPC L S" 'tramp-revert-buffer-with-sudo)
+  (:states 'normal "SPC L S" 'tramp-revert-buffer-with-sudo)
  )
 #+end_src
 
+** =savehist=:
+#+begin_src emacs-lisp
+(use-package savehist
+  :straight t
+  :config (savehist-mode))
+#+end_src
 ** COMMENT shell script to open terminal                                             :shell_script:
 #+begin_src bash :tangle garid/open_external_term.sh :shebang "#!/bin/bash"
 # Open System termianl $TERMINAL at $1:
@@ -792,12 +795,6 @@ fi
   )
 #+end_src
 
-** =savehist=:
-#+begin_src emacs-lisp
-(use-package savehist
-  :straight t
-  :config (savehist-mode))
-#+end_src
 * Org
 ** =org=: org-mode configuration
 #+caption: org config
@@ -1544,13 +1541,12 @@ fi
 ** COMMENT test
 From [[https://librephoenix.com/2023-12-30-making-org-agenda-look-beautiful]]
 #+begin_src emacs-lisp
-(setq org-agenda-skip-timestamp-if-done t
-      org-agenda-skip-deadline-if-done t
-      org-agenda-skip-scheduled-if-done t
-      org-agenda-skip-scheduled-if-deadline-is-shown t
-      org-agenda-skip-timestamp-if-deadline-is-shown t)
+(setq org-agenda-skip-timestamp-if-done               t
+      org-agenda-skip-deadline-if-done                t
+      org-agenda-skip-scheduled-if-done               t
+      org-agenda-skip-scheduled-if-deadline-is-shown  t
+      org-agenda-skip-timestamp-if-deadline-is-shown  t)
 #+end_src
-
 
 ** =casual-agenda=: casual agenda based on transient
 #+begin_src emacs-lisp
@@ -1636,11 +1632,11 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   :straight nil
   :after org
   :custom
-  (org-latex-compiler "lualatex")
-  (org-latex-src-block-backend           'listings                      )
-  (org-latex-format-headline-function    'garid/latex-formattig-headings)
-  (org-latex-active-timestamp-format      "\\textcolor{Brown}{%s}"      )
-  (org-latex-inactive-timestamp-format    "\\textcolor{Brown}{%s}"      )
+  (org-latex-compiler                    "lualatex"                      )
+  (org-latex-src-block-backend           'listings                       )
+  (org-latex-active-timestamp-format      "\\textcolor{Brown}{%s}"       )
+  (org-latex-inactive-timestamp-format    "\\textcolor{Brown}{%s}"       )
+  (org-latex-format-headline-function    'garid/latex-formattig-headings )
   (org-latex-pdf-process
    '("latexmk -shell-escape -f -pdf -%latex -interaction=nonstopmode -output-directory=%o %f"))
 
@@ -1752,7 +1748,11 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   :general
   (:states 'normal
            :keymaps 'org-mode-map
-           "SPC x r"   'org-re-reveal-export-to-html
+           "SPC o x r"   'org-re-reveal-export-to-html
+           "SPC o x R"   '((lambda ()
+                             (interactive)
+                             (org-re-reveal-export-to-html nil t))
+                           :which-key "org-re-reveal-export-to-html SUBTREE")
            )
   )
 #+end_src
