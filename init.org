@@ -494,6 +494,8 @@ and later sets cursor at that point when you open that file.
                          (find-file "~/BrainDump/inbox.org"))
            "SPC O m"  '(lambda () (interactive)
                           (find-file "~/BrainDump/denote_bps/20250911T174108--bps__gtd.org"))
+           "SPC O s"  '(lambda () (interactive)
+                          (find-file "/etc/nixos/configuration.nix"))
            "SPC O c"  'citar-open
            "SPC L r"  'revert-buffer-quick
            )
@@ -1487,6 +1489,7 @@ fi
 (use-package org-super-agenda
   :straight t
   :after org-agenda
+  :defer 2
   :custom
   (org-super-agenda-groups ;; https://librephoenix.com/2023-12-30-making-org-agenda-look-beautiful
    '(;; Each group has an implicit boolean OR operator between its selectors.
@@ -2729,12 +2732,13 @@ Similar to vim-signify.
   :config (gcmh-mode 1)
   :delight " gb")
 #+end_src
-** google
+** google related
 #+begin_src emacs-lisp
 (use-package google-translate
   :straight t
-  :custom
-  (google-translate-translation-directions-alist '(("ja" . "en")
+  :after general
+  :init
+  (setq google-translate-translation-directions-alist '(("ja" . "en")
                                                    ("en" . "ja")
                                                    ("en" . "mn")
                                                    ("mn" . "en")))
