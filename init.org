@@ -836,6 +836,8 @@ fi
            "SPC o f h"   'consult-org-heading
            "SPC o t"     'org-todo
 
+           "SPC o p"     'org-latex-preview
+
            "SPC o l d"     'garid/org-toggle-link-n-emphasis
            "SPC o l i"     'org-insert-link
            "SPC o l n"     'org-next-link
@@ -879,6 +881,7 @@ fi
   ;;(org-startup-numerated             t      )
   (org-hide-leading-stars t)
   (org-highlight-latex-and-related    '(latex entities native))
+  (org-preview-latex-default-process 'dvisvgm)
 
   ;; ---------------- source code in org -------------------------------------------------
   (org-src-tab-acts-natively         t      ) ;; org-src?
@@ -1009,9 +1012,6 @@ fi
   ;;(defvar garid-orgvar-is-img-shown nil "A buffer-local variable for Org mode.")
   ;;(make-variable-buffer-local 'garid-orgvar-is-img-shown)
 
-  ;;(add-hook 'org-mode-hook
-  ;;          (lambda ()
-  ;;            (setq garid-orgvar-is-img-shown "This is buffer-local for Org mode.")))
 
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1420,7 +1420,7 @@ fi
   (org-agenda-files '("~/BrainDump/denote/20250911T175810--personal__gtd.org"
                       "~/BrainDump/denote_bps/20250911T174108--bps__gtd.org"))
   ;;(org-agenda-span   90)
-  (org-agenda-span   3)
+  (org-agenda-span   1)
   (org-agenda-custom-commands
    '(("i" "Inbox"                tags-todo "+TODO=\"VAGUE\"" ((org-agenda-files (file-expand-wildcards "~/BrainDump/gtd/inbox.org"))))
      ("n" "Next actions"         tags-todo "+TODO=\"TODO\"")
@@ -1623,46 +1623,6 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   (advice-add 'org-odt-timestamp :override #'my-org-odt-timestamp-unstyled)
   )
 #+end_src
-** TODO =org-latex-preview=
-
-#+begin_src emacs-lisp
-(use-package org-latex-preview
-  :straight nil
-  :after org-mode
-  :hook (org-mode . org-latex-preview-auto-mode)
-  :config
-  ;; Increase preview width
-  (plist-put org-latex-preview-appearance-options
-             :page-width 0.8
-             )
-
-   ;; Use dvisvgm to generate previews
-   ;; You don't need this, it's the default:
-   (setq org-latex-preview-process-default 'dvisvgm)
-
-   ;; Block C-n, C-p etc from opening up previews when using auto-mode
-   (setq org-latex-preview-auto-ignored-commands
-         '(next-line previous-line mwheel-scroll
-                     scroll-up-command scroll-down-command))
-
-   ;; Enable consistent equation numbering
-   (setq org-latex-preview-numbered t)
-
-   ;; Bonus: Turn on live previews.  This shows you a live preview of a LaTeX
-   ;; fragment and updates the preview in real-time as you edit it.
-   ;; To preview only environments, set it to '(block edit-special) instead
-   (setq org-latex-preview-live t)
-
-   ;; More immediate live-previews -- the default delay is 1 second
-   (setq org-latex-preview-live-debounce 0.25)
-
-   :general
-   (:states 'normal
-            :keymaps org-mode-map
-           "SPC o p"     'org-latex-preview
-            )
-  )
-#+end_src
 ** =ox-html=
 #+begin_src emacs-lisp
 (use-package ox-html
@@ -1819,10 +1779,8 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
              :host github
              :brach "master"
              :repo "misohena/el-easydraw")
-
-
-  :after (org ox ox-latex ox-html)
-  ;; :hook (edraw-property-editor-mode . turn-off-evil-mode) test
+  :after org ox ox-latex ox-html
+  :demand t ;; needed <== don't know why
   :custom
   (edraw-editor-default-grid-interval 10)
   (edraw-default-shape-properties '((rect (fill            . #1="#f8f8f8")
@@ -1847,30 +1805,16 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
                                        (height . 400)
                                        (background . "#fff")))
 
+
   :general
   (:states 'normal
            :keymaps 'org-mode-map
            "SPC o i e"     'edraw-org-edit-regular-file-link
-           "SPC o i i"     '(lambda () (interactive) (insert "[[edraw:]]"))
-                                        ;#oiE     org-download-edit
-
-           )
+           "SPC o i i"     '(lambda () (interactive) (insert "[[edraw:]]")))
   :config
-  ;;(edraw-org-setup-default)
-  ;;(edraw-org-setup-exporter)
-
-  (with-eval-after-load 'org
-    (require 'edraw-org)
-    (edraw-org-setup-default)
-    )
-  ;; When using the org-export-in-background option (when using the
-  ;; asynchronous export function), the following settings are
-  ;; required. This is because Emacs started in a separate process does
-  ;; not load org.el but only ox.el.
-  (with-eval-after-load "ox"
-    (require 'edraw-org)
-    (edraw-org-setup-exporter))
-
+  (require 'edraw-org)
+  (edraw-org-setup-default)
+  (edraw-org-setup-exporter)
   )
 #+end_src
 * Programming languages
@@ -2657,6 +2601,7 @@ Similar to vim-signify.
                                    "\\*lsp-bridge-doc\\*"
                                    "\\*git-gutter:diff\\*"
                                    "\\*Org Select\\*"
+                                   "\\*Google Translate\\*"
                                    "\\*Org Attach\\*"
                                    "\\*Org Lint\\*"
                                    "\\*git-gutter:.*\\*"
@@ -2669,6 +2614,10 @@ Similar to vim-signify.
   (popper-mode      +1)
   (popper-echo-mode +1))
 #+end_src
+
+#+RESULTS:
+: popper-close-latest
+
 ** =hydra=
 #+begin_src emacs-lisp
 (use-package hydra
@@ -2709,10 +2658,34 @@ Similar to vim-signify.
 #+end_src
 ** google
 #+begin_src emacs-lisp
-(use-package google-translate :straight t)
-(use-package google-this :straight t)
+(use-package google-translate
+  :straight t
+  :custom
+  (google-translate-translation-directions-alist '(("ja" . "en")
+                                                   ("en" . "ja")
+                                                   ("en" . "mn")
+                                                   ("mn" . "en")))
+  :general
+  (:states '(normal visual)
+           "SPC G t" 'google-translate-smooth-translate)
+
+  )
+(use-package google-this
+  :straight t
+  :general
+  (:states '(normal visual)
+           "SPC G w" 'google-this-forecast
+           "SPC G l" 'google-this-line
+           "SPC G s" 'google-this-search
+           "SPC G r" 'google-this-region
+           "SPC G m" 'google-this-maps
+           )
+  )
 #+end_src
-** COMMENT test karthinks consult reftex                                                             :test:
+
+#+RESULTS:
+
+** COMMENT test karthinks consult reftex                                                     :test:
 #+begin_src emacs-lisp
 (use-package consult-reftex
   :straight (consult-reftex
