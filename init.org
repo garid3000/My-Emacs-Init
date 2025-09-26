@@ -395,7 +395,7 @@ but it feels slow when navigating.
   )
 #+end_src
 
-* System:
+* Built in packages
 ** =dired= - Directory
 #+begin_src emacs-lisp
 (use-package dired
@@ -640,6 +640,16 @@ else
 	return 0
 fi
 #+end_src
+** tramp sudo edit
+#+begin_src emacs-lisp
+(use-package tramp-cmds
+  :straight nil
+  :general
+  (:states 'normal
+           "SPC L S" 'tramp-revert-buffer-with-sudo)
+ )
+#+end_src
+
 * Mini-buffer completion, selection, suggestion
 ** =vertico=
 #+begin_src emacs-lisp
@@ -1693,16 +1703,6 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 
 #+RESULTS:
 
-** COMMENT =htmlize= - source code syntax in html export
-#+begin_src emacs-lisp
-(use-package htmlize
-  :straight t
-  :config
-  ;;(add-hook 'htmlize-before-hook (lambda () (indent-bars-mode -1)))
-  ;;(add-hook 'htmlize-before-hook (lambda () (modus-themes-select 'modus-operandi-tinted)))
-  ;;(add-hook 'htmlize-after-hook (lambda () (modus-themes-select 'modus-vivendi-tinted)))
-  )
-#+end_src
 ** =org-re-reveal=
 #+begin_src emacs-lisp
 (use-package org-re-reveal
@@ -1716,6 +1716,16 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   )
 #+end_src
 
+** COMMENT =htmlize= - source code syntax in html export
+#+begin_src emacs-lisp
+(use-package htmlize
+  :straight t
+  :config
+  ;;(add-hook 'htmlize-before-hook (lambda () (indent-bars-mode -1)))
+  ;;(add-hook 'htmlize-before-hook (lambda () (modus-themes-select 'modus-operandi-tinted)))
+  ;;(add-hook 'htmlize-after-hook (lambda () (modus-themes-select 'modus-vivendi-tinted)))
+  )
+#+end_src
 * Org Misc:
 ** =org-download= 
 #+begin_src emacs-lisp
@@ -2050,6 +2060,23 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 #+end_src
 
 * Coding lsp & jumping around
+** =abbrev=
+#+begin_src emacs-lisp
+(use-package abbrev
+  :straight nil
+  :delight "" ;;" abb"
+  :defer 1
+  ;;:custom
+  ;;(abbrev-file-name (expand-file-name "abbrev_defs" user-emacs-directory))
+  :config
+  (if (file-exists-p abbrev-file-name)
+      (quietly-read-abbrev-file))
+
+  ;;(abbrev-mode 1)
+  (setq-default abbrev-mode t)
+  )
+#+end_src
+
 ** =project.el=
 #+begin_src emacs-lisp
 (setq straight-built-in-pseudo-packages '(project xref))
@@ -2059,8 +2086,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   :demand t
   :general
   (:states 'normal
-          "SPC p r" 'xref-find-references
-          )
+          "SPC p r" 'xref-find-references)
   )
 
 (use-package project
@@ -2205,23 +2231,6 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 )
 #+end_src
 
-** =abbrev=
-#+begin_src emacs-lisp
-(use-package abbrev
-  :delight "" ;;" abb"
-  :defer 1
-  :straight nil
-  ;;:custom
-  ;;(abbrev-file-name (expand-file-name "abbrev_defs" user-emacs-directory))
-  :config
-  (if (file-exists-p abbrev-file-name)
-      (quietly-read-abbrev-file))
-
-  ;;(abbrev-mode 1)
-  (setq-default abbrev-mode t)
-  )
-#+end_src
-
 ** =compile=
 #+begin_src emacs-lisp
 (use-package compile
@@ -2238,6 +2247,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   :straight nil
   :general
   (:states 'normal
+           :keymaps 'comint-mode-map
            "SPC P k"  'comint-send-eof)
   )
 #+end_src
@@ -2278,6 +2288,23 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 #+end_src
 
 * Coding convenient
+** =eshell=
+#+begin_src emacs-lisp
+(use-package eshell
+  :straight nil
+  :after evil general
+  :general
+  (:states 'normal
+           "SPC e s" 'eshell
+           )
+  (:states 'insert
+           :keymaps 'eshell-mode-map
+           "C-a" 'eshell-bol
+           ;;#"C-r" 'eshell-atuin-history
+           )
+  )
+#+end_src
+
 ** =rg=: ripgrep in Emacs
 Probably requires external =rg= command.
 
@@ -2358,23 +2385,6 @@ Similar to vim-signify.
  :straight t
  :config
  (direnv-mode))
-#+end_src
-
-** =eshell=
-#+begin_src emacs-lisp
-(use-package eshell
-  :straight nil
-  :after evil general
-  :general
-  (:states 'normal
-           "SPC e s" 'eshell
-           )
-  (:states 'insert
-           :keymaps 'eshell-mode-map
-           "C-a" 'eshell-bol
-           ;;#"C-r" 'eshell-atuin-history
-           )
-  )
 #+end_src
 
 ** =eshell-atuin=
@@ -2496,6 +2506,7 @@ Similar to vim-signify.
 #+begin_src emacs-lisp
 (use-package sendmail
   :straight nil
+  :defer t
   :custom
   (send-mail-function              'sendmail-send-it )
   ;;:w (sendmail-program                "/usr/bin/msmtp"  ) < removed cause of nixos
@@ -2533,6 +2544,8 @@ Similar to vim-signify.
 #+begin_src emacs-lisp
 (use-package org-mime
   :straight t
+  :defer t
+  :after org
   :custom
   (org-mime-library 'mml)
   (org-mime-export-options '(
@@ -2554,6 +2567,8 @@ Similar to vim-signify.
 #+begin_src emacs-lisp
 (use-package consult-notmuch
   :straight t
+  :defer t
+  :after notmuch consult
   :general
   (:states 'normal
            "SPC m s" 'consult-notmuch)
@@ -2564,22 +2579,14 @@ Similar to vim-signify.
 #+begin_src emacs-lisp
 (use-package ol-notmuch
   :straight t
+  :defer t
+  :after notmuch org
   :config
   (define-key global-map "\C-c l" 'org-store-link)
   )
 #+end_src
 
 * Misc Packages
-** tramp sudo edit
-#+begin_src emacs-lisp
-(use-package tramp-cmds
-  :straight nil
-  :general
-  (:states 'normal
-           "SPC L S" 'tramp-revert-buffer-with-sudo)
- )
-#+end_src
-
 ** =crux=
 #+begin_src emacs-lisp
 (use-package crux
@@ -2693,7 +2700,19 @@ Similar to vim-signify.
   (gif-screencast-args '("-m" "window" "-m" "active" "-o" "/" "-f")))
 ;; this is configured to be on wayland/hyprland
 #+end_src
-** test karthinks consult reftex                                                             :test:
+** garbage-collect
+#+begin_src emacs-lisp
+(use-package gcmh
+  :straight t
+  :config (gcmh-mode 1)
+  :delight " gb")
+#+end_src
+** google
+#+begin_src emacs-lisp
+(use-package google-translate :straight t)
+(use-package google-this :straight t)
+#+end_src
+** COMMENT test karthinks consult reftex                                                             :test:
 #+begin_src emacs-lisp
 (use-package consult-reftex
   :straight (consult-reftex
@@ -2709,18 +2728,6 @@ Similar to vim-signify.
              :host github
              :branch "master"
              :repo "karthink/reftex-xref"))
-#+end_src
-** garbage-collect
-#+begin_src emacs-lisp
-(use-package gcmh
-  :straight t
-  :config (gcmh-mode 1)
-  :delight " gb")
-#+end_src
-** google
-#+begin_src emacs-lisp
-(use-package google-translate :straight t)
-(use-package google-this :straight t)
 #+end_src
 * Daemon
 #+begin_src emacs-lisp
