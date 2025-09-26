@@ -84,6 +84,34 @@ run:
   (which-key-mode)
   )
 #+end_src
+** =repeat= mode
+#+begin_src emacs-lisp
+(use-package repeat
+  :straight nil
+  :config (repeat-mode +1))
+#+end_src
+
+*** COMMENT Karthink
+This was taken from here [[https://karthinks.com/software/it-bears-repeating/#dot-dot-dot-but-i-repeat-myself]]
+but it feels slow when navigating.
+
+#+begin_src emacs-lisp
+(setq repeat-echo-function #'ignore)
+
+;; Spawn or hide a which-key popup
+(advice-add 'repeat-post-hook :after
+            (defun repeat-help--which-key-popup ()
+              (if-let ((cmd (or this-command real-this-command))
+                       (keymap (or repeat-map
+                                   (repeat--command-property 'repeat-map))))
+                (run-at-time
+                 0 nil
+                 (lambda ()
+                   (which-key--create-buffer-and-show
+                    nil (symbol-value keymap))))
+                (which-key--hide-popup))))
+#+end_src
+
 * Vi-movement and its friends
 ** =evil=: vi-movements
 #+begin_src emacs-lisp
@@ -183,71 +211,6 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
               (kbd "<f3>") 'evil-visual-mark-mode))
 #+end_src
 
-** repeat
-#+begin_src emacs-lisp
-(use-package repeat
-  :straight nil  ;; <- built in
-  :config (repeat-mode +1))
-#+end_src
-
-*** COMMENT Karthink
-This was taken from here [[https://karthinks.com/software/it-bears-repeating/#dot-dot-dot-but-i-repeat-myself]]
-but it feels slow when navigating.
-
-#+begin_src emacs-lisp
-(setq repeat-echo-function #'ignore)
-
-;; Spawn or hide a which-key popup
-(advice-add 'repeat-post-hook :after
-            (defun repeat-help--which-key-popup ()
-              (if-let ((cmd (or this-command real-this-command))
-                       (keymap (or repeat-map
-                                   (repeat--command-property 'repeat-map))))
-                (run-at-time
-                 0 nil
-                 (lambda ()
-                   (which-key--create-buffer-and-show
-                    nil (symbol-value keymap))))
-                (which-key--hide-popup))))
-#+end_src
-
-** window movmenets
-#+begin_src emacs-lisp
-(use-package windmove
-  :after (window evil)
-  :bind (( "M-q"  . delete-window )
-         ("M-L" . windmove-right               )
-         ("M-H" . windmove-left                )
-         ("M-J" . windmove-down                )
-         ("M-K" . windmove-up                  )
-         ("M-V" . evil-window-vsplit           )
-         ("M-S" . evil-window-split            )
-         :repeat-map garid/windmove-repeat
-         ("M-L"   . windmove-right             )
-         ("M-H"   . windmove-left              )
-         ("M-J"   . windmove-down              )
-         ("M-K"   . windmove-up                )
-
-         ("C-l"   . windmove-swap-states-right )
-         ("C-h"   . windmove-swap-states-left  )
-         ("C-j"   . windmove-swap-states-down  )
-         ("C-k"   . windmove-swap-states-up    )
-
-         ;; ("s"   . evil-window-split            )
-         ;; ("v"   . evil-window-vsplit           )
-         ;; ("q"   . delete-window                )
-         ("="   . balance-windows              )
-
-         ("{"   . shrink-window-horizontally   )
-         ("}"   . enlarge-window-horizontally  )
-         ("[".    shrink-window                )
-         ("]".    enlarge-window               )
-         :exit
-         ("RET"   . nil                        )
-         )
-  )
-#+end_src
-
 ** =vundo=: visual undo
 #+begin_src emacs-lisp
 (use-package vundo
@@ -297,9 +260,9 @@ but it feels slow when navigating.
   (modus-themes-prompts           '(bold             ))
   (modus-themes-completions         nil              )
   (modus-themes-org-blocks        'tinted-background )
-  (modus-themes-headings          '((0                . (medium variable-pitch 1.15 ))
+  (modus-themes-headings          '((0                . (medium variable-pitch 1.10 ))
                                     (1                . (medium variable-pitch 1.10 ))
-                                    (2                . (medium variable-pitch 1.05 ))
+                                    (2                . (medium variable-pitch 1.10 ))
                                     (3                . (medium variable-pitch 1.05 ))
                                     (agenda-date      . (                      1.1 ))
                                     (agenda-structure . (variable-pitch light  1.1 ))
@@ -668,6 +631,44 @@ else
 	return 0
 fi
 #+end_src
+** =window= movmenets
+#+begin_src emacs-lisp
+(use-package windmove
+  :straight nil
+  :after (window evil)
+  :bind (( "M-q"  . delete-window )
+         ("M-L" . windmove-right               )
+         ("M-H" . windmove-left                )
+         ("M-J" . windmove-down                )
+         ("M-K" . windmove-up                  )
+         ("M-V" . evil-window-vsplit           )
+         ("M-S" . evil-window-split            )
+         :repeat-map garid/windmove-repeat
+         ("M-L"   . windmove-right             )
+         ("M-H"   . windmove-left              )
+         ("M-J"   . windmove-down              )
+         ("M-K"   . windmove-up                )
+
+         ("C-l"   . windmove-swap-states-right )
+         ("C-h"   . windmove-swap-states-left  )
+         ("C-j"   . windmove-swap-states-down  )
+         ("C-k"   . windmove-swap-states-up    )
+
+         ;; ("s"   . evil-window-split            )
+         ;; ("v"   . evil-window-vsplit           )
+         ;; ("q"   . delete-window                )
+         ("="   . balance-windows              )
+
+         ("{"   . shrink-window-horizontally   )
+         ("}"   . enlarge-window-horizontally  )
+         ("[".    shrink-window                )
+         ("]".    enlarge-window               )
+         :exit
+         ("RET"   . nil                        )
+         )
+  )
+#+end_src
+
 * Mini-buffer completion, selection, suggestion
 ** =vertico=
 #+begin_src emacs-lisp
@@ -1944,8 +1945,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
            "SPC P r"  'python-shell-restart)
 
   :hook
-  (inferior-python-mode  . (lambda () (interactive)(setq comint-ptyp nil)))
-  (python-base-mode . auto-revert-mode )
+  (python-base-mode . auto-revert-mode) ;;(inferior-python-mode  . (lambda () (interactive)(setq comint-ptyp nil)))
   :config
   (defun garid/run-pydev-python ()
     ""
