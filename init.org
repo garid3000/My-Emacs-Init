@@ -491,9 +491,9 @@ and later sets cursor at that point when you open that file.
            "SPC O O"  '(lambda () (interactive)
                          (find-file org-default-notes-file))
            "SPC O i"  '(lambda () (interactive)
-                         (find-file "~/BrainDump/gtd/inbox.org"))
-           ;; "SPC O m"  '((lambda () (interactive)
-           ;; (find-file "~/BrainDump/gtd/main.org")))
+                         (find-file "~/BrainDump/inbox.org"))
+           "SPC O m"  '(lambda () (interactive)
+                          (find-file "~/BrainDump/denote_bps/20250911T174108--bps__gtd.org"))
            "SPC O c"  'citar-open
            "SPC L r"  'revert-buffer-quick
            )
@@ -613,6 +613,16 @@ and later sets cursor at that point when you open that file.
   )
 #+end_src
 
+** tramp sudo edit
+#+begin_src emacs-lisp
+(use-package tramp-cmds
+  :straight nil
+  :general
+  (:states 'normal
+           "SPC L S" 'tramp-revert-buffer-with-sudo)
+ )
+#+end_src
+
 ** COMMENT shell script to open terminal                                             :shell_script:
 #+begin_src bash :tangle garid/open_external_term.sh :shebang "#!/bin/bash"
 # Open System termianl $TERMINAL at $1:
@@ -640,16 +650,6 @@ else
 	return 0
 fi
 #+end_src
-** tramp sudo edit
-#+begin_src emacs-lisp
-(use-package tramp-cmds
-  :straight nil
-  :general
-  (:states 'normal
-           "SPC L S" 'tramp-revert-buffer-with-sudo)
- )
-#+end_src
-
 * Mini-buffer completion, selection, suggestion
 ** =vertico=
 #+begin_src emacs-lisp
@@ -1414,30 +1414,43 @@ fi
 ** =org-agenda=: the agenda
 #+begin_src emacs-lisp :results none
 (use-package org-agenda
-  :after    org
+  :after      org
   :straight   nil
   :custom
   (org-agenda-files '("~/BrainDump/denote/20250911T175810--personal__gtd.org"
-                      "~/BrainDump/denote_bps/20250911T174108--bps__gtd.org"))
+                      "~/BrainDump/denote_bps/20250911T174108--bps__gtd.org"
+                      "~/BrainDump/inbox.org"
+                      ))
   ;;(org-agenda-span   90)
-  (org-agenda-span   1)
+  (org-agenda-span             1)
   (org-agenda-custom-commands
-   '(("i" "Inbox"                tags-todo "+TODO=\"VAGUE\"" ((org-agenda-files (file-expand-wildcards "~/BrainDump/gtd/inbox.org"))))
+   '(("i" "Inbox"                tags-todo "+TODO=\"VAGUE\""
+      ((org-agenda-files (file-expand-wildcards "~/BrainDump/inbox.org"))))
      ("n" "Next actions"         tags-todo "+TODO=\"TODO\"")
      ("p" "Projects"             tags-todo "+TODO=\"PRJT\"")
      ("w" "Waiting"              tags-todo "+TODO=\"WAIT\"")
-     ("s" "Someday"              tags-todo "+TODO=\"TODO\"|TODO=\"PRJT\"" ((org-agenda-files (file-expand-wildcards "~/BrainDump/gtd/someday.org"))))
+     ("s" "Someday"              tags-todo "+TODO=\"TODO\"|TODO=\"PRJT\""
+      ((org-agenda-files (file-expand-wildcards "~/BrainDump/gtd/someday.org"))))
      ("o" "Actions and Projects" tags-todo "+TODO=\"TODO\"|TODO=\"PRJT\"")))
 
-  (org-agenda-prefix-format '((agenda   . "  %-25:c%?-12t% s" )
+  (org-agenda-current-time-string "← now ───────────────────────────────────────────────")
+  ;;(org-agenda-prefix-format '((agenda   . "  %-25:c%?-12t% s" )
+  ;;                            (timeline . "  % s"             )
+  ;;                            (todo     . "  %-12:c"          )
+  ;;                            (tags     . "  %-25:c"          )
+  ;;                            (search   . "  %-12:c"          )))
+
+  (org-agenda-prefix-format '((agenda . " %i %-16:c%?-12t% s")
                               (timeline . "  % s"             )
                               (todo     . "  %-12:c"          )
                               (tags     . "  %-25:c"          )
                               (search   . "  %-12:c"          )))
 
-  ;;(org-agenda-tags-column -120)
-  ;;(org-agenda-tags-column -90)
-  (org-agenda-tags-column 'auto)
+  (org-agenda-time-grid '((daily today require-timed)
+                          (800 900 1000 1100 1200 1300 1400 1500 1600 1700 1800 1900 2000)
+                          " " "⋯"))
+
+  (org-agenda-tags-column      'auto) ;;(org-agenda-tags-column -90)
   (org-agenda-sorting-strategy '((agenda habit-down time-up priority-down category-keep)
                                  (todo priority-down todo-state-up category-keep)
                                  (tags priority-down todo-state-up category-keep)
@@ -1450,20 +1463,18 @@ fi
   (org-outline-path-complete-in-steps      'nil)
 
   ;; (refile-targets                          (file-expand-wildcards "~/BrainDump/gtd/*.org"))
-  (org-refile-targets '( (nil :maxlevel . 6) ;; aka the current file
-                         ;("~/BrainDump/gtd/main.org"      :maxlevel . 3)
-                         ("~/BrainDump/denote_bps/20250911T174108--bps__gtd.org"      :maxlevel . 3)
-                         ("~/BrainDump/gtd/someday.org"   :level    . 1)
-                         ("~/BrainDump/gtd/reference.org" :maxlevel . 1)
+  (org-refile-targets '( (nil :maxlevel . 3) ;; aka the current file
+                         ("~/BrainDump/denote_bps/20250911T174108--bps__gtd.org"       :maxlevel . 3)
+                         ("~/BrainDump/denote_bps/20250926T122541--someday__gtd.org"   :maxlevel . 1)
                          ))
 
 
   (org-capture-templates
-   '(("i" "Inbox"      entry (file          "~/BrainDump/gtd/inbox.org"           )  "* VAGUE %?\nAdded: %U\n"                                          :empty-lines 1 :prepend t)
-     ("I" "Inbox from" entry (file          "~/BrainDump/gtd/inbox.org"           )  "* VAGUE %?\nAdded: %U\nFrom: %a"                                  :empty-lines 1 :prepend t)
-     ("n" "Next"       entry (file+headline "~/BrainDump/gtd/main.org"    "Single")  "** NEXT  %?\nAdded: %U\n"                                         :empty-lines 1 :prepend t)
-     ("p" "Project"    entry (file+headline "~/BrainDump/gtd/main.org"    "Project")  "* PRJT  %?\n:PROPERTIES:\n:CATEGORY: %^{Id}\n:END:\nAdded: %U\n" :empty-lines 1 :prepend t)
-     ("s" "Someday"    entry (file+headline "~/BrainDump/gtd/someday.org" "Someday")  "* TODO  %?\nAdded: %U\n"                                         :empty-lines 1 :prepend t)
+   '(("i" "Inbox"      entry (file "~/BrainDump/inbox.org")      "* VAGUE %?\nAdded: %U\n"         :empty-lines 1 :prepend t)
+     ("I" "Inbox from" entry (file "~/BrainDump/inbox.org")      "* VAGUE %?\nAdded: %U\nFrom: %a" :empty-lines 1 :prepend t)
+     ;;("n" "Next"       entry (file+headline "~/BrainDump/gtd/main.org"    "Single")  "** NEXT  %?\nAdded: %U\n"                                         :empty-lines 1 :prepend t)
+     ;;("p" "Project"    entry (file+headline "~/BrainDump/gtd/main.org"    "Project")  "* PRJT  %?\n:PROPERTIES:\n:CATEGORY: %^{Id}\n:END:\nAdded: %U\n" :empty-lines 1 :prepend t)
+     ;;("s" "Someday"    entry (file+headline "~/BrainDump/gtd/someday.org" "Someday")  "* TODO  %?\nAdded: %U\n"                                         :empty-lines 1 :prepend t)
      ))
 
   :config
@@ -1471,6 +1482,67 @@ fi
   (add-hook 'org-capture-mode-hook 'evil-insert-state)
   )
 #+end_src
+** org super agenda
+#+begin_src emacs-lisp
+(use-package org-super-agenda
+  :straight t
+  :after org-agenda
+  :custom
+  (org-super-agenda-groups ;; https://librephoenix.com/2023-12-30-making-org-agenda-look-beautiful
+   '(;; Each group has an implicit boolean OR operator between its selectors.
+
+     ;; This is the first filter, anything found here
+     ;; will be placed in this group
+     ;; even if it matches following groups
+     (:name "Overdue" ; Name
+            :scheduled past ; Filter criteria
+            :order 2 ; Order it should appear in agenda view
+            :face 'error) ; Font face used for text
+
+     ;; This is the second filter, anything not found
+     ;; from the first filter, but found here,
+     ;; will be placed in this group
+     ;; even if it matches following groups
+     (:name "Personal" ; Name
+            :file-path "Personal" ; Filter criteria
+            :order 3 ; Order it should appear in the agenda view
+            :face 'error) ; Font faced used for text
+
+     ;; Third filter..
+     (:name "Work"  ; Name
+            :file-path "Work" ; Filter criteria
+            :order 3 ; Order it should appear in the agenda view
+            :face 'error) ; Font face used for text
+
+     (:name "Work" ; Name
+            :file-path "bps" ; Filter criteria K------------------- how does this work?
+            :order 3 ; Order it should appear in the agenda view
+            :face 'error)
+
+     ;; Fourth filter..
+     (:name "Today "  ; Optionally specify section name
+            :time-grid t ; Use the time grid
+            :date today ; Filter criteria
+            :scheduled today ; Another filter criteria
+            :order 1 ; Order it should appear in the agenda view
+            :face 'warning) ; Font face used for text
+     )
+   )
+  :config
+  (org-super-agenda-mode t)
+  )
+#+end_src
+** COMMENT test
+From [[https://librephoenix.com/2023-12-30-making-org-agenda-look-beautiful]]
+#+begin_src emacs-lisp
+(setq org-agenda-skip-timestamp-if-done t
+      org-agenda-skip-deadline-if-done t
+      org-agenda-skip-scheduled-if-done t
+      org-agenda-skip-scheduled-if-deadline-is-shown t
+      org-agenda-skip-timestamp-if-deadline-is-shown t)
+#+end_src
+
+
 ** =casual-agenda=: casual agenda based on transient
 #+begin_src emacs-lisp
 (use-package casual-suite
@@ -1486,11 +1558,12 @@ fi
 #+begin_src emacs-lisp
 (use-package org-caldav
   :straight t
+  :after org
   :custom
   (org-caldav-url          "https://forgetfulfishfunctions.xyz/remote.php/dav/calendars/admin/" )
   (org-caldav-calendar-id  "org-caldav"                                                         )
   ;;(org-caldav-inbox        "~/BrainDump/gtd/main.org"                                         )
-  (org-caldav-inbox        "~/BrainDump/denote_bps/20250915T233100--bps-inbox__gtd.org"         )
+  (org-caldav-inbox        "~/BrainDump/inbox.org"         )
   (org-caldav-files        '("~/BrainDump/denote_bps/20250911T174108--bps__gtd.org")            )
   (org-icalendar-timezone  "Asia/Tokyo"                                                         )
   )
