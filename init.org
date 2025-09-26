@@ -8,6 +8,7 @@
 #+setupfile:    ~/.config/emacs/org-templates/lua.org
 #+options:      toc:t tags:nil  todo:t  tasks:t
 #+html_head:    <link rel="stylesheet" type="text/css" href="https://unpkg.com/chota"/>
+#+ODT_STYLES_FILE: "~/Downloads/APA-7th-Ed.ott"
 
 * From shell you can run make run
 #+begin_src makefile :eval no :tangle Makefile
@@ -893,7 +894,7 @@ fi
 
   ;; ---------------- how to open links in the org mode ----------------------------------
   (org-file-apps '((auto-mode                  . emacs                       )
-                   ("\\.html\\'"               . "thorium-browser   \"%s\""  )
+                   ("\\.html\\'"               . "firefox   \"%s\""          )
                    ("\\.gif\\'"                . "mpv     \"%s\""            )
                    ("\\.mp4\\'"                . "mpv     \"%s\""            )
                    ("\\.png\\'"                . "nsxiv    \"%s\""           )
@@ -1646,9 +1647,15 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   :general
   (:states 'normal
            :keymaps 'org-mode-map
-           "SPC x p"   'org-latex-export-to-pdf
-           "SPC x P"   '((lambda () (interactive) (org-latex-export-to-pdf nil t)))
-           "SPC x o"   'garid/org-open-pdf
+           "SPC o x p"   'org-latex-export-to-pdf
+           "SPC o x P"   '((lambda () (interactive)
+                             (org-latex-export-to-pdf nil t))
+                           :which-key "org-latex-export-to-pdf SUBTREE")
+           "SPC o x o"   '((lambda () (interactive)
+                             (browse-url-xdg-open
+                              (replace-regexp-in-string
+                               "\\.tex$" ".pdf" (org-export-output-file-name ".tex"))))
+                           :which-key "Open exported PDF")
            )
   :config
   (defun garid/latex-formattig-headings
@@ -1668,15 +1675,6 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
           (format "\\hfill{}\\textsc{%s}"
                   (mapconcat #'org-latex--protect-text tags ":")))))
 
-  (defun garid/org-open-pdf ()
-    (interactive)
-    (call-process-shell-command
-     (concat "xdg-open "                                  ;; try to open default PDF viewer
-             (file-name-directory buffer-file-name)       ;; directory of current file/buffer
-             "/export_tex/"                               ;; adds export directory name
-             (file-name-base)                             ;; filaname (of current file/buffer) without extension
-             ".pdf &"                                     ;; adds extension
-             )))
   )
 #+end_src
 ** =ox-odt= org export odt
@@ -1684,6 +1682,19 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 (use-package ox-odt
   :straight nil
   :after org
+  :general
+  (:states 'normal
+           :keymaps 'org-mode-map
+           "SPC o x d"   'org-odt-export-to-odt
+           "SPC o x D"   '((lambda ()
+                             (interactive)
+                             (org-odt-export-to-odf nil t))
+                           :which-key "org-html-export-to-html SUBTREE")
+           ;; "SPC o x O"   '((lambda ()
+           ;;                   (interactive)
+           ;;                   (browse-url-xdg-open (org-export-output-file-name ".html")))
+           ;;                 :which-key "Open exported HTML")
+           )
   :config
   (defun my-org-odt-timestamp-unstyled (timestamp _contents info)
     (let ((use-fields (plist-get info :odt-use-date-fields)))
@@ -1711,7 +1722,8 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   :after org
   :custom
   (org-html-validation-link              nil) ;; Don't show validation link
-  (org-html-htmlize-output-type 'css)
+  ;; (org-html-htmlize-output-type 'inline-css)
+  ;; (org-html-htmlize-output-type 'css)  <-- breaks the html export
   ;; (org-html-head-include-scripts         nil) ;; Use our own scripts
   ;; (org-html-head-include-default-style   nil) ;; Use our own styles
   ;; (org-html-head "<link rel=\"stylesheet\" type=\"text/css\" href=\"https://orgmode.org/worg/style/worg.css\"/>" )
@@ -1720,28 +1732,17 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   (:states 'normal
            :keymaps 'org-mode-map
            "SPC o x h"   'org-html-export-to-html
-           "SPC o x H"   '((lambda () (interactive) (org-html-export-to-html nil t)) :which-key "html export subtree")
-           "SPC o x O"   'garid/org-open-html
+           "SPC o x H"   '((lambda ()
+                             (interactive)
+                             (org-html-export-to-html nil t))
+                           :which-key "org-html-export-to-html SUBTREE")
+           "SPC o x O"   '((lambda ()
+                             (interactive)
+                             (browse-url-xdg-open (org-export-output-file-name ".html")))
+                           :which-key "Open exported HTML")
            )
-
-  (defun garid/org-open-html ()
-    (interactive)
-    (call-process-shell-command
-     (concat "$BROWSER "                                  ;; try to open default PDF viewer
-             (file-name-directory buffer-file-name)    ;; directory of current file/buffer
-             "/export_html/"                           ;; adds export directory name
-             (file-name-base)                          ;; filaname (of current file/buffer) without extension
-             ".html &"                                 ;; adds extension
-
-             ;; (file-name-directory buffer-file-name)
-             ;; (my/org-attach-dir "")
-             ;; (file-name-base)
-             ;; ".html &"                                 ;; adds extension
-             )))
   )
 #+end_src
-
-#+RESULTS:
 
 ** =org-re-reveal=
 #+begin_src emacs-lisp
