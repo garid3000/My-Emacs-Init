@@ -517,9 +517,16 @@ org-mode
 (jupyter-inline-svg  "%config InlineBackend.figure_formats = ['svg']")
 (challenge           "challenge: I can't do ")
 
-(python_header "#+property:   header-args:python :tangle (my/org-attach-dir \"0000_main.py\") :dir (my/org-attach-dir \"\") :comments link :eval no-export :results output :exports both  :async yes
-"
- )
+(srcheader ":src-header-at-top:"                                                                                               r n
+            "#+property:   header-args:python  :tangle (my/org-attach-dir \"0000_main.py\")"                                   r n
+            "#+property:   header-args:python+ :dir (my/org-attach-dir "")"                                                    r n
+            "#+property:   header-args:python+ :comments link"                                                                 r n
+            "#+property:   header-args:python+ :eval no-export"                                                                r n
+            "#+property:   header-args:python+ :results output"                                                                r n
+            "#+property:   header-args:python+ :exports both"                                                                  r n
+            "#+property:   header-args:python+ :session (concat \"python-\" (my/org-attach-dir-calculator \"\") \"-session\")" r n
+            ":end:"                                                                                                            r n)
+
 
 (initcontacts        ":EMAIL: %(org-contacts-template-email) " r n ":PHONE:" r n ":ALIAS:" r n ":NICKNAME:" r n ":IGNORE:" r n ":ICON:" r n ":NOTE:" r n ":ADDRESS:" r n ":BIRTHDAY:")
 

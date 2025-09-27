@@ -2099,7 +2099,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   
   :general
   (:states '(normal prog-mode)
-           "SPC s e g"  'eglot
+           "SPC s e"  'eglot
            "SPC v r"  'eglot-rename
            )
 
