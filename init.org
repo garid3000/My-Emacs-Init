@@ -905,14 +905,13 @@ and later sets cursor at that point when you open that file.
                              "|"
                              "NEAR(N)" "DONE(d)" "DONE(d)" "CNCL(c)")))
 
-  (org-todo-keyword-faces '(
-                            ("TODO"  . org-todo         )       ;; org-faces?
-                            ("PRJT"  . "tomato"         )
-                            ("NEXT"  . org-warning      )
-                            ("WAIT"  . "gold"           )
-                            ("DONE"  . "dim gray"       )
-                            ("VAGUE" . "medium purple"  )
-                            ("CNCL"  . (:foreground "gray30" :weight bold))))
+  ( org-todo-keyword-faces '(("TODO"  . org-todo                           )
+                             ("PRJT"  . org-tag                            )
+                             ("NEXT"  . org-target                         )
+                             ("WAIT"  . org-warning                        )
+                             ("DONE"  . org-done                           )
+                             ("VAGUE" . "medium purple"                    )
+                             ("CNCL"  . (:foreground "gray30" :weight bold ))))
 
   (org-log-done            'time)
   (org-tags-column         -100)   ;; how many spaces left padding for tags
