@@ -96,27 +96,6 @@ run:
   :config (repeat-mode +1))
 #+end_src
 
-*** COMMENT Karthink
-This was taken from here [[https://karthinks.com/software/it-bears-repeating/#dot-dot-dot-but-i-repeat-myself]]
-but it feels slow when navigating.
-
-#+begin_src emacs-lisp
-(setq repeat-echo-function #'ignore)
-
-;; Spawn or hide a which-key popup
-(advice-add 'repeat-post-hook :after
-            (defun repeat-help--which-key-popup ()
-              (if-let ((cmd (or this-command real-this-command))
-                       (keymap (or repeat-map
-                                   (repeat--command-property 'repeat-map))))
-                (run-at-time
-                 0 nil
-                 (lambda ()
-                   (which-key--create-buffer-and-show
-                    nil (symbol-value keymap))))
-                (which-key--hide-popup))))
-#+end_src
-
 * Vi-movement and it's friends
 ** =evil=: vi-movements
 #+begin_src emacs-lisp
@@ -295,9 +274,8 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
     (tooltip-mode          -1)   ; Disable tooltips
     (menu-bar-mode         -1)   ; Disable the menu bar
     (set-fringe-mode       10)   ; Give some breathing room
-    (column-number-mode      )   ; Shows the column number in the mod bar
-
-    (setq-default tab-width 4          )
+    (column-number-mode)         ; Shows the column number in the mod bar
+    (setq-default tab-width 4)
     )
 
   :bind ("<f5>" . modus-themes-toggle)
