@@ -39,6 +39,10 @@ run:
 
 (straight-use-package 'use-package)
 #+end_src
+** straight-built-in-pseudo-packages
+#+begin_src emacs-lisp
+(setq straight-built-in-pseudo-packages '(project xref))
+#+end_src
 * Keybinding related
 ** =general= config
 #+begin_src emacs-lisp
@@ -113,7 +117,7 @@ but it feels slow when navigating.
                 (which-key--hide-popup))))
 #+end_src
 
-* Vi-movement and its friends
+* Vi-movement and it's friends
 ** =evil=: vi-movements
 #+begin_src emacs-lisp
 ;; Vim Bindings
@@ -512,6 +516,15 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
            )
   )
 #+end_src
+** =flyspell=
+#+begin_src emacs-lisp
+(use-package flyspell
+  :straight nil
+  :general
+  (:states 'normal
+           "SPC z s f" 'flyspell-mode))
+#+end_src
+
 ** =ibuffer=
 #+begin_src emacs-lisp
 (use-package ibuffer
@@ -658,13 +671,7 @@ and later sets cursor at that point when you open that file.
   )
 #+end_src
 
-* Mini-buffer completion, selection, suggestion
-** =savehist= Save minibuffer history
-#+begin_src emacs-lisp
-(use-package savehist
-  :straight t
-  :config (savehist-mode))
-#+end_src
+* Mini-buffer related
 ** =vertico=
 #+begin_src emacs-lisp
 (use-package vertico
@@ -683,16 +690,6 @@ and later sets cursor at that point when you open that file.
   (vertico-resize    nil)
   :config
   (vertico-mode))
-#+end_src
-** =marginalia=
-#+begin_src emacs-lisp
-(use-package marginalia
-  :after vertico
-  :straight t
-  :custom
-  (marginalia-annotators '(marginalia-annotators-heavy
-                           marginalia-annotators-light nil))
-  :init (marginalia-mode))
 #+end_src
 ** =consult=: consulting
 #+begin_src emacs-lisp
@@ -722,7 +719,7 @@ and later sets cursor at that point when you open that file.
            "SPC p l" 'consult-project-buffer
            "SPC p v" 'consult-imenu
            "SPC p s" 'consult-git-grep
-           "SPC p D" 'consult-flymake
+           "SPC p d" 'consult-flymake
            )
   (:states 'normal
            :keymaps 'org-mode-map
@@ -743,17 +740,6 @@ and later sets cursor at that point when you open that file.
       (when (string= "0.5sec" tmp-chose) (setq consult-preview-key (list :debounce 0.5 'any)))
       ))
   )
-#+end_src
-** =orderless=: orderless completion
-#+begin_src emacs-lisp
-(use-package orderless
-  :straight t
-  :custom
-  (completion-styles '(orderless flex))
-  '((file (styles basic partial-completion))))
-
-;; (completion-styles '(orderless basic))
-;; (completion-category-overrides
 #+end_src
 ** =embark=: interacting with completion entries
 #+begin_src emacs-lisp
@@ -789,6 +775,33 @@ and later sets cursor at that point when you open that file.
                nil
                ))))
   )
+#+end_src
+** =marginalia=
+#+begin_src emacs-lisp
+(use-package marginalia
+  :after vertico
+  :straight t
+  :custom
+  (marginalia-annotators '(marginalia-annotators-heavy
+                           marginalia-annotators-light nil))
+  :init (marginalia-mode))
+#+end_src
+** =orderless=: orderless completion
+#+begin_src emacs-lisp
+(use-package orderless
+  :straight t
+  :custom
+  (completion-styles '(orderless flex))
+  '((file (styles basic partial-completion))))
+
+;; (completion-styles '(orderless basic))
+;; (completion-category-overrides
+#+end_src
+** =savehist= Save minibuffer history
+#+begin_src emacs-lisp
+(use-package savehist
+  :straight t
+  :config (savehist-mode))
 #+end_src
 
 * Org
@@ -1041,43 +1054,6 @@ and later sets cursor at that point when you open that file.
   (setf (alist-get "python" org-src-lang-modes nil nil #'equal) 'python-ts)
   )
 #+end_src
-** =org-attach=
-#+begin_src emacs-lisp
-(use-package org-attach
-  :after org
-  :straight nil
-  :custom
-  (org-id-method                       'ts) ;;'org)
-  (org-attach-id-to-path-function-list '(my/org-attach-dir-calculator
-                                         org-attach-id-ts-folder-format
-                                         org-attach-id-uuid-folder-format))
-  :config
-  (defun my/org-attach-dir-calculator (id)
-    "id"
-    (let ((possible-denote-id (car                     ;; 4. "20241002T190027"
-                               (split-string           ;; 3. ("20241002T190027" "denote-getting-id-of-current-file__elisp_org")
-                                (file-name-base        ;; 2. "20241002T190027--denote-getting-id-of-current-file__elisp_org.org"
-                                 (buffer-file-name))   ;; 1. "/home/garid/BrainDump/denote/20241002T190027--denote-getting-id-of-current-file__elisp_org.org"
-                                "--"))))
-
-      (if (length= possible-denote-id 15)
-          possible-denote-id
-        id)))
-
-  (defun my/org-attach-dir (input-fname)
-    (interactive)
-    (let ((my-attach-dir
-           (concat "data/"
-                   (file-name-as-directory
-                    (my/org-attach-dir-calculator input-fname)
-                    ;; (denote-retrieve-filename-identifier (buffer-file-name)) <= basically same but, not deependent on it
-                    ))))
-      (unless (file-directory-p my-attach-dir) (mkdir my-attach-dir))
-      (concat my-attach-dir input-fname))
-    )
-  )
-#+end_src
-
 ** =org-link=
 #+begin_src emacs-lisp
 (use-package ol
@@ -1096,12 +1072,6 @@ and later sets cursor at that point when you open that file.
   :custom (org-indent-mode-turns-on-hiding-stars t)
   :delight "")
 #+end_src
-** COMMENT =org-num=
-#+begin_src emacs-lisp
-(use-package org-num
-  :straight nil
-  :delight "")
-#+end_src
 ** =org-appear= 
 #+begin_src emacs-lisp
 (use-package org-appear
@@ -1110,6 +1080,34 @@ and later sets cursor at that point when you open that file.
   :custom
   (org-appear-autolinks t)
   (org-appear-delay     0.25))
+#+end_src
+
+** =org-num=
+#+begin_src emacs-lisp
+(use-package org-num
+  :straight nil
+  :delight "")
+#+end_src
+** =org-contacts=
+#+begin_src emacs-lisp
+(use-package org-contacts
+  :straight t
+  :after org ;;  denote)
+  :custom
+  (org-contacts-files
+        '("~/BrainDump/denote/20240802T185223--contacts__info.org"
+          "~/BrainDump/denote_bps/20250306T114521--contacts__info.org"))
+  )
+#+end_src
+** =org-auto-tangle=
+#+begin_src emacs-lisp
+(use-package org-auto-tangle
+  :straight t
+  :defer  t
+  :after org
+  :delight "" ;; " oat"
+  :custom (org-auto-tangle-default    nil)
+  :hook   (org-mode . org-auto-tangle-mode))
 #+end_src
 
 ** org-babel languages related
@@ -1131,7 +1129,7 @@ and later sets cursor at that point when you open that file.
   :custom (ob-mermaid-cli-path "/usr/bin/mmdc"))
 #+end_src
 
-* Org zettelkasten notes
+* Org taking notes related
 ** =denote=: Note taking package                                                            :by_prot:
 #+begin_src emacs-lisp
 (use-package denote
@@ -1573,20 +1571,11 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   )
 #+end_src
 
-** =latex=
-#+begin_src emacs-lisp
-(use-package tex-mode
-  :straight nil
-  ;; :config
-  ;;(add-hook 'LaTeX-mode-hook (function (lambda() (set-input-method "TeQ-Math"))))
-  ;;(add-hook 'latex-mode-hook (function (lambda() (set-input-method "TeQ-Math"))))
-  )
-#+end_src
-
 ** Latex related
 #+begin_src emacs-lisp
-(use-package auctex  :straight t)
-(use-package cdlatex :straight t)
+(use-package tex-mode :straight nil)
+(use-package auctex   :straight t)
+(use-package cdlatex  :straight t)
 #+end_src
 ** =ox-latex= org export latex
 #+begin_src emacs-lisp
@@ -1716,16 +1705,56 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   )
 #+end_src
 
-* Org Misc:
+* Org Attachments, Images, Figures related
+** =org-attach=
+#+begin_src emacs-lisp
+(use-package org-attach
+  :after org
+  :straight nil
+  :custom
+  (org-id-method                       'ts) ;;'org)
+  (org-attach-id-to-path-function-list '(my/org-attach-dir-calculator
+                                         org-attach-id-ts-folder-format
+                                         org-attach-id-uuid-folder-format))
+  :config
+  (defun my/org-attach-dir-calculator (id)
+    "id"
+    (let ((possible-denote-id (car                     ;; 4. "20241002T190027"
+                               (split-string           ;; 3. ("20241002T190027" "denote-getting-id-of-current-file__elisp_org")
+                                (file-name-base        ;; 2. "20241002T190027--denote-getting-id-of-current-file__elisp_org.org"
+                                 (buffer-file-name))   ;; 1. "/home/garid/BrainDump/denote/20241002T190027--denote-getting-id-of-current-file__elisp_org.org"
+                                "--"))))
+
+      (if (length= possible-denote-id 15)
+          possible-denote-id
+        id)))
+
+  (defun my/org-attach-dir (input-fname)
+    (interactive)
+    (let ((my-attach-dir
+           (concat "data/"
+                   (file-name-as-directory
+                    (my/org-attach-dir-calculator input-fname)
+                    ;; (denote-retrieve-filename-identifier (buffer-file-name)) <= basically same but, not deependent on it
+                    ))))
+      (unless (file-directory-p my-attach-dir) (mkdir my-attach-dir))
+      (concat my-attach-dir input-fname))
+    )
+  )
+#+end_src
+
 ** =org-download= 
+:PROPERTIES:
+:ID:       20250928T024644.200137
+:END:
 #+begin_src emacs-lisp
 (use-package org-download
   :straight t
   :after org
   :custom
   (org-download-display-inline-images  nil)
-  (org-download-edit-cmd (concat user-emacs-directory "garid/edit_img.sh %s"))
-  (org-download-heading-lvl nil)
+  (org-download-heading-lvl            nil)
+  (org-download-edit-cmd        "pinta %s")
 
   :general
   (:states 'normal
@@ -1734,11 +1763,12 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
            "SPC o i P"     'org-download-image
            "SPC o i d"     'org-download-delete
            "SPC o i r"     'org-download-rename-at-point
+           "SPC o i e"     'org-download-rename-at-point
            )
-
   :config
   (org-download-enable))
 #+end_src
+
 ** =org-ipe=
 #+begin_src emacs-lisp
 (use-package f :straight t)
@@ -1774,33 +1804,6 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 (add-to-list 'org-file-apps '("\\ode.svg\\'" . garid/odt-edit-open))
 #+end_src
 
-** =org-auto-tangle=
-#+begin_src emacs-lisp
-(use-package org-auto-tangle
-  :straight t
-  :defer  t
-  :after org
-  :delight "" ;; " oat"
-  :custom (org-auto-tangle-default    nil)
-  :hook   (org-mode . org-auto-tangle-mode))
-#+end_src
-
-** =org-contacts=
-#+begin_src emacs-lisp
-(use-package org-contacts
-  :straight t
-  :after (org denote)
-  ;; :config
-  ;; (setq org-contacts-files
-  ;;       '("~/BrainDump/denote/20240802T185223--contacts__info.org"
-  ;;         "~/BrainDump/denote_bps/20250306T114521--contacts__info.org"))
-
-  :custom
-  (org-contacts-files
-        '("~/BrainDump/denote/20240802T185223--contacts__info.org"
-          "~/BrainDump/denote_bps/20250306T114521--contacts__info.org"))
-  )
-#+end_src
 ** =edraw= svg drawing inline in org
 #+begin_src emacs-lisp
 (use-package edraw-mode
@@ -1852,7 +1855,17 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 #+begin_src emacs-lisp
 (use-package prog-mode
   :straight nil
-  :bind (:map prog-mode-map ("M-q" .  nil))
+  :bind (:map prog-mode-map ("M-q" .  nil)))
+#+end_src
+
+** =comint= 
+#+begin_src emacs-lisp
+(use-package comint
+  :straight nil
+  :general
+  (:states 'normal
+           :keymaps 'comint-mode-map
+           "SPC P k"  'comint-send-eof)
   )
 #+end_src
 ** =eldoc=
@@ -1863,23 +1876,57 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   (evil-define-key 'normal 'prog-mode-map  (kbd "K") 'eldoc)
   )
 #+end_src
-** TODO =python=
+** =elixir= 
+#+begin_src emacs-lisp
+(use-package elixir-mode :straight t)
+(use-package ob-elixir :straight t)
+#+end_src
+
+** =graphviz-dot-mode=
+#+begin_src emacs-lisp
+(use-package graphviz-dot-mode :straight t)
+#+end_src
+
+** =json-mode=
+#+begin_src emacs-lisp
+(use-package json-mode :straight t)
+#+end_src
+
+** =jupyter=
+#+begin_src emacs-lisp
+(use-package jupyter
+  :straight t
+  :custom (jupyter-repl-echo-eval-p t))
+#+end_src
+** =lua-mode=
+#+begin_src emacs-lisp
+(use-package lua-mode :straight t)
+#+end_src
+
+** =nix= 
+#+begin_src emacs-lisp
+(use-package nix-mode :straight t)
+(use-package ob-nix :straight t)
+#+end_src
+** =python=
 #+begin_src emacs-lisp
 (use-package python
   :straight t
-  :bind (("M-["  . python-nav-backward-defun     )
-         ("M-]"  . python-nav-forward-defun      )
+  :bind (("M-["    . python-nav-backward-defun     )
+         ("M-]"    . python-nav-forward-defun      )
+
          :repeat-map my/python-repeat-map
-         ("e"    . python-nav-forward-block      )
-         ("a"    . python-nav-backward-block     )
-         ("["    . python-nav-backward-defun     )
-         ("]"    . python-nav-forward-defun      )
-         ("p"    . python-nav-backward-statement )
-         ("n"    . python-nav-forward-statement  )
-         ("b"    . python-nav-backward-sexp      )
-         ("f"    . python-nav-forward-sexp       )
+         ("e"      . python-nav-forward-block      )
+         ("a"      . python-nav-backward-block     )
+         ("["      . python-nav-backward-defun     )
+         ("]"      . python-nav-forward-defun      )
+         ("p"      . python-nav-backward-statement )
+         ("n"      . python-nav-forward-statement  )
+         ("b"      . python-nav-backward-sexp      )
+         ("f"      . python-nav-forward-sexp       )
+
          :map inferior-python-mode-map
-         ("C-l" . comint-clear-buffer))
+         ("C-l"    . comint-clear-buffer))
 
   :general
   (:states 'normal
@@ -1890,7 +1937,8 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
            "SPC P r"  'python-shell-restart)
 
   :hook
-  (python-base-mode . auto-revert-mode) ;;(inferior-python-mode  . (lambda () (interactive)(setq comint-ptyp nil)))
+  (python-base-mode . auto-revert-mode)
+  ;;(inferior-python-mode  . (lambda () (interactive)(setq comint-ptyp nil)))
   :config
   (defun garid/run-pydev-python ()
     ""
@@ -1904,7 +1952,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   ;; and interactively set python-shell-buffer-name
   ;;  )
 
-  
+
   )
 #+end_src
 *** TODO Need to write each python buffer (or org mode) to connect to another python shell buffers
@@ -1936,42 +1984,9 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   )
 #+end_src
 
-** =jupyter=
-#+begin_src emacs-lisp
-(use-package jupyter
-  :straight t
-  :custom (jupyter-repl-echo-eval-p t))
-#+end_src
-** =graphviz-dot-mode=
-#+begin_src emacs-lisp
-(use-package graphviz-dot-mode :straight t)
-#+end_src
-
 ** =scad-mode=
 #+begin_src emacs-lisp
 (use-package scad-mode :straight t)
-#+end_src
-
-** =lua-mode=
-#+begin_src emacs-lisp
-(use-package lua-mode :straight t)
-#+end_src
-
-** =json-mode=
-#+begin_src emacs-lisp
-(use-package json-mode :straight t)
-#+end_src
-
-** =elixir= 
-#+begin_src emacs-lisp
-(use-package elixir-mode :straight t)
-(use-package ob-elixir :straight t)
-#+end_src
-
-** =nix= 
-#+begin_src emacs-lisp
-(use-package nix-mode :straight t)
-(use-package ob-nix :straight t)
 #+end_src
 
 * Coding input
@@ -2012,10 +2027,10 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
               (completing-read "Choose: " choices))))
 
 
-  (defun garid/choose-from-list-and-return-it (asdf)
-    (interactive)
-    (let ((choices asdf))
-      (completing-read "Choose: " choices)))
+  ;; (defun garid/choose-from-list-and-return-it (asdf)
+  ;;   (interactive)
+  ;;   (let ((choices asdf))
+  ;;     (completing-read "Choose: " choices)))
   )
 #+end_src
 
@@ -2033,6 +2048,15 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 #+end_src
 
 * Coding lsp & jumping around
+** xref
+#+begin_src emacs-lisp
+(use-package xref
+  :straight nil
+  :demand t
+  :general
+  (:states 'normal "SPC p r" 'xref-find-references))
+#+end_src
+
 ** =abbrev=
 #+begin_src emacs-lisp
 (use-package abbrev
@@ -2050,95 +2074,34 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   )
 #+end_src
 
-** =project.el=
+** =cape=: completion at point extensions
 #+begin_src emacs-lisp
-(setq straight-built-in-pseudo-packages '(project xref))
-
-(use-package xref
-  :straight nil
-  :demand t
-  :general
-  (:states 'normal
-          "SPC p r" 'xref-find-references)
-  )
-
-(use-package project
-  :straight nil
-  :demand t
-  :custom
-  (project-switch-commands
-   '(
-     (project-find-file    "Find file"      )
-     (project-find-regexp  "Find regexp"    )
-     (project-find-dir     "Find directory" )
-     (magit-project-status "Magit"          )
-     (project-eshell       "Eshell"         )
-     (project-any-command  "Other"          ))
-   )
-  :general
-  (:states 'normal
-          "SPC p f"     'project-find-file
-          "SPC p z"     'project-switch-project
-          "SPC p S"     'project-find-regexp
-          "SPC p k"     'project-kill-buffers
-          "SPC p c"     'project-recompile
-          "SPC p q r r" 'project-query-replace-regexp
-          )
-
-  :config
-  (keymap-set project-prefix-map "m" #'magit-project-status)
-  )
+(use-package cape
+  :straight t
+  :bind ("C-c p" . cape-prefix-map)
+  :init
+  (add-hook 'completion-at-point-functions #'cape-dabbrev )
+  (add-hook 'completion-at-point-functions #'cape-file    )
+  (add-hook 'completion-at-point-functions #'cape-history )
+  ;; (add-hook 'completion-at-point-functions #'cape-elisp-block)
+)
 #+end_src
 
-** =eglot=: lsp
+** =compile=
 #+begin_src emacs-lisp
-(use-package eglot
-  :after project
-  :hook
-  (python-base-mode . eglot-ensure)
-  
+(use-package compile
+  :straight nil
   :general
-  (:states '(normal prog-mode)
-           "SPC s e"  'eglot
-           "SPC v r"  'eglot-rename
-           )
-
-
-  :config
-  (add-to-list 'eglot-server-programs
-               '(python-mode . ("pyright-langserver" "--stdio")))
-
-  (add-to-list 'eglot-server-programs
-               '(org-mode . ("harper-ls" "--stdio")))
-
-  (evil-define-key 'normal 'prog-mode-map  (kbd "g o") 'eglot-find-typeDefinition)
-  (evil-define-key 'normal 'prog-mode-map  (kbd "] d") 'flymake-goto-next-error)
-  (evil-define-key 'normal 'prog-mode-map  (kbd "[ d") 'flymake-goto-prev-error)
-
-  (add-hook
-   'eglot-managed-mode-hook
-   (lambda ()
-     (eldoc-mode -1)))
-  )
+  (:states 'normal
+           "SPC <"  'recompile))
 #+end_src
+
 ** =consult-eglot=: consulting with lsp
 #+begin_src emacs-lisp
 (use-package consult-eglot
   :straight t
   :after eglot)
 #+end_src
-** =eglot-booster=: faster eglot
-#+begin_src emacs-lisp
-(use-package eglot-booster
-  :straight (eglot-booster
-             :type git
-             :host github
-             :repo "jdtsmith/eglot-booster")
-  :after eglot
-  :config
-  (eglot-booster-mode +1))
-#+end_src
-
 ** =corfu=: completion
 #+begin_src emacs-lisp
 (use-package corfu
@@ -2180,48 +2143,77 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
                         (corfu-mode)))
   )
 #+end_src
-** =cape=: completion at point extensions
+** =eglot=: lsp
 #+begin_src emacs-lisp
-(use-package cape
-  ;; Bind prefix keymap providing all Cape commands under a mnemonic key.
-  ;; Press C-c p ? to for help.
-  :straight t
-  :bind ("C-c p" . cape-prefix-map) ;; Alternative keys: M-p, M-+, ...
-  ;; Alternatively bind Cape commands individually.
-  ;; :bind (("C-c p d" . cape-dabbrev)
-  ;;        ("C-c p h" . cape-history)
-  ;;        ("C-c p f" . cape-file)
-  ;;        ...)
-  :init
-  ;; Add to the global default value of `completion-at-point-functions' which is
-  ;; used by `completion-at-point'.  The order of the functions matters, the
-  ;; first function returning a result wins.  Note that the list of buffer-local
-  ;; completion functions takes precedence over the global list.
-  (add-hook 'completion-at-point-functions #'cape-dabbrev)
-  (add-hook 'completion-at-point-functions #'cape-file)
-  ;; (add-hook 'completion-at-point-functions #'cape-elisp-block)
-  (add-hook 'completion-at-point-functions #'cape-history)
-)
-#+end_src
-
-** =compile=
-#+begin_src emacs-lisp
-(use-package compile
+(use-package eglot
   :straight nil
+  ;; :after project
+  :hook
+  (python-base-mode . eglot-ensure)
+  
   :general
   (:states 'normal
-           "SPC <"  'recompile)
+           :keymaps 'prog-mode-map
+           "SPC s e"  'eglot
+           "SPC v r"  'eglot-rename
+           )
+
+
+  :config
+  (add-to-list 'eglot-server-programs
+               '(python-mode . ("pyright-langserver" "--stdio")))
+
+  (add-to-list 'eglot-server-programs
+               '(org-mode . ("harper-ls" "--stdio")))
+
+  (evil-define-key 'normal 'prog-mode-map  (kbd "g o") 'eglot-find-typeDefinition)
+  (evil-define-key 'normal 'prog-mode-map  (kbd "] d") 'flymake-goto-next-error)
+  (evil-define-key 'normal 'prog-mode-map  (kbd "[ d") 'flymake-goto-prev-error)
+
+  (add-hook
+   'eglot-managed-mode-hook
+   (lambda ()
+     (eldoc-mode -1)))
   )
 #+end_src
-
-** =comint= 
+** =eglot-booster=: faster eglot
 #+begin_src emacs-lisp
-(use-package comint
+(use-package eglot-booster
+  :straight (eglot-booster
+             :type git
+             :host github
+             :repo "jdtsmith/eglot-booster")
+  :after eglot
+  :config
+  (eglot-booster-mode +1))
+#+end_src
+
+** =project.el=
+#+begin_src emacs-lisp
+(use-package project
   :straight nil
+  :demand t
+  :custom
+  (project-switch-commands
+   '((project-find-file    "Find file"      )
+     (project-find-regexp  "Find regexp"    )
+     (project-find-dir     "Find directory" )
+     (magit-project-status "Magit"          )
+     (project-eshell       "Eshell"         )
+     (project-any-command  "Other"          ))
+   )
   :general
   (:states 'normal
-           :keymaps 'comint-mode-map
-           "SPC P k"  'comint-send-eof)
+          "SPC p f"     'project-find-file
+          "SPC p z"     'project-switch-project
+          "SPC p S"     'project-find-regexp
+          "SPC p k"     'project-kill-buffers
+          "SPC p c"     'project-recompile
+          "SPC p q r r" 'project-query-replace-regexp
+          )
+
+  :config
+  (keymap-set project-prefix-map "m" #'magit-project-status)
   )
 #+end_src
 
@@ -2263,13 +2255,10 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   :after evil general
   :general
   (:states 'normal
-           "SPC e s" 'eshell
-           )
+           "SPC t e" 'eshell)
   (:states 'insert
            :keymaps 'eshell-mode-map
-           "C-a" 'eshell-bol
-           ;;#"C-r" 'eshell-atuin-history
-           )
+           "C-a" 'eshell-bol)
   )
 #+end_src
 
@@ -2365,6 +2354,11 @@ Similar to vim-signify.
   )
 #+end_src
 
+** =outline-indent=
+#+begin_src emacs-lisp
+(use-package outline-indent :straight t)
+#+end_src
+
 * Writing & Reading
 ** ispell config
 #+begin_src emacs-lisp
@@ -2387,7 +2381,7 @@ Similar to vim-signify.
 ** spell-checking & synonym
 #+begin_src emacs-lisp
 ;; (use-package langtool   :straight t) it required external jar / java  someday i will try
-(use-package jinx          :straight t)
+;; (use-package jinx          :straight t)
 (use-package mw-thesaurus
   :straight t
   :general
@@ -2399,10 +2393,16 @@ Similar to vim-signify.
 ;;(use-package org-wc        :straight t :after org)
 #+end_src
 
-** Writing packages
+** Writing package
 #+begin_src emacs-lisp
 (use-package darkroom             :straight t)
-(use-package focus                :straight t)
+(use-package focus
+  :straight t
+  :general
+  (:states 'normal
+           "SPC s f m " 'focus-mode
+           )
+  )
 #+end_src
 
 ** =pdf-tools=: reading pdf in Emacs
@@ -2452,7 +2452,7 @@ Similar to vim-signify.
 (use-package tmr :straight t)
 #+end_src
 * email
-** notmuch
+** =notmuch=
 #+begin_src emacs-lisp
 (use-package notmuch
   :straight t
