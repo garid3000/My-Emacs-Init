@@ -1,14 +1,15 @@
-#+startup:      show2levels
-#+title:        My Emacs Configuration
-#+author:       Garid Z.
-#+creator:      Garid Z.
-#+email:        garidzorigoo@gmail.com
-#+auto_tangle:  t
-#+property:     header-args :tangle init.el
-#+setupfile:    ~/.config/emacs/org-templates/lua.org
-#+options:      toc:t tags:nil  todo:t  tasks:t
-#+html_head:    <link rel="stylesheet" type="text/css" href="https://unpkg.com/chota"/>
-#+ODT_STYLES_FILE: "~/Downloads/APA-7th-Ed.ott"
+#+title:            My Emacs Configuration
+#+author:           Garid Z.
+#+creator:          Garid Z.
+#+email:            garidzorigoo@gmail.com
+#+auto_tangle:      t
+#+startup:          show2levels
+
+#+property:         header-args :tangle init.el
+#+setupfile:        ~/.config/emacs/org-templates/lua.org
+#+options:          toc:t tags:nil  todo:t  tasks:t
+#+html_head:        <link rel="stylesheet" type="text/css" href="https://unpkg.com/chota"/>
+#+odt_styles_file: "~/Downloads/APA-7th-Ed.ott"
 
 * From shell you can run make run
 #+begin_src makefile :eval no :tangle Makefile
@@ -38,7 +39,7 @@ run:
 
 (straight-use-package 'use-package)
 #+end_src
-* Keybinding releted
+* Keybinding related
 ** =general= config
 #+begin_src emacs-lisp
 (use-package general
@@ -249,16 +250,16 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 
 #+begin_src emacs-lisp
 (use-package modus-themes
-  :straight t
-  :demand t
+  :straight  t
+  :demand    t
   :custom
-  (modus-themes-to-toggle '(modus-vivendi-tinted modus-operandi-tinted ))
-  (modus-themes-italic-constructs  t                 )
-  (modus-themes-bold-constructs    t                 )
-  (modus-themes-variable-pitch-ui  t                 )
-  (modus-themes-mixed-fonts        t                 )
-  (modus-themes-prompts           '(bold             ))
-  (modus-themes-completions         nil              )
+  (modus-themes-to-toggle '(modus-vivendi-tinted modus-operandi-tinted))
+  (modus-themes-italic-constructs       t)
+  (modus-themes-bold-constructs         t)
+  (modus-themes-variable-pitch-ui       t)
+  (modus-themes-mixed-fonts             t)
+  (modus-themes-prompts           '(bold))
+  (modus-themes-completions           nil)
   (modus-themes-org-blocks        'tinted-background )
   (modus-themes-headings          '((0                . (medium variable-pitch 1.10 ))
                                     (1                . (medium variable-pitch 1.10 ))
@@ -285,15 +286,14 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   (defun ct/modus-themes-init ()
     (enable-theme (car modus-themes-to-toggle))
 
-    (scroll-bar-mode       -1)        ; Disable visible scrollbar
-    (tool-bar-mode         -1)        ; Disable the toolbar
-    (tooltip-mode          -1)        ; Disable tooltips
-    (menu-bar-mode         -1)        ; Disable the menu bar
-    (setq-default tab-width 4)
-    (set-fringe-mode       10)        ; Give some breathing room
-    (column-number-mode      )
+    (scroll-bar-mode       -1)   ; Disable visible scrollbar
+    (tool-bar-mode         -1)   ; Disable the toolbar
+    (tooltip-mode          -1)   ; Disable tooltips
+    (menu-bar-mode         -1)   ; Disable the menu bar
+    (set-fringe-mode       10)   ; Give some breathing room
+    (column-number-mode      )   ; Shows the column number in the mod bar
 
-    (setq-default indent-tabs-mode nil)
+    (setq-default tab-width 4          )
     )
 
   :bind ("<f5>" . modus-themes-toggle)
@@ -320,10 +320,20 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 
   :general
   (:states 'normal
-           "SPC s l n" display-line-numbers-mode
-           "SPC s l N" global-display-line-numbers-mode
+           "SPC s l n" 'display-line-numbers-mode
+           "SPC s l N" 'global-display-line-numbers-mode
            )
   )
+#+end_src
+
+** =pulsar= pulses on certain functions                                                     :by_prot:
+#+begin_src emacs-lisp
+(use-package pulsar
+  :straight t
+  :custom
+  (pulsar-delay      0.05)
+  (pulsar-iterations    2)
+  :config (pulsar-global-mode))
 #+end_src
 
 ** Line visibility
@@ -337,17 +347,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   :config (global-hl-todo-mode 1))
 #+end_src
 
-** =pulsar= pulses on certain functions                                                     :by_prot:
-#+begin_src emacs-lisp
-(use-package pulsar
-  :straight t
-  :custom
-  (pulsar-delay      0.05)
-  (pulsar-iterations    2)
-  :config (pulsar-global-mode))
-#+end_src
-
-** hilock hightlight
+** =hilock= hightlight
 #+begin_src emacs-lisp
 (use-package hi-lock
   :straight nil
@@ -359,7 +359,30 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   )
 #+end_src
 
-* Built in packages
+* Configuration of General Built-in Packages
+** =align=
+#+begin_src emacs-lisp
+(use-package align
+  :straight nil
+  :general
+  (:states '(visual)
+           "SPC z a"  'align-regexp)
+  )
+#+end_src
+
+** =bookmark=
+#+begin_src emacs-lisp
+(use-package bookmark
+  :straight nil
+  :general
+  (:states 'normal
+           "SPC b b" 'list-bookmarks
+           "SPC b s" 'bookmark-set
+           "SPC b j" 'bookmark-jump
+           )
+  )
+#+end_src
+
 ** =dired= - Directory
 #+begin_src emacs-lisp
 (use-package dired
@@ -412,26 +435,51 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
            "SPC D p"  'dired-preview-mode)
   )
 #+end_src
-** =saveplace= - Save (last) cursor position
-This mode saves the last cursor point when you close a file,
-and later sets cursor at that point when you open that file.
-
+** =emacs= c-codes
 #+begin_src emacs-lisp
-(use-package saveplace
+(use-package emacs
   :straight nil
-  :config (save-place-mode 1))
-#+end_src
-** =recentf= - Recent files
-#+begin_src emacs-lisp
-(use-package recentf
-  :straight nil
-  :demand t
-  :custom
-  (recentf-max-menu-items   40)
-  (recentf-max-saved-items  40)
+  :general
+  (:states 'normal
+           "SPC L e"  'eval-buffer
+           "SPC L n"  'rename-buffer
+           "SPC L o"  'garid/new-org-scratch
+           "SPC L p"  'garid/new-python-scratch
+           "SPC Z Q"  'kill-emacs
+           "SPC t x"  'garid/open-terminal-at-current-working-dir
+           )
   :config
-  (recentf-mode 1))
+  (defun garid/new-org-scratch ()
+    "Create a new scratch buffer in Org mode."
+    (interactive)
+    (let ((buf (generate-new-buffer "*org-scratch*")))
+      (switch-to-buffer buf)
+      (org-mode)))
+
+  (defun garid/new-python-scratch ()
+    "Create a new scratch buffer in Python mode."
+    (interactive)
+    (let ((buf (generate-new-buffer "*python-scratch*")))
+      (switch-to-buffer buf)
+      (python-mode)))
+
+  (defun garid/clear-kill-ring-and-garbage-collect ()
+    (interactive)
+    (setq kill-ring nil)
+    (garbage-collect))
+
+  (defun garid/open-terminal-at-current-working-dir ()
+    "Open a terminal at the current buffer's directory."
+    (interactive)
+    (call-process-shell-command
+     (concat
+      "foot"                                   ;; the terminal program to launch
+      " -D "                                   ;; specify the working directory
+      (file-name-directory (buffer-file-name)) ;; get the current buffer's directory
+      " &")))
+  )
 #+end_src
+
 ** =files=
 #+begin_src emacs-lisp
 (use-package files
@@ -464,48 +512,6 @@ and later sets cursor at that point when you open that file.
            )
   )
 #+end_src
-** =whitespace-mode=
-#+begin_src emacs-lisp
-(use-package whitespace-mode
-  :straight nil
-  :general
-  (:states 'normal "SPC s w" 'whitespace-mode))
-#+end_src
-
-** =emacs= c-codes
-#+begin_src emacs-lisp
-(use-package emacs
-  :straight nil
-  :general
-  (:states 'normal
-           "SPC L e"  'eval-buffer
-           "SPC L n"  'rename-buffer
-           "SPC L o"  'garid/new-org-scratch
-           "SPC L p"  'garid/new-python-scratch
-           "SPC Z Q"  'kill-emacs
-           )
-  :config
-  (defun garid/new-org-scratch ()
-    "Create a new scratch buffer in Org mode."
-    (interactive)
-    (let ((buf (generate-new-buffer "*org-scratch*")))
-      (switch-to-buffer buf)
-      (org-mode)))
-
-  (defun garid/new-python-scratch ()
-    "Create a new scratch buffer in Python mode."
-    (interactive)
-    (let ((buf (generate-new-buffer "*python-scratch*")))
-      (switch-to-buffer buf)
-      (python-mode)))
-
-  (defun garid/clear-kill-ring-and-garbage-collect ()
-    (interactive)
-    (setq kill-ring nil)
-    (garbage-collect))
-  )
-#+end_src
-
 ** =ibuffer=
 #+begin_src emacs-lisp
 (use-package ibuffer
@@ -517,44 +523,33 @@ and later sets cursor at that point when you open that file.
   )
 #+end_src
 
-** =simple=
+** =newcomment=
 #+begin_src emacs-lisp
-(use-package simple
+(use-package newcomment
   :straight nil
   :general
-  (:states 'normal
-           "SPC SPC"  'execute-extended-command
-           "SPC L c"  'clone-indirect-buffer
-           )
-  :bind
-  ("M-Q" . kill-current-buffer)
-  )
-#+end_src
+  (:states '(normal insert)
+           "C-/"  'comment-line)
 
-** =window=
-#+begin_src emacs-lisp
-(use-package window
-  :straight nil
-  :general
-  (:states 'normal
-           "SPC L <"  'switch-to-prev-buffer
-           "SPC L >"  'switch-to-next-buffer
-           )
-  :bind
-  ("M-q" . delete-window)
-  )
-#+end_src
-
-** =align=
-#+begin_src emacs-lisp
-(use-package align
-  :straight nil
-  :general
   (:states '(visual)
-           "SPC z a"  'align-regexp)
+           "C-/"  'comment-or-uncomment-region
+           ;;"C-?"  'comment-box
+           )
+
   )
 #+end_src
 
+** =recentf= - Recent files
+#+begin_src emacs-lisp
+(use-package recentf
+  :straight nil
+  :demand t
+  :custom
+  (recentf-max-menu-items   40)
+  (recentf-max-saved-items  40)
+  :config
+  (recentf-mode 1))
+#+end_src
 ** =replace=
 #+begin_src emacs-lisp
 (use-package replace
@@ -566,26 +561,27 @@ and later sets cursor at that point when you open that file.
   )
 #+end_src
 
-** =newcomment=
-#+begin_src emacs-lisp
-(use-package newcomment
-  :straight nil
-  :bind
-  ("C-/" . comment-line)
-  ;; need few more TODO
-  )
-#+end_src
+** =saveplace= - Save (last) cursor position
+This mode saves the last cursor point when you close a file,
+and later sets cursor at that point when you open that file.
 
-** =bookmark=
 #+begin_src emacs-lisp
-(use-package bookmark
+(use-package saveplace
+  :straight nil
+  :config (save-place-mode 1))
+#+end_src
+** =simple=
+#+begin_src emacs-lisp
+(use-package simple
   :straight nil
   :general
   (:states 'normal
-           "SPC b b" 'list-bookmarks
-           "SPC b s" 'bookmark-set
-           "SPC b j" 'bookmark-jump
-           )
+           "SPC SPC"  'execute-extended-command
+           "SPC L c"  'clone-indirect-buffer)
+  :bind
+  ("M-Q" . kill-current-buffer)
+  :config
+  (setq-default indent-tabs-mode nil )
   )
 #+end_src
 
@@ -598,39 +594,32 @@ and later sets cursor at that point when you open that file.
  )
 #+end_src
 
-** =savehist=:
+** =whitespace-mode=
 #+begin_src emacs-lisp
-(use-package savehist
-  :straight t
-  :config (savehist-mode))
+(use-package whitespace-mode
+  :straight nil
+  :general
+  (:states 'normal "SPC s w" 'whitespace-mode))
 #+end_src
-** COMMENT shell script to open terminal                                             :shell_script:
-#+begin_src bash :tangle garid/open_external_term.sh :shebang "#!/bin/bash"
-# Open System termianl $TERMINAL at $1:
-# nohup for exitting terminal that executed this script
-# other wise terminal that executed this script just hangs there
 
-# if $1 is directory; -> cd to this dir
-if [[ -d $1 ]]; then
-	notify-send "Emacs external terminal" "Emacs is openning external terminal\n at: $1"
-	cd "$1" || return 1
-	nohup "$TERMINAL" > /dev/null &
-	return 0
+** =window=
+#+begin_src emacs-lisp
+(use-package window
+  :straight nil
+  :general
+  (:states 'normal
+           "SPC L <"  'switch-to-prev-buffer
+           "SPC L >"  'switch-to-next-buffer)
 
-# if $1 is file; -> cd to parent dir
-elif [[ -f $1 ]]; then
-	notify-send "Emacs external terminal" "Emacs is openning external terminal\n near: $1"
-	cd "$(dirname "$1")" || return 1
-	nohup "$TERMINAL" > /dev/null &
-	return 0
-
-# if $1 is neither directory nor file -> fail
-else
-	notify-send "Emacs external terminal" "$1\nwas not found\nOpening at Home"
-	nohup "$TERMINAL" > /dev/null &
-	return 0
-fi
+  :bind (("M-q" . delete-window)
+         :repeat-map garid/switch-buffer-repeat
+         ("<"  . switch-to-prev-buffer)
+         (">"  . switch-to-next-buffer)
+         (","  . switch-to-prev-buffer)
+         ("."  . switch-to-next-buffer))
+  )
 #+end_src
+
 ** =window= movmenets
 #+begin_src emacs-lisp
 (use-package windmove
@@ -670,6 +659,12 @@ fi
 #+end_src
 
 * Mini-buffer completion, selection, suggestion
+** =savehist= Save minibuffer history
+#+begin_src emacs-lisp
+(use-package savehist
+  :straight t
+  :config (savehist-mode))
+#+end_src
 ** =vertico=
 #+begin_src emacs-lisp
 (use-package vertico
@@ -954,6 +949,7 @@ fi
                                  (python     . t)
                                  (shell      . t)
                                  (sqlite     . t)
+                                 (plantuml   . t)
                                  ;; (asymptote  . t)
                                  ;; (ditaa      . t)
                                  ;; (go         . t)
@@ -962,7 +958,6 @@ fi
                                  ;; (mermaid    . t)
                                  ;; (nim        . t)
                                  ;; (nix        . t)
-                                 ;; (plantuml   . t)
                                  ))
 
   (defcustom org-inline-image-background nil
@@ -1047,41 +1042,6 @@ fi
   (setf (alist-get "python" org-src-lang-modes nil nil #'equal) 'python-ts)
   )
 #+end_src
-** =org-link=
-#+begin_src emacs-lisp
-(use-package ol
-  :straight nil
-  :after org
-  :bind (:map org-mode-map
-              :repeat-map garid/org-repeat
-              ("N"  . org-next-link     )
-              ("P"  . org-previous-link ))
-  )
-#+end_src
-** =org-indent=
-#+begin_src emacs-lisp
-(use-package org-indent
-  :straight nil
-  :custom
-  (org-indent-mode-turns-on-hiding-stars t)
-  :delight "")
-#+end_src
-** =org-num=
-#+begin_src emacs-lisp
-(use-package org-num
-  :straight nil
-  :delight "")
-#+end_src
-** =org-appear=
-#+begin_src emacs-lisp
-(use-package org-appear
-  :straight t
-  :hook (org-mode . org-appear-mode)
-  :custom
-  (org-appear-autolinks t)
-  (org-appear-delay     0.25))
-#+end_src
-
 ** =org-attach=
 #+begin_src emacs-lisp
 (use-package org-attach
@@ -1119,20 +1079,51 @@ fi
   )
 #+end_src
 
+** =org-link=
+#+begin_src emacs-lisp
+(use-package ol
+  :straight nil
+  :after org
+  :bind (:map org-mode-map
+              :repeat-map garid/org-repeat
+              ("N"  . org-next-link     )
+              ("P"  . org-previous-link ))
+  )
+#+end_src
+** =org-indent=
+#+begin_src emacs-lisp
+(use-package org-indent
+  :straight nil
+  :custom (org-indent-mode-turns-on-hiding-stars t)
+  :delight "")
+#+end_src
+** COMMENT =org-num=
+#+begin_src emacs-lisp
+(use-package org-num
+  :straight nil
+  :delight "")
+#+end_src
+** =org-appear= 
+#+begin_src emacs-lisp
+(use-package org-appear
+  :straight t
+  :hook (org-mode . org-appear-mode)
+  :custom
+  (org-appear-autolinks t)
+  (org-appear-delay     0.25))
+#+end_src
+
 ** org-babel languages related
 #+begin_src emacs-lisp
-(use-package plantuml-mode :straight t)
-;;(use-package ob-plantuml
-;;  :straight t
-;;  :after (org  plantuml-mode)
-;;  :custom
-;;  (org-plantuml-executable-path  "plantuml")
-;;  (org-plantuml-exec-mode        'plantuml))
+(use-package plantuml-mode :straight t
+  :after org
+  :custom
+  (org-plantuml-executable-path  "plantuml")
+  (org-plantuml-exec-mode        'plantuml))
 
 (use-package ob-nim       :after org :straight t)
 (use-package ob-go        :after org :straight t)
 (use-package ob-asymptote :after org :straight t)
-
 
 (use-package mermaid-mode :straight t)
 (use-package ob-mermaid
@@ -1307,10 +1298,11 @@ fi
 #+RESULTS:
 
 ** =citar=: citation
+
 #+begin_src emacs-lisp
 (use-package citar
   :straight t
-  :after org denote
+  :after org denote ;; must load after denote must be because it uses variable that's defined in denote
   :no-require
   :custom
   (org-cite-global-bibliography (list (concat (file-name-as-directory denote-directory)
@@ -1334,14 +1326,15 @@ fi
   )
 #+end_src
 
-#+RESULTS:
+*** TODO I should read citar-citeproc-csl-style
+*** TODO As well as org-cite-csl-styles-dir
 
 ** =citar-denote= citation
 #+begin_src emacs-lisp
 (use-package citar-denote
   :straight t
-  :demand t ;; Ensure minor mode loads
-  :after (:any citar denote)
+  :demand t
+  :after citar denote
   :custom
   (citar-denote-file-type             'org          )
   (citar-denote-keyword               "bib"         )
@@ -1354,59 +1347,22 @@ fi
   (citar-denote-use-bib-keywords      nil           )
   :preface
   (bind-key "C-c w n" #'citar-denote-open-note)
-  :init
-  (citar-denote-mode)
-  :bind (("C-c w d" . citar-denote-dwim)
-         ("C-c w e" . citar-denote-open-reference-entry)
-         ("C-c w a" . citar-denote-add-citekey)
-         ("C-c w k" . citar-denote-remove-citekey)
-         ("C-c w r" . citar-denote-find-reference)
-         ("C-c w l" . citar-denote-link-reference)
-         ("C-c w f" . citar-denote-find-citation)
-         ("C-c w x" . citar-denote-nocite)
-         ("C-c w y" . citar-denote-cite-nocite)
-         ("C-c w z" . citar-denote-nobib)))
+  :bind (("C-c w d" . citar-denote-dwim                 )
+         ("C-c w e" . citar-denote-open-reference-entry )
+         ("C-c w a" . citar-denote-add-citekey          )
+         ("C-c w k" . citar-denote-remove-citekey       )
+         ("C-c w r" . citar-denote-find-reference       )
+         ("C-c w l" . citar-denote-link-reference       )
+         ("C-c w f" . citar-denote-find-citation        )
+         ("C-c w x" . citar-denote-nocite               )
+         ("C-c w y" . citar-denote-cite-nocite          )
+         ("C-c w z" . citar-denote-nobib                )
+         )
 
-;;(use-package citar-denote
-;;  :after (:any citar denote)
-;;  :no-require
-;;  :delight ""
-;;  :custom
-;;  ;;(citar-org-roam-subdir                      "g_paper")
-;;
-;;  ;; Package defaults
-;;  (citar-denote-file-type             'org                )
-;;  (citar-denote-keyword               "bib"               )
-;;  (citar-denote-signature             nil                 )
-;;  ;; (citar-denote-subdir              nil                )
-;;  (citar-denote-subdir                "lit"               )
-;;  ;;(citar-denote-template              'biblio           )
-;;  (citar-denote-title-format          "author-year"       )
-;;  (citar-denote-title-format-andstr   "and"               )
-;;  (citar-denote-title-format-authors  1                   )
-;;  (citar-denote-use-bib-keywords      nil                 )
-;;
-;;  ;; (citar-denote-subdir "")
-;;  ;; (citar-denote-template
-;;  ;;  (concat "${=key=}\n"
-;;  ;;          "#+subtitle: ${=type=}: ${title}\n"
-;;  ;;          "#+author:   author(s): ${author}\n"
-;;  ;;          "#+filetags: :paper:\n\n"
-;;  ;;          "[cite:@${=key=}]\n\n"
-;;  ;;          "* Notes\n\n"
-;;  ;;          ))
-;;  :config
-;;  (citar-denote-mode)
-;;  :bind (("C-c w d" . citar-denote-dwim                 )
-;;         ("C-c w e" . citar-denote-open-reference-entry )
-;;         ("C-c w a" . citar-denote-add-citekey          )
-;;         ("C-c w k" . citar-denote-remove-citekey       )
-;;         ("C-c w r" . citar-denote-find-reference       )
-;;         ("C-c w l" . citar-denote-link-reference       )
-;;         ("C-c w f" . citar-denote-find-citation        )
-;;         ("C-c w x" . citar-denote-nocite               )
-;;         ("C-c w y" . citar-denote-cite-nocite          )
-;;         ("C-c w z" . citar-denote-nobib                )))
+  ;:init
+  :config
+  (citar-denote-mode)
+  )
 
 #+end_src
 
@@ -1427,16 +1383,13 @@ fi
                       "~/BrainDump/denote_bps/20250911T174108--bps__gtd.org"
                       "~/BrainDump/inbox.org"
                       ))
-  ;;(org-agenda-span   90)
-  (org-agenda-span             1)
+  (org-agenda-span             1) ;;  90)
   (org-agenda-custom-commands
-   '(("i" "Inbox"                tags-todo "+TODO=\"VAGUE\""
-      ((org-agenda-files (file-expand-wildcards "~/BrainDump/inbox.org"))))
+   '(("i" "Inbox"                tags-todo "+TODO=\"VAGUE\"" ((org-agenda-files (file-expand-wildcards "~/BrainDump/inbox.org"))))
      ("n" "Next actions"         tags-todo "+TODO=\"TODO\"")
      ("p" "Projects"             tags-todo "+TODO=\"PRJT\"")
      ("w" "Waiting"              tags-todo "+TODO=\"WAIT\"")
-     ("s" "Someday"              tags-todo "+TODO=\"TODO\"|TODO=\"PRJT\""
-      ((org-agenda-files (file-expand-wildcards "~/BrainDump/gtd/someday.org"))))
+     ("s" "Someday"              tags-todo "+TODO=\"TODO\"|TODO=\"PRJT\"" ((org-agenda-files (file-expand-wildcards "~/BrainDump/gtd/someday.org"))))
      ("o" "Actions and Projects" tags-todo "+TODO=\"TODO\"|TODO=\"PRJT\"")))
 
   (org-agenda-current-time-string "← now ───────────────────────────────────────────────")
@@ -1573,6 +1526,15 @@ From [[https://librephoenix.com/2023-12-30-making-org-agenda-look-beautiful]]
   (org-caldav-files        '("~/BrainDump/denote_bps/20250911T174108--bps__gtd.org")            )
   (org-icalendar-timezone  "Asia/Tokyo"                                                         )
   )
+#+end_src
+** =consult-todo=
+#+begin_src emacs-lisp
+(use-package consult-todo
+  :straight t
+  :general
+  (:states 'normal
+           "SPC c t" 'consult-todo
+           "SPC c T" 'consult-todo-project))
 #+end_src
 * Org Exporting related
 ** =ox=
@@ -1719,8 +1681,8 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   :after org
   :custom
   (org-html-validation-link              nil) ;; Don't show validation link
-  ;; (org-html-htmlize-output-type 'inline-css)
-  ;; (org-html-htmlize-output-type 'css)  <-- breaks the html export
+  ;; (org-html-htmlize-output-type 'inline-css) <-- default
+  ;; (org-html-htmlize-output-type 'css)        <-- breaks the html export
   ;; (org-html-head-include-scripts         nil) ;; Use our own scripts
   ;; (org-html-head-include-default-style   nil) ;; Use our own styles
   ;; (org-html-head "<link rel=\"stylesheet\" type=\"text/css\" href=\"https://orgmode.org/worg/style/worg.css\"/>" )
@@ -1729,12 +1691,10 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   (:states 'normal
            :keymaps 'org-mode-map
            "SPC o x h"   'org-html-export-to-html
-           "SPC o x H"   '((lambda ()
-                             (interactive)
+           "SPC o x H"   '((lambda () (interactive)
                              (org-html-export-to-html nil t))
                            :which-key "org-html-export-to-html SUBTREE")
-           "SPC o x O"   '((lambda ()
-                             (interactive)
+           "SPC o x O"   '((lambda () (interactive)
                              (browse-url-xdg-open (org-export-output-file-name ".html")))
                            :which-key "Open exported HTML")
            )
@@ -1750,26 +1710,12 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   (:states 'normal
            :keymaps 'org-mode-map
            "SPC o x r"   'org-re-reveal-export-to-html
-           "SPC o x R"   '((lambda ()
-                             (interactive)
+           "SPC o x R"   '((lambda () (interactive)
                              (org-re-reveal-export-to-html nil t))
                            :which-key "org-re-reveal-export-to-html SUBTREE")
            )
   )
 #+end_src
-
-** COMMENT =htmlize= - source code syntax in html export
-#+begin_src emacs-lisp
-(use-package htmlize
-  :straight t
-  :config
-  ;;(add-hook 'htmlize-before-hook (lambda () (indent-bars-mode -1)))
-  ;;(add-hook 'htmlize-before-hook (lambda () (modus-themes-select 'modus-operandi-tinted)))
-  ;;(add-hook 'htmlize-after-hook (lambda () (modus-themes-select 'modus-vivendi-tinted)))
-  )
-#+end_src
-
-#+RESULTS:
 
 * Org Misc:
 ** =org-download= 
@@ -2300,7 +2246,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 (use-package gptel-commit
   :straight t
   :after (gptel magit)
-
+  :commands gptel-commit gptel-commit-rationale
   :general
   (:states 'normal
            "SPC g c"  'gptel-commit
@@ -2615,26 +2561,24 @@ Similar to vim-signify.
   :straight t
   :general
   (:states 'normal
-           "SPC L d"  'crux-delete-file-and-buffer
-           "SPC L s"  'crux-create-scratch-buffer
+           "SPC L d"   'crux-delete-file-and-buffer
+           "SPC L s"   'crux-create-scratch-buffer
+           "SPC s r d" 'crux-recentf-find-directory
            )
-
   )
 #+end_src
 ** =command-log-mode=
 #+begin_src emacs-lisp
 (use-package command-log-mode
   :straight t
+  :commands global-command-log-mode clm/open-command-log-buffer
   :general
   (:states 'normal
-           "SPC s c l g" '((lambda () (interactive)
+           "SPC s c l" '((lambda () (interactive)
                            (global-command-log-mode)
-                           (clm/open-command-log-buffer) )
+                           (clm/open-command-log-buffer))
                          :which-key "command log mode")
-           "SPC s c l c"  'clm/command-log-clear
-
-           )
-
+           "SPC s c L"  'clm/command-log-clear)
   )
 #+end_src
 ** =format-all=

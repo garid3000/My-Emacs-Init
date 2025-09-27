@@ -2228,3 +2228,44 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
            )
   )
 #+end_src
+* COMMENT shell script to open terminal                                              :shell_script:
+#+begin_src bash :tangle garid/open_external_term.sh :shebang "#!/bin/bash"
+# Open System termianl $TERMINAL at $1:
+# nohup for exitting terminal that executed this script
+# other wise terminal that executed this script just hangs there
+
+# if $1 is directory; -> cd to this dir
+if [[ -d $1 ]]; then
+	notify-send "Emacs external terminal" "Emacs is openning external terminal\n at: $1"
+	cd "$1" || return 1
+	nohup "$TERMINAL" > /dev/null &
+	return 0
+
+# if $1 is file; -> cd to parent dir
+elif [[ -f $1 ]]; then
+	notify-send "Emacs external terminal" "Emacs is openning external terminal\n near: $1"
+	cd "$(dirname "$1")" || return 1
+	nohup "$TERMINAL" > /dev/null &
+	return 0
+
+# if $1 is neither directory nor file -> fail
+else
+	notify-send "Emacs external terminal" "$1\nwas not found\nOpening at Home"
+	nohup "$TERMINAL" > /dev/null &
+	return 0
+fi
+#+end_src
+
+* COMMENT =htmlize= - source code syntax in html export
+#+begin_src emacs-lisp
+(use-package htmlize
+  :straight t
+  :config
+  ;;(add-hook 'htmlize-before-hook (lambda () (indent-bars-mode -1)))
+  ;;(add-hook 'htmlize-before-hook (lambda () (modus-themes-select 'modus-operandi-tinted)))
+  ;;(add-hook 'htmlize-after-hook (lambda () (modus-themes-select 'modus-vivendi-tinted)))
+  )
+#+end_src
+
+#+RESULTS:
+
