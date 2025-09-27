@@ -1776,9 +1776,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   :general
   (:states 'normal
            :keymaps 'org-mode-map
-           "SPC o i c" 'org-ipe-insert-drawing
-           )
-
+           "SPC o i c" 'org-ipe-insert-drawing)
   )
 #+end_src
 
@@ -1806,6 +1804,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
              :repo "misohena/el-easydraw")
   :after org ox ox-latex ox-html
   :demand t ;; needed <== don't know why
+  :hook (edraw-property-editor-mode . turn-off-evil-mode)
   :custom
   (edraw-editor-default-grid-interval 10)
   (edraw-default-shape-properties '((rect (fill            . #1="#f8f8f8")
