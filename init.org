@@ -1477,6 +1477,11 @@ From [[https://librephoenix.com/2023-12-30-making-org-agenda-look-beautiful]]
       org-agenda-skip-timestamp-if-deadline-is-shown  t)
 #+end_src
 
+org-agenda-category-icon-alis -> #+category 
+
+<2005-05-10 Tue 20:30>--<2005-05-10 Tue 22:15>
+org-attach-use-inheritance
+
 ** =casual-agenda=: casual agenda based on transient
 #+begin_src emacs-lisp
 (use-package casual-suite
@@ -1684,7 +1689,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 #+end_src
 
 * Org Attachments, Images, Figures related
-** =org-attach=
+** =org-attach=                                                                              :ATTACH:
 #+begin_src emacs-lisp
 (use-package org-attach
   :after org
@@ -1694,7 +1699,16 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   (org-attach-id-to-path-function-list '(my/org-attach-dir-calculator
                                          org-attach-id-ts-folder-format
                                          org-attach-id-uuid-folder-format))
+  (org-attach-use-inheritance t) ;; 2025-09-28 TODO
+  ;; (org-attach-auto-tag      nil) TODO
+  :general
+  (:states 'normal
+           :keymaps 'dired-mode-map
+           "SPC D a" 'org-attach-dired-to-subtree
+           )
   :config
+
+  (require 'org-attach-git) ;; 2025-09-28 TODO test
   (defun my/org-attach-dir-calculator (id)
     "id"
     (let ((possible-denote-id (car                     ;; 4. "20241002T190027"
