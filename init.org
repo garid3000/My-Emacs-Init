@@ -2246,17 +2246,12 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   :straight t
   :after (gptel magit)
   :commands gptel-commit gptel-commit-rationale
+  :custom
+  (gptel-commit-stream t)
   :general
   (:states 'normal
            "SPC g c"  'gptel-commit
            "SPC g C"  'gptel-commit-rationale)
-
-  :custom
-  (gptel-commit-stream t)
-  ;; :bind (:map git-commit-mode-map
-  ;;             ("C-c g" . gptel-commit)
-  ;;             ("C-c G" . gptel-commit-rationale))
-
   )
 #+end_src
 
