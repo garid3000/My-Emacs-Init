@@ -75,7 +75,7 @@ run:
 ** =which-key=: keybinding shower
 #+begin_src emacs-lisp
 (use-package which-key
-  :delight
+  :delight ""
   :straight nil
   :custom
   (which-key-popup-type              'side-window               )
@@ -209,6 +209,11 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 #+end_src
 
 * Theme & colors
+** =delight=
+#+begin_src emacs-lisp
+(use-package delight :demand t :straight t)
+#+end_src
+
 ** font related
 #+begin_src emacs-lisp
 (use-package faces
@@ -225,6 +230,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   )
 
 (use-package faces-remap
+  :delight ""
   :straight nil
   :hook (org-mode . variable-pitch-mode))
 #+end_src
@@ -284,11 +290,6 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 
 #+RESULTS:
 : modus-themes-toggle
-
-** =delight=
-#+begin_src emacs-lisp
-(use-package delight :demand t :straight t)
-#+end_src
 
 ** =display-line-numbers=: displaying number
 #+begin_src emacs-lisp
@@ -423,12 +424,17 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   :straight nil
   :general
   (:states 'normal
-           "SPC L e"  'eval-buffer
-           "SPC L n"  'rename-buffer
-           "SPC L o"  'garid/new-org-scratch
-           "SPC L p"  'garid/new-python-scratch
-           "SPC Z Q"  'kill-emacs
-           "SPC t x"  'garid/open-terminal-at-current-working-dir
+           "SPC L e"     'eval-buffer
+           "SPC L n"     'rename-buffer
+           "SPC L o"     'garid/new-org-scratch
+           "SPC L p"     'garid/new-python-scratch
+           "SPC Z Q"     'kill-emacs
+           "SPC t x"     'garid/open-terminal-at-current-working-dir
+
+           "SPC s n r"   'narrow-to-region
+           "SPC s n f"   'narrow-to-defun
+           "SPC s n w"   'widen
+           "SPC s n SPC" 'widen
            )
   :config
   (put 'narrow-to-region 'disabled nil)
@@ -792,7 +798,7 @@ and later sets cursor at that point when you open that file.
 (use-package org
   :straight t
   :demand t
-  :delight "org"
+  :delight "org" 
   :bind (:map org-mode-map
               ("C-S-k"     . org-previous-visible-heading    )
               ("C-S-j"     . org-next-visible-heading        )
