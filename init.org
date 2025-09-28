@@ -287,7 +287,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 
 ** =delight=
 #+begin_src emacs-lisp
-(use-package delight :straight t)
+(use-package delight :demand t :straight t)
 #+end_src
 
 ** =display-line-numbers=: displaying number
@@ -431,6 +431,8 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
            "SPC t x"  'garid/open-terminal-at-current-working-dir
            )
   :config
+  (put 'narrow-to-region 'disabled nil)
+
   (defun garid/new-org-scratch ()
     "Create a new scratch buffer in Org mode."
     (interactive)
@@ -2348,7 +2350,11 @@ Similar to vim-signify.
 
 ** =outline-indent=
 #+begin_src emacs-lisp
-(use-package outline-indent :straight t)
+(use-package outline-indent
+  :straight t
+  :delight ""
+  ;; :hook (python-base-mode  . outline-indent-minor-mode))
+  :hook (prog-mode  . outline-indent-minor-mode))
 #+end_src
 
 * Writing & Reading
