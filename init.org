@@ -2000,48 +2000,6 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   )
 #+end_src
 
-*** In the python buffer, how to set which buffer to send python-shell-send-block in emacs.
-
-To set the buffer from which =python-shell-send-block= sends code in
-Emacs, you can customize the =python-shell-buffer-name= variable
-interactively or use the =python-shell-switch-to-shell= command.
-
-*** Steps to Set the Python Buffer Interactively:
-
-1. *Switch to the desired Python shell buffer*:
-   You can use the command from your configuration:
-   - =M-x garid/switch-python-shell-buffer=
-
-2. *Send the current block to the Python shell*:
-   Make sure you are in the desired buffer where you want to run the code, and then use:
-   - =C-c C-b= for =python-shell-send-block= (this is the default keybinding).
-
-*** Setting Default Python Shell Buffer:
-
-If you want to programmatically set a specific buffer for =python-shell-send-block=, you can define a function that sets =python-shell-buffer-name= before sending the code:
-
-#+begin_src elisp
-(defun my-set-python-shell-buffer (buf)
-  "Set the Python shell buffer to BUF."
-  (interactive
-   (list (completing-read "Choose Python buffer: "
-                          (cl-loop for b in (buffer-list)
-                                   if (with-current-buffer b
-                                        (eq major-mode 'inferior-python-mode))
-                                   collect (buffer-name b)))))
-  (setq python-shell-buffer-name buf)
-  (switch-to-buffer buf))
-#+end_src
-
-You can bind this function to a key in your =:general= section for ease of use.
-
-*** Summary:
-
-You can either interactively choose the buffer with your defined function or manually switch to the desired buffer to ensure =python-shell-send-block= sends the code to the right place.
-
-***   
-
-
 ** =code-cells-mode=
 #+begin_src emacs-lisp
 (use-package code-cells
