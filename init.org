@@ -554,7 +554,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 (use-package replace
   :straight nil
   :general
-  (:states 'normal
+  (:states 'visual
            "SPC z r"  'replace-regexp
            )
   )
@@ -1696,6 +1696,32 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   )
 #+end_src
 
+*** test with chalkboard
+#+begin_src org :tangle no
+,#+reveal_root: https://cdn.jsdelivr.net/npm/reveal.js
+,#+reveal_version: 4
+,#+reveal_add_plugin: chalkboard RevealChalkboard https://cdn.jsdelivr.net/npm/reveal.js-plugins@latest/chalkboard/plugin.js https://cdn.jsdelivr.net/npm/reveal.js-plugins@latest/chalkboard/style.css
+
+# Workaround for issue #100, fixed upstream:
+# #+REVEAL_HEAD_PREAMBLE: <style type="text/css">.reveal > .overlay { backdrop-filter: unset!important; }</style>
+
+# Per its README, font awesome is required for the chalkboard plugin.
+,#+reveal_head_preamble: <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+,#+reveal_head_preamble: <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+# Custom controls can be used to display buttons for opening and
+# closing annotation modes, see README of chalkboard plugin:
+# https://github.com/rajgoel/reveal.js-plugins/tree/master/chalkboard
+,#+reveal_add_plugin: customcontrol RevealCustomControls https://cdn.jsdelivr.net/npm/reveal.js-plugins@latest/customcontrols/plugin.js https://cdn.jsdelivr.net/npm/reveal.js-plugins@latest/customcontrols/style.css
+
+# Custom control require more configuration:
+,#+reveal_head_preamble: <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js-plugins/menu/font-awesome/css/fontawesome.css">
+,#+reveal_init_script: customcontrols: { controls: [{ icon: '<i class="fa fa-pen-square"></i>', title: 'Toggle chalkboard (B)', action: 'RevealChalkboard.toggleChalkboard();'}, { icon: '<i class="fa fa-pen"></i>', title: 'Toggle notes canvas (C)', action: 'RevealChalkboard.toggleNotesCanvas();'}]}
+
+,#+reveal_preamble:
+#+end_src
+
+
 * Org Attachments, Images, Figures related
 ** =org-attach=                                                                              :ATTACH:
 #+begin_src emacs-lisp
@@ -1929,7 +1955,11 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 
   :general
   (:states 'normal
-           "SPC P P"  'run-python)
+           "SPC P P"  'run-python
+           "SPC P S"    'garid/set-python-send-buffer
+           "SPC L P"    'garid/switch-python-shell-buffer
+
+           )
 
   (:states 'normal
            :keymaps 'inferior-python-mode-map
@@ -1944,17 +1974,74 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
     (interactive)
     (run-python "/home/garid/.local/pydev/bin/python"))
 
-  ;;(defun garid/set-python-send-buffer ()
-  ;;  ""
-  ;;  (interactive)
-  ;; must list python buffers
-  ;; and interactively set python-shell-buffer-name
-  ;;  )
+  (defun garid/switch-python-shell-buffer ()
+    ""
+    (interactive)
+    (switch-to-buffer
+     (completing-read "Choose inferior-python-mode buffer "
+                      (cl-loop for buf in (buffer-list)
+                               if (with-current-buffer buf
+                                    (eq major-mode 'inferior-python-mode))
+                               collect (buffer-name buf)))))
+
+  (defun garid/set-python-send-buffer ()
+    ""
+    (interactive)
+    (setq python-shell-buffer-name
+
+     (completing-read "Choose inferior-python-mode buffer "
+                      (cl-loop for buf in (buffer-list)
+                               if (with-current-buffer buf
+                                    (eq major-mode 'inferior-python-mode))
+                               collect  buf))))
+
 
 
   )
 #+end_src
-*** TODO Need to write each python buffer (or org mode) to connect to another python shell buffers
+
+*** In the python buffer, how to set which buffer to send python-shell-send-block in emacs.
+
+To set the buffer from which =python-shell-send-block= sends code in
+Emacs, you can customize the =python-shell-buffer-name= variable
+interactively or use the =python-shell-switch-to-shell= command.
+
+*** Steps to Set the Python Buffer Interactively:
+
+1. *Switch to the desired Python shell buffer*:
+   You can use the command from your configuration:
+   - =M-x garid/switch-python-shell-buffer=
+
+2. *Send the current block to the Python shell*:
+   Make sure you are in the desired buffer where you want to run the code, and then use:
+   - =C-c C-b= for =python-shell-send-block= (this is the default keybinding).
+
+*** Setting Default Python Shell Buffer:
+
+If you want to programmatically set a specific buffer for =python-shell-send-block=, you can define a function that sets =python-shell-buffer-name= before sending the code:
+
+#+begin_src elisp
+(defun my-set-python-shell-buffer (buf)
+  "Set the Python shell buffer to BUF."
+  (interactive
+   (list (completing-read "Choose Python buffer: "
+                          (cl-loop for b in (buffer-list)
+                                   if (with-current-buffer b
+                                        (eq major-mode 'inferior-python-mode))
+                                   collect (buffer-name b)))))
+  (setq python-shell-buffer-name buf)
+  (switch-to-buffer buf))
+#+end_src
+
+You can bind this function to a key in your =:general= section for ease of use.
+
+*** Summary:
+
+You can either interactively choose the buffer with your defined function or manually switch to the desired buffer to ensure =python-shell-send-block= sends the code to the right place.
+
+***   
+
+
 ** =code-cells-mode=
 #+begin_src emacs-lisp
 (use-package code-cells
