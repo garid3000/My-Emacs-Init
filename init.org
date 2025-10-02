@@ -798,7 +798,7 @@ and later sets cursor at that point when you open that file.
 (use-package org
   :straight t
   :demand t
-  :delight "org" 
+  :delight "org"
   :bind (:map org-mode-map
               ("C-S-k"     . org-previous-visible-heading    )
               ("C-S-j"     . org-next-visible-heading        )
@@ -819,35 +819,36 @@ and later sets cursor at that point when you open that file.
 
   :general
   (:states 'normal
-           :keymaps 'org-mode-map
+           :keymaps      'org-mode-map
            "SPC ,"       'org-ctrl-c-ctrl-c
-           "SPC j"     'org-next-block
-           "SPC k"     'org-previous-block
+           "SPC j"       'org-next-block
+           "SPC k"       'org-previous-block
            "SPC o O"     'garid/jump-label-def-of-ref-at-point-word
-           "SPC o T C"    'org-table-toggle-coordinate-overlays
-           "SPC o T T"    'org-table-toggle-column-width
-           "SPC o T c"    'orgtbl-create-or-convert-from-region
-           "SPC o T i c"    'org-table-insert-column
-           "SPC o T i r"    'org-table-insert-row
-           "SPC o T m"    'orgtbl-mode
-           "SPC o T s"    'org-table-sum
-           "SPC o T x"    'org-table-export
+           "SPC o T C"   'org-table-toggle-coordinate-overlays
+           "SPC o T T"   'org-table-toggle-column-width
+           "SPC o T c"   'orgtbl-create-or-convert-from-region
+           "SPC o T i c" 'org-table-insert-column
+           "SPC o T i r" 'org-table-insert-row
+           "SPC o T m"   'orgtbl-mode
+           "SPC o T s"   'org-table-sum
+           "SPC o T x"   'org-table-export
            "SPC o a C"   'org-clock-out
            "SPC o a c"   'org-clock-in
            "SPC o a d"   'org-deadline
            "SPC o a s"   'org-schedule
+           "SPC o b t"   'org-babel-tangle
            "SPC o d"     'garid/open-org-link-at-point-with-dired
            "SPC o f h"   'consult-org-heading
-           "SPC o i t"       'garid/org-toggle-display-images-n-edraw
-           "SPC o l F"     'org-footnote-action
-           "SPC o l c"     'org-cite-insert
-           "SPC o l d"     'garid/org-toggle-link-n-emphasis
-           "SPC o l f"     'org-footnote-new
-           "SPC o l i"     'org-insert-link
-           "SPC o l l"     'org-lint
-           "SPC o l n"     'org-next-link
-           "SPC o l o"     'org-open-at-point
-           "SPC o l p"     'org-previous-link
+           "SPC o i t"   'garid/org-toggle-display-images-n-edraw
+           "SPC o l F"   'org-footnote-action
+           "SPC o l c"   'org-cite-insert
+           "SPC o l d"   'garid/org-toggle-link-n-emphasis
+           "SPC o l f"   'org-footnote-new
+           "SPC o l i"   'org-insert-link
+           "SPC o l l"   'org-lint
+           "SPC o l n"   'org-next-link
+           "SPC o l o"   'org-open-at-point
+           "SPC o l p"   'org-previous-link
            "SPC o o"     'org-open-at-point
            "SPC o p"     'org-latex-preview
            "SPC o s I"   'org-indent-mode
@@ -861,10 +862,12 @@ and later sets cursor at that point when you open that file.
            "SPC o s s"   'org-sort
            "SPC o s t"   'org-toggle-narrow-to-subtree
            "SPC o s v"   'org-mark-element
-           "SPC o s y"   'org-copy-subtree
+           "SPC o s y"   'org-copy-subtree)
+  (:states '(normal visual)
            "SPC o t"     'org-todo)
   (:states 'normal
            "SPC o a g"   'org-agenda
+           "SPC o b d"   'org-babel-detangle
            "SPC o c  "   'org-capture)
   :custom
   ;; ---------------- theme/styling ------------------------------------------------------
@@ -1389,7 +1392,7 @@ and later sets cursor at that point when you open that file.
                               (search   . "  %-12:c"          )))
 
   (org-agenda-time-grid '((daily today require-timed)
-                          (800 900 1000 1100 1200 1300 1400 1500 1600 1700 1800 1900 2000)
+                          (700 800 900 1000 1100 1200 1300 1400 1500 1600 1700 1800 1900 2000)
                           " " "⋯"))
 
   (org-agenda-tags-column      'auto) ;;(org-agenda-tags-column -90)
@@ -1918,7 +1921,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 (use-package json-mode :straight t)
 #+end_src
 
-** =jupyter=
+** COMMENT =jupyter=
 #+begin_src emacs-lisp
 (use-package jupyter
   :straight t
@@ -1989,15 +1992,17 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
     ""
     (interactive)
     (setq python-shell-buffer-name
-
-     (completing-read "Choose inferior-python-mode buffer "
-                      (cl-loop for buf in (buffer-list)
-                               if (with-current-buffer buf
-                                    (eq major-mode 'inferior-python-mode))
-                               collect  buf))))
-
-
-
+          (string-remove-suffix
+           "*"
+           (string-remove-prefix
+            "*"
+            (completing-read "Choose inferior-python-mode buffer "
+                             (cl-loop for buf in (buffer-list)
+                                      if (with-current-buffer buf
+                                           (eq major-mode 'inferior-python-mode))
+                                      collect (buffer-name buf)))
+            ))
+          ))
   )
 #+end_src
 
@@ -2614,8 +2619,8 @@ Similar to vim-signify.
   :init
   (setq popper-reference-buffers '("\\*Messages\\*"
                                    "\\*eldoc\\*"
-                                   "\\*eldoc.*\\*" ;;regex
-                                   "\\*Outline.*\\*" ;;regex
+                                   "\\*eldoc.*\\*"
+                                   "\\*Outline.*\\*"
                                    "\\*xref\\*"
                                    "\\*Help\\*"
                                    "Output\\*$"
@@ -2698,13 +2703,18 @@ Similar to vim-signify.
 (use-package zoom-window
   :straight t
   :custom
-  (zoom-window-mode-line-color "dark slate gray")
+  ;; (zoom-window-mode-line-color "dark slate gray")
+  (zoom-window-mode-line-color "gray60")
   :bind (("M-F" . zoom-window-zoom)
          :repeat-map garid/windmove-repeat
          ("f" . zoom-window-zoom)
          ("n" . zoom-window-next))
   )
 #+end_src
+
+#+RESULTS:
+: zoom-window-next
+
 ** =screencast=
 #+begin_src emacs-lisp
 (use-package gif-screencast

@@ -477,19 +477,16 @@ org-mode
 
 
 (printbibliograph  "#+print_bibliography:")
-(results           "results "
-                   :post (garid/choose-from-list-and-insert-it
-                          '("verbatim" "value" "output" "table" "file xxx :output-dir .../"
-                            "list" "scalar" "code" "drawer" "html" "latex" "link" "org" "pp")))
-(vardown      "#+header: :var outputVar=" :post (insert (concat org-download-image-dir "/filename.svg") ))
+(results           "results "             :post (garid/choose-from-list-and-insert-it '("verbatim" "value" "output" "table" "file" "list" "scalar" "code" "drawer" "html" "latex" "link" "org" "pp" )))
+(vardown      "#+header: :var outputVar=" :post (insert (concat org-download-image-dir "/filename.svg"                                                                                              )))
 (file         "file (my/org-attach-dir \"" p "\") ")
-(cache        "cache "                    :post (garid/choose-from-list-and-insert-it '("yes" "no")))
-(wrap         "wrap "                     :post (garid/choose-from-list-and-insert-it '("example" "src python" "src sh" "src bash")))
-(mkdirp       "mkdirp "                   :post (garid/choose-from-list-and-insert-it '("yes" "no")))
-(eval         "eval "                     :post (garid/choose-from-list-and-insert-it '("never-export" "no" "yes")))
-(exports      "exports "                  :post (garid/choose-from-list-and-insert-it '("code" "results" "both" "none")))
-(session      "session "                  :post (garid/choose-from-list-and-insert-it '("SessionName" "" "/ssh:localhost:py" "/jpy:localhost#8888")))
-(async        "session "                  :post (garid/choose-from-list-and-insert-it '("yes" "no")))
+(cache        "cache "                    :post (garid/choose-from-list-and-insert-it '("yes" "no"                                                                                                  )))
+(wrap         "wrap "                     :post (garid/choose-from-list-and-insert-it '("example" "src python" "src sh" "src bash"                                                                  )))
+(mkdirp       "mkdirp "                   :post (garid/choose-from-list-and-insert-it '("yes" "no"                                                                                                  )))
+(eval         "eval "                     :post (garid/choose-from-list-and-insert-it '("never-export" "no" "yes"                                                                                   )))
+(exports      "exports "                  :post (garid/choose-from-list-and-insert-it '("code" "results" "both" "none"                                                                              )))
+(session      "session "                  :post (garid/choose-from-list-and-insert-it '("SessionName" "" "/ssh:localhost:py" "/jpy:localhost#8888"                                                  )))
+(async        "session "                  :post (garid/choose-from-list-and-insert-it '("yes" "no"                                                                                                  )))
 (tangle       "tangle ~/")
 (tangle_iff   "tangle (if (not file-exists-p \"foo\") \"foo\" \"no\")")
 (shebang      "shebang #!/usr/bin/env bash") ;; (shebang      "shebang #!/bin/bash")
@@ -519,7 +516,7 @@ org-mode
 
 (srcheader ":src-header-at-top:"                                                                                               r n
             "#+property:   header-args:python  :tangle (my/org-attach-dir \"0000_main.py\")"                                   r n
-            "#+property:   header-args:python+ :dir (my/org-attach-dir "")"                                                    r n
+            "#+property:   header-args:python+ :dir (my/org-attach-dir \"\")"                                                  r n
             "#+property:   header-args:python+ :comments link"                                                                 r n
             "#+property:   header-args:python+ :eval no-export"                                                                r n
             "#+property:   header-args:python+ :results output"                                                                r n
