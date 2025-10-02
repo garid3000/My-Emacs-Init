@@ -303,8 +303,9 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 
   :general
   (:states 'normal
-           "SPC s l n" 'display-line-numbers-mode
-           "SPC s l N" 'global-display-line-numbers-mode
+           :prefix "SPC"
+           "s l n" 'display-line-numbers-mode
+           "s l N" 'global-display-line-numbers-mode
            )
   )
 #+end_src
@@ -336,8 +337,9 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   :straight nil
   :general
   (:states 'normal
-           "SPC z h"  'highlight-symbol-at-point
-           "SPC z H"  'unhighlight-regexp
+           :prefix "SPC"
+           "z h"   'highlight-symbol-at-point
+           "z H"   'unhighlight-regexp
            )
   )
 #+end_src
@@ -359,9 +361,10 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   :straight nil
   :general
   (:states 'normal
-           "SPC b b" 'list-bookmarks
-           "SPC b s" 'bookmark-set
-           "SPC b j" 'bookmark-jump
+           :prefix "SPC"
+           "b b" 'list-bookmarks
+           "b s" 'bookmark-set
+           "b j" 'bookmark-jump
            )
   )
 #+end_src
@@ -393,15 +396,17 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 
   :general
   (:states 'normal
-           "SPC d"    'dired-jump
-           "SPC D s"  'dired)
+           :prefix "SPC"
+           "d"    'dired-jump
+           "D s"  'dired)
   )
 
 (use-package wdired
   :straight   nil
   :general
   (:states 'normal
-           "SPC D w"  'wdired-change-to-wdired-mode)
+           :prefix "SPC"
+           "D w"  'wdired-change-to-wdired-mode)
   )
 #+end_src
 ** =dired-preview= - preview
@@ -422,20 +427,20 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 #+begin_src emacs-lisp
 (use-package emacs
   :straight nil
-  :general
-  (:states 'normal
-           "SPC L e"     'eval-buffer
-           "SPC L n"     'rename-buffer
-           "SPC L o"     'garid/new-org-scratch
-           "SPC L p"     'garid/new-python-scratch
-           "SPC Z Q"     'kill-emacs
-           "SPC t x"     'garid/open-terminal-at-current-working-dir
-
-           "SPC s n r"   'narrow-to-region
-           "SPC s n f"   'narrow-to-defun
-           "SPC s n w"   'widen
-           "SPC s n SPC" 'widen
-           )
+  :general (
+            :states 'normal
+            :prefix "SPC"
+            "L e"     'eval-buffer
+            "L n"     'rename-buffer
+            "L o"     'garid/new-org-scratch
+            "L p"     'garid/new-python-scratch
+            "Z Q"     'kill-emacs
+            "t x"     'garid/open-terminal-at-current-working-dir
+            "s n r"   'narrow-to-region
+            "s n f"   'narrow-to-defun
+            "s n w"   'widen
+            "s n SPC" 'widen
+            )
   :config
   (put 'narrow-to-region 'disabled nil)
 
@@ -478,28 +483,21 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   ;; from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][mastering emacs article]].
   (major-mode-remap-alist '((bash-mode   . bash-ts-mode)
                             (python-mode . python-ts-mode)))
-  :general
-  (:states 'normal
-           "SPC f"  'find-file
-           "SPC O e"  '(lambda () (interactive)
-                         (find-file "~/.config/emacs/init.org"))
-           "SPC O E"  '(lambda () (interactive)
-                         (find-file "~/.config/emacs/init.el"))
-           "SPC O b"  '(lambda () (interactive)
-                         (find-file (nth 0 org-cite-global-bibliography)))
-           "SPC O p"  '(lambda () (interactive)
-                         (find-file "~/BrainDump/bookshelf/"))
-           "SPC O O"  '(lambda () (interactive)
-                         (find-file org-default-notes-file))
-           "SPC O i"  '(lambda () (interactive)
-                         (find-file "~/BrainDump/inbox.org"))
-           "SPC O m"  '(lambda () (interactive)
-                          (find-file "~/BrainDump/denote_bps/20250911T174108--bps__gtd.org"))
-           "SPC O s"  '(lambda () (interactive)
-                          (find-file "/etc/nixos/configuration.nix"))
-           "SPC O c"  'citar-open
-           "SPC L r"  'revert-buffer-quick
-           )
+  :general (
+            :states 'normal
+            :prefix "SPC"
+            "f"  'find-file
+            "O e"  '(lambda () (interactive) (find-file "~/.config/emacs/init.org"))
+            "O E"  '(lambda () (interactive) (find-file "~/.config/emacs/init.el"))
+            "O b"  '(lambda () (interactive) (find-file (nth 0 org-cite-global-bibliography)))
+            "O p"  '(lambda () (interactive) (find-file "~/BrainDump/bookshelf/"))
+            "O O"  '(lambda () (interactive) (find-file org-default-notes-file))
+            "O i"  '(lambda () (interactive) (find-file "~/BrainDump/inbox.org"))
+            "O m"  '(lambda () (interactive) (find-file "~/BrainDump/denote_bps/20250911T174108--bps__gtd.org"))
+            "O s"  '(lambda () (interactive) (find-file "/etc/nixos/configuration.nix"))
+            "O c"  'citar-open
+            "L r"  'revert-buffer-quick
+            )
   )
 #+end_src
 ** =flyspell=
@@ -575,8 +573,9 @@ and later sets cursor at that point when you open that file.
   :straight nil
   :general
   (:states 'normal
-           "SPC SPC"  'execute-extended-command
-           "SPC L c"  'clone-indirect-buffer)
+           :prefix "SPC"
+           "SPC"  'execute-extended-command
+           "L c"  'clone-indirect-buffer)
   :bind
   ("M-Q" . kill-current-buffer)
   :config
@@ -607,8 +606,9 @@ and later sets cursor at that point when you open that file.
   :straight nil
   :general
   (:states 'normal
-           "SPC L <"  'switch-to-prev-buffer
-           "SPC L >"  'switch-to-next-buffer)
+           :prefix "SPC"
+           "L <"  'switch-to-prev-buffer
+           "L >"  'switch-to-next-buffer)
 
   :bind (("M-q" . delete-window)
          :repeat-map garid/switch-buffer-repeat
@@ -688,32 +688,33 @@ and later sets cursor at that point when you open that file.
   ("M-f" . consult-line               )
   :general
   (:states 'normal
-           "SPC l" 'consult-buffer
-           "SPC c o" 'consult-outline
-           "SPC c i" 'consult-imenu
-           "SPC c m" 'consult-man
-           "SPC c r" 'consult-ripgrep
-           "SPC c f" 'consult-flymake
-           "SPC c p" 'consult-project-buffer
-           "SPC c a" 'consult-org-agenda
-           "SPC c g" 'consult-git-grep
-           "SPC c c" 'garid/consult-preview-change
-           "SPC c b" 'consult-bookmark
-           "SPC s r f" 'consult-recent-file
-           "SPC c R f" 'consult-recent-file
-
-           "SPC p l" 'consult-project-buffer
-           "SPC p v" 'consult-imenu
-           "SPC p s" 'consult-git-grep
-           "SPC p d" 'consult-flymake
+           :prefix "SPC"
+           "l"     'consult-buffer
+           "c o"   'consult-outline
+           "c i"   'consult-imenu
+           "c m"   'consult-man
+           "c r"   'consult-ripgrep
+           "c f"   'consult-flymake
+           "c p"   'consult-project-buffer
+           "c a"   'consult-org-agenda
+           "c g"   'consult-git-grep
+           "c c"   'garid/consult-preview-change
+           "c b"   'consult-bookmark
+           "s r f" 'consult-recent-file
+           "c R f" 'consult-recent-file
+           "p l"   'consult-project-buffer
+           "p v"   'consult-imenu
+           "p s"   'consult-git-grep
+           "p d"   'consult-flymake
            )
   (:states 'normal
            :keymaps 'org-mode-map
-           "SPC o f n"    '(labmda () (interactive)  (consult-line "^#+name"   )     )
-           "SPC o f r"    '(labmda () (interactive)  (consult-line "^#+result" )     )
-           "SPC o f s"    '(labmda () (interactive)  (consult-line "^#+begin_" )     )
-           "SPC o f l"    '(labmda () (interactive)  (consult-line "\\\\label{.*}" ) )
-           "SPC o f r"    '(labmda () (interactive)  (consult-line "\\\\ref{.*}" )   )
+           :prefix "SPC"
+           "o f n"    '(labmda () (interactive)  (consult-line "^#+name"   )     )
+           "o f r"    '(labmda () (interactive)  (consult-line "^#+result" )     )
+           "o f s"    '(labmda () (interactive)  (consult-line "^#+begin_" )     )
+           "o f l"    '(labmda () (interactive)  (consult-line "\\\\label{.*}" ) )
+           "o f r"    '(labmda () (interactive)  (consult-line "\\\\ref{.*}" )   )
            )
 
   :config
@@ -820,55 +821,63 @@ and later sets cursor at that point when you open that file.
   :general
   (:states 'normal
            :keymaps      'org-mode-map
-           "SPC ,"       'org-ctrl-c-ctrl-c
-           "SPC j"       'org-next-block
-           "SPC k"       'org-previous-block
-           "SPC o O"     'garid/jump-label-def-of-ref-at-point-word
-           "SPC o T C"   'org-table-toggle-coordinate-overlays
-           "SPC o T T"   'org-table-toggle-column-width
-           "SPC o T c"   'orgtbl-create-or-convert-from-region
-           "SPC o T i c" 'org-table-insert-column
-           "SPC o T i r" 'org-table-insert-row
-           "SPC o T m"   'orgtbl-mode
-           "SPC o T s"   'org-table-sum
-           "SPC o T x"   'org-table-export
-           "SPC o a C"   'org-clock-out
-           "SPC o a c"   'org-clock-in
-           "SPC o a d"   'org-deadline
-           "SPC o a s"   'org-schedule
-           "SPC o b t"   'org-babel-tangle
-           "SPC o d"     'garid/open-org-link-at-point-with-dired
-           "SPC o f h"   'consult-org-heading
-           "SPC o i t"   'garid/org-toggle-display-images-n-edraw
-           "SPC o l F"   'org-footnote-action
-           "SPC o l c"   'org-cite-insert
-           "SPC o l d"   'garid/org-toggle-link-n-emphasis
-           "SPC o l f"   'org-footnote-new
-           "SPC o l i"   'org-insert-link
-           "SPC o l l"   'org-lint
-           "SPC o l n"   'org-next-link
-           "SPC o l o"   'org-open-at-point
-           "SPC o l p"   'org-previous-link
-           "SPC o o"     'org-open-at-point
-           "SPC o p"     'org-latex-preview
-           "SPC o s I"   'org-indent-mode
-           "SPC o s Y"   'org-id-copy
-           "SPC o s a"   'org-archive-subtree-default-with-confirmation
-           "SPC o s d"   'org-cut-subtree
-           "SPC o s e"   'org-set-effort
-           "SPC o s m"   'org-refile
-           "SPC o s n"   'org-num-mode
-           "SPC o s p"   'org-set-property
-           "SPC o s s"   'org-sort
-           "SPC o s t"   'org-toggle-narrow-to-subtree
-           "SPC o s v"   'org-mark-element
-           "SPC o s y"   'org-copy-subtree)
+           :prefix "SPC"
+           ;; :states '(emacs insert normal)
+           ;; :prefix-map 'my-prefix-map
+           ;; :global-prefix "C-c"
+           ;; :non-normal-prefix "M-SPC"
+
+           ","       'org-ctrl-c-ctrl-c
+           "j"       'org-next-block
+           "k"       'org-previous-block
+           "o O"     'garid/jump-label-def-of-ref-at-point-word
+           "o T C"   'org-table-toggle-coordinate-overlays
+           "o T T"   'org-table-toggle-column-width
+           "o T c"   'orgtbl-create-or-convert-from-region
+           "o T i c" 'org-table-insert-column
+           "o T i r" 'org-table-insert-row
+           "o T m"   'orgtbl-mode
+           "o T s"   'org-table-sum
+           "o T x"   'org-table-export
+           "o a C"   'org-clock-out
+           "o a c"   'org-clock-in
+           "o a d"   'org-deadline
+           "o a s"   'org-schedule
+           "o b t"   'org-babel-tangle
+           "o d"     'garid/open-org-link-at-point-with-dired
+           "o f h"   'consult-org-heading
+           "o i t"   'garid/org-toggle-display-images-n-edraw
+           "o l F"   'org-footnote-action
+           "o l c"   'org-cite-insert
+           "o l d"   'garid/org-toggle-link-n-emphasis
+           "o l f"   'org-footnote-new
+           "o l i"   'org-insert-link
+           "o l l"   'org-lint
+           "o l n"   'org-next-link
+           "o l o"   'org-open-at-point
+           "o l p"   'org-previous-link
+           "o o"     'org-open-at-point
+           "o p"     'org-latex-preview
+           "o s I"   'org-indent-mode
+           "o s Y"   'org-id-copy
+           "o s a"   'org-archive-subtree-default-with-confirmation
+           "o s d"   'org-cut-subtree
+           "o s e"   'org-set-effort
+           "o s m"   'org-refile
+           "o s n"   'org-num-mode
+           "o s p"   'org-set-property
+           "o s s"   'org-sort
+           "o s t"   'org-toggle-narrow-to-subtree
+           "o s v"   'org-mark-element
+           "o s y"   'org-copy-subtree)
   (:states '(normal visual)
-           "SPC o t"     'org-todo)
+           :prefix "SPC"
+           "o t"     'org-todo)
   (:states 'normal
-           "SPC o a g"   'org-agenda
-           "SPC o b d"   'org-babel-detangle
-           "SPC o c  "   'org-capture)
+           :prefix "SPC"
+           "o a g"   'org-agenda
+           "o b d"   'org-babel-detangle
+           "o c  "   'org-capture)
   :custom
   ;; ---------------- theme/styling ------------------------------------------------------
   (org-hide-emphasis-markers         t                        )
@@ -1132,28 +1141,26 @@ and later sets cursor at that point when you open that file.
                                          (plain  . nil)))
   (denote-file-type 'org)
   ;;:bind
-  :general
-  (:states 'normal
-          "SPC n r"  'denote-rename-file
-          "SPC n R"  'denote-rename-file-date
-          "SPC n f"  'denote-open-or-create
-          "SPC n d"  'denote-dired
-
-          "SPC n n t"  'denote-type
-          "SPC n n d"  'denote-date
-          "SPC n n s"  'denote-subdirectory
-          "SPC n n t"  'denote-template
-          "SPC n n S"  'denote-singature
-
-          "SPC n l i"  'denote-insert-link
-          "SPC n l b"  'denote-find-backlink
-          "SPC n l f"  'denote-find-link
-          "SPC n l B"  'denote-backlinks
-          "SPC n l F"  'denote-link
-          "SPC n l a"  'denote-add-links
-
-          "SPC n I"  'garid/denote-node-insert-immediate
-          )
+  :general (
+            :states  'normal
+            :prefix  "SPC"
+            "n r"    'denote-rename-file
+            "n R"    'denote-rename-file-date
+            "n f"    'denote-open-or-create
+            "n d"    'denote-dired
+            "n n t"  'denote-type
+            "n n d"  'denote-date
+            "n n s"  'denote-subdirectory
+            "n n t"  'denote-template
+            "n n S"  'denote-singature
+            "n l i"  'denote-insert-link
+            "n l b"  'denote-find-backlink
+            "n l f"  'denote-find-link
+            "n l B"  'denote-backlinks
+            "n l F"  'denote-link
+            "n l a"  'denote-add-links
+            "n I"    'garid/denote-node-insert-immediate
+            )
 
   :config
   (when (not (assoc 'python denote-file-types))
@@ -1198,12 +1205,13 @@ and later sets cursor at that point when you open that file.
   :after denote
   :custom (denote-journal-extras-title-format 'day)
 
-  :general
-  (:states 'normal
-          "SPC n j n"  'denote-journal-new-entry
-          "SPC n j e"  'denote-journal-new-or-existing-entry
+  :general (
+            :states 'normal
+            :prefix "SPC"
+            "n j n"  'denote-journal-new-entry
+            "n j e"  'denote-journal-new-or-existing-entry
+            )
   )
-)
 #+end_src
 
 #+RESULTS:
@@ -1230,21 +1238,23 @@ and later sets cursor at that point when you open that file.
      (lambda (x) (string-match "denote.*" x))
      (directory-files "~/BrainDump/")))
    )
-  :general
-  (:states 'normal
-          "SPC N f"  'denote-silo-open-or-create
-          "SPC N d"  'denote-silo-dired
-          )
+  :general (
+            :states 'normal
+            :prefix "SPC"
+            "N f"  'denote-silo-open-or-create
+            "N d"  'denote-silo-dired
+            )
+  )
+
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;; (denote-silo-directories            ;;
-  ;;  '("~/BrainDump/denote"             ;;
-  ;;    "~/BrainDump/denote_bps/"        ;;
-  ;;    "~/BrainDump/denote_proj_grape/" ;;
-  ;;    "~/BrainDump/marscury/"          ;;
-  ;;    ))                               ;;
+;; (denote-silo-directories            ;;
+;;  '("~/BrainDump/denote"             ;;
+;;    "~/BrainDump/denote_bps/"        ;;
+;;    "~/BrainDump/denote_proj_grape/" ;;
+;;    "~/BrainDump/marscury/"          ;;
+;;    ))                               ;;
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  )
 #+end_src
 
 #+RESULTS:
@@ -1255,28 +1265,19 @@ and later sets cursor at that point when you open that file.
   :straight t
   :after denote
   :custom
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;; (consult-denote-silo-source            ;;
-  ;;  '("~/BrainDump/denote"                ;;
-  ;;    "~/BrainDump/denote_bps/"           ;;
-  ;;    "~/BrainDump/denote_proj_grape//")) ;;
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  (consult-denote-silo-source                             ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+   (mapcar                                                ;; (consult-denote-silo-source            ;;
+    (lambda (y) (concat "~/BrainDump/" y))                ;;  '("~/BrainDump/denote"                ;;
+    (seq-filter                                           ;;    "~/BrainDump/denote_bps/"           ;;
+     (lambda (x) (string-match "denote.*" x))             ;;    "~/BrainDump/denote_proj_grape//")) ;;
+     (directory-files "~/BrainDump/"))))                  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-  (consult-denote-silo-source
-   (mapcar
-    (lambda (y) (concat "~/BrainDump/" y))
-    (seq-filter
-     (lambda (x) (string-match "denote.*" x))
-     (directory-files "~/BrainDump/")))
-   )
-
-
-  :general
-  (:states 'normal
-          "SPC n s"  'consult-denote-grep
-          "SPC n F"  'consult-denote-find
-          )
-
+  :general (
+            :states  'normal
+            :prefix  "SPC"
+            "n s"    'consult-denote-grep
+            "n F"    'consult-denote-find
+            )
   :config
   (consult-denote-mode 1))
 #+end_src
@@ -1525,8 +1526,9 @@ org-attach-use-inheritance
   :straight t
   :general
   (:states 'normal
-           "SPC c t" 'consult-todo
-           "SPC c T" 'consult-todo-project))
+           :prefix "SPC"
+           "c t" 'consult-todo
+           "c T" 'consult-todo-project))
 #+end_src
 * Org Exporting related
 ** =ox=
@@ -1589,15 +1591,16 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   :general
   (:states 'normal
            :keymaps 'org-mode-map
-           "SPC o x p"   'org-latex-export-to-pdf
-           "SPC o x P"   '((lambda () (interactive)
-                             (org-latex-export-to-pdf nil t))
-                           :which-key "org-latex-export-to-pdf SUBTREE")
-           "SPC o x o"   '((lambda () (interactive)
-                             (browse-url-xdg-open
-                              (replace-regexp-in-string
-                               "\\.tex$" ".pdf" (org-export-output-file-name ".tex"))))
-                           :which-key "Open exported PDF")
+           :prefix "SPC"
+           "o x p"   'org-latex-export-to-pdf
+           "o x P"   '((lambda () (interactive)
+                         (org-latex-export-to-pdf nil t))
+                       :which-key "org-latex-export-to-pdf SUBTREE")
+           "o x o"   '((lambda () (interactive)
+                         (browse-url-xdg-open
+                          (replace-regexp-in-string
+                           "\\.tex$" ".pdf" (org-export-output-file-name ".tex"))))
+                       :which-key "Open exported PDF")
            )
   :config
   (defun garid/latex-formattig-headings
@@ -1627,11 +1630,12 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   :general
   (:states 'normal
            :keymaps 'org-mode-map
-           "SPC o x d"   'org-odt-export-to-odt
-           "SPC o x D"   '((lambda ()
-                             (interactive)
-                             (org-odt-export-to-odf nil t))
-                           :which-key "org-html-export-to-html SUBTREE")
+           :prefix  "SPC"
+           "o x d"   'org-odt-export-to-odt
+           "o x D"   '((lambda ()
+                         (interactive)
+                         (org-odt-export-to-odf nil t))
+                       :which-key "org-html-export-to-html SUBTREE")
            ;; "SPC o x O"   '((lambda ()
            ;;                   (interactive)
            ;;                   (browse-url-xdg-open (org-export-output-file-name ".html")))
@@ -1673,13 +1677,14 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   :general
   (:states 'normal
            :keymaps 'org-mode-map
-           "SPC o x h"   'org-html-export-to-html
-           "SPC o x H"   '((lambda () (interactive)
-                             (org-html-export-to-html nil t))
-                           :which-key "org-html-export-to-html SUBTREE")
-           "SPC o x O"   '((lambda () (interactive)
-                             (browse-url-xdg-open (org-export-output-file-name ".html")))
-                           :which-key "Open exported HTML")
+           :prefix "SPC"
+           "o x h"   'org-html-export-to-html
+           "o x H"   '((lambda () (interactive)
+                         (org-html-export-to-html nil t))
+                       :which-key "org-html-export-to-html SUBTREE")
+           "o x O"   '((lambda () (interactive)
+                         (browse-url-xdg-open (org-export-output-file-name ".html")))
+                       :which-key "Open exported HTML")
            )
   )
 #+end_src
@@ -1692,10 +1697,11 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   :general
   (:states 'normal
            :keymaps 'org-mode-map
-           "SPC o x r"   'org-re-reveal-export-to-html
-           "SPC o x R"   '((lambda () (interactive)
-                             (org-re-reveal-export-to-html nil t))
-                           :which-key "org-re-reveal-export-to-html SUBTREE")
+           :prefix "SPC"
+           "o x r"   'org-re-reveal-export-to-html
+           "o x R"   '((lambda () (interactive)
+                         (org-re-reveal-export-to-html nil t))
+                       :which-key "org-re-reveal-export-to-html SUBTREE")
            )
   )
 #+end_src
@@ -1788,12 +1794,13 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 
   :general
   (:states 'normal
-           :keymaps 'org-mode-map
-           "SPC o i p"     'org-download-clipboard
-           "SPC o i P"     'org-download-image
-           "SPC o i d"     'org-download-delete
-           "SPC o i r"     'org-download-rename-at-point
-           "SPC o i e"     'org-download-rename-at-point
+           :keymaps   'org-mode-map
+           :prefix    "SPC"
+           "o i p"    'org-download-clipboard
+           "o i P"    'org-download-image
+           "o i d"    'org-download-delete
+           "o i r"    'org-download-rename-at-point
+           "o i e"    'org-download-rename-at-point
            )
   :config
   (org-download-enable))
@@ -1814,7 +1821,8 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   :general
   (:states 'normal
            :keymaps 'org-mode-map
-           "SPC o i c" 'org-ipe-insert-drawing)
+           :prefix  "SPC"
+           "o i c"  'org-ipe-insert-drawing)
   )
 #+end_src
 
@@ -1871,8 +1879,9 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   :general
   (:states 'normal
            :keymaps 'org-mode-map
-           "SPC o i e"     'edraw-org-edit-regular-file-link
-           "SPC o i i"     '(lambda () (interactive) (insert "[[edraw:]]")))
+           :prefix "SPC"
+           "o i e"     'edraw-org-edit-regular-file-link
+           "o i i"     '(lambda () (interactive) (insert "[[edraw:]]")))
   :config
   (require 'edraw-org)
   (edraw-org-setup-default)
@@ -2253,16 +2262,16 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
      (project-eshell       "Eshell"         )
      (project-any-command  "Other"          ))
    )
-  :general
-  (:states 'normal
-          "SPC p f"     'project-find-file
-          "SPC p z"     'project-switch-project
-          "SPC p S"     'project-find-regexp
-          "SPC p k"     'project-kill-buffers
-          "SPC p c"     'project-recompile
-          "SPC p q r r" 'project-query-replace-regexp
-          )
-
+  :general (
+            :states 'normal
+            :prefix "SPC"
+            "p f"     'project-find-file
+            "p z"     'project-switch-project
+            "p S"     'project-find-regexp
+            "p k"     'project-kill-buffers
+            "p c"     'project-recompile
+            "p q r r" 'project-query-replace-regexp
+            )
   :config
   (keymap-set project-prefix-map "m" #'magit-project-status)
   )
@@ -2351,14 +2360,15 @@ Similar to vim-signify.
                      ("c" . magit-commit-create)
                      ("C" . magit-commit)
                      ("b" . magit-blame))
-  :general
-  (:states 'normal
-           "SPC g S"  'git-gutter:stage-hunk
-           "SPC g s"  'git-gutter:popup-hunk
-           "SPC g r"  'git-gutter:update-all-windows
-           "SPC g g"  'git-gutter-mode
-           "SPC g n"  'git-gutter:next-hunk
-           "SPC g p"  'git-gutter:previous-hunk)
+  :general (
+            :states 'normal
+            :prefix "SPC"
+            "g S"  'git-gutter:stage-hunk
+            "g s"  'git-gutter:popup-hunk
+            "g r"  'git-gutter:update-all-windows
+            "g g"  'git-gutter-mode
+            "g n"  'git-gutter:next-hunk
+            "g p"  'git-gutter:previous-hunk)
   :config (global-git-gutter-mode)
   )
 #+end_src
@@ -2420,18 +2430,17 @@ Similar to vim-signify.
 (use-package ispell
   :straight nil
   :custom (ispell-alternate-dictionary "/home/garid/.config/emacs/ispell-wl.txt")
-  :general
-  (:states 'normal
-          "SPC z s w"    'ispell-word
-          "SPC z s r"    'ispell-region
-          "SPC z s C"    'ispell-comments-and-strings
-          "SPC z s c"    'ispell-comment-or-string-at-point
-          "SPC z s b"    'ispell-buffer
-          "SPC z s m"    'ispell-message
-          "SPC z s q"    'ispell-kill-ispell
-          "SPC z s l"    'ispell-change-dictionary
-          )
-  )
+  :general (:states 'normal
+            :prefix "SPC"
+            "z s w"    'ispell-word
+            "z s r"    'ispell-region
+            "z s C"    'ispell-comments-and-strings
+            "z s c"    'ispell-comment-or-string-at-point
+            "z s b"    'ispell-buffer
+            "z s m"    'ispell-message
+            "z s q"    'ispell-kill-ispell
+            "z s l"    'ispell-change-dictionary
+            ))
 #+end_src
 ** spell-checking & synonym
 #+begin_src emacs-lisp
