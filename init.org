@@ -844,6 +844,7 @@ and later sets cursor at that point when you open that file.
            "o a d"   'org-deadline
            "o a s"   'org-schedule
            "o b t"   'org-babel-tangle
+           "o b ,"   'org-babel-execute-subtree
            "o d"     'garid/open-org-link-at-point-with-dired
            "o f h"   'consult-org-heading
            "o i t"   'garid/org-toggle-display-images-n-edraw
@@ -877,6 +878,8 @@ and later sets cursor at that point when you open that file.
            :prefix "SPC"
            "o a g"   'org-agenda
            "o b d"   'org-babel-detangle
+           "o b j"   'org-babel-tangle-jump-to-org
+           "o b g d"   'org-babel-tangle-jump-to-org
            "o c  "   'org-capture)
   :custom
   ;; ---------------- theme/styling ------------------------------------------------------
@@ -1125,6 +1128,18 @@ and later sets cursor at that point when you open that file.
   :after org
   :straight t
   :custom (ob-mermaid-cli-path "/usr/bin/mmdc"))
+#+end_src
+
+*** COMMENT Later
+https://stackoverflow.com/questions/78982629/in-emacs-how-to-prevent-org-babel-detangle-from-changing-my-frame-window-buffer
+#+begin_src emacs-lisp :tangle no
+(defun org-babel-detangle-no-buffer-pop-up (orig-fun &rest args)
+  (save-excursion
+    (let ((display-buffer-alist
+           '((".*" (display-buffer-no-window) (allow-no-window . t)))))
+      (apply orig-fun args))))
+
+(advice-add 'org-babel-detangle :around #'org-babel-detangle-no-buffer-pop-up)
 #+end_src
 
 * Org taking notes related
@@ -1730,7 +1745,6 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 
 ,#+reveal_preamble:
 #+end_src
-
 
 * Org Attachments, Images, Figures related
 ** =org-attach=                                                                              :ATTACH:
@@ -2515,7 +2529,7 @@ Similar to vim-signify.
 #+begin_src emacs-lisp
 (use-package tmr :straight t)
 #+end_src
-* email
+* Email
 ** =notmuch=
 #+begin_src emacs-lisp
 (use-package notmuch
