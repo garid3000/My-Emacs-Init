@@ -408,7 +408,7 @@ graphviz-dot-mode
 org-mode
 
 (caption     "#+caption: ")
-(name        "#+name: " :post (garid/choose-from-list-and-insert-it '("fig-" "tbl-" "eqn-" "lst-")))
+(name        "#+name: " :post (garid/choose-from-list-and-insert-it '("fig_" "tbl_" "eqn_" "lst_")))
 (drawer      ":" p ":" n r ":end:")
 (begin       "#+begin_" (s name)    n> r> n "#+end_" name)
 (quote       "#+begin_quote"        n> r> n "#+end_quote")
@@ -462,8 +462,7 @@ org-mode
  :post (garid/choose-from-list-and-insert-it '("black" "white" "league" "beige" "night" "serif"
                                                "solarized" "moon" "dracula" "sky" "blood")))
 
-(oxsplit     "#+REVEAL: split")
-
+(oxsplit     "#+reveal: split")
 (oxt         "#+setupfile: ~/.config/emacs/org-templates/lua.org")
 (oxh         "#+setupfile: ~/.config/emacs/org-templates/level-0-html-export-template.org")
 (ox2r        "#+reveal_html: <div style=\"float:left; width:50%\">" n
@@ -477,9 +476,9 @@ org-mode
 
 
 (printbibliograph  "#+print_bibliography:")
-(results           "results "             :post (garid/choose-from-list-and-insert-it '("verbatim" "value" "output" "table" "file" "list" "scalar" "code" "drawer" "html" "latex" "link" "org" "pp" )))
-(vardown      "#+header: :var outputVar=" :post (insert (concat org-download-image-dir "/filename.svg"                                                                                              )))
 (file         "file (my/org-attach-dir \"" p "\") ")
+(results           "results "             :post (garid/choose-from-list-and-insert-it '("verbatim" "value" "output" "table" "file" "list" "scalar" "code" "drawer" "html" "latex" "link" "org" "pp" "silent" )))
+(vardown      "#+header: :var outputVar=" :post (insert (concat org-download-image-dir "/filename.svg"                                                                                              )))
 (cache        "cache "                    :post (garid/choose-from-list-and-insert-it '("yes" "no"                                                                                                  )))
 (wrap         "wrap "                     :post (garid/choose-from-list-and-insert-it '("example" "src python" "src sh" "src bash"                                                                  )))
 (mkdirp       "mkdirp "                   :post (garid/choose-from-list-and-insert-it '("yes" "no"                                                                                                  )))

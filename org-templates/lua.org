@@ -12,7 +12,8 @@
 
 #+LATEX_HEADER: \setmonofont[Scale=MatchLowercase]{Aporetic Serif}
 
-#+LATEX_HEADER: \usepackage{svg}                % for svg images my need \usepackage[inkscapelatex=false]{svg}
+#+LATEX_HEADER: %\usepackage{svg}                % for svg images my need \usepackage[inkscapelatex=false]{svg}
+#+LATEX_HEADER: \usepackage[inkscapelatex=false]{svg}
 #+LATEX_HEADER: \usepackage{float}              % for float \begin{figure}[H]
 
 #+LATEX_HEADER: \usepackage[dvipsnames]{xcolor} % \usepackage{xcolor}   % for coddes

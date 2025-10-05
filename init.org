@@ -52,23 +52,25 @@ run:
   :config
   (general-evil-setup t)
 
-  ;; Keybindings for everywhere
-  (general-create-definer garids-keybind/for-all-modes
-    :keymaps  '(normal visual emacs)
-    :prefix         "SPC"
-    :global-prefix  "C-SPC")
-
-  ;; Keybindings inside Org-mode-map
-  (general-create-definer garids-keybind/in-org-mode
-    :states '(normal visual)
-    :keymaps '(org-mode-map)
-    :prefix        "SPC"
-    :global-prefix "C-SPC")
-
-  (general-create-definer garids-keybind/easier-window-surfing
-    :keymaps  '(normal visual emacs insert)
-    :prefix         "<f2>"
-    :global-prefix  "C-<f2>")
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; ;; Keybindings for everywhere                                ;;
+  ;; (general-create-definer garids-keybind/for-all-modes         ;;
+  ;;   :keymaps  '(normal visual emacs)                           ;;
+  ;;   :prefix         "SPC"                                      ;;
+  ;;   :global-prefix  "C-SPC")                                   ;;
+  ;;                                                              ;;
+  ;; ;; Keybindings inside Org-mode-map                           ;;
+  ;; (general-create-definer garids-keybind/in-org-mode           ;;
+  ;;   :states '(normal visual)                                   ;;
+  ;;   :keymaps '(org-mode-map)                                   ;;
+  ;;   :prefix        "SPC"                                       ;;
+  ;;   :global-prefix "C-SPC")                                    ;;
+  ;;                                                              ;;
+  ;; (general-create-definer garids-keybind/easier-window-surfing ;;
+  ;;   :keymaps  '(normal visual emacs insert)                    ;;
+  ;;   :prefix         "<f2>"                                     ;;
+  ;;   :global-prefix  "C-<f2>")                                  ;;
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   )
 #+end_src
 
@@ -104,27 +106,18 @@ run:
   :straight t
   :demand t
   :init
-  (setq evil-want-keybinding     nil) ;;  these
-  (setq evil-want-integration      t) ;;  are for the evil-collection
+  (setq evil-want-keybinding        nil) ;;  these
+  (setq evil-want-integration         t) ;;  are for the evil-collection
 
   :custom
-  (evil-undo-system         'undo-redo)
-  (evil-toggle-key           "")      ;; removes the C-z toggling evil accidentally
-  (evil-want-C-i-jump       t)
-
-  ;; not much related with evil but related to movement
-  (scroll-step           1)
-  (scroll-margin         7)
-  (scroll-conservatively 9999)
+  (evil-undo-system         'undo-redo )
+  (evil-toggle-key                   "")      ;; removes the C-z toggling evil accidentally
+  (evil-want-C-i-jump                 t)
 
   :config
-  ;;(evil-define-key 'normal  org-mode-map   (kbd "TAB") #'org-cycle) ;; for org-cycle (tab) working for terminal
-  ;;(setq evil-want-C-i-jump       t)
-  ;; (evil-define-key 'normal  org-mode-map   (kbd "TAB") #'org-cycle)
   (evil-mode 1)
-
   (define-key evil-normal-state-map (kbd "SPC a") 'evil-avy-goto-char-2)
-  ;;(define-key evil-normal-state-map (kbd "<f3>") )
+  ;; (evil-define-key 'normal  org-mode-map   (kbd "TAB") #'org-cycle)
   )
 #+end_src
 ** =evil-collection=: vi-movements everywhere
@@ -224,9 +217,9 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
      ("Serif" "Aporetic Serif Mono" "Iosevka etoile" "Linux Libertine"  "CMU Serif" "Georgia"  "DejaVu Serif")))
 
   :custom-face
-  (variable-pitch ((t (:family "Serif"           :height 120))))
-  (fixed-pitch    ((t (:family "Monospace"       :height 120))))
-  (default        ((t (:family "Monospace"       :height 120))))
+  (variable-pitch ((t (:family "Serif"     :height 120))))
+  (fixed-pitch    ((t (:family "Monospace" :height 120))))
+  (default        ((t (:family "Monospace" :height 120))))
   )
 
 (use-package faces-remap
@@ -280,8 +273,6 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
     (tooltip-mode          -1)   ; Disable tooltips
     (menu-bar-mode         -1)   ; Disable the menu bar
     (set-fringe-mode       10)   ; Give some breathing room
-    (column-number-mode)         ; Shows the column number in the mod bar
-    (setq-default tab-width 4)
     )
 
   :bind ("<f5>" . modus-themes-toggle)
@@ -441,8 +432,15 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
             "s n w"   'widen
             "s n SPC" 'widen
             )
+  :custom
+  (scroll-step                        1)
+  (scroll-margin                      7)
+  (scroll-conservatively           9999)
   :config
+  (setq-default tab-width 4)
   (put 'narrow-to-region 'disabled nil)
+
+  (setq-default truncate-lines t)             ;; <----------------------- tests ---------------
 
   (defun garid/new-org-scratch ()
     "Create a new scratch buffer in Org mode."
@@ -474,7 +472,17 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
       " &")))
   )
 #+end_src
-
+** =ffap=
+#+begin_src emacs-lisp
+(use-package ffap
+  :straight nil
+  :general (
+            :states 'normal
+            :prefix "SPC"
+            "D f"     'ffap
+            "D F m"   'ffap-menu
+            ))
+#+end_src
 ** =files=
 #+begin_src emacs-lisp
 (use-package files
@@ -580,6 +588,7 @@ and later sets cursor at that point when you open that file.
   ("M-Q" . kill-current-buffer)
   :config
   (setq-default indent-tabs-mode nil )
+  (column-number-mode)         ; Shows the column number in the mod bar
   )
 #+end_src
 
