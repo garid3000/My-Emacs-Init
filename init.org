@@ -2190,20 +2190,22 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 (use-package corfu
   ;; Optional customizations
   :straight t
+  :init
+  (setq  tab-always-indent  'complete) ;; <-- why I forget
   :custom
-  (corfu-cycle            t          ) ;; Allows cycling through candidates
-  (corfu-auto             t          ) ;; Enable auto completion nov23 C-M-i?
-  (corfu-auto-prefix      2          )
-  (corfu-auto-delay       0.1        )
+  (corfu-auto                       t) ;; Enable auto completion nov23 C-M-i?
+  (corfu-auto-delay               0.1)
+  (corfu-auto-prefix                2)
+  (corfu-cycle                      t) ;; Allows cycling through candidates
+  (corfu-on-exact-match           nil) ;; Don't auto expand tempel snippets
   (corfu-popupinfo-delay '(0.8 . 0.2))
-  (corfu-preview-current   nil       )
-  (corfu-on-exact-match    nil       ) ;; Don't auto expand tempel snippets
+  (corfu-preview-current          nil)
 
   ;; Optionally use TAB for cycling, default is `corfu-complete'.
   :bind (:map corfu-map
               ("M-SPC"      . corfu-insert-separator )
-              ;;("TAB"        . corfu-insert           )
-              ;;([tab]        . corfu-insert           )
+              ;; ("TAB"     . corfu-insert           )
+              ;; ([tab]     . corfu-insert           )
               ("S-<return>" . corfu-insert           )
               ("M-h"        . corfu-insert           )
               ("RET"        . nil                    ))
@@ -2212,12 +2214,10 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
            "SPC s c o"  'corfu-mode
            )
 
-  :init
-  (setq tab-always-indent 'complete)
-  ;;:config
-  (global-corfu-mode    )
-  (corfu-history-mode   )
-  (corfu-popupinfo-mode )
+  :config
+  (global-corfu-mode   )
+  (corfu-history-mode  )
+  (corfu-popupinfo-mode)
 
   :hook
   (eshell-mode-hook . (lambda () (setq-local corfu-quit-at-boundary t
@@ -2240,7 +2240,6 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
            "SPC s e"  'eglot
            "SPC v r"  'eglot-rename
            )
-
 
   :config
   (add-to-list 'eglot-server-programs
@@ -2305,6 +2304,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 #+begin_src emacs-lisp
 (use-package gptel
   :straight t
+  :after org
   :custom
   (gptel-default-mode 'org-mode)
   :general
@@ -2335,7 +2335,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 #+begin_src emacs-lisp
 (use-package eshell
   :straight nil
-  :after evil general
+  :after    evil general
   :general
   (:states 'normal
            "SPC t e" 'eshell)
