@@ -2306,7 +2306,6 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   (:states 'normal
            "SPC g d"  'magit-ediff-compare
            "SPC m g"  'magit-status)
-  ;;
   :config
   (add-hook 'magit-post-commit-hook 'git-gutter:update-all-windows)
   )
