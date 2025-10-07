@@ -860,6 +860,15 @@ and later sets cursor at that point when you open that file.
            "o a s"   'org-schedule
            "o b t"   'org-babel-tangle
            "o b ,"   'org-babel-execute-subtree
+           "o b k"   'org-babel-remove-result-one-or-many
+           "o b i h" 'org-babel-insert-header-arg
+           "o b v"   'org-babel-view-src-block-info
+           "o b s"   'org-babel-demarcate-block
+           "o b p"   'org-babel-pop-to-session
+           "o b j s" 'org-babel-goto-named-src-block
+           "o b j r" 'org-babel-goto-named-result
+           "o b j S" 'org-babel-goto-src-block-head
+           "o b o"   'org-babel-open-src-block-result
            "o d"     'garid/open-org-link-at-point-with-dired
            "o f h"   'consult-org-heading
            "o i t"   'garid/org-toggle-display-images-n-edraw
@@ -1126,6 +1135,14 @@ and later sets cursor at that point when you open that file.
   :delight "" ;; " oat"
   :custom (org-auto-tangle-default    nil)
   :hook   (org-mode . org-auto-tangle-mode))
+#+end_src
+
+** COMMENT ob-babel
+#+begin_src emacs-lisp
+(use-package ob-core
+  :straight nil
+
+  )
 #+end_src
 
 ** org-babel languages related
@@ -1931,12 +1948,14 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 #+begin_src emacs-lisp
 (use-package comint
   :straight nil
+  :bind (:map comint-mode-map ("C-M-l" .  nil)) ;; C-M-l bind for window movement
   :general
   (:states 'normal
            :keymaps 'comint-mode-map
            "SPC P k"  'comint-send-eof)
   )
 #+end_src
+
 ** =eldoc=
 #+begin_src emacs-lisp
 (use-package eldoc-box
