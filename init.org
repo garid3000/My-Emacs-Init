@@ -77,8 +77,8 @@ run:
 ** =which-key= keybinding shower
 #+begin_src emacs-lisp
 (use-package which-key
-  :delight ""
   :straight nil
+  :delight ""
   :custom
   (which-key-popup-type              'side-window               )
   (which-key-side-window-location    'right                     )
@@ -255,8 +255,6 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
                                     (agenda-structure . (variable-pitch light  1.1 ))
                                     (t                . (medium variable-pitch 1.0 ))))
   :config
-
-
   (customize-set-variable 'modus-themes-common-palette-overrides
                           `(;; Make the mode-line borderless
                             (bg-mode-line-active        bg-inactive )
@@ -1224,7 +1222,7 @@ https://stackoverflow.com/questions/78982629/in-emacs-how-to-prevent-org-babel-d
 #+begin_src emacs-lisp
 (use-package denote-journal
   :straight t
-  :after denote
+  ;; :after denote
   :custom (denote-journal-extras-title-format 'day)
 
   :general (
@@ -1241,7 +1239,7 @@ https://stackoverflow.com/questions/78982629/in-emacs-how-to-prevent-org-babel-d
 ** =denote-org=                                                                             :by_prot:
 #+begin_src emacs-lisp
 (use-package denote-org
-  :after denote
+  ;; :after denote
   :straight t)
 #+end_src
 
@@ -1251,7 +1249,7 @@ https://stackoverflow.com/questions/78982629/in-emacs-how-to-prevent-org-babel-d
 #+begin_src emacs-lisp
 (use-package denote-silo
   :straight t
-  :after denote
+  ;; :after denote
   :custom
   (denote-silo-directories
    (mapcar
@@ -1285,7 +1283,7 @@ https://stackoverflow.com/questions/78982629/in-emacs-how-to-prevent-org-babel-d
 #+begin_src emacs-lisp
 (use-package consult-denote
   :straight t
-  :after denote
+  ;; :after denote
   :custom
   (consult-denote-silo-source                             ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
    (mapcar                                                ;; (consult-denote-silo-source            ;;
@@ -1311,7 +1309,7 @@ https://stackoverflow.com/questions/78982629/in-emacs-how-to-prevent-org-babel-d
 #+begin_src emacs-lisp
 (use-package citar
   :straight t
-  :after org denote ;; must load after denote must be because it uses variable that's defined in denote
+  ;; :after org denote ;; must load after denote must be because it uses variable that's defined in denote
   :no-require
   :custom
   (org-cite-global-bibliography (list (concat (file-name-as-directory denote-directory)
@@ -1342,8 +1340,8 @@ https://stackoverflow.com/questions/78982629/in-emacs-how-to-prevent-org-babel-d
 #+begin_src emacs-lisp
 (use-package citar-denote
   :straight t
-  :demand t
-  :after citar denote
+  ;; :demand t
+  ;; :after citar denote
   :custom
   (citar-denote-file-type             'org          )
   (citar-denote-keyword               "bib"         )
@@ -2313,7 +2311,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 Similar to vim-signify.
 #+begin_src emacs-lisp
 (use-package git-gutter
-  :delight  " git"
+  :delight  " gtg"
   :straight t
   :bind (
          :repeat-map git-gutter:repeat-map
@@ -2608,7 +2606,7 @@ Probably requires external =rg= command.
 (use-package consult-notmuch
   :straight t
   :defer    t
-  :after    notmuch consult
+  ;;:after    notmuch consult
   :general
   (:states 'normal
            "SPC m s" 'consult-notmuch)
@@ -2620,7 +2618,7 @@ Probably requires external =rg= command.
 (use-package ol-notmuch
   :straight  t
   :defer     t
-  :after     notmuch org
+  ;;:after     notmuch org
   :config
   (define-key global-map "\C-c l" 'org-store-link))
 #+end_src
