@@ -126,7 +126,6 @@ run:
          ("<" . evil-window-decrease-width)
          (">" . evil-window-increase-width)
          ("r" . evil-window-rotate-downwards)
-         ;; ("h". evil-window-increase-width)
          )
   )
 #+end_src
@@ -2332,7 +2331,8 @@ Similar to vim-signify.
             :prefix "SPC"
             "g S"  'git-gutter:stage-hunk
             "g s"  'git-gutter:popup-hunk
-            "g r"  'git-gutter:update-all-windows
+            "g u"  'git-gutter:update-all-windows
+            "g r"  'git-gutter:revert-hunk
             "g g"  'git-gutter-mode
             "g n"  'git-gutter:next-hunk
             "g p"  'git-gutter:previous-hunk)
