@@ -2314,7 +2314,6 @@ Similar to vim-signify.
 #+begin_src emacs-lisp
 (use-package git-gutter
   :delight  " git"
-  :after magit
   :straight t
   :bind (
          :repeat-map git-gutter:repeat-map
@@ -2439,7 +2438,7 @@ Probably requires external =rg= command.
 #+begin_src emacs-lisp
 (use-package gptel-commit
   :straight t
-  :after (gptel magit)
+  ;;:after (gptel magit)
   :commands gptel-commit gptel-commit-rationale
   :custom
   (gptel-commit-stream t)
