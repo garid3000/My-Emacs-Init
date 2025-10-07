@@ -2306,8 +2306,6 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   (:states 'normal
            "SPC g d"  'magit-ediff-compare
            "SPC m g"  'magit-status)
-  :config
-  (add-hook 'magit-post-commit-hook 'git-gutter:update-all-windows)
   )
 #+end_src
 
@@ -2316,6 +2314,7 @@ Similar to vim-signify.
 #+begin_src emacs-lisp
 (use-package git-gutter
   :delight  " git"
+  :after magit
   :straight t
   :bind (
          :repeat-map git-gutter:repeat-map
@@ -2340,6 +2339,7 @@ Similar to vim-signify.
             "g p"  'git-gutter:previous-hunk)
   :config
   (global-git-gutter-mode)
+  (add-hook 'magit-post-commit-hook 'git-gutter:update-all-windows)
   )
 #+end_src
 
