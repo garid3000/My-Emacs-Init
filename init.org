@@ -123,9 +123,11 @@ run:
 
   :bind (
          :repeat-map evil/window-related
-         ("<" . evil-window-decrease-width)
-         (">" . evil-window-increase-width)
-         ("r" . evil-window-rotate-downwards)
+         ("<" . evil-window-decrease-width   )
+         (">" . evil-window-increase-width   )
+         ("r" . evil-window-rotate-downwards )
+         ("-" . evil-window-decrease-height  )
+         ("+" . evil-window-increase-height  )
          )
   )
 #+end_src
@@ -296,9 +298,12 @@ Following is customization of the theme. Actual in the loading the theme is in t
 (use-package pulsar
   :straight t
   :custom
-  (pulsar-delay      0.05)
-  (pulsar-iterations    2)
-  :config (pulsar-global-mode))
+  (pulsar-delay           0.06)
+  (pulsar-iterations      2)
+  (pulsar-face            'pulsar-red)
+  (pulsar-highlight-face  'pulsar-blue)
+  :config
+  (pulsar-global-mode))
 #+end_src
 
 ** Line visibility
@@ -483,12 +488,12 @@ Following is customization of the theme. Actual in the loading the theme is in t
 #+begin_src emacs-lisp
 (use-package ffap
   :straight nil
-  :general (
-            :states 'normal
-            :prefix "SPC"
-            "D f"     'ffap
-            "D F m"   'ffap-menu
-            ))
+  :general
+  (:states 'normal
+           :prefix "SPC"
+           "D f"     'ffap
+           "D F m"   'ffap-menu
+           ))
 #+end_src
 ** =files=
 #+begin_src emacs-lisp
