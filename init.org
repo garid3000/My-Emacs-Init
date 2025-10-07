@@ -233,6 +233,8 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 #+end_src
 
 ** =modus= theme                                                                            :by_prot:
+[[https://protesilaos.com/emacs/modus-themes][Modus themes]] is a nice built-in theme for emacs that [[https://protesilaos.com/][Protesilaos Stavrou]].
+Following is customization of the theme. Actual in the loading the theme is in the section [[id:20251007T133457.470613][=emacs=]] 
 
 #+begin_src emacs-lisp
 (use-package modus-themes
@@ -266,23 +268,9 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
                             (fringe                     bg-main     )
                             ))
 
-
-  (defun ct/modus-themes-init ()
-    (enable-theme (car modus-themes-to-toggle))
-
-    (scroll-bar-mode       -1)   ; Disable visible scrollbar
-    (tool-bar-mode         -1)   ; Disable the toolbar
-    (tooltip-mode          -1)   ; Disable tooltips
-    (menu-bar-mode         -1)   ; Disable the menu bar
-    (set-fringe-mode       10)   ; Give some breathing room
-    )
-
   :bind ("<f5>" . modus-themes-toggle)
-  :hook (after-init . ct/modus-themes-init))
+  )
 #+end_src
-
-#+RESULTS:
-: modus-themes-toggle
 
 ** =display-line-numbers=: displaying number
 #+begin_src emacs-lisp
@@ -416,34 +404,40 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
            "SPC D p"  'dired-preview-mode)
   )
 #+end_src
-** =emacs= c-codes
+** =emacs=
+:PROPERTIES:
+:ID:       20251007T133457.470613
+:END:
+
 #+begin_src emacs-lisp
 (use-package emacs
   :straight nil
-  :general (
-            :states 'normal
-            :prefix "SPC"
-            "L e"     'eval-buffer
-            "L n"     'rename-buffer
-            "L o"     'garid/new-org-scratch
-            "L p"     'garid/new-python-scratch
-            "Z Q"     'kill-emacs
-            "t x"     'garid/open-terminal-at-current-working-dir
-            "s n r"   'narrow-to-region
-            "s n f"   'narrow-to-defun
-            "s n w"   'widen
-            "s n SPC" 'widen
-            )
+  :init
+  (require-theme 'modus-themes) ; `require-theme' is ONLY for the built-in Modus themes
+  :general
+  (:states 'normal
+           :prefix "SPC"
+           "L e"     'eval-buffer
+           "L n"     'rename-buffer
+           "L o"     'garid/new-org-scratch
+           "L p"     'garid/new-python-scratch
+           "Z Q"     'kill-emacs
+           "t x"     'garid/open-terminal-at-current-working-dir
+           ;; "s n r"   'narrow-to-region
+           "s n f"   'narrow-to-defun
+           "s n w"   'widen
+           "s n SPC" 'widen
+           )
+  (:states 'visual
+           :prefix "SPC"
+           "s n r"   'narrow-to-region
+           "s n f"   'narrow-to-defun
+           )
   :custom
   (scroll-step                        1)
   (scroll-margin                      7)
   (scroll-conservatively           9999)
   :config
-  (setq-default tab-width 4)
-  (put 'narrow-to-region 'disabled nil)
-
-  (setq-default truncate-lines t)             ;; <----------------------- tests ---------------
-
   (defun garid/new-org-scratch ()
     "Create a new scratch buffer in Org mode."
     (interactive)
@@ -472,6 +466,17 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
       " -D "                                   ;; specify the working directory
       (file-name-directory (buffer-file-name)) ;; get the current buffer's directory
       " &")))
+
+
+  (setq-default tab-width 4)
+  (put 'narrow-to-region 'disabled nil)
+  (setq-default truncate-lines t)             ;; <----------------------- tests ---------------
+  (scroll-bar-mode       -1)   ; Disable visible scrollbar
+  (tool-bar-mode         -1)   ; Disable the toolbar
+  (tooltip-mode          -1)   ; Disable tooltips
+  (menu-bar-mode         -1)   ; Disable the menu bar
+  (set-fringe-mode       10)   ; Give some breathing room
+  (modus-themes-load-theme (car modus-themes-to-toggle)) ;; setting theme
   )
 #+end_src
 ** =ffap=
@@ -857,7 +862,7 @@ and later sets cursor at that point when you open that file.
            "o l c"   'org-cite-insert
            "o l d"   'garid/org-toggle-link-n-emphasis
            "o l f"   'org-footnote-new
-           "o l i"   'org-insert-link
+           ;; "o l i"   'org-insert-link
            "o l l"   'org-lint
            "o l n"   'org-next-link
            "o l o"   'org-open-at-point
@@ -878,7 +883,9 @@ and later sets cursor at that point when you open that file.
            "o s y"   'org-copy-subtree)
   (:states '(normal visual)
            :prefix "SPC"
-           "o t"     'org-todo)
+           "o t"     'org-todo
+           "o l i"   'org-insert-link
+           )
   (:states 'normal
            :prefix "SPC"
            "o a g"   'org-agenda
@@ -2336,7 +2343,8 @@ Similar to vim-signify.
             "g p"  'git-gutter:previous-hunk)
   :config
   (global-git-gutter-mode)
-  (add-hook 'magit-post-commit-hook 'git-gutter:update-all-windows)
+  ;; (add-hook 'magit-post-commit-hook 'git-gutter:update-all-windows)
+  :hook (magit-post-commit-hook . git-gutter:update-all-windows)
   )
 #+end_src
 
