@@ -252,7 +252,7 @@ I publish first from org to md in the local dir. Then using that local dir to cr
   )
 #+end_src
 
-* keybindings
+* COMMENT keybindings
 ** COMMENT removed
 | <f9>   | org-gtd-capture                                             | capture                          |      |        |
 | C-<f8> | org-gtd-clarify-item                                        | gtd org                          |      |        |
@@ -467,7 +467,7 @@ _Q_: delete a tag to task
   )
 #+end_src
 
-* COMMENT Org inline transparent image background                  :customFunc:
+* COMMENT Org inline transparent image background                                       :customFunc:
 #+begin_src emacs-lisp
 (defcustom org-inline-image-background nil
   "The color used as the default background for inline images.
@@ -641,7 +641,7 @@ When nil, use the default face background."
    ("C-c n r" . consult-org-roam-search)
    )
 #+end_src
-** COMMENT org-roam (custom) function for inserting node                             :customFunc:
+** COMMENT org-roam (custom) function for inserting node                                :customFunc:
 #+begin_src emacs-lisp
 (defun garid-custom/org-roam-node-insert-immediate (arg &rest args)
   (interactive "P")
@@ -652,7 +652,7 @@ When nil, use the default face background."
     (apply #'org-roam-node-insert args)
     ))
 #+end_src
-** COMMENT org-roam (custom) functions for tag searching                             :customFunc:
+** COMMENT org-roam (custom) functions for tag searching                                :customFunc:
 #+begin_src emacs-lisp
 (defun my/org-roam-filter-by-tag (tag-name)
   (lambda (node)
@@ -711,7 +711,7 @@ Now I use the captain mode
   (add-hook 'org-agenda-finalize-hook 'org-timeline-insert-timeline :append))
 #+end_src
 
-* COMMENT XeLaTeX equation preview fix                                                :customFunc:
+* COMMENT XeLaTeX equation preview fix                                                  :customFunc:
 #+begin_src emacs-lisp
 ;; (with-eval-after-load 'org
 ;;   (setq org-preview-latex-default-process 'imagemagick)
@@ -720,7 +720,7 @@ Now I use the captain mode
 ;;   )
 #+end_src
 
-* COMMENT Org hooked function                                                         :customFunc:
+* COMMENT Org hooked function                                                           :customFunc:
 #+begin_src emacs-lisp
 ;; (defun garid-custom/org-mode-hooked-func ()
 ;;   ;; (org-indent-mode)
@@ -866,7 +866,7 @@ stork.register(
 #+end_src
 +end_src
 
-* COMMENT put empty svg file at point                                         :customFunc:
+* COMMENT put empty svg file at point                                                   :customFunc:
 #+begin_src emacs-lisp
 (defun garid/put-emtpy-svg-img-at-point ()
   (interactive)
@@ -917,7 +917,7 @@ stork.register(
 #+end_src
 
 
-* COMMENT org-download editing shell script                                 :shell_script:
+* COMMENT org-download editing shell script                                           :shell_script:
 #+begin_src shell :tangle garid/edit_img.sh :shebang "#!/bin/sh"
 file=$(readlink -f "$1")
 ext="${file##*.}"
@@ -1340,7 +1340,7 @@ Slighty different version.
   )
 #+end_src
 
-* COMMENT Custom Aligner function (with untabify)                                      :customFunc:
+* COMMENT Custom Aligner function (with untabify)                                       :customFunc:
 #+begin_src emacs-lisp
 (defun garid/align-regexp-and-untabify (beg end)
   (interactive "r")
@@ -1427,31 +1427,31 @@ Slighty different version.
   )
 #+end_src
 * COMMENT Bunch of functions
-** COMMENT Org toggle hide/shot hyperlink                                                      :customFunc:
+** COMMENT Org toggle hide/shot hyperlink                                               :customFunc:
 #+begin_src emacs-lisp
 
 #+end_src
 
-** COMMENT Org toggle hide/shot display images                                                 :customFunc:
+** COMMENT Org toggle hide/shot display images                                          :customFunc:
 #+begin_src emacs-lisp
 
 #+end_src
 
-** COMMENT Remove equal sign from both sides in string                                         :customFunc:
+** COMMENT Remove equal sign from both sides in string                                  :customFunc:
 #+begin_src emacs-lisp
 #+end_src
 
-** COMMENT Kill ring and garbage collect                                                       :customFunc:
+** COMMENT Kill ring and garbage collect                                                :customFunc:
 #+begin_src emacs-lisp
 #+end_src
 
-** COMMENT copy link in org at point                                                           :customFunc:
+** COMMENT copy link in org at point                                                    :customFunc:
 [[https://emacs.stackexchange.com/a/60555/38482][stack exchange]]
 
 #+begin_src emacs-lisp
 
 #+end_src
-** COMMENT My Custom LaTeX writing system (aka TeQ)                                    :customFunc:
+** COMMENT My Custom LaTeX writing system (aka TeQ)                                     :customFunc:
 #+begin_src emacs-lisp
 (add-to-list 'load-path (expand-file-name "~/.config/emacs/Emacs-TeQ"))
 (register-input-method "TeQ-Math" "Emacs-Teq-Latex" 'quail-use-package
@@ -1471,10 +1471,10 @@ Slighty different version.
       (kmacro-lambda-form [?v ?t tab ?v ?t ?| ?v ?t] 0 "%d"))
 #+end_src
 
-** COMMENT Jumping ref-label in org or latex                                                   :customFunc:
+** COMMENT Jumping ref-label in org or latex                                            :customFunc:
 #+begin_src emacs-lisp
 #+end_src
-** COMMENT Org structure in the denote dire                                            :customFunc:
+** COMMENT Org structure in the denote dire                                             :customFunc:
 #+begin_src emacs-lisp
 (defun garid/org-ql-function-on-each-heading (INCLUDE_PROGRESS)
   ""
@@ -1544,7 +1544,7 @@ Slighty different version.
     ))
 #+end_src
 
-** COMMENT Custom opening external terminal at current buffer                          :customFunc:
+** COMMENT Custom opening external terminal at current buffer                           :customFunc:
 #+begin_src emacs-lisp
 (defun garid/open-external-term-here ()
   (interactive)
@@ -1554,7 +1554,7 @@ Slighty different version.
 ;;(shell-command (concat user-emacs-directory "garid/open_external_term.sh" " " buffer-file-name)))
 #+end_src
 
-** COMMENT Open PDF/HMTL exported from org mode externally                                     :customFunc:
+** COMMENT Open PDF/HMTL exported from org mode externally                              :customFunc:
 #+begin_src emacs-lisp
 ;; (defun replace-in-string (what with in)
 ;;   (replace-regexp-in-string (regexp-quote what) with in nil 'literal))
@@ -2138,7 +2138,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
 #+end_src
 
 
-* COMMENT Writing Distraction free                                                     :customFunc:
+* COMMENT Writing Distraction free                                                      :customFunc:
 #+begin_src emacs-lisp
 (defun garid/distraction-free-on ()
   (interactive)
@@ -2228,7 +2228,7 @@ Note to myself: after changing Table-[[tbl-global-keybindings]], I need to updat
            )
   )
 #+end_src
-* COMMENT shell script to open terminal                                              :shell_script:
+* COMMENT shell script to open terminal                                               :shell_script:
 #+begin_src bash :tangle garid/open_external_term.sh :shebang "#!/bin/bash"
 # Open System termianl $TERMINAL at $1:
 # nohup for exitting terminal that executed this script

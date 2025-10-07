@@ -74,7 +74,7 @@ run:
   )
 #+end_src
 
-** =which-key=: keybinding shower
+** =which-key= keybinding shower
 #+begin_src emacs-lisp
 (use-package which-key
   :delight ""
@@ -184,21 +184,16 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   :straight t
   :after evil
   :config
-  (define-key evil-normal-state-map
-              (kbd "<f3>") 'evil-visual-mark-mode))
+  (define-key evil-normal-state-map (kbd "<f3>") 'evil-visual-mark-mode))
 #+end_src
 
 ** =vundo=: visual undo
 #+begin_src emacs-lisp
 (use-package vundo
   :straight t
-  :demand t
-  :after general
-  :general
-  (:states 'normal
-           "SPC u t" 'vundo
-           )
-  )
+  :after    general
+  :demand   t
+  :general (:states 'normal "SPC u t" 'vundo))
 #+end_src
 
 * Theme & colors
@@ -1953,12 +1948,6 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 (use-package json-mode :straight t)
 #+end_src
 
-** COMMENT =jupyter=
-#+begin_src emacs-lisp
-(use-package jupyter
-  :straight t
-  :custom (jupyter-repl-echo-eval-p t))
-#+end_src
 ** =lua-mode=
 #+begin_src emacs-lisp
 (use-package lua-mode :straight t)
@@ -2072,6 +2061,12 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 (use-package scad-mode :straight t)
 #+end_src
 
+** COMMENT =jupyter=
+#+begin_src emacs-lisp
+(use-package jupyter
+  :straight t
+  :custom (jupyter-repl-echo-eval-p t))
+#+end_src
 * Coding input
 ** =tempel=: snippet system
 #+begin_src emacs-lisp
@@ -2299,65 +2294,8 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   )
 #+end_src
 
-* AI helpers:
-** =gptel= : gpt.el by karthinks                                                        :by_karthink:
-#+begin_src emacs-lisp
-(use-package gptel
-  :straight t
-  :after org
-  :custom
-  (gptel-default-mode 'org-mode)
-  :general
-  (:states 'normal
-           "SPC L g"  'gptel)
-  (:states 'visual
-           "g r"  'gptel-rewrite)
-  )
-#+end_src
-
-** =gptel-commit=
-#+begin_src emacs-lisp
-(use-package gptel-commit
-  :straight t
-  :after (gptel magit)
-  :commands gptel-commit gptel-commit-rationale
-  :custom
-  (gptel-commit-stream t)
-  :general
-  (:states 'normal
-           "SPC g c"  'gptel-commit
-           "SPC g C"  'gptel-commit-rationale)
-  )
-#+end_src
-
-* Coding convenient
-** =eshell=
-#+begin_src emacs-lisp
-(use-package eshell
-  :straight nil
-  :after    evil general
-  :general
-  (:states 'normal
-           "SPC t e" 'eshell)
-  (:states 'insert
-           :keymaps 'eshell-mode-map
-           "C-a" 'eshell-bol)
-  )
-#+end_src
-
-** =rg=: ripgrep in Emacs
-Probably requires external =rg= command.
-
-#+begin_src emacs-lisp
-(use-package rg
-  :straight t
-  :general
-  (:states 'normal
-           "SPC r g"  'rg)
-  )
-#+end_src
-
-** =magit=: git control
+* Git version control
+** =magit=:
 #+begin_src emacs-lisp
 (use-package magit
   :straight t
@@ -2396,30 +2334,27 @@ Similar to vim-signify.
   )
 #+end_src
 
-** =harpoon=
-#+begin_src emacs-lisp
-(use-package harpoon
-  :straight t
-  :bind
-  ("M-1"   .  harpoon-go-to-1           )
-  ("M-2"   .  harpoon-go-to-2           )
-  ("M-3"   .  harpoon-go-to-3           )
-  ("M-4"   .  harpoon-go-to-4           )
-  ("M-5"   .  harpoon-go-to-5           )
-  ("M-6"   .  harpoon-go-to-6           )
-  ("<f9>"  .  harpoon-quick-menu-hydra  )
-  :general
-  (:states 'normal
-           "SPC B"      'harpoon-quick-menu-hydra)
-  )
-#+end_src
-
+* Coding convenient
 ** =direnv.el=
 #+begin_src emacs-lisp
 (use-package direnv
  :straight t
  :config
  (direnv-mode))
+#+end_src
+
+** =eshell=
+#+begin_src emacs-lisp
+(use-package eshell
+  :straight nil
+  :after    evil general
+  :general
+  (:states 'normal
+           "SPC t e" 'eshell)
+  (:states 'insert
+           :keymaps 'eshell-mode-map
+           "C-a" 'eshell-bol)
+  )
 #+end_src
 
 ** =eshell-atuin=
@@ -2438,6 +2373,24 @@ Similar to vim-signify.
   )
 #+end_src
 
+** =harpoon=
+#+begin_src emacs-lisp
+(use-package harpoon
+  :straight t
+  :bind
+  ("M-1"   .  harpoon-go-to-1           )
+  ("M-2"   .  harpoon-go-to-2           )
+  ("M-3"   .  harpoon-go-to-3           )
+  ("M-4"   .  harpoon-go-to-4           )
+  ("M-5"   .  harpoon-go-to-5           )
+  ("M-6"   .  harpoon-go-to-6           )
+  ("<f9>"  .  harpoon-quick-menu-hydra  )
+  :general
+  (:states 'normal
+           "SPC B"      'harpoon-quick-menu-hydra)
+  )
+#+end_src
+
 ** =outline-indent=
 #+begin_src emacs-lisp
 (use-package outline-indent
@@ -2445,6 +2398,47 @@ Similar to vim-signify.
   :delight ""
   ;; :hook (python-base-mode  . outline-indent-minor-mode))
   :hook (prog-mode  . outline-indent-minor-mode))
+#+end_src
+** =rg=: ripgrep in Emacs
+Probably requires external =rg= command.
+
+#+begin_src emacs-lisp
+(use-package rg
+  :straight t
+  :general
+  (:states 'normal
+           "SPC r g"  'rg)
+  )
+#+end_src
+* AI helpers:
+** =gptel= : gpt.el by karthinks                                                        :by_karthink:
+#+begin_src emacs-lisp
+(use-package gptel
+  :straight t
+  :after org
+  :custom
+  (gptel-default-mode 'org-mode)
+  :general
+  (:states 'normal
+           "SPC L g"  'gptel)
+  (:states 'visual
+           "g r"  'gptel-rewrite)
+  )
+#+end_src
+
+** =gptel-commit=
+#+begin_src emacs-lisp
+(use-package gptel-commit
+  :straight t
+  :after (gptel magit)
+  :commands gptel-commit gptel-commit-rationale
+  :custom
+  (gptel-commit-stream t)
+  :general
+  (:states 'normal
+           "SPC g c"  'gptel-commit
+           "SPC g C"  'gptel-commit-rationale)
+  )
 #+end_src
 
 * Writing & Reading
@@ -2496,8 +2490,7 @@ Similar to vim-signify.
 #+begin_src emacs-lisp
 (use-package pdf-tools
   :straight t
-  :bind (:map pdf-view-mode-map
-              ("t" . pdf-outline))
+  :bind (:map pdf-view-mode-map ("t" . pdf-outline))
   :mode  ("\\.pdf\\'" . pdf-view-mode)
   :config
   (pdf-tools-install))
@@ -2507,29 +2500,19 @@ Similar to vim-signify.
 #+begin_src emacs-lisp
 (use-package captain
   :straight t
-  :delight "" ;; " cap"
+  :delight " cap" ;; " cap"
   :after org
   :custom
   (sentence-end-double-space nil)
 
-  :config ;; from https://emacs.stackexchange.com/q/54326/38482
-  (add-hook 'prog-mode-hook
-            (lambda ()
-              (setq captain-predicate
-                    (lambda () (nth 8 (syntax-ppss (point)))))))
-  ;; Or for text modes, work all the time:
-  (add-hook 'text-mode-hook
-            (lambda ()
-              (setq captain-predicate (lambda () t))))
+  :hook
+  (latex-mode . (lambda () (captain-mode -1)))
+  (text-mode  . (lambda () (setq captain-predicate (lambda () t))))
+  (org-mode   . (lambda () (setq captain-predicate (lambda () (not (org-in-src-block-p))))))
+  (prog-mode  . (lambda () (setq captain-predicate (lambda () (nth 8 (syntax-ppss (point)))))))
+  ;; this (org-in-src-block-p) checks whether cursor is in the src block
 
-  ;; Or don't work in source blocks in Org-mode:
-  (add-hook 'org-mode-hook
-            (lambda ()
-              (setq captain-predicate
-                    (lambda () (not (org-in-src-block-p))))))
-
-
-  (add-hook 'latex-mode-hook (lambda () (captain-mode -1)))
+  :config
   (global-captain-mode t)
   )
 #+end_src
@@ -2543,7 +2526,7 @@ Similar to vim-signify.
 #+begin_src emacs-lisp
 (use-package notmuch
   :straight t
-  :defer t
+  :defer    t
   :general
    (:states 'normal
             "SPC m a" 'notmuch
@@ -2555,7 +2538,7 @@ Similar to vim-signify.
 #+begin_src emacs-lisp
 (use-package sendmail
   :straight nil
-  :defer t
+  :defer    t
   :custom
   (send-mail-function              'sendmail-send-it )
   ;;:w (sendmail-program                "/usr/bin/msmtp"  ) < removed cause of nixos
@@ -2593,8 +2576,8 @@ Similar to vim-signify.
 #+begin_src emacs-lisp
 (use-package org-mime
   :straight t
-  :defer t
-  :after org
+  :defer    t
+  :after    org
   :custom
   (org-mime-library 'mml)
   (org-mime-export-options '(
@@ -2616,8 +2599,8 @@ Similar to vim-signify.
 #+begin_src emacs-lisp
 (use-package consult-notmuch
   :straight t
-  :defer t
-  :after notmuch consult
+  :defer    t
+  :after    notmuch consult
   :general
   (:states 'normal
            "SPC m s" 'consult-notmuch)
@@ -2627,12 +2610,11 @@ Similar to vim-signify.
 ** notmuch ol
 #+begin_src emacs-lisp
 (use-package ol-notmuch
-  :straight t
-  :defer t
-  :after notmuch org
+  :straight  t
+  :defer     t
+  :after     notmuch org
   :config
-  (define-key global-map "\C-c l" 'org-store-link)
-  )
+  (define-key global-map "\C-c l" 'org-store-link))
 #+end_src
 
 * Misc Packages
