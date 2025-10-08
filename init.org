@@ -482,6 +482,7 @@ Following is customization of the theme. Actual in the loading the theme is in t
   (menu-bar-mode         -1)   ; Disable the menu bar
   (set-fringe-mode       10)   ; Give some breathing room
   (modus-themes-load-theme (car modus-themes-to-toggle)) ;; setting theme
+  ;; (global-corfu-mode   )
   )
 #+end_src
 ** =ffap=
@@ -878,9 +879,11 @@ and later sets cursor at that point when you open that file.
            "o l f"   'org-footnote-new
            ;; "o l i"   'org-insert-link
            "o l l"   'org-lint
-           "o l n"   'org-next-link
            "o l o"   'org-open-at-point
-           "o l p"   'org-previous-link
+           "o l n"   'org-next-block
+           "o l p"   'org-previous-block
+           "o l N"   'org-next-link
+           "o l P"   'org-previous-link
            "o o"     'org-open-at-point
            "o p"     'org-latex-preview
            "o s I"   'org-indent-mode
@@ -2217,6 +2220,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 (use-package corfu
   ;; Optional customizations
   :straight t
+  :demand t
   :init
   (setq  tab-always-indent  'complete) ;; <-- why I forget
   :custom
