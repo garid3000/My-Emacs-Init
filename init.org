@@ -241,7 +241,7 @@ Following is customization of the theme. Actual in the loading the theme is in t
 #+begin_src emacs-lisp
 (use-package modus-themes
   :straight  t
-  :demand    t
+  ;;:demand    t
   :custom
   (modus-themes-to-toggle '(modus-vivendi-tinted modus-operandi-tinted))
   (modus-themes-italic-constructs       t)
@@ -249,15 +249,14 @@ Following is customization of the theme. Actual in the loading the theme is in t
   (modus-themes-variable-pitch-ui       t)
   (modus-themes-mixed-fonts             t)
   (modus-themes-prompts           '(bold))
-  (modus-themes-completions           nil)
-  (modus-themes-org-blocks        'tinted-background )
-  (modus-themes-headings          '((0                . (medium variable-pitch 1.10 ))
-                                    (1                . (medium variable-pitch 1.10 ))
-                                    (2                . (medium variable-pitch 1.10 ))
-                                    (3                . (medium variable-pitch 1.05 ))
-                                    (agenda-date      . (                      1.1 ))
-                                    (agenda-structure . (variable-pitch light  1.1 ))
-                                    (t                . (medium variable-pitch 1.0 ))))
+  (modus-themes-completions          nil)
+  ;; (modus-themes-headings          '((0                . (medium variable-pitch 1.10 ))
+  ;;                                   (1                . (medium variable-pitch 1.10 ))
+  ;;                                   (2                . (medium variable-pitch 1.10 ))
+  ;;                                   (3                . (medium variable-pitch 1.05 ))
+  ;;                                   (agenda-date      . (                      1.1 ))
+  ;;                                   (agenda-structure . (variable-pitch light  1.1 ))
+  ;;                                   (t                . (medium variable-pitch 1.0 ))))
   :config
   (customize-set-variable 'modus-themes-common-palette-overrides
                           `(;; Make the mode-line borderless
@@ -1253,9 +1252,9 @@ https://stackoverflow.com/questions/78982629/in-emacs-how-to-prevent-org-babel-d
 ** =denote-journal= denote journal                                                          :by_prot:
 #+begin_src emacs-lisp
 (use-package denote-journal
-  :straight t
-  ;; :after denote
-  :custom (denote-journal-title-format 'day)
+  :straight t ;; :after denote
+  :custom
+  (denote-journal-title-format "Week-%V %A (Date: %Y-%B-%e)") ;; 'day
 
   :general (
             :states 'normal
@@ -2095,6 +2094,25 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 #+begin_src emacs-lisp
 (use-package scad-mode :straight t)
 #+end_src
+
+#+begin_example
+(org-babel-do-load-languages 'org-babel-load-languages
+                             '(
+                               (awk        . t)
+                               (calc       . t)
+                               (dot        . t)
+                               (emacs-lisp . t)
+                               (gnuplot    . t)
+                               (latex      . t)
+                               (makefile   . t)
+                               (maxima     . t)
+                               (python     . t)
+                               (shell      . t)
+                               (sqlite     . t)
+                               (plantuml   . t)
+                               (scad       . t)
+                               ))
+#+end_example
 
 ** COMMENT =jupyter=
 #+begin_src emacs-lisp
