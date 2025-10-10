@@ -1255,7 +1255,7 @@ https://stackoverflow.com/questions/78982629/in-emacs-how-to-prevent-org-babel-d
 (use-package denote-journal
   :straight t
   ;; :after denote
-  :custom (denote-journal-extras-title-format 'day)
+  :custom (denote-journal-title-format 'day)
 
   :general (
             :states 'normal
@@ -2448,7 +2448,7 @@ Probably requires external =rg= command.
 (use-package rg
   :straight t
   :general
-  (:states 'normal
+  (:states '(normal visual)
            "SPC r g"  'rg)
   )
 #+end_src
