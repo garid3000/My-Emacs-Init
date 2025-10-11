@@ -162,8 +162,8 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
                   ))
 
   (org-mode . (lambda ()
-                (push '(?S  . ("#+begin_src"      . "#+end_src"     )) evil-surround-pairs-alist)
-                (push '(?E  . ("#+begin_example"  . "#+end_example" )) evil-surround-pairs-alist)
+                (push '(?s  . ("#+begin_src"      . "#+end_src"     )) evil-surround-pairs-alist)
+                (push '(?e  . ("#+begin_example"  . "#+end_example" )) evil-surround-pairs-alist)
                 (push '(?e  . ("\\("              . "\\)"           )) evil-surround-pairs-alist)
                 (push '(?d . (":drawername:"      . ":end:"         )) evil-surround-pairs-alist)
                 ))
@@ -186,7 +186,18 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   (define-key evil-inner-text-objects-map "f" (evil-textobj-tree-sitter-get-textobj "function.inner" ))
   (define-key evil-inner-text-objects-map "c" (evil-textobj-tree-sitter-get-textobj "class.inner"    ))
   (define-key evil-outer-text-objects-map "c" (evil-textobj-tree-sitter-get-textobj "class.inner"    ))
-  (define-key evil-outer-text-objects-map "a" (evil-textobj-tree-sitter-get-textobj ("conditional.outer" "loop.outer"))))
+  (define-key evil-outer-text-objects-map "a" (evil-textobj-tree-sitter-get-textobj ("conditional.outer" "loop.outer")))
+
+  ;; Goto start of next function
+  (define-key evil-normal-state-map (kbd "]f") (lambda () (interactive) (evil-textobj-tree-sitter-goto-textobj "function.outer")))
+  ;; Goto start of previous function
+  (define-key evil-normal-state-map (kbd "[f") (lambda () (interactive) (evil-textobj-tree-sitter-goto-textobj "function.outer" t)))
+  ;; Goto end of next function
+  (define-key evil-normal-state-map (kbd "]F") (lambda () (interactive) (evil-textobj-tree-sitter-goto-textobj "function.outer" nil t)))
+  ;; Goto end of previous function
+  (define-key evil-normal-state-map (kbd "[F") (lambda () (interactive) (evil-textobj-tree-sitter-goto-textobj "function.outer" t t)))
+
+  )
 #+end_src
 
 ** =evil-visual-mark-mode= for visualizing evil marker
@@ -286,11 +297,14 @@ Following is customization of the theme. Actual in the loading the theme is in t
   :general
   (:states 'normal
            :prefix "SPC"
+           "s l"    '(:which-key "line number...")
            "s l n" 'display-line-numbers-mode
            "s l N" 'global-display-line-numbers-mode
            )
   )
 #+end_src
+
+#+RESULTS:
 
 ** =pulsar= pulses on certain functions                                                     :by_prot:
 #+begin_src emacs-lisp
@@ -347,6 +361,7 @@ Following is customization of the theme. Actual in the loading the theme is in t
   :general
   (:states 'normal
            :prefix "SPC"
+           "b" '(:which-key "bookmark...")
            "b b" 'list-bookmarks
            "b s" 'bookmark-set
            "b j" 'bookmark-jump
@@ -383,6 +398,7 @@ Following is customization of the theme. Actual in the loading the theme is in t
   (:states 'normal
            :prefix "SPC"
            "d"    'dired-jump
+           "D"  '(:which-key "dired...")
            "D s"  'dired)
   )
 
@@ -394,6 +410,9 @@ Following is customization of the theme. Actual in the loading the theme is in t
            "D w"  'wdired-change-to-wdired-mode)
   )
 #+end_src
+
+#+RESULTS:
+
 ** =dired-preview= - preview
 #+begin_src emacs-lisp
 (use-package dired-preview
@@ -421,6 +440,7 @@ Following is customization of the theme. Actual in the loading the theme is in t
   :general
   (:states 'normal
            :prefix "SPC"
+           "L" '(:which-key "buffer ...")
            "L e"     'eval-buffer
            "L n"     'rename-buffer
            "L o"     'garid/new-org-scratch
@@ -428,6 +448,9 @@ Following is customization of the theme. Actual in the loading the theme is in t
            "Z Q"     'kill-emacs
            "t x"     'garid/open-terminal-at-current-working-dir
            ;; "s n r"   'narrow-to-region
+
+           "s"      '(:which-key "system...")
+           "s n"    '(:which-key "narrow...")
            "s n f"   'narrow-to-defun
            "s n w"   'widen
            "s n SPC" 'widen
@@ -705,6 +728,7 @@ and later sets cursor at that point when you open that file.
   (:states 'normal
            :prefix "SPC"
            "l"     'consult-buffer
+           "c"     '(:which-key "consult...")
            "c o"   'consult-outline
            "c i"   'consult-imenu
            "c m"   'consult-man
@@ -826,7 +850,7 @@ and later sets cursor at that point when you open that file.
               ("}"         . org-forward-paragraph           )
               ("<tab>"     . org-cycle                       )
               ("<backtab>" . org-shifttab                    )
-              ("t"         . org-toggle-narrow-to-subtree    )
+              ;; ("t"         . org-toggle-narrow-to-subtree    )
               ("n"         . org-next-block                  )
               ("p"         . org-previous-block              )
               ("c"         . org-ctrl-c-ctrl-c               )
@@ -841,11 +865,13 @@ and later sets cursor at that point when you open that file.
            ;; :prefix-map 'my-prefix-map
            ;; :global-prefix "C-c"
            ;; :non-normal-prefix "M-SPC"
-
            ","       'org-ctrl-c-ctrl-c
            "j"       'org-next-block
            "k"       'org-previous-block
+           "o"       '(:which-key "org...")
            "o O"     'garid/jump-label-def-of-ref-at-point-word
+
+           "o T"       '(:which-key "Table...")
            "o T C"   'org-table-toggle-coordinate-overlays
            "o T T"   'org-table-toggle-column-width
            "o T c"   'orgtbl-create-or-convert-from-region
@@ -854,10 +880,14 @@ and later sets cursor at that point when you open that file.
            "o T m"   'orgtbl-mode
            "o T s"   'org-table-sum
            "o T x"   'org-table-export
+
+           "o a"     '(:which-key "agenda...")
            "o a C"   'org-clock-out
            "o a c"   'org-clock-in
            "o a d"   'org-deadline
            "o a s"   'org-schedule
+
+           "o b"     '(:which-key "babel...")
            "o b t"   'org-babel-tangle
            "o b ,"   'org-babel-execute-subtree
            "o b k"   'org-babel-remove-result-one-or-many
@@ -865,13 +895,19 @@ and later sets cursor at that point when you open that file.
            "o b v"   'org-babel-view-src-block-info
            "o b s"   'org-babel-demarcate-block
            "o b p"   'org-babel-pop-to-session
+           "o b j"   '(:which-key "jump...")
            "o b j s" 'org-babel-goto-named-src-block
            "o b j r" 'org-babel-goto-named-result
            "o b j S" 'org-babel-goto-src-block-head
            "o b o"   'org-babel-open-src-block-result
+
            "o d"     'garid/open-org-link-at-point-with-dired
            "o f h"   'consult-org-heading
+
+           "o i"     '(:which-key "images...")
            "o i t"   'garid/org-toggle-display-images-n-edraw
+
+           "o l"     '(:which-key "links...")
            "o l F"   'org-footnote-action
            "o l c"   'org-cite-insert
            "o l d"   'garid/org-toggle-link-n-emphasis
@@ -883,8 +919,11 @@ and later sets cursor at that point when you open that file.
            "o l p"   'org-previous-block
            "o l N"   'org-next-link
            "o l P"   'org-previous-link
+
            "o o"     'org-open-at-point
            "o p"     'org-latex-preview
+
+           "o l"     '(:which-key "subtree...")
            "o s I"   'org-indent-mode
            "o s Y"   'org-id-copy
            "o s a"   'org-archive-subtree-default-with-confirmation
@@ -897,11 +936,13 @@ and later sets cursor at that point when you open that file.
            "o s t"   'org-toggle-narrow-to-subtree
            "o s v"   'org-mark-element
            "o s y"   'org-copy-subtree)
+
   (:states '(normal visual)
            :prefix "SPC"
            "o t"     'org-todo
            "o l i"   'org-insert-link
            )
+
   (:states 'normal
            :prefix "SPC"
            "o a g"   'org-agenda
@@ -1184,33 +1225,40 @@ https://stackoverflow.com/questions/78982629/in-emacs-how-to-prevent-org-babel-d
 (use-package denote
   :straight t
   :after org
+  :demand t
   :custom
   (denote-excluded-directories-regexp  ".*export_.*\\|.*website.*")
   (denote-directory                    "~/BrainDump/denote")
   (denote-known-keywords               '("phd"  "code"  "python"))
   (denote-templates                    '((biblio . "* Abstract\n\n* Review")
                                          (plain  . nil)))
-  (denote-file-type 'org)
+  (denote-file-type                    'org)
   ;;:bind
   :general (
             :states  'normal
             :prefix  "SPC"
+            "n"      '(:which-key "+denote...")
             "n r"    'denote-rename-file
             "n R"    'denote-rename-file-date
             "n f"    'denote-open-or-create
             "n d"    'denote-dired
+
+            "n n"    '(:which-key "+new...")
             "n n t"  'denote-type
             "n n d"  'denote-date
             "n n s"  'denote-subdirectory
             "n n t"  'denote-template
             "n n S"  'denote-singature
-            "n l i"  'denote-insert-link
-            "n l b"  'denote-find-backlink
-            "n l f"  'denote-find-link
-            "n l B"  'denote-backlinks
-            "n l F"  'denote-link
-            "n l a"  'denote-add-links
-            "n I"    'garid/denote-node-insert-immediate
+
+            "n l"    '(:which-key "+link...")
+            "n l i"  'denote-link         ;; 'denote-insert-link ;; "n l F"  'denote-link
+            "n l c"  'denote-link-or-create 
+
+            "n L"    '(:which-key "+Link...")
+            "n L b"  'denote-find-backlink
+            "n L f"  'denote-find-link
+            "n L B"  'denote-backlinks
+            "n L a"  'denote-add-links
             )
 
   :config
@@ -1227,28 +1275,11 @@ https://stackoverflow.com/questions/78982629/in-emacs-how-to-prevent-org-babel-d
                    :link denote-org-link-format
                    :link-in-context-regexp denote-org-link-in-context-regexp)
           denote-file-types))
-
-  (defun garid/denote-node-insert-immediate(start end)
-    ;; create emtpy denote note on the regions
-    (interactive "r")
-    (let* ((tmp-str-marked              (string-trim (buffer-substring start end) ))
-           (tmp-cur-time-of-this-note  (current-time)))
-      (delete-region start end)
-      (denote tmp-str-marked '("future") nil "tmp"
-              (format-time-string "%Y-%m-%d %H:%M:%S" tmp-cur-time-of-this-note))
-
-      (save-buffer)
-      (kill-buffer)
-
-      (insert
-       (format
-        "[[denote:%s][%s]]"
-        (format-time-string "%Y%m%dT%H%M%S" tmp-cur-time-of-this-note)
-        tmp-str-marked))))
-
-
   )
 #+end_src
+
+#+RESULTS:
+
 ** =denote-journal= denote journal                                                          :by_prot:
 #+begin_src emacs-lisp
 (use-package denote-journal
@@ -1259,6 +1290,7 @@ https://stackoverflow.com/questions/78982629/in-emacs-how-to-prevent-org-babel-d
   :general (
             :states 'normal
             :prefix "SPC"
+            "n j"    '(:which-key "+denote-journal...")
             "n j n"  'denote-journal-new-entry
             "n j e"  'denote-journal-new-or-existing-entry
             )
@@ -1271,46 +1303,53 @@ https://stackoverflow.com/questions/78982629/in-emacs-how-to-prevent-org-babel-d
 #+begin_src emacs-lisp
 (use-package denote-org
   ;; :after denote
-  :straight t)
+  :straight t
+  :general (
+            :states  'normal
+            :prefix  "SPC"
+            "n o"   '(:which-key "+denote-org...")
+            "n o l" 'denote-org-link-to-heading
+            "n o e" 'denote-org-dblock-insert-links
+            "n o d" 'denote-org-link-to-heading
+            ;; "n l I o"  'denote-org-link-to-heading
+            )
+  )
 #+end_src
-
-#+RESULTS:
 
 ** =denote-silo=                                                                            :by_prot:
 #+begin_src emacs-lisp
 (use-package denote-silo
-  :straight t
-  ;; :after denote
+  :straight t               ;; :after denote
+
   :custom
   (denote-silo-directories
    (mapcar
     (lambda (y) (concat "~/BrainDump/" y))
     (seq-filter
      (lambda (x) (string-match "denote.*" x))
-     (directory-files "~/BrainDump/")))
-   )
+     (directory-files "~/BrainDump/"))))
+
+  (which-key-dont-use-unicode nil)
+  (which-key-separator " → " )
+  (which-key-unicode-correction 3)
+  (which-key-show-prefix 'left)
+
   :general (
             :states 'normal
             :prefix "SPC"
-            "N f"  'denote-silo-open-or-create
-            "N d"  'denote-silo-dired
+            "n s" '(:which-key "+denote-silo...")
+            "n s t" 'denote-silo-select-silo-then-command
+            "n s d" 'denote-silo-dired
+            "n s f" 'denote-silo-open-or-create
+            ;; "N f"  'denote-silo-open-or-create
+            ;; "N d"  'denote-silo-dired
             )
   )
-
-
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; (denote-silo-directories            ;;
-;;  '("~/BrainDump/denote"             ;;
-;;    "~/BrainDump/denote_bps/"        ;;
-;;    "~/BrainDump/denote_proj_grape/" ;;
-;;    "~/BrainDump/marscury/"          ;;
-;;    ))                               ;;
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 #+end_src
 
 #+RESULTS:
 
-** =consult-denote=: consulting with denote                                                 :by_prot:
+** COMMENT =consult-denote=: consulting with denote                                         :by_prot:
 #+begin_src emacs-lisp
 (use-package consult-denote
   :straight t
@@ -1341,7 +1380,7 @@ https://stackoverflow.com/questions/78982629/in-emacs-how-to-prevent-org-babel-d
 (use-package citar
   :straight t
   ;; :after org denote ;; must load after denote must be because it uses variable that's defined in denote
-  :no-require
+  ;; :no-require
   :custom
   (org-cite-global-bibliography (list (concat (file-name-as-directory denote-directory)
                                               "20220101T010101--references__study.bib")))
@@ -1898,7 +1937,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
              :host github
              :brach "master"
              :repo "misohena/el-easydraw")
-  :after org ox ox-latex ox-html
+  ;; :after org ox ox-latex ox-html
   :demand t ;; needed <== don't know why
   :hook (edraw-property-editor-mode . turn-off-evil-mode)
   :custom
@@ -2014,10 +2053,12 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 
   :general
   (:states 'normal
-           "SPC P P"  'run-python
-           "SPC P S"    'garid/set-python-send-buffer
-           "SPC L P"    'garid/switch-python-shell-buffer
-
+           :prefix "SPC"
+           "P"      '(:which-key "Python...")
+           "P P"    'run-python
+           "P S"    'garid/set-python-send-buffer
+           "P L"    'garid/switch-python-shell-buffer
+           "L P"    'garid/switch-python-shell-buffer
            )
 
   (:states 'normal
@@ -2060,6 +2101,9 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
           ))
   )
 #+end_src
+
+#+RESULTS:
+: comint-clear-buffer
 
 ** =code-cells-mode=
 #+begin_src emacs-lisp
@@ -2336,6 +2380,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   :general (
             :states 'normal
             :prefix "SPC"
+            "p"      '(:which-key "project")
             "p f"     'project-find-file
             "p z"     'project-switch-project
             "p S"     'project-find-regexp
@@ -2355,8 +2400,11 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   :straight t
   :general
   (:states 'normal
-           "SPC g d"  'magit-ediff-compare
-           "SPC m g"  'magit-status)
+           :prefix "SPC"
+           "g"   '(:which-key "git...")
+           "g m"  'magit-status
+           "g d"  'magit-ediff-compare
+           )
   )
 #+end_src
 
@@ -2410,7 +2458,9 @@ Similar to vim-signify.
   :after    evil general
   :general
   (:states 'normal
-           "SPC t e" 'eshell)
+           "SPC t" '(:which-key "terminal")
+           "SPC t e" 'eshell
+           )
   (:states 'insert
            :keymaps 'eshell-mode-map
            "C-a" 'eshell-bol)
@@ -2480,9 +2530,16 @@ Probably requires external =rg= command.
   (gptel-default-mode 'org-mode)
   :general
   (:states 'normal
-           "SPC L g"  'gptel)
+           :prefix "SPC"
+           "G l"  'gptel
+           "G m"  'gptel-menu
+           )
+
   (:states 'visual
-           "g r"  'gptel-rewrite)
+           ;; :prefix "SPC" ;; "G p"  'gptel-rewrite
+           "g r"  'gptel-rewrite
+           "SPC G R"  'gptel-rewrite
+           )
   )
 #+end_src
 
@@ -2508,17 +2565,21 @@ Probably requires external =rg= command.
   :straight nil
   :custom (ispell-alternate-dictionary "/home/garid/.config/emacs/ispell-wl.txt")
   :general (:states 'normal
-            :prefix "SPC"
-            "z s w"    'ispell-word
-            "z s r"    'ispell-region
-            "z s C"    'ispell-comments-and-strings
-            "z s c"    'ispell-comment-or-string-at-point
-            "z s b"    'ispell-buffer
-            "z s m"    'ispell-message
-            "z s q"    'ispell-kill-ispell
-            "z s l"    'ispell-change-dictionary
+            :prefix "SPC z"
+            "s"      '(:which-key "ispell...")
+            "s w"    'ispell-word
+            "s r"    'ispell-region
+            "s C"    'ispell-comments-and-strings
+            "s c"    'ispell-comment-or-string-at-point
+            "s b"    'ispell-buffer
+            "s m"    'ispell-message
+            "s q"    'ispell-kill-ispell
+            "s l"    'ispell-change-dictionary
             ))
 #+end_src
+
+#+RESULTS:
+
 ** spell-checking & synonym
 #+begin_src emacs-lisp
 ;; (use-package langtool   :straight t) it required external jar / java  someday i will try
@@ -2588,9 +2649,11 @@ Probably requires external =rg= command.
   :straight t
   :defer    t
   :general
-   (:states 'normal
-            "SPC m a" 'notmuch
-            "SPC m n" 'notmuch-mua-new-mail)
+  (:states 'normal
+            :prefix "SPC"
+            "m"   '(:which-key "mail...")
+            "m a" 'notmuch
+            "m n" 'notmuch-mua-new-mail)
   )
 #+end_src
 
@@ -2820,18 +2883,21 @@ Probably requires external =rg= command.
                                                         ("mn" . "en")))
   :general
   (:states '(normal visual)
-           "SPC G t" 'google-translate-smooth-translate)
+           :prefix "SPC"
+           "G t" 'google-translate-smooth-translate)
 
   )
 (use-package google-this
   :straight t
   :general
   (:states '(normal visual)
-           "SPC G w" 'google-this-forecast
-           "SPC G l" 'google-this-line
-           "SPC G s" 'google-this-search
-           "SPC G r" 'google-this-region
-           "SPC G m" 'google-this-maps
+           :prefix "SPC"
+           "G"   '(:which-key "Google...")
+           "G w" 'google-this-forecast
+           "G l" 'google-this-line
+           "G s" 'google-this-search
+           "G r" 'google-this-region
+           "G m" 'google-this-maps
            )
   )
 #+end_src
