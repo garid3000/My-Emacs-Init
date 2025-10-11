@@ -82,15 +82,16 @@ run:
   :custom
   (which-key-popup-type              'side-window               )
   (which-key-side-window-location    'right                     )
-  ;;(which-key-side-window-max-width    0.5                     )
-  ;;(which-key-popup-type              'minibuffer              )
+  (which-key-side-window-max-width    0.4                       )
+  ;; (which-key-popup-type              'minibuffer             )
   (which-key-idle-delay               0.8                       )
   (which-key-idle-secondary-delay     0.01                      )
-  (which-key-sort-order              'which-key-key-order-alpha )
+  (which-key-sort-order              'which-key-local-then-key-order )
   :config
   (which-key-mode)
   )
 #+end_src
+
 ** =repeat= mode
 #+begin_src emacs-lisp
 (use-package repeat
@@ -834,7 +835,7 @@ and later sets cursor at that point when you open that file.
 ** =org=: org-mode configuration
 #+caption: org config
 #+name: lst_org
-#+begin_src emacs-lisp :eval no
+#+begin_src emacs-lisp
 (use-package org
   :straight t
   :demand t
@@ -908,9 +909,9 @@ and later sets cursor at that point when you open that file.
            "o d"     'garid/open-org-link-at-point-with-dired
 
            "o h"     '(:which-key "heading")
-           "o h f"   'consult-org-heading
-           "o h n"   'org-next-visible-heading
-           "o h p"   'org-previous-visible-heading
+           "o f h"   'consult-org-heading
+           "o f n"   'org-next-visible-heading
+           "o f p"   'org-previous-visible-heading
 
            "o i"     '(:which-key "images...")
            "o i t"   'garid/org-toggle-display-images-n-edraw
@@ -946,6 +947,7 @@ and later sets cursor at that point when you open that file.
            "o s y"   'org-copy-subtree)
 
   (:states '(normal visual)
+           :keymaps      'org-mode-map
            :prefix "SPC"
            "o t"     'org-todo
            "o l i"   'org-insert-link
@@ -953,11 +955,11 @@ and later sets cursor at that point when you open that file.
 
   (:states 'normal
            :prefix "SPC"
-           "o a g"   'org-agenda
-           "o b d"   'org-babel-detangle
-           "o b j"   'org-babel-tangle-jump-to-org
+           "o a g"     'org-agenda
+           "o b d"     'org-babel-detangle
+           "o b j"     'org-babel-tangle-jump-to-org
            "o b g d"   'org-babel-tangle-jump-to-org
-           "o c  "   'org-capture)
+           "o c  "     'org-capture)
   :custom
   ;; ---------------- theme/styling ------------------------------------------------------
   (org-hide-emphasis-markers         t                        )
@@ -1132,6 +1134,7 @@ and later sets cursor at that point when you open that file.
   (setf (alist-get "python" org-src-lang-modes nil nil #'equal) 'python-ts)
   )
 #+end_src
+
 ** =org-link=
 #+begin_src emacs-lisp
 (use-package ol
@@ -1186,14 +1189,6 @@ and later sets cursor at that point when you open that file.
   :delight "" ;; " oat"
   :custom (org-auto-tangle-default    nil)
   :hook   (org-mode . org-auto-tangle-mode))
-#+end_src
-
-** COMMENT ob-babel
-#+begin_src emacs-lisp
-(use-package ob-core
-  :straight nil
-
-  )
 #+end_src
 
 ** org-babel languages related
@@ -2539,7 +2534,8 @@ Probably requires external =rg= command.
   :general
   (:states 'normal
            :prefix "SPC"
-           "G l"  'gptel
+           "G p"  'gptel
+           "L g"  'gptel
            "G m"  'gptel-menu
            )
 
@@ -2902,7 +2898,7 @@ Probably requires external =rg= command.
            :prefix "SPC"
            "G"   '(:which-key "Google...")
            "G w" 'google-this-forecast
-           "G l" 'google-this-line
+           ;; "G l" 'google-this-line
            "G s" 'google-this-search
            "G r" 'google-this-region
            "G m" 'google-this-maps
