@@ -857,25 +857,24 @@ and later sets cursor at that point when you open that file.
               :exit
               ("'"         . org-edit-special                )
 
-              ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-              ;; :repeat-map garid/org-heading-repeat       ;;
-              ;; ("n"      .  org-next-visible-heading)     ;;
-              ;; ("p"      .  org-previous-visible-heading) ;;
-              ;;                                            ;;
-              ;; :repeat-map garid/org-block-repeat         ;;
-              ;; ("n"      .  org-next-visible-block)       ;;
-              ;; ("p"      .  org-previous-visible-block)   ;;
-              ;;                                            ;;
-              ;; :repeat-map garid/org-link-repeat          ;;
-              ;; ("n"      .  org-next-visible-link)        ;;
-              ;; ("p"      .  org-previous-visible-link)    ;;
-              ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-
               )
+              ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; :repeat-map garid/org-heading-repeat       ;;
+  ;; ("n"      .  org-next-visible-heading)     ;;
+  ;; ("p"      .  org-previous-visible-heading) ;;
+  ;;                                            ;;
+  ;; :repeat-map garid/org-block-repeat         ;;
+  ;; ("n"      .  org-next-visible-block)       ;;
+  ;; ("p"      .  org-previous-visible-block)   ;;
+  ;;                                            ;;
+  ;; :repeat-map garid/org-link-repeat          ;;
+  ;; ("n"      .  org-next-visible-link)        ;;
+  ;; ("p"      .  org-previous-visible-link)    ;;
+              ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;; :general                                                                     ;;
   ;; (:states 'normal                                                             ;;
   ;;          :keymaps   'org-mode-map                                            ;;
   ;;          :prefix    "]"                                                      ;;
@@ -895,6 +894,7 @@ and later sets cursor at that point when you open that file.
   ;;          )                                                                   ;;
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+  :general                                                                     ;;
   (:states 'normal
            :keymaps      'org-mode-map
            :prefix "SPC"
