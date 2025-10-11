@@ -87,6 +87,7 @@ run:
   (which-key-idle-delay               0.8                       )
   (which-key-idle-secondary-delay     0.01                      )
   (which-key-sort-order              'which-key-local-then-key-order )
+  (which-key-show-prefix             'echo                      )
   :config
   (which-key-mode)
   )
@@ -861,6 +862,11 @@ and later sets cursor at that point when you open that file.
               ("n"         . org-next-visible-heading        )
               ("p"         . org-previous-visible-heading    )
 
+              :repeat-map garid/org-repeat-babel-src-block
+              ("n"         . org-babel-next-src-block        )
+              ("p"         . org-babel-previous-src-block    )
+
+
               )
   :general
   (:states 'normal
@@ -905,6 +911,8 @@ and later sets cursor at that point when you open that file.
            "o b j r" 'org-babel-goto-named-result
            "o b j S" 'org-babel-goto-src-block-head
            "o b o"   'org-babel-open-src-block-result
+           "o b n"   'org-babel-next-src-block
+           "o b p"   'org-babel-previous-src-block
 
            "o d"     'garid/open-org-link-at-point-with-dired
 
