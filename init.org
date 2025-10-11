@@ -850,51 +850,18 @@ and later sets cursor at that point when you open that file.
               ("}"         . org-forward-paragraph           )
               ("<tab>"     . org-cycle                       )
               ("<backtab>" . org-shifttab                    )
-              ;; ("t"         . org-toggle-narrow-to-subtree    )
               ("n"         . org-next-block                  )
               ("p"         . org-previous-block              )
               ("c"         . org-ctrl-c-ctrl-c               )
               :exit
               ("'"         . org-edit-special                )
+              
+              :repeat-map garid/org-repeat-heading
+              ("n"         . org-next-visible-heading        )
+              ("p"         . org-previous-visible-heading    )
 
               )
-              ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;; :repeat-map garid/org-heading-repeat       ;;
-  ;; ("n"      .  org-next-visible-heading)     ;;
-  ;; ("p"      .  org-previous-visible-heading) ;;
-  ;;                                            ;;
-  ;; :repeat-map garid/org-block-repeat         ;;
-  ;; ("n"      .  org-next-visible-block)       ;;
-  ;; ("p"      .  org-previous-visible-block)   ;;
-  ;;                                            ;;
-  ;; :repeat-map garid/org-link-repeat          ;;
-  ;; ("n"      .  org-next-visible-link)        ;;
-  ;; ("p"      .  org-previous-visible-link)    ;;
-              ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-
-
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;; (:states 'normal                                                             ;;
-  ;;          :keymaps   'org-mode-map                                            ;;
-  ;;          :prefix    "]"                                                      ;;
-  ;;          "h"        'org-next-visible-heading                                ;;
-  ;;          "b"        'org-next-block                                          ;;
-  ;;          "l"        'org-next-link                                           ;;
-  ;;                                       ;"e"        'org-next-line-empty-p     ;;
-  ;;          )                                                                   ;;
-  ;;                                                                              ;;
-  ;; (:states 'normal                                                             ;;
-  ;;          :keymaps   'org-mode-map                                            ;;
-  ;;          :prefix    "["                                                      ;;
-  ;;          "h"        'org-previous-visible-heading                            ;;
-  ;;          "b"        'org-previous-block                                      ;;
-  ;;          "l"        'org-previous-link                                       ;;
-  ;;                                       ;"e"        'org-previous-line-empty-p ;;
-  ;;          )                                                                   ;;
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-  :general                                                                     ;;
+  :general
   (:states 'normal
            :keymaps      'org-mode-map
            :prefix "SPC"
@@ -939,7 +906,11 @@ and later sets cursor at that point when you open that file.
            "o b o"   'org-babel-open-src-block-result
 
            "o d"     'garid/open-org-link-at-point-with-dired
-           "o f h"   'consult-org-heading
+
+           "o h"     '(:which-key "heading")
+           "o h f"   'consult-org-heading
+           "o h n"   'org-next-visible-heading
+           "o h p"   'org-previous-visible-heading
 
            "o i"     '(:which-key "images...")
            "o i t"   'garid/org-toggle-display-images-n-edraw
