@@ -849,8 +849,8 @@ and later sets cursor at that point when you open that file.
               ("u"         . org-up-heading                  )
               ("{"         . org-backward-paragraph          )
               ("}"         . org-forward-paragraph           )
-              ("<tab>"     . org-cycle                       )
-              ("<backtab>" . org-shifttab                    )
+              ;; ("<tab>"     . org-cycle                       )
+              ;; ("<backtab>" . org-shifttab                    )
               ("n"         . org-next-block                  )
               ("p"         . org-previous-block              )
               ("c"         . org-ctrl-c-ctrl-c               )
@@ -1823,6 +1823,18 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 
 ,#+reveal_preamble:
 #+end_src
+** COMMENT ox-ip
+#+begin_src emacs-lisp
+(use-package ox-ipynb
+  :straight (ox-ipynb
+             :type git
+             :host github
+             :branch "master"
+             :repo "jkitchin/ox-ipynb")
+  )
+#+end_src
+
+#+RESULTS:
 
 * Org Attachments, Images, Figures related
 ** =org-attach=                                                                              :ATTACH:
@@ -1907,7 +1919,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   :straight (org-ipe
              :type git
              :host github
-             :brach "master"
+             :branch "master"
              :repo "Stefanomarton/org-ipe")
 
   :general
@@ -1938,7 +1950,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   :straight (edraw-mode
              :type git
              :host github
-             :brach "master"
+             :branch "master"
              :repo "misohena/el-easydraw")
   ;; :after org ox ox-latex ox-html
   :demand t ;; needed <== don't know why
