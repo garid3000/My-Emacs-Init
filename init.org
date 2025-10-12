@@ -75,6 +75,7 @@ run:
 #+end_src
 
 ** =which-key= keybinding shower
+
 #+begin_src emacs-lisp
 (use-package which-key
   :straight nil
@@ -87,7 +88,10 @@ run:
   (which-key-idle-delay               0.8                       )
   (which-key-idle-secondary-delay     0.01                      )
   (which-key-sort-order              'which-key-local-then-key-order )
-  (which-key-show-prefix             'echo                      )
+  (which-key-dont-use-unicode nil)
+  (which-key-separator " → " )
+  (which-key-unicode-correction 3)
+  ;; (which-key-show-prefix 'left)
   :config
   (which-key-mode)
   )
@@ -834,6 +838,7 @@ and later sets cursor at that point when you open that file.
 
 * Org
 ** =org=: org-mode configuration
+ 
 #+caption: org config
 #+name: lst_org
 #+begin_src emacs-lisp
@@ -857,7 +862,7 @@ and later sets cursor at that point when you open that file.
               ("c"         . org-ctrl-c-ctrl-c               )
               :exit
               ("'"         . org-edit-special                )
-              
+
               :repeat-map garid/org-repeat-heading
               ("n"         . org-next-visible-heading        )
               ("p"         . org-previous-visible-heading    )
@@ -881,6 +886,10 @@ and later sets cursor at that point when you open that file.
            "k"       'org-previous-block
            "o"       '(:which-key "org...")
            "o O"     'garid/jump-label-def-of-ref-at-point-word
+           "o o"     'org-open-at-point
+           "o p"     'org-latex-preview
+           "o d"     'garid/open-org-link-at-point-with-dired
+           "o f h"   'consult-org-heading
 
            "o T"       '(:which-key "Table...")
            "o T C"   'org-table-toggle-coordinate-overlays
@@ -892,55 +901,46 @@ and later sets cursor at that point when you open that file.
            "o T s"   'org-table-sum
            "o T x"   'org-table-export
 
-           "o a"     '(:which-key "agenda...")
+           "o a"     '(:which-key "agenda/schedule...")
            "o a C"   'org-clock-out
            "o a c"   'org-clock-in
            "o a d"   'org-deadline
            "o a s"   'org-schedule
 
            "o b"     '(:which-key "babel...")
-           "o b t"   'org-babel-tangle
            "o b ,"   'org-babel-execute-subtree
            "o b k"   'org-babel-remove-result-one-or-many
-           "o b i h" 'org-babel-insert-header-arg
-           "o b v"   'org-babel-view-src-block-info
-           "o b s"   'org-babel-demarcate-block
-           "o b p"   'org-babel-pop-to-session
-           "o b j"   '(:which-key "jump...")
-           "o b j s" 'org-babel-goto-named-src-block
-           "o b j r" 'org-babel-goto-named-result
-           "o b j S" 'org-babel-goto-src-block-head
-           "o b o"   'org-babel-open-src-block-result
            "o b n"   'org-babel-next-src-block
+           "o b o"   'org-babel-open-src-block-result
+           "o b p"   'org-babel-pop-to-session
            "o b p"   'org-babel-previous-src-block
+           "o b s"   'org-babel-demarcate-block
+           "o b t"   'org-babel-tangle
+           "o b v"   'org-babel-view-src-block-info
 
-           "o d"     'garid/open-org-link-at-point-with-dired
+           "o b j"   '(:which-key "jump...")
+           "o b i h" 'org-babel-insert-header-arg
+           "o b j S" 'org-babel-goto-src-block-head
+           "o b j r" 'org-babel-goto-named-result
+           "o b j s" 'org-babel-goto-named-src-block
 
-           "o h"     '(:which-key "heading")
-           "o f h"   'consult-org-heading
-           "o f n"   'org-next-visible-heading
-           "o f p"   'org-previous-visible-heading
 
            "o i"     '(:which-key "images...")
            "o i t"   'garid/org-toggle-display-images-n-edraw
 
            "o l"     '(:which-key "links...")
-           "o l F"   'org-footnote-action
            "o l c"   'org-cite-insert
            "o l d"   'garid/org-toggle-link-n-emphasis
-           "o l f"   'org-footnote-new
-           ;; "o l i"   'org-insert-link
            "o l l"   'org-lint
+           "o l n"   'org-next-link
            "o l o"   'org-open-at-point
-           "o l n"   'org-next-block
-           "o l p"   'org-previous-block
-           "o l N"   'org-next-link
-           "o l P"   'org-previous-link
+           "o l p"   'org-previous-link
+           "o l f"    '(:which-key "footnote...")
+           "o l f n"  'org-footnote-new
+           ;; "o l f a"  'org-footnote-action
+           "o l f N"  'org-footnote-normalize
 
-           "o o"     'org-open-at-point
-           "o p"     'org-latex-preview
-
-           "o l"     '(:which-key "subtree...")
+           "o s"     '(:which-key "subtree...")
            "o s I"   'org-indent-mode
            "o s Y"   'org-id-copy
            "o s a"   'org-archive-subtree-default-with-confirmation
@@ -1340,10 +1340,6 @@ https://stackoverflow.com/questions/78982629/in-emacs-how-to-prevent-org-babel-d
      (lambda (x) (string-match "denote.*" x))
      (directory-files "~/BrainDump/"))))
 
-  (which-key-dont-use-unicode nil)
-  (which-key-separator " → " )
-  (which-key-unicode-correction 3)
-  (which-key-show-prefix 'left)
 
   :general (
             :states 'normal
@@ -1639,6 +1635,12 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 (use-package ox
   :straight nil
   :after org
+  :general
+  (:states 'normal
+           :keymaps  'org-mode-map
+           :prefix    "SPC"
+           "o x"     '(:which-key "export...")
+           )
   :config
 
   ;;(defadvice org-export-output-file-name (before org-add-export-dir activate)
@@ -2999,3 +3001,4 @@ Probably requires external =rg= command.
                        "--"))))))
      (dired-omit-files . "\\`[.]?#\\|\\`[.][.]?\\'\\|\\.html\\'\\|\\.tex\\'"))))
 #+end_src
+
