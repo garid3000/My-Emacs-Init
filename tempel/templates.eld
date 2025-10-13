@@ -413,14 +413,14 @@ org-mode
 (begin       "#+begin_" (s name)    n> r> n "#+end_" name)
 (quote       "#+begin_quote"        n> r> n "#+end_quote")
 (abstract    "#+begin_abstract"     n> r> n "#+end_abstract")
-(sidenote    "#+begin_sidenote"     n> r> n "#+end_sidenote")
-(marginnote  "#+begin_marginnote"   n> r> n "#+end_marginnote")
+;; (sidenote    "#+begin_sidenote"     n> r> n "#+end_sidenote")
+;; (marginnote  "#+begin_marginnote"   n> r> n "#+end_marginnote")
+;; (ascii       "#+begin_export ascii" n> r> n "#+end_export")
+;; (be_comment  "#+begin_comment"      n> r> n "#+end_comment")
 (example     "#+begin_example"      n> r> n "#+end_example")
 (center      "#+begin_center"       n> r> n "#+end_center")
-(ascii       "#+begin_export ascii" n> r> n "#+end_export")
 (html        "#+begin_export html"  n> r> n "#+end_export")
 (latex       "#+begin_export latex" n> r> n "#+end_export")
-(be_comment  "#+begin_comment"      n> r> n "#+end_comment")
 (verse       "#+begin_verse"        n> r> n "#+end_verse")
 (src         "#+begin_src "         q n r n "#+end_src")
 (conf        "#+begin_src conf"     q n r n "#+end_src")
@@ -434,8 +434,13 @@ org-mode
              "#+auto_tangle: t")
 (toc         "#+options: " n
              :post (garid/choose-from-list-and-insert-it '("toc:t" "toc:2" "toc:nil")))
-(shell       "#+begin_src sh :eval no-export :results verbatim :exports both" n
-             "#!/bin/sh" n r n
+(shell       "#+begin_src sh :shebang #!/usr/bin/env bash :eval no-export :results output :exports both" n
+             ;;"#!/bin/sh"
+             n r n
+             "#+end_src") ;; :post (org-edit-src-code))
+
+(dot       "#+begin_src dot :eval no-export :exports both :file" n
+             n r n
              "#+end_src") ;; :post (org-edit-src-code))
 (startup     "#+startup: "
              :post (garid/choose-from-list-and-insert-it
@@ -473,14 +478,13 @@ org-mode
 (notes       "#+begin_notes" n n n
              "#+end_notes" n)
 
-
-
 (printbibliograph  "#+print_bibliography:")
 (async        "session "                  :post (garid/choose-from-list-and-insert-it '("yes" "no")))
 (cache        "cache "                    :post (garid/choose-from-list-and-insert-it '("yes" "no")))
 (eval         "eval "                     :post (garid/choose-from-list-and-insert-it '("never-export" "no" "yes")))
 (exports      "exports "                  :post (garid/choose-from-list-and-insert-it '("code" "results" "both" "none")))
 (file         "file (my/org-attach-dir \"" p "\") ")
+(dir          "dir (my/org-attach-dir \"\") ")
 (mkdirp       "mkdirp "                   :post (garid/choose-from-list-and-insert-it '("yes" "no")))
 (results      "results "                  :post (garid/choose-from-list-and-insert-it '("verbatim" "value" "output" "table" "file" "list" "scalar" "code" "drawer" "html" "latex" "link" "org" "pp" "silent" )))
 (session      "session "                  :post (garid/choose-from-list-and-insert-it '("SessionName" "" "/ssh:localhost:py" "/jpy:localhost#8888")))
