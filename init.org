@@ -1319,9 +1319,9 @@ https://stackoverflow.com/questions/78982629/in-emacs-how-to-prevent-org-babel-d
             :states  'normal
             :prefix  "SPC"
             "n o"   '(:which-key "+denote-org...")
+            "n o d" 'denote-org-dblock-insert-links
+            "n o e" 'denote-org-extract-org-subtree
             "n o l" 'denote-org-link-to-heading
-            "n o e" 'denote-org-dblock-insert-links
-            "n o d" 'denote-org-link-to-heading
             ;; "n l I o"  'denote-org-link-to-heading
             )
   )
