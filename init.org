@@ -433,6 +433,19 @@ Following is customization of the theme. Actual in the loading the theme is in t
            "SPC D p"  'dired-preview-mode)
   )
 #+end_src
+
+** TODO dired-filter need to do further the keybind
+#+begin_src emacs-lisp
+(use-package dired-filter
+  :straight t
+  ;; :general
+  ;; (:states 'normal
+  ;;          :keymaps   'dired-mode-map
+  ;;         "SPC D p"  'dired-preview-mode)
+
+  )
+#+end_src
+
 ** =emacs=
 :PROPERTIES:
 :ID:       20251007T133457.470613
@@ -1470,7 +1483,7 @@ https://stackoverflow.com/questions/78982629/in-emacs-how-to-prevent-org-babel-d
   (org-agenda-span             1) ;;  90)
   (org-agenda-custom-commands
    '(("i" "Inbox"                tags-todo "+TODO=\"VAGUE\"" ((org-agenda-files (file-expand-wildcards "~/BrainDump/inbox.org"))))
-     ("n" "Next actions"         tags-todo "+TODO=\"TODO\"")
+     ("n" "Next actions"         tags-todo "+TODO=\"NEXT\"")
      ("p" "Projects"             tags-todo "+TODO=\"PRJT\"")
      ("w" "Waiting"              tags-todo "+TODO=\"WAIT\"")
      ("s" "Someday"              tags-todo "+TODO=\"TODO\"|TODO=\"PRJT\"" ((org-agenda-files (file-expand-wildcards "~/BrainDump/gtd/someday.org"))))
@@ -2022,12 +2035,12 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   )
 #+end_src
 
-** =eldoc=
+** COMMENT =eldoc=
 #+begin_src emacs-lisp
 (use-package eldoc-box
   :straight t
   :config
-  (evil-define-key 'normal 'prog-mode-map  (kbd "K") 'eldoc)
+  (evil-define-key 'normal 'prog-mode-map  (kbd "K") 'eldoc) ;; this showing some questionable behaviour
   )
 #+end_src
 ** =elixir= 
@@ -2471,9 +2484,15 @@ Similar to vim-signify.
 ** =direnv.el=
 #+begin_src emacs-lisp
 (use-package direnv
- :straight t
- :config
- (direnv-mode))
+  :straight t
+  ;; :custom
+  ;; (direnv-always-show-summary t)
+  ;; (direnv-show-paths-in-summary t)
+  ;; (direnv-use-faces-in-summary nil)
+  :config
+  (direnv-mode)
+
+  )
 #+end_src
 
 ** =eshell=
@@ -2756,14 +2775,12 @@ Probably requires external =rg= command.
   )
 #+end_src
 
-** notmuch ol
+** TODO notmuch ol
 #+begin_src emacs-lisp
 (use-package ol-notmuch
   :straight  t
-  :defer     t
-  ;;:after     notmuch org
   :config
-  (define-key global-map "\C-c l" 'org-store-link))
+  (define-key global-map "\C-c l" 'org-store-link)) ;; make is more :general later
 #+end_src
 
 * Misc Packages
@@ -2901,7 +2918,6 @@ Probably requires external =rg= command.
 #+begin_src emacs-lisp
 (use-package google-translate
   :straight t
-  :after general
   :init
   (setq google-translate-translation-directions-alist '(("ja" . "en")
                                                         ("en" . "ja")
@@ -2913,6 +2929,7 @@ Probably requires external =rg= command.
            "G t" 'google-translate-smooth-translate)
 
   )
+
 (use-package google-this
   :straight t
   :general
