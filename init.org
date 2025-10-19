@@ -438,10 +438,10 @@ Following is customization of the theme. Actual in the loading the theme is in t
 #+begin_src emacs-lisp
 (use-package dired-filter
   :straight t
-  ;; :general
-  ;; (:states 'normal
-  ;;          :keymaps   'dired-mode-map
-  ;;         "SPC D p"  'dired-preview-mode)
+  :general
+  (:states 'normal
+           :keymaps   'dired-mode-map
+           "f"  'dired-filter-by-name)
 
   )
 #+end_src
@@ -1613,6 +1613,11 @@ org-attach-use-inheritance
          :map ibuffer-mode-map    ("<f7>" . casual-ibuffer-tmenu)
          :map calc-mode-map       ("<f7>" . casual-calc-tmenu)
          :map dired-mode-map      ("<f7>" . casual-dired-tmenu))
+  
+  :general
+  (:states 'normal
+           :keymaps   'dired-mode-map
+           ","  'casual-dired-sort-by-tmenu)
   )
 #+end_src
 ** =org-caldav=: 
@@ -2937,7 +2942,6 @@ Probably requires external =rg= command.
            :prefix "SPC"
            "G"   '(:which-key "Google...")
            "G w" 'google-this-forecast
-           ;; "G l" 'google-this-line
            "G s" 'google-this-search
            "G r" 'google-this-region
            "G m" 'google-this-maps

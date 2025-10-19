@@ -407,6 +407,7 @@ graphviz-dot-mode
 
 org-mode
 
+(dailywork   "Daily work today")
 (caption     "#+caption: ")
 (name        "#+name: " :post (garid/choose-from-list-and-insert-it '("fig_" "tbl_" "eqn_" "lst_")))
 (drawer      ":" p ":" n r ":end:")
@@ -477,6 +478,7 @@ org-mode
 
 (notes       "#+begin_notes" n n n
              "#+end_notes" n)
+
 
 (printbibliograph  "#+print_bibliography:")
 (async        "session "                  :post (garid/choose-from-list-and-insert-it '("yes" "no")))
