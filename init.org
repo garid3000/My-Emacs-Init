@@ -371,6 +371,7 @@ Following is customization of the theme. Actual in the loading the theme is in t
            "b b" 'list-bookmarks
            "b s" 'bookmark-set
            "b j" 'bookmark-jump
+           "b c" 'consult-bookmark
            )
   )
 #+end_src
@@ -637,7 +638,8 @@ and later sets cursor at that point when you open that file.
   (:states 'normal
            :prefix "SPC"
            "SPC"  'execute-extended-command
-           "L c"  'clone-indirect-buffer)
+           "L c"  'clone-indirect-buffer
+           "L R"  'read-only-mode)
   :bind
   ("M-Q" . kill-current-buffer)
   :config
