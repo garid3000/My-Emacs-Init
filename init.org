@@ -124,6 +124,7 @@ run:
   (evil-mode 1)
   (define-key evil-normal-state-map (kbd "SPC a") 'evil-avy-goto-char-2)
   ;; (evil-define-key 'normal  org-mode-map   (kbd "TAB") #'org-cycle)
+  (global-set-key [mouse-3] 'evil-paste-after)
 
 
 
@@ -285,6 +286,13 @@ Following is customization of the theme. Actual in the loading the theme is in t
                             (border-mode-line-inactive  bg-main     )
                             (fringe                     bg-main     )
                             ))
+  (modus-themes-with-colors
+    (custom-set-faces
+     `(font-lock-comment-face           ((t (:foreground ,border :slant italic))))
+     `(font-lock-comment-delimiter-face ((t (:foreground ,border :slant italic))))
+     ;;`(font-lock-comment-face ((t (:foreground ,fg-dim :slant italic))))))
+     ;;'(font-lock-comment-delimiter-face ((t (:foreground modus-themes-fg-cyan-faint)))))
+     ))
 
   :bind ("<f5>" . modus-themes-toggle)
   )
@@ -1155,6 +1163,10 @@ and later sets cursor at that point when you open that file.
 
   ;; from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][mastering emacs article]].
   (setf (alist-get "python" org-src-lang-modes nil nil #'equal) 'python-ts)
+
+
+  (add-hook 'org-after-refile-insert-hook 'org-mode-restart)
+
   )
 #+end_src
 
@@ -2042,10 +2054,10 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   )
 #+end_src
 
-** COMMENT =eldoc=
+** =eldoc=
 #+begin_src emacs-lisp
-(use-package eldoc-box
-  :straight t
+(use-package eldoc
+  :straight nil
   :config
   (evil-define-key 'normal 'prog-mode-map  (kbd "K") 'eldoc) ;; this showing some questionable behaviour
   )
@@ -2053,7 +2065,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 ** =elixir= 
 #+begin_src emacs-lisp
 (use-package elixir-mode :straight t)
-(use-package ob-elixir :straight t)
+(use-package ob-elixir   :straight t)
 #+end_src
 
 ** =graphviz-dot-mode=
@@ -2160,21 +2172,21 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
         "^\\s<+\\(?:\\s-*%\\(?1:%+\\)\\| In\\[[[:space:][:digit:]]*]:\\| \\[\\[\\)")
   :hook (python-base-mode . code-cells-mode)
   :bind (:map code-cells-mode-map
-              ("M-<RET>"    . code-cells-eval           )
-              ("C-k"        . code-cells-backward-cell  )
               ("C-j"        . code-cells-forward-cell   )
-              ("M-k"        . code-cells-move-cell-up   )
+              ("C-k"        . code-cells-backward-cell  )
+              ("C-n"        . code-cells-forward-cell   )
+              ("C-p"        . code-cells-backward-cell  )
+              ("M-<RET>"    . code-cells-eval           )
+              ("M-D"        . code-cells-duplicate      )
+              ("M-d"        . code-cells-kill           )
               ("M-j"        . code-cells-move-cell-down )
-              ("S-<return>" . code-cells-eval-and-step  )
-              ("C-<return>" . (lambda () (interactive)
-                                (code-cells-forward-cell)
-                                (insert "\n# %%\n\n")
-                                (previous-line)))
-              ("M-v"        . code-cells-mark-cell            )
-              ("M-d"        . code-cells-kill                 )
-              ("M-D"        . code-cells-duplicate            )
-              ("M-;"        . code-cells-comment-or-uncomment )
+              ("M-k"        . code-cells-move-cell-up   )
               ("M-l"        . (lambda () (interactive) (insert "\n# %%\n")))
+              ("M-v"        . code-cells-mark-cell      )
+
+              ("M-;"        . code-cells-comment-or-uncomment)
+              ("S-<return>" . code-cells-eval-and-step  )
+              ("C-<return>" . (lambda () (interactive) (code-cells-forward-cell) (insert "\n# %%\n\n") (previous-line)))
               )
   )
 #+end_src
