@@ -391,7 +391,11 @@ Following is customization of the theme. Actual in the loading the theme is in t
   :demand   t
   :commands (dired dired-jump)
   :custom ((dired-listing-switches "-agho --group-directories-first")
-           (dired-kill-when-opening-new-dired-buffer t))
+           ;;(dired-listing-switches "-a --group-directories-first")
+           (dired-kill-when-opening-new-dired-buffer t)
+           (dired-hide-details-mode t)
+
+           )
   :hook     ((dired-mode . denote-dired-mode)
              (dired-mode . dired-omit-mode  )
              (dired-mode . auto-revert-mode ))
@@ -2221,6 +2225,12 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   :straight t
   :custom (jupyter-repl-echo-eval-p t))
 #+end_src
+** arduino
+#+begin_src emacs-lisp
+(use-package arduino-mode
+  :straight t
+  )
+#+end_src
 * Coding input
 ** =tempel=: snippet system
 #+begin_src emacs-lisp
@@ -2383,7 +2393,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   ;; :after project
   :hook
   (python-base-mode . eglot-ensure)
-  
+
   :general
   (:states 'normal
            :keymaps 'prog-mode-map
@@ -2397,6 +2407,13 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 
   (add-to-list 'eglot-server-programs
                '(org-mode . ("harper-ls" "--stdio")))
+
+  (add-to-list 'eglot-server-programs
+               '(arduino-mode . ("arduino-language-server"
+                                 "-clangd" "clangd" ;;"-clangd" "/usr/bin/clangd"
+                                 "-cli" "arduino-cli" ;;"-cli" "/opt/homebrew/bin/arduino-cli"
+                                 "-cli-config" "~/.arduino15/arduino-cli.yaml"
+                                 "-fqbn" "esp32:esp32:esp32da")))
 
   (evil-define-key 'normal 'prog-mode-map  (kbd "g o") 'eglot-find-typeDefinition)
   (evil-define-key 'normal 'prog-mode-map  (kbd "] d") 'flymake-goto-next-error)
@@ -2982,6 +2999,15 @@ Probably requires external =rg= command.
              :branch "master"
              :repo "karthink/reftex-xref"))
 #+end_src
+
+** csv mode
+#+begin_src emacs-lisp
+(use-package csv-mode
+  :straight t)
+#+end_src
+
+#+RESULTS:
+
 * Daemon
 #+begin_src emacs-lisp
 (use-package server
