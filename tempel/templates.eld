@@ -540,6 +540,10 @@ org-mode
 
 (py "#+begin_src python :async yes"  n n "#+end_src")
 
+
+notmuch-message-mode  :when (re-search-backward "^To:" (line-beginning-position) 'noerror)
+(i :post (garid/insert-list-of-email-addresses))
+
 ;; Local Variables:
 ;; mode: lisp-data
 ;; outline-regexp: "[a-z]"

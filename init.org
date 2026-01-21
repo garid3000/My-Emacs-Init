@@ -646,6 +646,8 @@ and later sets cursor at that point when you open that file.
 #+begin_src emacs-lisp
 (use-package simple
   :straight nil
+  :custom
+  (mail-user-agent 'notmuch-user-agent)
   :general
   (:states 'normal
            :prefix "SPC"
@@ -2038,6 +2040,23 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   (edraw-org-setup-exporter)
   )
 #+end_src
+
+** COMMENT test
+#+begin_src emacs-lisp
+(use-package org-drawio
+  :commands (org-drawio-create-drawing)
+  ;;:straigh (org-drawio :repo 4honor/org-drawio :fetcher github)
+  ;; customize diragram directory
+
+  :straight (org-drawio
+             :type git
+             :host github
+             :repo "4honor/org-drawio")
+  (setq org-drawio-default-directory "/tmp/"))
+
+(require 'org-drawio)
+#+end_src
+
 * Programming languages
 ** =prog-mode=
 #+begin_src emacs-lisp
@@ -2729,14 +2748,47 @@ Probably requires external =rg= command.
 (use-package notmuch
   :straight t
   :defer    t
+  :custom
+  (notmuch-search-oldest-first nil)
+  (notmuch-address-command nil)
   :general
   (:states 'normal
-            :prefix "SPC"
-            "m"   '(:which-key "mail...")
-            "m a" 'notmuch
-            "m n" 'notmuch-mua-new-mail)
+           :prefix "SPC"
+           "m"   '(:which-key "mail...")
+           "m a" 'notmuch
+           "m n" 'notmuch-mua-new-mail)
+
+  :config
+  (defun garid/insert-list-of-email-addresses ()
+    ""
+    (interactive)
+    (insert
+     (completing-read "contacts: "
+                      (append
+                       (seq-filter
+                        #'identity
+                        (mapcar
+                         (lambda (entry)
+                           (let* ((name  (org-no-properties (car entry)))
+                                  (plist (nth 2 entry))
+                                  (email (cdr (assoc "EMAIL" plist))))
+                             (when (and email
+                                        (not (string-match-p "%(org-contacts-template-email)" email)))
+                               (format "\"%s\" <%s>" name email))))
+                         (org-contacts-db)))
+
+                       (split-string                                                        ;; splits it into list of strings
+                        (shell-command-to-string "notmuch address \"*\" | sort | uniq -i")  ;; runs cmd in shell
+                        "[\r\n]+" t)
+                       )
+                      )
+     )
+
+    )
   )
+
 #+end_src
+
 
 ** writting
 #+begin_src emacs-lisp
