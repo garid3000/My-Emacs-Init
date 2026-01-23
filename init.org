@@ -357,6 +357,12 @@ Following is customization of the theme. Actual in the loading the theme is in t
   )
 #+end_src
 
+** Indent bars
+#+begin_src emacs-lisp
+(use-package indent-bars
+  :straight t)
+#+end_src
+
 * Configuration of General Built-in Packages
 ** =align=
 #+begin_src emacs-lisp
