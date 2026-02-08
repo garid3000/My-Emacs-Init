@@ -1038,8 +1038,8 @@ and later sets cursor at that point when you open that file.
   ;; ---------------- TODO tabs ----------------------------------------------------------
   (org-todo-keywords      '((sequence
                              "TODO(t)" "NEXT(n)" "WAIT(w)" "PRJT(p)" "VAGUE(v)"
-                             "|"
-                             "NEAR(N)" "DONE(d)" "DONE(d)" "CNCL(c)")))
+                             "|"  "DONE(d)" "CNCL(c)")))
+                             ;;//"NEAR(N)" "DONE(d)"
 
   ( org-todo-keyword-faces '(("TODO"  . org-todo                           )
                              ("PRJT"  . org-tag                            )
@@ -1502,15 +1502,17 @@ https://stackoverflow.com/questions/78982629/in-emacs-how-to-prevent-org-babel-d
   :after      org
   :straight   nil
   :custom
-  (org-agenda-files '("~/BrainDump/denote/20250911T175810--personal__gtd.org"
-                      "~/BrainDump/denote_bps/20250911T174108--bps__gtd.org"
-                      "~/BrainDump/inbox.org"
+  (org-agenda-files '(;;"~/BrainDump/denote/20250911T175810--personal__gtd.org"
+                      ;;"~/BrainDump/denote_bps/20250911T174108--bps__gtd.org"
+                      ;;//"~/BrainDump/inbox.org"
+                      "~/BrainDump/gtd/org-gtd-tasks.org"
+                      ;;//"~/BrainDump/inbox.org"
                       ))
   (org-agenda-span             1) ;;  90)
   (org-agenda-custom-commands
-   '(("i" "Inbox"                tags-todo "+TODO=\"VAGUE\"" ((org-agenda-files (file-expand-wildcards "~/BrainDump/inbox.org"))))
+   '(("i" "Inbox"                tags-todo "+TODO=\"VAGUE\"" ((org-agenda-files (file-expand-wildcards "~/BrainDump/gtd/inbox.org"))))
      ("n" "Next actions"         tags-todo "+TODO=\"NEXT\"")
-     ("p" "Projects"             tags-todo "+TODO=\"PRJT\"")
+     ;; ("p" "Projects"             tags-todo "+TODO=\"PRJT\"")
      ("w" "Waiting"              tags-todo "+TODO=\"WAIT\"")
      ("s" "Someday"              tags-todo "+TODO=\"TODO\"|TODO=\"PRJT\"" ((org-agenda-files (file-expand-wildcards "~/BrainDump/gtd/someday.org"))))
      ("o" "Actions and Projects" tags-todo "+TODO=\"TODO\"|TODO=\"PRJT\"")))
@@ -1670,6 +1672,57 @@ org-attach-use-inheritance
            :prefix "SPC"
            "c t" 'consult-todo
            "c T" 'consult-todo-project))
+#+end_src
+** TODO gtd
+#+begin_src emacs-lisp
+(use-package org-edna
+  :straight t)
+
+(use-package org-gtd
+  :straight t
+  :ensure t
+  :after org
+  :demand t
+  :init
+  ;; Suppress upgrade warnings (must be set before package loads)
+  (setq org-gtd-update-ack "4.0.0")
+  (setq org-gtd-directory "~/BrainDump/gtd/")
+  ;; Where org-gtd will keep its files (defaults to ~/gtd/)
+  ;; (setq org-gtd-directory "~/my-gtd/")
+
+  :custom
+  ;; Configure TODO keyword states (options like "TODO(t)" or "DONE(d!)" are fine)
+  ;; already put in the org mode config
+  ;; //(org-todo-keywords '((sequence "TODO" "NEXT" "WAIT" "|" "DONE" "CNCL")))
+
+  ;; Map GTD semantic states to your keywords
+  (org-gtd-keyword-mapping '((todo . "TODO")
+                             (next . "NEXT")
+                             (wait . "WAIT")
+                             (canceled . "CNCL")))
+
+  :config
+  ;; REQUIRED: Enable org-edna for project dependencies
+  (org-edna-mode 1)
+
+  ;; Add org-gtd files to your agenda (must be in :config so org-gtd-directory is defined)
+  (setq org-agenda-files (list org-gtd-directory))
+
+  :bind
+  ;; Global keybindings (work anywhere in Emacs)
+  (("C-c d c" . org-gtd-capture)
+   ("C-c d e" . org-gtd-engage)
+   ("C-c d p" . org-gtd-process-inbox)
+   ("C-c d n" . org-gtd-show-all-next)
+   ("C-c d s" . org-gtd-reflect-stuck-projects)
+
+   ;; Keybinding for organizing items (only works in clarify buffers)
+   :map org-gtd-clarify-mode-map
+   ("C-c c" . org-gtd-organize)
+
+   ;; Quick actions on tasks in agenda views (optional but recommended)
+   :map org-agenda-mode-map
+   ("C-c ." . org-gtd-agenda-transient)))
 #+end_src
 * Org Exporting related
 ** =ox=
