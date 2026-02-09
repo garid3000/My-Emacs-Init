@@ -2818,6 +2818,11 @@ Probably requires external =rg= command.
            "m n" 'notmuch-mua-new-mail)
 
   :config
+  (setq notmuch-identities '("Garid <garid@bpsensing.com>"))
+  (setq notmuch-fcc-dirs
+        '(("garid@bpsensing.com" . "posteo/Sent")
+          ))
+
   (defun garid/insert-list-of-email-addresses ()
     ""
     (interactive)
@@ -2845,10 +2850,107 @@ Probably requires external =rg= command.
 
     )
   )
-
 #+end_src
+*** TODO COMMENT Some test from
+#+begin_src emacs-lisp :tangle nil
+;; This buffer is for text that is not saved, and for Lisp evaluation.
+;; To create a file, visit it with ‘C-x C-f’ and enter text in its buffer.
 
+(setq notmuch-show-logo nil
+      notmuch-column-control 1.0
+      notmuch-hello-auto-refresh t
+      notmuch-hello-recent-searches-max 20
+      notmuch-hello-thousands-separator ""
+      notmuch-hello-sections '(notmuch-hello-insert-saved-searches)
+      notmuch-show-all-tags-list t)
 
+(setq notmuch-show-logo nil)
+(setq notmuch-column-control 1.0)
+(setq notmuch-hello-recent-searches-max 20)
+(setq notmuch-show-all-tags-list nil)
+
+(setq notmuch-search-result-format
+      '(("date" . "%12s  ")
+        ("count" . "%-7s  ")
+        ("authors" . "%-20s  ")
+        ("subject" . "%-80s  ")
+        ("tags" . "(%s)")))
+
+(setq notmuch-show-empty-saved-searches t)
+
+(setq notmuch-saved-searches
+      `(( :name "📥 inbox"
+          :query "tag:inbox"
+          :sort-order newest-first
+          :key ,(kbd "i"))
+        ( :name "💬 all unread (inbox)"
+          :query "tag:unread and tag:inbox"
+          :sort-order newest-first
+          :key ,(kbd "u"))
+        ( :name "🛠️ unread packages"
+          :query "tag:unread and tag:package"
+          :sort-order newest-first
+          :key ,(kbd "p"))
+        ;; My coaching job: <https://protesilaos.com/coach/>.
+        ( :name "🏆 unread coaching"
+          :query "tag:unread and tag:coach"
+          :sort-order newest-first
+          :key ,(kbd "c")))))
+
+(setq notmuch-mua-compose-in 'current-window)
+(setq notmuch-mua-compose-in 'new-frame) ;; nice
+(setq notmuch-address-command 'internal) ;;
+(setq notmuch-address-use-company nil) ;; probably must (perhaps C-M-i is enough?)
+(setq notmuch-always-prompt-for-sender nil) ;;?
+(setq notmuch-mua-cite-function 'message-cite-original-without-signature) ;;?
+(setq notmuch-mua-reply-insert-header-p-function 'notmuch-show-reply-insert-header-p-never)
+(setq notmuch-mua-user-agent-function nil)
+(setq notmuch-maildir-use-notmuch-insert t)
+(setq notmuch-crypto-process-mime t)
+(setq notmuch-crypto-get-keys-asynchronously t)
+(setq notmuch-mua-attachment-regexp   ; see `notmuch-mua-send-hook'
+      (concat "\\b\\(attache\?ment\\|attached\\|attach\\|"
+              "pi[èe]ce\s+jointe?\\|"
+              "συνημμ[εέ]νο\\|επισυν[αά]πτω\\)\\b"))
+
+(with-eval-after-load 'message
+  (defun prot-notmuch-message-tab ()
+    "Override for `message-tab' to enforce header line check.
+More specifically, perform address completion when on a relevant header
+line, because `message-tab' sometimes (not sure when/how) fails to do
+that and instead tries to complete against dictionary entries."
+    (interactive nil message-mode)
+    (cond
+     ((save-excursion
+        (goto-char (line-beginning-position))
+        (looking-at notmuch-address-completion-headers-regexp))
+      (notmuch-address-expand-name)
+      ;; Completion was performed; nothing else to do.
+      nil)
+     (message-tab-body-function (funcall message-tab-body-function))
+     (t (funcall (or (lookup-key text-mode-map "\t")
+                     (lookup-key global-map "\t")
+                     'indent-relative)))))
+
+  (advice-add #'message-tab :override #'prot-notmuch-message-tab))
+
+--------------------------
+;;;; Reading messages
+(setq notmuch-show-relative-dates t)
+(setq notmuch-show-all-multipart/alternative-parts nil)
+(setq notmuch-show-indent-messages-width 0)
+(setq notmuch-show-indent-multipart nil)
+(setq notmuch-show-part-button-default-action 'notmuch-show-view-part) ;; interesting
+(setq notmuch-show-text/html-blocked-images ".") ; block everything
+(setq notmuch-wash-wrap-lines-length 120)
+(setq notmuch-unthreaded-show-out nil)
+(setq notmuch-message-headers '("To" "Cc" "Subject" "Date"))
+(setq notmuch-message-headers-visible t)
+
+(let ((count most-positive-fixnum)) ; I don't like the buttonisation of long quotes
+  (setq notmuch-wash-citation-lines-prefix count
+        notmuch-wash-citation-lines-suffix count))
+#+end_src
 ** writting
 #+begin_src emacs-lisp
 (use-package sendmail
@@ -2862,11 +2964,11 @@ Probably requires external =rg= command.
   (mail-envelope-from              'header           )
   :config
   ;; Use msmtp for sending
-  (setq message-send-mail-function 'message-send-mail-with-sendmail
-        sendmail-program "msmtp"
-        mail-specify-envelope-from t
+  (setq message-send-mail-function     'message-send-mail-with-sendmail
+        sendmail-program               "msmtp"
+        mail-specify-envelope-from     t
         message-sendmail-envelope-from 'header
-        mail-envelope-from 'header)
+        mail-envelope-from             'header)
 
   ;; Identity
   (setq user-full-name "Garid Zorigoo"
@@ -2880,7 +2982,7 @@ Probably requires external =rg= command.
 
   ;; Optional signature
   (setq message-signature
-        "Best regards,\nGarid")
+        "Best regards,\nGarid Z.")
 
   (setq message-default-mail-headers "Bcc: garid@bpsensing.com")
 
