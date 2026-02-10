@@ -237,7 +237,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   :straight nil
   :custom
   (face-font-family-alternatives
-   '(("Monospace" "Aporetic Sans Mono" "Iosevka SS06" "Iosevka Term SS06" "Liberation Mono" "courier" "fixed")
+   '(("Monospace" "Aporetic Sans Mono" "Noto Sans Mono CJK JP" "Iosevka SS06" "Iosevka Term SS06" "Liberation Mono" "courier" "fixed")
      ("Serif" "Aporetic Serif Mono" "Iosevka etoile" "Linux Libertine"  "CMU Serif" "Georgia"  "DejaVu Serif")))
 
   :custom-face
@@ -2823,6 +2823,33 @@ Probably requires external =rg= command.
         '(("garid@bpsensing.com" . "posteo/Sent")
           ))
 
+  (setq notmuch-saved-searches
+        `(( :name "📥 inbox"
+            :query "tag:inbox"
+            :sort-order newest-first
+            :key ,(kbd "i"))
+          ( :name "💬 all unread (inbox)"
+            :query "tag:unread and tag:inbox"
+            :sort-order newest-first
+            :key ,(kbd "u"))
+          ( :name "💼 bps_internal"
+            :query "tag:bps_internal"
+            :sort-order newest-first
+            :key ,(kbd "b"))
+          ( :name "🍌 esl"
+            :query "tag:esl"
+            :sort-order newest-first
+            :key ,(kbd "e"))
+          ( :name "🌱 floatmeal"
+            :query "tag:floatmeal"
+            :sort-order newest-first
+            :key ,(kbd "f"))
+          ( :name "🌾 shinmei"
+            :query "tag:shinmei"
+            :sort-order newest-first
+            :key ,(kbd "s"))
+          ))
+
   (defun garid/insert-list-of-email-addresses ()
     ""
     (interactive)
@@ -2844,11 +2871,37 @@ Probably requires external =rg= command.
                        (split-string                                                        ;; splits it into list of strings
                         (shell-command-to-string "notmuch address \"*\" | sort | uniq -i")  ;; runs cmd in shell
                         "[\r\n]+" t)
-                       )
-                      )
-     )
+                       ))))
 
-    )
+  (defun my-notmuch--truncate/pad-to-width (s width &optional pad ellipsis)
+    (let* ((pad (or pad ?\s))
+           (ellipsis (or ellipsis "…"))
+           (s (truncate-string-to-width s width 0 pad ellipsis)))
+      (concat s (make-string (max 0 (- width (string-width s))) pad))))
+
+  (defun my-notmuch-search-authors-field (_fmt result)
+    (let* ((w 20)
+           (a (notmuch-sanitize (plist-get result :authors)))
+           (s (my-notmuch--truncate/pad-to-width a w)))
+      (concat
+       (propertize s 'face 'notmuch-search-matching-authors)
+       "  ")))   ;; <-- column separator
+
+  (defun my-notmuch-search-subject-field (_fmt result)
+    (let* ((w 80)
+           (subj (notmuch-sanitize (plist-get result :subject)))
+           (s (my-notmuch--truncate/pad-to-width subj w)))
+      (concat
+       (propertize s 'face 'notmuch-search-subject)
+       "  ")))   ;; <-- column separator
+
+  (setq notmuch-search-result-format
+        `(("date" . "%12s  ")
+          ("count" . "%-7s  ")
+          (,#'my-notmuch-search-authors-field . "%s")
+          (,#'my-notmuch-search-subject-field . "%s")
+          ("tags" . "(%s)")))
+
   )
 #+end_src
 *** TODO COMMENT Some test from
@@ -2878,24 +2931,6 @@ Probably requires external =rg= command.
 
 (setq notmuch-show-empty-saved-searches t)
 
-(setq notmuch-saved-searches
-      `(( :name "📥 inbox"
-          :query "tag:inbox"
-          :sort-order newest-first
-          :key ,(kbd "i"))
-        ( :name "💬 all unread (inbox)"
-          :query "tag:unread and tag:inbox"
-          :sort-order newest-first
-          :key ,(kbd "u"))
-        ( :name "🛠️ unread packages"
-          :query "tag:unread and tag:package"
-          :sort-order newest-first
-          :key ,(kbd "p"))
-        ;; My coaching job: <https://protesilaos.com/coach/>.
-        ( :name "🏆 unread coaching"
-          :query "tag:unread and tag:coach"
-          :sort-order newest-first
-          :key ,(kbd "c")))))
 
 (setq notmuch-mua-compose-in 'current-window)
 (setq notmuch-mua-compose-in 'new-frame) ;; nice
