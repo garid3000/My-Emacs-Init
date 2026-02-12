@@ -890,8 +890,8 @@ and later sets cursor at that point when you open that file.
               ("u"         . org-up-heading                  )
               ("{"         . org-backward-paragraph          )
               ("}"         . org-forward-paragraph           )
-              ;; ("<tab>"     . org-cycle                       )
-              ;; ("<backtab>" . org-shifttab                    )
+              ;; ("<tab>"     . org-cycle                    )
+              ;; ("<backtab>" . org-shifttab                 )
               ("n"         . org-next-block                  )
               ("p"         . org-previous-block              )
               ("c"         . org-ctrl-c-ctrl-c               )
@@ -1002,7 +1002,9 @@ and later sets cursor at that point when you open that file.
            "o b d"     'org-babel-detangle
            "o b j"     'org-babel-tangle-jump-to-org
            "o b g d"   'org-babel-tangle-jump-to-org
-           "o c  "     'org-capture)
+           "o C  "     'org-capture
+           "o c  "     'org-gtd-capture
+           )
   :custom
   ;; ---------------- theme/styling ------------------------------------------------------
   (org-hide-emphasis-markers         t                        )
@@ -1039,11 +1041,11 @@ and later sets cursor at that point when you open that file.
   (org-todo-keywords      '((sequence
                              "TODO(t)" "NEXT(n)" "WAIT(w)" "PRJT(p)" "VAGUE(v)"
                              "|"  "DONE(d)" "CNCL(c)")))
-                             ;;//"NEAR(N)" "DONE(d)"
+  ;;//"NEAR(N)" "DONE(d)"
 
   ( org-todo-keyword-faces '(("TODO"  . org-todo                           )
                              ("PRJT"  . org-tag                            )
-                             ("NEXT"  . org-target                         )
+                             ("NEXT"  . org-formula                        )
                              ("WAIT"  . org-warning                        )
                              ("DONE"  . org-done                           )
                              ("VAGUE" . "medium purple"                    )
@@ -1052,14 +1054,26 @@ and later sets cursor at that point when you open that file.
   (org-log-done            'time)
   (org-tags-column         -100)   ;; how many spaces left padding for tags
   (org-tag-alist           '((:startgroup . nil)
-                             ("@rsch" . ?r) ("@bps" . ?w) ("@home" . ?h)
-                             (:endgroup . nil)
-                             ("phd"  . ?p) ("4bc"   . ?4) ("idea"     . ?i)
-                             ("lit"  . ?l) ("yak"   . ?y) ("tool"     . ?T)
-                             ("tdbt" . ?t) ("rndm"  . ?R) ("meet"     . ?m)
-                             ("qstn" . ??) ("prjt"  . ?P) ("msg/mail" . ?M)
-                             ("Life" . ?L) ("write" . ?W) ("errand"   . ?e)
-                             ("hkdn" . ?H) ("read" . ?R)
+                             ("bps"  . ?b) ;; should it be like at during work time?
+                             ("life" . ?l) ;; should it be more like at leasure time?
+                             (:endgroup   . nil)
+                             ("4bc"       . ?4)
+                             ("yak"       . ?y)
+                             ("tdbt"      . ?t)
+                             ("meet"      . ?m)
+                             ("qstn"      . ??)
+                             ("msg"       . ?M)
+                             ("esl"       . ?e)
+                             ("rsch"      . ?r)
+                             ("slide"     . ?s)
+                             ("device"    . ?d)
+                             ("floatmeal" . ?f)
+                             ("uavsoft"   . ?U)
+                             ("ernd"      . ?E)
+
+                             ;; ("phd"  . ?p)  ("lit"  . ?l)
+                             ;; ("hkdn" . ?H)
+                             ;; ("read" . ?R)
                              ))
   (org-return-follows-link      t) ;; org-keys?
 
@@ -1696,9 +1710,9 @@ org-attach-use-inheritance
   ;; //(org-todo-keywords '((sequence "TODO" "NEXT" "WAIT" "|" "DONE" "CNCL")))
 
   ;; Map GTD semantic states to your keywords
-  (org-gtd-keyword-mapping '((todo . "TODO")
-                             (next . "NEXT")
-                             (wait . "WAIT")
+  (org-gtd-keyword-mapping '((todo     . "TODO")
+                             (next     . "NEXT")
+                             (wait     . "WAIT")
                              (canceled . "CNCL")))
 
   :config
@@ -1719,10 +1733,14 @@ org-attach-use-inheritance
    ;; Keybinding for organizing items (only works in clarify buffers)
    :map org-gtd-clarify-mode-map
    ("C-c c" . org-gtd-organize)
+   ("<f8>" . org-gtd-organize)
 
    ;; Quick actions on tasks in agenda views (optional but recommended)
    :map org-agenda-mode-map
-   ("C-c ." . org-gtd-agenda-transient)))
+   ("C-c ." . org-gtd-agenda-transient)
+   ("<f8>" . org-gtd-agenda-transient)
+
+   ))
 #+end_src
 * Org Exporting related
 ** =ox=
@@ -2832,8 +2850,8 @@ Probably requires external =rg= command.
             :query "tag:unread and tag:inbox"
             :sort-order newest-first
             :key ,(kbd "u"))
-          ( :name "💼 bps_internal"
-            :query "tag:bps_internal"
+          ( :name "💼 BPS"
+            :query "tag:bps"
             :sort-order newest-first
             :key ,(kbd "b"))
           ( :name "🍌 esl"
@@ -2848,6 +2866,14 @@ Probably requires external =rg= command.
             :query "tag:shinmei"
             :sort-order newest-first
             :key ,(kbd "s"))
+          ( :name "✈️ uavsoft"
+            :query "tag:uavsoft"
+            :sort-order newest-first
+            :key ,(kbd "U"))
+          ( :name "📌 todo"
+            :query "tag:todo"
+            :sort-order newest-first
+            :key ,(kbd "t"))
           ))
 
   (defun garid/insert-list-of-email-addresses ()
@@ -3059,12 +3085,20 @@ that and instead tries to complete against dictionary entries."
   )
 #+end_src
 
-** TODO notmuch ol
+** TODO ol-notmuch (org link notmuch)
+
 #+begin_src emacs-lisp
 (use-package ol-notmuch
   :straight  t
   :config
-  (define-key global-map "\C-c l" 'org-store-link)) ;; make is more :general later
+  (define-key global-map "\C-c l" 'org-store-link) ;; make is more :general later
+
+  :general
+  (:states 'normal
+           "SPC o l s" 'org-store-link
+           )
+
+  )
 #+end_src
 
 * Misc Packages
