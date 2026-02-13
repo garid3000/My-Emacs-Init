@@ -2584,17 +2584,17 @@ Similar to vim-signify.
 (use-package git-gutter
   :delight  " gtg"
   :straight t
-  :bind (
-         :repeat-map git-gutter:repeat-map
-         ("n" . git-gutter:next-hunk     )
-         ("p" . git-gutter:previous-hunk )
-         ("s" . git-gutter:popup-hunk    )
-         ("S" . git-gutter:stage-hunk    )
-         ("r" . git-gutter:revert-hunk   )
-         :exit ;; here are available in the repeat, but only once executed
-         ("c" . magit-commit-create      )
-         ("C" . magit-commit             )
-         ("b" . magit-blame              ))
+  :bind (:repeat-map git-gutter:repeat-map
+                     ("n" . git-gutter:next-hunk     )
+                     ("p" . git-gutter:previous-hunk )
+                     ("s" . git-gutter:popup-hunk    )
+                     ("S" . git-gutter:stage-hunk    )
+                     ("r" . git-gutter:revert-hunk   )
+                     ;;:exit ;; here are available in the repeat, but only once executed
+                     ;;("c" . magit-commit-create      ) these were great but was conflicting with 
+                     ;;("C" . magit-commit             ) gptel commit keybinding.
+                     ;;("b" . magit-blame              ) perhaps should have added major-mode specification for the gptel commit
+                     )
   :general (
             :states 'normal
             :prefix "SPC"
