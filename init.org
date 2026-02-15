@@ -433,6 +433,7 @@ Following is customization of the theme. Actual in the loading the theme is in t
   :general
   (:states 'normal
            :prefix "SPC"
+           :keymaps   'dired-mode-map
            "D w"  'wdired-change-to-wdired-mode)
   )
 #+end_src
@@ -454,16 +455,16 @@ Following is customization of the theme. Actual in the loading the theme is in t
   )
 #+end_src
 
-** TODO dired-filter need to do further the keybind
+** =dired-filter= need to do further the keybind
 #+begin_src emacs-lisp
 (use-package dired-filter
   :straight t
   :general
   (:states 'normal
            :keymaps   'dired-mode-map
-           "f"  'dired-filter-by-name)
-
-  )
+           "f"  'dired-filter-by-name
+           "F"  'dired-filter-pop
+           ))
 #+end_src
 
 ** =emacs=
@@ -569,18 +570,18 @@ Following is customization of the theme. Actual in the loading the theme is in t
             :states 'normal
             :prefix "SPC"
             "f"  'find-file
-            "O e"  '(lambda () (interactive) (find-file "~/.config/emacs/init.org"))
-            "O E"  '(lambda () (interactive) (find-file "~/.config/emacs/init.el"))
-            "O b"  '(lambda () (interactive) (find-file (nth 0 org-cite-global-bibliography)))
-            "O p"  '(lambda () (interactive) (find-file "~/BrainDump/bookshelf/"))
-            "O O"  '(lambda () (interactive) (find-file org-default-notes-file))
-            "O i"  '(lambda () (interactive) (find-file "~/BrainDump/inbox.org"))
-            "O m"  '(lambda () (interactive) (find-file "~/BrainDump/denote_bps/20250911T174108--bps__gtd.org"))
-            "O s"  '(lambda () (interactive) (find-file "/etc/nixos/configuration.nix"))
             "O c"  'citar-open
             "L r"  'revert-buffer-quick
-            )
-  )
+            ;; I should I use bookmarks
+            ;; "O e"  '(lambda () (interactive) (find-file "~/.config/emacs/init.org"))
+            ;; "O E"  '(lambda () (interactive) (find-file "~/.config/emacs/init.el"))
+            ;; "O b"  '(lambda () (interactive) (find-file (nth 0 org-cite-global-bibliography)))
+            ;; "O p"  '(lambda () (interactive) (find-file "~/BrainDump/bookshelf/"))
+            ;; "O O"  '(lambda () (interactive) (find-file org-default-notes-file))
+            ;; "O i"  '(lambda () (interactive) (find-file "~/BrainDump/inbox.org"))
+            ;; "O m"  '(lambda () (interactive) (find-file "~/BrainDump/denote_bps/20250911T174108--bps__gtd.org"))
+            ;; "O s"  '(lambda () (interactive) (find-file "/etc/nixos/configuration.nix"))
+            ))
 #+end_src
 ** =flyspell=
 #+begin_src emacs-lisp
@@ -598,8 +599,7 @@ Following is customization of the theme. Actual in the loading the theme is in t
   :general
   (:states 'normal
            "SPC L i"  'ibuffer
-           )
-  )
+           ))
 #+end_src
 
 ** =newcomment=
@@ -726,15 +726,13 @@ and later sets cursor at that point when you open that file.
 
          ;; :repeat-map garid/windmove-repeat
          ;; ("="   . balance-windows              )
-
          ;; ("{"   . shrink-window-horizontally   )
          ;; ("}"   . enlarge-window-horizontally  )
          ;; ("[".    shrink-window                )
          ;; ("]".    enlarge-window               )
          ;; :exit
          ;; ("RET"   . nil                        )
-         )
-  )
+         ))
 #+end_src
 
 * Mini-buffer related
@@ -1421,31 +1419,6 @@ https://stackoverflow.com/questions/78982629/in-emacs-how-to-prevent-org-babel-d
 
 #+RESULTS:
 
-** COMMENT =consult-denote=: consulting with denote                                         :by_prot:
-#+begin_src emacs-lisp
-(use-package consult-denote
-  :straight t
-  ;; :after denote
-  :custom
-  (consult-denote-silo-source                             ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-   (mapcar                                                ;; (consult-denote-silo-source            ;;
-    (lambda (y) (concat "~/BrainDump/" y))                ;;  '("~/BrainDump/denote"                ;;
-    (seq-filter                                           ;;    "~/BrainDump/denote_bps/"           ;;
-     (lambda (x) (string-match "denote.*" x))             ;;    "~/BrainDump/denote_proj_grape//")) ;;
-     (directory-files "~/BrainDump/"))))                  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-  :general (
-            :states  'normal
-            :prefix  "SPC"
-            "n s"    'consult-denote-grep
-            "n F"    'consult-denote-find
-            )
-  :config
-  (consult-denote-mode 1))
-#+end_src
-
-#+RESULTS:
-
 ** =citar=: citation
 
 #+begin_src emacs-lisp
@@ -1648,49 +1621,19 @@ license.
   (org-super-agenda-mode t)
   )
 #+end_src
-** COMMENT test
-From [[https://librephoenix.com/2023-12-30-making-org-agenda-look-beautiful]]
-#+begin_src emacs-lisp
-(setq org-agenda-skip-timestamp-if-done               t
-      org-agenda-skip-deadline-if-done                t
-      org-agenda-skip-scheduled-if-done               t
-      org-agenda-skip-scheduled-if-deadline-is-shown  t
-      org-agenda-skip-timestamp-if-deadline-is-shown  t)
-#+end_src
-
-org-agenda-category-icon-alis -> #+category 
-
-<2005-05-10 Tue 20:30>--<2005-05-10 Tue 22:15>
-org-attach-use-inheritance
-
 ** =casual-agenda=: casual agenda based on transient
 #+begin_src emacs-lisp
 (use-package casual-suite
   :straight t
   :after org-agenda
-  :bind (:map org-agenda-mode-map ("<f7>" . casual-agenda-tmenu)
-         :map ibuffer-mode-map    ("<f7>" . casual-ibuffer-tmenu)
-         :map calc-mode-map       ("<f7>" . casual-calc-tmenu)
-         :map dired-mode-map      ("<f7>" . casual-dired-tmenu))
-  
+  :bind (:map org-agenda-mode-map ("<f7>" . casual-agenda-tmenu  )
+         :map ibuffer-mode-map    ("<f7>" . casual-ibuffer-tmenu )
+         :map calc-mode-map       ("<f7>" . casual-calc-tmenu    )
+         :map dired-mode-map      ("<f7>" . casual-dired-tmenu   ))
   :general
   (:states 'normal
            :keymaps   'dired-mode-map
-           ","  'casual-dired-sort-by-tmenu)
-  )
-#+end_src
-** =org-caldav=: 
-#+begin_src emacs-lisp
-(use-package org-caldav
-  :straight t
-  :after org
-  :custom
-  (org-caldav-url          "https://forgetfulfishfunctions.xyz/remote.php/dav/calendars/admin/" )
-  (org-caldav-calendar-id  "org-caldav"                                                         )
-  ;;(org-caldav-inbox        "~/BrainDump/gtd/main.org"                                         )
-  (org-caldav-inbox        "~/BrainDump/inbox.org"         )
-  (org-caldav-files        '("~/BrainDump/denote_bps/20250911T174108--bps__gtd.org")            )
-  (org-icalendar-timezone  "Asia/Tokyo"                                                         )
+           ","        'casual-dired-sort-by-tmenu )
   )
 #+end_src
 ** =consult-todo=
@@ -1703,7 +1646,7 @@ org-attach-use-inheritance
            "c t" 'consult-todo
            "c T" 'consult-todo-project))
 #+end_src
-** TODO gtd
+** =org-gtd=
 #+begin_src emacs-lisp
 (use-package org-edna
   :straight t)
@@ -1869,10 +1812,6 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
                          (interactive)
                          (org-odt-export-to-odf nil t))
                        :which-key "org-html-export-to-html SUBTREE")
-           ;; "SPC o x O"   '((lambda ()
-           ;;                   (interactive)
-           ;;                   (browse-url-xdg-open (org-export-output-file-name ".html")))
-           ;;                 :which-key "Open exported HTML")
            )
   :config
   (defun my-org-odt-timestamp-unstyled (timestamp _contents info)
@@ -1963,21 +1902,8 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 
 ,#+reveal_preamble:
 #+end_src
-** COMMENT ox-ip
-#+begin_src emacs-lisp
-(use-package ox-ipynb
-  :straight (ox-ipynb
-             :type git
-             :host github
-             :branch "master"
-             :repo "jkitchin/ox-ipynb")
-  )
-#+end_src
-
-#+RESULTS:
-
 * Org Attachments, Images, Figures related
-** =org-attach=                                                                              :ATTACH:
+** =org-attach=
 #+begin_src emacs-lisp
 (use-package org-attach
   :after org
@@ -2131,22 +2057,6 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   (edraw-org-setup-default)
   (edraw-org-setup-exporter)
   )
-#+end_src
-
-** COMMENT test
-#+begin_src emacs-lisp
-(use-package org-drawio
-  :commands (org-drawio-create-drawing)
-  ;;:straigh (org-drawio :repo 4honor/org-drawio :fetcher github)
-  ;; customize diragram directory
-
-  :straight (org-drawio
-             :type git
-             :host github
-             :repo "4honor/org-drawio")
-  (setq org-drawio-default-directory "/tmp/"))
-
-(require 'org-drawio)
 #+end_src
 
 * Programming languages
@@ -2330,17 +2240,10 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
                                ))
 #+end_example
 
-** COMMENT =jupyter=
-#+begin_src emacs-lisp
-(use-package jupyter
-  :straight t
-  :custom (jupyter-repl-echo-eval-p t))
-#+end_src
-** arduino
+** =arduino=
 #+begin_src emacs-lisp
 (use-package arduino-mode
-  :straight t
-  )
+  :straight t)
 #+end_src
 * Coding input
 ** =tempel=: snippet system
@@ -2729,8 +2632,8 @@ Probably requires external =rg= command.
 
   (:states 'visual
            ;; :prefix "SPC" ;; "G p"  'gptel-rewrite
-           "g r"  'gptel-rewrite
-           "SPC G R"  'gptel-rewrite
+           ;;"SPC G R"  'gptel-rewrite
+           "g r"      'gptel-rewrite
            )
   )
 #+end_src
@@ -2782,7 +2685,6 @@ Probably requires external =rg= command.
   (:states 'normal
           "SPC z s t"    'mw-thesaurus-lookup-at-point
           "SPC z s T"    'mw-thesaurus-lookup)
-
   )
 ;;(use-package org-wc        :straight t :after org)
 #+end_src
@@ -2830,7 +2732,7 @@ Probably requires external =rg= command.
   )
 #+end_src
 
-** COMMENT =tmr=: timer may ring                                                            :by_prot:
+** =tmr=: timer may ring                                                                    :by_prot:
 #+begin_src emacs-lisp
 (use-package tmr :straight t)
 #+end_src
@@ -3100,20 +3002,17 @@ that and instead tries to complete against dictionary entries."
   )
 #+end_src
 
-** TODO ol-notmuch (org link notmuch)
+** =ol-notmuch= (org link notmuch)
 
 #+begin_src emacs-lisp
 (use-package ol-notmuch
   :straight  t
-  :config
-  (define-key global-map "\C-c l" 'org-store-link) ;; make is more :general later
+  ;;:config
+  ;;(define-key global-map "\C-c l" 'org-store-link) ;; make is more :general later
 
   :general
   (:states 'normal
-           "SPC o l s" 'org-store-link
-           )
-
-  )
+           "SPC o l s" 'org-store-link))
 #+end_src
 
 * Misc Packages
@@ -3279,25 +3178,7 @@ that and instead tries to complete against dictionary entries."
 
 #+RESULTS:
 
-** COMMENT test karthinks consult reftex                                                     :test:
-#+begin_src emacs-lisp
-(use-package consult-reftex
-  :straight (consult-reftex
-             :type git
-             :host github
-             :branch "master"
-             :repo "karthink/consult-reftex"))
-
-
-(use-package reftex-xref
-  :straight (reftex-xref
-             :type git
-             :host github
-             :branch "master"
-             :repo "karthink/reftex-xref"))
-#+end_src
-
-** csv mode
+** csv-mode
 #+begin_src emacs-lisp
 (use-package csv-mode
   :straight t)

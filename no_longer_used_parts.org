@@ -641,7 +641,7 @@ When nil, use the default face background."
    ("C-c n r" . consult-org-roam-search)
    )
 #+end_src
-** COMMENT org-roam (custom) function for inserting node                                :customFunc:
+** COMMENT org-roam (custom) function for inserting node                               :customFunc:
 #+begin_src emacs-lisp
 (defun garid-custom/org-roam-node-insert-immediate (arg &rest args)
   (interactive "P")
@@ -652,7 +652,7 @@ When nil, use the default face background."
     (apply #'org-roam-node-insert args)
     ))
 #+end_src
-** COMMENT org-roam (custom) functions for tag searching                                :customFunc:
+** COMMENT org-roam (custom) functions for tag searching                               :customFunc:
 #+begin_src emacs-lisp
 (defun my/org-roam-filter-by-tag (tag-name)
   (lambda (node)
@@ -1427,31 +1427,31 @@ Slighty different version.
   )
 #+end_src
 * COMMENT Bunch of functions
-** COMMENT Org toggle hide/shot hyperlink                                               :customFunc:
+** COMMENT Org toggle hide/shot hyperlink                                              :customFunc:
 #+begin_src emacs-lisp
 
 #+end_src
 
-** COMMENT Org toggle hide/shot display images                                          :customFunc:
+** COMMENT Org toggle hide/shot display images                                         :customFunc:
 #+begin_src emacs-lisp
 
 #+end_src
 
-** COMMENT Remove equal sign from both sides in string                                  :customFunc:
+** COMMENT Remove equal sign from both sides in string                                 :customFunc:
 #+begin_src emacs-lisp
 #+end_src
 
-** COMMENT Kill ring and garbage collect                                                :customFunc:
+** COMMENT Kill ring and garbage collect                                               :customFunc:
 #+begin_src emacs-lisp
 #+end_src
 
-** COMMENT copy link in org at point                                                    :customFunc:
+** COMMENT copy link in org at point                                                   :customFunc:
 [[https://emacs.stackexchange.com/a/60555/38482][stack exchange]]
 
 #+begin_src emacs-lisp
 
 #+end_src
-** COMMENT My Custom LaTeX writing system (aka TeQ)                                     :customFunc:
+** COMMENT My Custom LaTeX writing system (aka TeQ)                                    :customFunc:
 #+begin_src emacs-lisp
 (add-to-list 'load-path (expand-file-name "~/.config/emacs/Emacs-TeQ"))
 (register-input-method "TeQ-Math" "Emacs-Teq-Latex" 'quail-use-package
@@ -1471,10 +1471,10 @@ Slighty different version.
       (kmacro-lambda-form [?v ?t tab ?v ?t ?| ?v ?t] 0 "%d"))
 #+end_src
 
-** COMMENT Jumping ref-label in org or latex                                            :customFunc:
+** COMMENT Jumping ref-label in org or latex                                           :customFunc:
 #+begin_src emacs-lisp
 #+end_src
-** COMMENT Org structure in the denote dire                                             :customFunc:
+** COMMENT Org structure in the denote dire                                            :customFunc:
 #+begin_src emacs-lisp
 (defun garid/org-ql-function-on-each-heading (INCLUDE_PROGRESS)
   ""
@@ -1544,7 +1544,7 @@ Slighty different version.
     ))
 #+end_src
 
-** COMMENT Custom opening external terminal at current buffer                           :customFunc:
+** COMMENT Custom opening external terminal at current buffer                          :customFunc:
 #+begin_src emacs-lisp
 (defun garid/open-external-term-here ()
   (interactive)
@@ -1554,7 +1554,7 @@ Slighty different version.
 ;;(shell-command (concat user-emacs-directory "garid/open_external_term.sh" " " buffer-file-name)))
 #+end_src
 
-** COMMENT Open PDF/HMTL exported from org mode externally                              :customFunc:
+** COMMENT Open PDF/HMTL exported from org mode externally                             :customFunc:
 #+begin_src emacs-lisp
 ;; (defun replace-in-string (what with in)
 ;;   (replace-regexp-in-string (regexp-quote what) with in nil 'literal))
@@ -2288,5 +2288,118 @@ but it feels slow when navigating.
                    (which-key--create-buffer-and-show
                     nil (symbol-value keymap))))
                 (which-key--hide-popup))))
+#+end_src
+
+
+
+* COMMENT ox-ip
+#+begin_src emacs-lisp
+(use-package ox-ipynb
+  :straight (ox-ipynb
+             :type git
+             :host github
+             :branch "master"
+             :repo "jkitchin/ox-ipynb")
+  )
+#+end_src
+
+#+RESULTS:
+
+
+* COMMENT test
+#+begin_src emacs-lisp
+(use-package org-drawio
+  :commands (org-drawio-create-drawing)
+  ;;:straigh (org-drawio :repo 4honor/org-drawio :fetcher github)
+  ;; customize diragram directory
+
+  :straight (org-drawio
+             :type git
+             :host github
+             :repo "4honor/org-drawio")
+  (setq org-drawio-default-directory "/tmp/"))
+
+(require 'org-drawio)
+#+end_src
+
+
+* COMMENT =jupyter=
+#+begin_src emacs-lisp
+(use-package jupyter
+  :straight t
+  :custom (jupyter-repl-echo-eval-p t))
+#+end_src
+
+* COMMENT test
+From [[https://librephoenix.com/2023-12-30-making-org-agenda-look-beautiful]]
+#+begin_src emacs-lisp
+(setq org-agenda-skip-timestamp-if-done               t
+      org-agenda-skip-deadline-if-done                t
+      org-agenda-skip-scheduled-if-done               t
+      org-agenda-skip-scheduled-if-deadline-is-shown  t
+      org-agenda-skip-timestamp-if-deadline-is-shown  t)
+#+end_src
+
+org-agenda-category-icon-alis -> #+category 
+
+<2005-05-10 Tue 20:30>--<2005-05-10 Tue 22:15>
+org-attach-use-inheritance
+
+
+* COMMENT =org-caldav=: 
+#+begin_src emacs-lisp
+(use-package org-caldav
+  :straight t
+  :after org
+  :custom
+  (org-caldav-url          "https://forgetfulfishfunctions.xyz/remote.php/dav/calendars/admin/" )
+  (org-caldav-calendar-id  "org-caldav"                                                         )
+  ;;(org-caldav-inbox        "~/BrainDump/gtd/main.org"                                         )
+  (org-caldav-inbox        "~/BrainDump/inbox.org"         )
+  (org-caldav-files        '("~/BrainDump/denote_bps/20250911T174108--bps__gtd.org")            )
+  (org-icalendar-timezone  "Asia/Tokyo"                                                         )
+  )
+#+end_src
+
+* COMMENT =consult-denote=: consulting with denote                                           :by_prot:
+#+begin_src emacs-lisp
+(use-package consult-denote
+  :straight t
+  ;; :after denote
+  :custom
+  (consult-denote-silo-source                             ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+   (mapcar                                                ;; (consult-denote-silo-source            ;;
+    (lambda (y) (concat "~/BrainDump/" y))                ;;  '("~/BrainDump/denote"                ;;
+    (seq-filter                                           ;;    "~/BrainDump/denote_bps/"           ;;
+     (lambda (x) (string-match "denote.*" x))             ;;    "~/BrainDump/denote_proj_grape//")) ;;
+     (directory-files "~/BrainDump/"))))                  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+  :general (
+            :states  'normal
+            :prefix  "SPC"
+            "n s"    'consult-denote-grep
+            "n F"    'consult-denote-find
+            )
+  :config
+  (consult-denote-mode 1))
+#+end_src
+
+#+RESULTS:
+
+* COMMENT test karthinks consult reftex                                           :by_karthink:test:
+#+begin_src emacs-lisp
+(use-package consult-reftex
+  :straight (consult-reftex
+             :type git
+             :host github
+             :branch "master"
+             :repo "karthink/consult-reftex"))
+
+(use-package reftex-xref
+  :straight (reftex-xref
+             :type git
+             :host github
+             :branch "master"
+             :repo "karthink/reftex-xref"))
 #+end_src
 
