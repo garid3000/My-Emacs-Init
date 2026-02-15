@@ -2823,7 +2823,7 @@ Probably requires external =rg= command.
       (concat s (make-string (max 0 (- width (string-width s))) pad))))
 
   (defun my-notmuch-search-authors-field (_fmt result)
-    (let* ((w 20)
+    (let* ((w 30) ;; 20 -> 30
            (a (notmuch-sanitize (plist-get result :authors)))
            (s (my-notmuch--truncate/pad-to-width a w)))
       (concat
@@ -2845,6 +2845,14 @@ Probably requires external =rg= command.
           (,#'my-notmuch-search-subject-field . "%s")
           ("tags" . "(%s)")))
 
+  (setq notmuch-tree-result-format
+        `(
+          ("date" . "%12s  ")
+          ("authors" . "%-30s") ;;(,#'my-notmuch-search-authors-field . "%s")
+          ((("tree" . "%s") ("subject" . "%s")) . " %-54s ")
+          ("tags" . "(%s)")
+          )
+        )
   )
 #+end_src
 *** TODO COMMENT Some test from
