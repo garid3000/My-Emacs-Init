@@ -2,9 +2,10 @@
 
 fundamental-mode ;; Available everywhere
 
-(today  (format-time-string "%Y-%m-%d"))
-(date   (org-read-date "%Y-%m-%d"))
-(update (format-time-string "Regular update: %Y-%m-%d %Hh%M") )
+(today      (format-time-string "%Y-%m-%d"))
+(yesterday  (format-time-string "%Y-%m-%d" (time-subtract (current-time) (days-to-time 1))))
+(update     (format-time-string "Regular update: %Y-%m-%d %Hh%M") )
+(date       (org-read-date "%Y-%m-%d"))
 
 prog-mode
 
@@ -433,6 +434,11 @@ org-mode
              "#+language: en" n
              "#+startup: show2levels" n
              "#+auto_tangle: t")
+(citation    "#+cite_export:  csl " :post
+                (garid/choose-from-list-and-insert-it
+                    (seq-filter
+                    (lambda (x) (string-match ".*.csl" x))
+                    (directory-files (expand-file-name "citation_styles/" user-emacs-directory)))))
 (toc         "#+options: " n
              :post (garid/choose-from-list-and-insert-it '("toc:t" "toc:2" "toc:nil")))
 (shell       "#+begin_src sh :shebang #!/usr/bin/env bash :eval no-export :results output :exports both" n

@@ -402,9 +402,10 @@ Following is customization of the theme. Actual in the loading the theme is in t
            (dired-hide-details-mode t)
 
            )
-  :hook     ((dired-mode . denote-dired-mode)
-             (dired-mode . dired-omit-mode  )
-             (dired-mode . auto-revert-mode ))
+  :hook     ((dired-mode . denote-dired-mode       )
+             (dired-mode . dired-omit-mode         )
+             (dired-mode . auto-revert-mode        )
+             (dired-mode . dired-hide-details-mode ))
   :config
   (evil-collection-define-key 'normal 'dired-mode-map
     "h"          'dired-up-directory
@@ -1192,6 +1193,17 @@ and later sets cursor at that point when you open that file.
 
 
   (add-hook 'org-after-refile-insert-hook 'org-mode-restart)
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+  (defun garid/org-up-heading-dwim (&optional arg)
+    "If on a heading, go to parent heading. If in body text, go to the current entry's heading."
+    (interactive "p")
+    (if (org-at-heading-p)
+        (org-up-heading arg)
+      (org-back-to-heading t)))
+
+  (with-eval-after-load 'evil
+    (evil-define-key 'normal org-mode-map (kbd "z u") #'garid/org-up-heading-dwim))
 
   )
 #+end_src
@@ -1442,6 +1454,8 @@ https://stackoverflow.com/questions/78982629/in-emacs-how-to-prevent-org-babel-d
   ;; :after org denote ;; must load after denote must be because it uses variable that's defined in denote
   ;; :no-require
   :custom
+  (org-cite-csl-styles-dir (expand-file-name "citation_styles/" user-emacs-directory)) ;; newly added
+
   (org-cite-global-bibliography (list (concat (file-name-as-directory denote-directory)
                                               "20220101T010101--references__study.bib")))
   (org-cite-insert-processor    'citar                        )
@@ -1463,8 +1477,11 @@ https://stackoverflow.com/questions/78982629/in-emacs-how-to-prevent-org-babel-d
   )
 #+end_src
 
-*** TODO I should read citar-citeproc-csl-style
-*** TODO As well as org-cite-csl-styles-dir
+Citation style files are downloaded and placed in the
+[[file:citation_styles/]] directory. Currently, this config includes the
+[[file:citation_styles/apa.csl][apa.csl]] style downloaded from https://citationstyles.org/, where it
+is distributed under the Creative Commons Attribution-ShareAlike 3.0
+license.
 
 ** =citar-denote= citation
 #+begin_src emacs-lisp
@@ -1676,7 +1693,6 @@ org-attach-use-inheritance
   (org-icalendar-timezone  "Asia/Tokyo"                                                         )
   )
 #+end_src
-** TODO org-gcal 
 ** =consult-todo=
 #+begin_src emacs-lisp
 (use-package consult-todo
@@ -1739,7 +1755,6 @@ org-attach-use-inheritance
    :map org-agenda-mode-map
    ("C-c ." . org-gtd-agenda-transient)
    ("<f8>" . org-gtd-agenda-transient)
-
    ))
 #+end_src
 * Org Exporting related
@@ -2843,35 +2858,35 @@ Probably requires external =rg= command.
 
   (setq notmuch-saved-searches
         `(( :name "📥 inbox"
-            :query "tag:inbox"
+            :query "tag:inbox and tag:bps"
             :sort-order newest-first
             :key ,(kbd "i"))
           ( :name "💬 all unread (inbox)"
-            :query "tag:unread and tag:inbox"
+            :query "tag:unread and tag:inbox and tag:bps"
             :sort-order newest-first
             :key ,(kbd "u"))
           ( :name "💼 BPS"
-            :query "tag:bps"
+            :query "tag:bps and tag:internal"
             :sort-order newest-first
             :key ,(kbd "b"))
           ( :name "🍌 esl"
-            :query "tag:esl"
+            :query "tag:esl and tag:bps"
             :sort-order newest-first
             :key ,(kbd "e"))
           ( :name "🌱 floatmeal"
-            :query "tag:floatmeal"
+            :query "tag:floatmeal and tag:bps"
             :sort-order newest-first
             :key ,(kbd "f"))
           ( :name "🌾 shinmei"
-            :query "tag:shinmei"
+            :query "tag:shinmei and tag:bps"
             :sort-order newest-first
             :key ,(kbd "s"))
           ( :name "✈️ uavsoft"
-            :query "tag:uavsoft"
+            :query "tag:uavsoft and tag:bps"
             :sort-order newest-first
             :key ,(kbd "U"))
           ( :name "📌 todo"
-            :query "tag:todo"
+            :query "tag:todo  and tag:bps"
             :sort-order newest-first
             :key ,(kbd "t"))
           ))
