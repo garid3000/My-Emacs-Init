@@ -381,11 +381,12 @@ Following is customization of the theme. Actual in the loading the theme is in t
   :general
   (:states 'normal
            :prefix "SPC"
-           "b" '(:which-key "bookmark...")
-           "b b" 'list-bookmarks
-           "b s" 'bookmark-set
-           "b j" 'bookmark-jump
-           "b c" 'consult-bookmark
+           "b" 'consult-bookmark
+           "B" '(:which-key "bookmark...")
+           "B b" 'list-bookmarks
+           "B s" 'bookmark-set
+           "B j" 'bookmark-jump
+           "B c" 'consult-bookmark
            )
   )
 #+end_src
@@ -1051,7 +1052,7 @@ and later sets cursor at that point when you open that file.
                              ("CNCL"  . (:foreground "gray30" :weight bold ))))
 
   (org-log-done            'time)
-  (org-tags-column         -100)   ;; how many spaces left padding for tags
+  (org-tags-column         -93) ;;-100)   ;; how many spaces left padding for tags
   (org-tag-alist           '((:startgroup . nil)
                              ("bps"  . ?b) ;; should it be like at during work time?
                              ("life" . ?l) ;; should it be more like at leasure time?
@@ -1691,14 +1692,30 @@ license.
 
    ;; Keybinding for organizing items (only works in clarify buffers)
    :map org-gtd-clarify-mode-map
-   ("C-c c" . org-gtd-organize)
-   ("<f8>" . org-gtd-organize)
+   ("C-c C-c" . org-gtd-organize) ;; ("<f8>" . org-gtd-organize)
 
    ;; Quick actions on tasks in agenda views (optional but recommended)
    :map org-agenda-mode-map
    ("C-c ." . org-gtd-agenda-transient)
    ("<f8>" . org-gtd-agenda-transient)
-   ))
+   )
+
+  :general
+  (:states 'normal
+           :prefix "SPC o g"
+           "p"      'org-gtd-process-inbox
+           "e"      'org-gtd-engage
+           "n"      'org-gtd-show-all-next)
+
+  ;; (:states 'normal
+  ;;          :keymaps 'org-gtd-clarify-mode-map
+  ;;          "c"      'org-gtd-organize)
+
+  (:states 'normal
+           :keymaps 'org-mode-map
+           :prefix "SPC o s"
+           "c"      'org-gtd-clarify-item)
+  )
 #+end_src
 * Org Exporting related
 ** =ox=
@@ -2591,7 +2608,7 @@ Similar to vim-signify.
   ("<f9>"  .  harpoon-quick-menu-hydra  )
   :general
   (:states 'normal
-           "SPC B"      'harpoon-quick-menu-hydra)
+           "SPC B H"      'harpoon-quick-menu-hydra)
   )
 #+end_src
 
@@ -3139,12 +3156,20 @@ that and instead tries to complete against dictionary entries."
 #+begin_src emacs-lisp
 (use-package gif-screencast
   :straight t
-  :custom
-  (gif-screencast-program "hyprshot")
-  (gif-screencast-args    '("-m" "window" "-m" "active" "-o" "/" "-f"))
+  ;; :custom
   :general
   (:states 'normal
            "SPC s s s" 'gif-screencast-start-or-stop)
+
+  :config
+  ;; for niri 
+  (setq gif-screencast-program "niri")
+  (setq gif-screencast-args    '("msg" "action" "screenshot-window" "--path"))
+
+
+  ;; for hyprland
+  ;; (setq gif-screencast-program "hyprshot")
+  ;; (setq gif-screencast-args    '("-m" "window" "-m" "active" "-o" "/" "-f"))
   )
 #+end_src
 ** garbage-collect
@@ -3186,7 +3211,7 @@ that and instead tries to complete against dictionary entries."
 
 #+RESULTS:
 
-** csv-mode
+** =csv-mode=
 #+begin_src emacs-lisp
 (use-package csv-mode
   :straight t)
