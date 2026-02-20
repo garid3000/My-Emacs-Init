@@ -19,6 +19,10 @@ run:
 #+end_src
 
 * Package manager:
+** Turning off the package.el                                                   :early_init:
+#+begin_src emacs-lisp :tangle ./early-init.el
+(setq package-enable-at-startup nil)
+#+end_src
 ** Straight.el initialization
 #+begin_src emacs-lisp
 (defvar bootstrap-version)
