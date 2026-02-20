@@ -256,7 +256,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   :hook (org-mode . variable-pitch-mode))
 #+end_src
 
-** =modus= theme                                                                            :by_prot:
+** =modus= theme                                                                     :by_prot:
 [[https://protesilaos.com/emacs/modus-themes][Modus themes]] is a nice built-in theme for emacs that [[https://protesilaos.com/][Protesilaos Stavrou]].
 Following is customization of the theme. Actual in the loading the theme is in the section [[id:20251007T133457.470613][=emacs=]] 
 
@@ -324,7 +324,7 @@ Following is customization of the theme. Actual in the loading the theme is in t
 
 #+RESULTS:
 
-** =pulsar= pulses on certain functions                                                     :by_prot:
+** =pulsar= pulses on certain functions                                              :by_prot:
 #+begin_src emacs-lisp
 (use-package pulsar
   :straight t
@@ -926,6 +926,7 @@ and later sets cursor at that point when you open that file.
            "o"       '(:which-key "org...")
            "o O"     'garid/jump-label-def-of-ref-at-point-word
            "o o"     'org-open-at-point
+           "o m r"   'org-mode-restart
            "o p"     'org-latex-preview
            "o d"     'garid/open-org-link-at-point-with-dired
            "o f h"   'consult-org-heading
@@ -1299,7 +1300,7 @@ https://stackoverflow.com/questions/78982629/in-emacs-how-to-prevent-org-babel-d
 #+end_src
 
 * Org taking notes related
-** =denote=: Note taking package                                                            :by_prot:
+** =denote=: Note taking package                                                     :by_prot:
 #+begin_src emacs-lisp
 (use-package denote
   :straight t
@@ -1359,7 +1360,7 @@ https://stackoverflow.com/questions/78982629/in-emacs-how-to-prevent-org-babel-d
 
 #+RESULTS:
 
-** =denote-journal= denote journal                                                          :by_prot:
+** =denote-journal= denote journal                                                   :by_prot:
 #+begin_src emacs-lisp
 (use-package denote-journal
   :straight t ;; :after denote
@@ -1378,7 +1379,7 @@ https://stackoverflow.com/questions/78982629/in-emacs-how-to-prevent-org-babel-d
 
 #+RESULTS:
 
-** =denote-org=                                                                             :by_prot:
+** =denote-org=                                                                      :by_prot:
 #+begin_src emacs-lisp
 (use-package denote-org
   ;; :after denote
@@ -1395,7 +1396,7 @@ https://stackoverflow.com/questions/78982629/in-emacs-how-to-prevent-org-babel-d
   )
 #+end_src
 
-** =denote-silo=                                                                            :by_prot:
+** =denote-silo=                                                                     :by_prot:
 #+begin_src emacs-lisp
 (use-package denote-silo
   :straight t               ;; :after denote
@@ -1717,8 +1718,10 @@ license.
 
   (:states 'normal
            :keymaps 'org-mode-map
-           :prefix "SPC o s"
-           "c"      'org-gtd-clarify-item)
+           :prefix "SPC o"
+           "s c"      'org-gtd-clarify-item
+           "g c"      'org-gtd-clarify-item
+           )
   )
 #+end_src
 * Org Exporting related
@@ -2636,7 +2639,7 @@ Probably requires external =rg= command.
   )
 #+end_src
 * AI helpers:
-** =gptel= : gpt.el by karthinks                                                        :by_karthink:
+** =gptel= : gpt.el by karthinks                                                 :by_karthink:
 #+begin_src emacs-lisp
 (use-package gptel
   :straight t
@@ -2753,7 +2756,7 @@ Probably requires external =rg= command.
   )
 #+end_src
 
-** =tmr=: timer may ring                                                                    :by_prot:
+** =tmr=: timer may ring                                                             :by_prot:
 #+begin_src emacs-lisp
 (use-package tmr :straight t)
 #+end_src
@@ -3045,7 +3048,7 @@ that and instead tries to complete against dictionary entries."
 #+end_src
 
 * Misc Packages
-** =popper=                                                                             :by_karthink:
+** =popper=                                                                      :by_karthink:
 #+begin_src emacs-lisp
 (use-package popper
   :straight t ; or :straight t
