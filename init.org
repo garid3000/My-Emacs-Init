@@ -220,6 +220,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   (define-key evil-normal-state-map (kbd "<f3>") 'evil-visual-mark-mode))
 #+end_src
 
+* Undo and Trash
 ** =vundo=: visual undo
 #+begin_src emacs-lisp
 (use-package vundo
@@ -228,7 +229,12 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   :demand   t
   :general (:states 'normal "SPC u t" 'vundo))
 #+end_src
-
+** =trashed=: trash directory interaction
+#+begin_src emacs-lisp
+(use-package trashed
+  :straight t
+  :defer t)
+#+end_src
 * Theme & colors
 ** =delight=
 #+begin_src emacs-lisp
@@ -439,7 +445,7 @@ Following is customization of the theme. Actual in the loading the theme is in t
   (:states 'normal
            :prefix "SPC"
            :keymaps   'dired-mode-map
-           "D w"  'wdired-change-to-wdired-mode)
+           "D w"  'wdired-change-to-wdired-mode) ;; almoslty no need already bind with W
   )
 #+end_src
 
@@ -467,8 +473,8 @@ Following is customization of the theme. Actual in the loading the theme is in t
   :general
   (:states 'normal
            :keymaps   'dired-mode-map
-           "f"  'dired-filter-by-name
-           "F"  'dired-filter-pop
+           "SPC f"  'dired-filter-by-name
+           "SPC F"  'dired-filter-pop
            ))
 #+end_src
 
@@ -509,7 +515,11 @@ Following is customization of the theme. Actual in the loading the theme is in t
   (scroll-step                        1)
   (scroll-margin                      7)
   (scroll-conservatively           9999)
+  (nobreak-char-display             nil) ;; <= NBSP
+  (delete-by-moving-to-trash          t) ;; deletes to trash
   :config
+  (define-key minibuffer-local-map (kbd "M-f") #'forward-word);; otherwise M-f globally bind to consult-line.
+
   (defun garid/new-org-scratch ()
     "Create a new scratch buffer in Org mode."
     (interactive)
@@ -812,6 +822,10 @@ and later sets cursor at that point when you open that file.
       ))
   )
 #+end_src
+
+#+RESULTS:
+: consult-line
+
 ** =embark=: interacting with completion entries
 #+begin_src emacs-lisp
 (use-package embark

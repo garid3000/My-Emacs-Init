@@ -415,6 +415,7 @@ org-mode
 (begin       "#+begin_" (s name)    n> r> n "#+end_" name)
 (quote       "#+begin_quote"        n> r> n "#+end_quote")
 (abstract    "#+begin_abstract"     n> r> n "#+end_abstract")
+(project_path_insert "" :post (garid/choose-from-list-and-insert-it project--list))
 ;; (sidenote    "#+begin_sidenote"     n> r> n "#+end_sidenote")
 ;; (marginnote  "#+begin_marginnote"   n> r> n "#+end_marginnote")
 ;; (ascii       "#+begin_export ascii" n> r> n "#+end_export")
