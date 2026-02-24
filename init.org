@@ -173,7 +173,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
                   ))
 
   (org-mode . (lambda ()
-                (push '(?s  . ("#+begin_src"      . "#+end_src"     )) evil-surround-pairs-alist)
+                (push '(?s  . ("#+begin_src lang" . "#+end_src"     )) evil-surround-pairs-alist)
                 (push '(?e  . ("#+begin_example"  . "#+end_example" )) evil-surround-pairs-alist)
                 (push '(?e  . ("\\("              . "\\)"           )) evil-surround-pairs-alist)
                 (push '(?d . (":drawername:"      . ":end:"         )) evil-surround-pairs-alist)

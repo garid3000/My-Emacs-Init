@@ -7,6 +7,7 @@ fundamental-mode ;; Available everywhere
 (update     (format-time-string "Regular update: %Y-%m-%d %Hh%M") )
 (date       (org-read-date "%Y-%m-%d"))
 
+
 prog-mode
 
 (fixme (if (derived-mode-p 'emacs-lisp-mode) ";; " comment-start) "FIXME ")
@@ -406,150 +407,132 @@ graphviz-dot-mode
 (fontcolor "fontcolor=" :post (garid/choose-from-list-and-insert-it '("gray" "red" "blue" "yellow" "green" "aliceblue" "black" "blueviolet" "brown" "cadetblue" "coral" "darkblue" "darkcyan" "1" "2" "3" "4" "5" "6" "7" "8" "9")))
 (dir       "dir=both")
 
-org-mode
+org-mode :when (re-search-backward "^\\S-*$" (line-beginning-position) 'noerror)
 
-(dailywork   "Daily work today")
+
 (caption     "#+caption: ")
 (name        "#+name: " :post (garid/choose-from-list-and-insert-it '("fig_" "tbl_" "eqn_" "lst_")))
 (drawer      ":" p ":" n r ":end:")
 (begin       "#+begin_" (s name)    n> r> n "#+end_" name)
 (quote       "#+begin_quote"        n> r> n "#+end_quote")
 (abstract    "#+begin_abstract"     n> r> n "#+end_abstract")
-(project_path_insert "" :post (garid/choose-from-list-and-insert-it project--list))
-;; (sidenote    "#+begin_sidenote"     n> r> n "#+end_sidenote")
-;; (marginnote  "#+begin_marginnote"   n> r> n "#+end_marginnote")
-;; (ascii       "#+begin_export ascii" n> r> n "#+end_export")
-;; (be_comment  "#+begin_comment"      n> r> n "#+end_comment")
 (example     "#+begin_example"      n> r> n "#+end_example")
 (center      "#+begin_center"       n> r> n "#+end_center")
 (html        "#+begin_export html"  n> r> n "#+end_export")
 (latex       "#+begin_export latex" n> r> n "#+end_export")
 (verse       "#+begin_verse"        n> r> n "#+end_verse")
-(src         "#+begin_src "         q n r n "#+end_src")
-(conf        "#+begin_src conf"     q n r n "#+end_src")
-(gnuplot     "#+begin_src gnuplot :var data=" (p "table") " :file " (p "plot.png") n r n "#+end_src") ;;  :post (org-edit-src-code))
-(elisp       "#+begin_src emacs-lisp" n r n "#+end_src") ;; :post (org-edit-src-code)  
-(inlsrc      "src_" p "[:exports code]{" q "}")
 (title       "#+title: " p n
              "#+author: Garid Zorigoo" n
              "#+language: en" n
              "#+startup: show2levels" n
              "#+auto_tangle: t")
-(citation    "#+cite_export:  csl " :post
+(cite_export "#+cite_export:  csl " :post
                 (garid/choose-from-list-and-insert-it
                     (seq-filter
                     (lambda (x) (string-match ".*.csl" x))
                     (directory-files (expand-file-name "citation_styles/" user-emacs-directory)))))
-(toc         "#+options: " n
-             :post (garid/choose-from-list-and-insert-it '("toc:t" "toc:2" "toc:nil")))
-(shell       "#+begin_src sh :shebang #!/usr/bin/env bash :eval no-export :results output :exports both" n
-             ;;"#!/bin/sh"
-             n r n
-             "#+end_src") ;; :post (org-edit-src-code))
-
-(dot       "#+begin_src dot :eval no-export :exports both :file" n
-             n r n
-             "#+end_src") ;; :post (org-edit-src-code))
+(toc         "#+options: " n :post (garid/choose-from-list-and-insert-it '("toc:t" "toc:2" "toc:nil")))
 (startup     "#+startup: "
              :post (garid/choose-from-list-and-insert-it
                     '("overview" "content" "showall" "showeverything"
                       "show2levels" "show3levels" "show4levels" "show5levels")))
-(imgw        "#+attr_latex: :width 0.9\\textwidth" n
+(imgwidth    "#+attr_latex: :width 0.9\\textwidth" n
              "#+attr_html:  :width 100% :height 100%")
-(oxr
- "#+reveal_root:          https://cdn.jsdelivr.net/npm/reveal.js"                                n
- "#+reveal_version:       4"                                                                     n
- "#+options:              reveal_center:t reveal_progress:t reveal_history:nil reveal_control:t" n
- "#+options:              reveal_rolling_links:t reveal_keyboard:t reveal_overview:t num:nil"    n
- "#+options:              reveal_width:1920 reveal_height:1080"                                  n
- "#+options:              toc:1"                                                                 n
- "#+options:              reveal_klipsify_src:t"                                                 n
- "#+reveal_min_scale:     1.0"                                                                   n
- "#+reveal_max_scale:     1.0"                                                                   n
- "#+reveal_plugins:       (notes search zoom markdown)"                                          n
- "#+reveal_margin:        0.1"                                                                   n
- "#+reveal_extra_css:     ./local.css"                                                           n
- "#+reveal_trans:         fade"                                                                  n
- "#+reveal_hlevel:        2"                                                                     n
- "#+reveal_theme:         "
- :post (garid/choose-from-list-and-insert-it '("black" "white" "league" "beige" "night" "serif"
-                                               "solarized" "moon" "dracula" "sky" "blood")))
 
-(oxsplit     "#+reveal: split")
+;; org export related
 (oxt         "#+setupfile: ~/.config/emacs/org-templates/lua.org")
 (oxh         "#+setupfile: ~/.config/emacs/org-templates/level-0-html-export-template.org")
+(oxr         "#+reveal_root:          https://cdn.jsdelivr.net/npm/reveal.js"                                n
+             "#+reveal_version:       4"                                                                     n
+             "#+options:              reveal_center:t reveal_progress:t reveal_history:nil reveal_control:t" n
+             "#+options:              reveal_rolling_links:t reveal_keyboard:t reveal_overview:t num:nil"    n
+             "#+options:              reveal_width:1920 reveal_height:1080"                                  n
+             "#+options:              toc:1"                                                                 n
+             "#+options:              reveal_klipsify_src:t"                                                 n
+             "#+reveal_min_scale:     1.0"                                                                   n
+             "#+reveal_max_scale:     1.0"                                                                   n
+             "#+reveal_plugins:       (notes search zoom markdown)"                                          n
+             "#+reveal_margin:        0.1"                                                                   n
+             "#+reveal_extra_css:     ./local.css"                                                           n
+             "#+reveal_trans:         fade"                                                                  n
+             "#+reveal_hlevel:        2"                                                                     n
+             "#+reveal_theme:         "
+             :post (garid/choose-from-list-and-insert-it '("black" "white" "league" "beige" "night" "serif" "solarized" "moon" "dracula" "sky" "blood")))
+(oxsplit     "#+reveal: split")
 (ox2r        "#+reveal_html: <div style=\"float:left; width:50%\">" n
              "#+reveal_html: </div>" n n n
              "#+reveal_html: <div style=\"float:right; width:50%\">" n
              "#+reveal_html: </div>"n)
-
-(notes       "#+begin_notes" n n n
-             "#+end_notes" n)
+(notes       "#+begin_notes" n p n "#+end_notes")
 
 
-(printbibliograph  "#+print_bibliography:")
-(async        "session "                  :post (garid/choose-from-list-and-insert-it '("yes" "no")))
-(cache        "cache "                    :post (garid/choose-from-list-and-insert-it '("yes" "no")))
-(eval         "eval "                     :post (garid/choose-from-list-and-insert-it '("never-export" "no" "yes")))
-(exports      "exports "                  :post (garid/choose-from-list-and-insert-it '("code" "results" "both" "none")))
-(file         "file (my/org-attach-dir \"" p "\") ")
-(dir          "dir "  :post (garid/choose-from-list-and-insert-it '("'attach" "(my/org-attach-dir \"\") ")))
-(mkdirp       "mkdirp "                   :post (garid/choose-from-list-and-insert-it '("yes" "no")))
-(results      "results "                  :post (garid/choose-from-list-and-insert-it '("verbatim" "value" "output" "table" "file" "list" "scalar" "code" "drawer" "html" "latex" "link" "org" "pp" "silent" )))
-(session      "session "                  :post (garid/choose-from-list-and-insert-it '("SessionName" "" "/ssh:localhost:py" "/jpy:localhost#8888")))
-(shebang      "shebang #!/usr/bin/env bash") ;; (shebang      "shebang #!/bin/bash")
-(tangle       "tangle ~/")
-(tangle_iff   "tangle (if (not file-exists-p \"foo\") \"foo\" \"no\")")
-(vardown      "#+header: :var outputVar=" :post (insert (concat org-download-image-dir "/filename.svg")))
-(wrap         "wrap "                     :post (garid/choose-from-list-and-insert-it '("example" "src python" "src sh" "src bash")))
-(noweb        "noweb "                    :post (garid/choose-from-list-and-insert-it '("yes" "no" "tangle" "strip-tangle" "no-export" "strip-export" "eval")))
-(comments     "comments "                 :post (garid/choose-from-list-and-insert-it '("noweb" "link" "no" "org" "both")))
-
-
-(eqin1               "\\(" r> "\\)")
-(eqin2               "\\[" r> "\\]")
-(equation            "\\begin{equation}" r> n> "\\end{equation}")
-(equationaligned     "\\begin{equation}" n> "\\begin{aligned}" r> n> "\\end{aligned}" n> "\\end{equation}")
-(equationlabel       "\\label{"  r  "}" )
-(equationref         "\\ref{"    r  "}" )
+(print_bibliography  "#+print_bibliography:")
 (latexdocclass       "#+latex_class: extarticle" r> n> "#+LATEX_CLASS_OPTIONS: [a4paper, 8pt, twocolumn]")
 (latexstayhere       "#+attr_latex: :placement [H]")
 (auto_tangle         "#+auto_tangle:  t")
 (denote_links        "#+begin: denote-links :regexp \"" r "\" :excluded-dirs-regexp nil :sort-by-component nil :reverse-sort nil :id-only nil :include-date nil" n> r> n "#+end:")
-(gtdclarify          "- [ ] what-it-is :: " r n  "- [ ] resolution :: "  r n "- [ ] next-step? :: " n> )
-(frac                "\\frac{" p "}{" q "}")
-(include             "#+INCLUDE: \"\" :only-contents t")
-(structure           "#+begin_src emacs-lisp :results file" r n
-                     "(garid/create-plantuml-using-temp-file \"structure.svg\")" r n
-                     "#+end_src")
+(include             "#+include: \"./" q "\" :only-contents t")
 (iframehtml          "#+begin_export html" r n
                      "<iframe src=\"tempFile.html\" width=\"100%\" height=\"500\"></iframe>" r n
                      "#+end_export")
-(jupyter-inline-svg  "%config InlineBackend.figure_formats = ['svg']")
-(challenge           "challenge: I can't do ")
 
-(srcheader ":src-header-at-top:"                                                                                               r n
-            "#+property:   header-args:python  :tangle (my/org-attach-dir \"0000_main.py\")"                                   r n
-            "#+property:   header-args:python+ :dir (my/org-attach-dir \"\")"                                                  r n
-            "#+property:   header-args:python+ :comments link"                                                                 r n
-            "#+property:   header-args:python+ :eval no-export"                                                                r n
-            "#+property:   header-args:python+ :results output"                                                                r n
-            "#+property:   header-args:python+ :exports both"                                                                  r n
-            "#+property:   header-args:python+ :session (concat \"python-\" (my/org-attach-dir-calculator \"\") \"-session\")" r n
-            ":end:"                                                                                                            r n)
+(initcontacts        ":EMAIL: " r n ":PHONE:" r n ":ALIAS:" r n ":NICKNAME:" r n ":IGNORE:" r n ":ICON:" r n ":NOTE:" r n ":ADDRESS:" r n ":BIRTHDAY:")
 
-
-(initcontacts        ":EMAIL: %(org-contacts-template-email) " r n ":PHONE:" r n ":ALIAS:" r n ":NICKNAME:" r n ":IGNORE:" r n ":ICON:" r n ":NOTE:" r n ":ADDRESS:" r n ":BIRTHDAY:")
-
-
+(babel-header ":src-header-at-top:"                                                                                            r n
+              "#+property: header-args:python  :tangle (my/org-attach-dir \"0000_main.py\")"                                   r n
+              "#+property: header-args:python+ :dir (my/org-attach-dir \"\")"                                                  r n
+              "#+property: header-args:python+ :comments link"                                                                 r n
+              "#+property: header-args:python+ :eval no-export"                                                                r n
+              "#+property: header-args:python+ :results output"                                                                r n
+              "#+property: header-args:python+ :exports both"                                                                  r n
+              "#+property: header-args:python+ :session (concat \"python-\" (my/org-attach-dir-calculator \"\") \"-session\")" r n
+              ":end:"                                                                                                            r n)
 
 ;; (pySess1    "#+begin_src python :session pySess1 :results output :exports both :eval no-export :async yes :comments link :dir (my/org-attach-dir \"\")" n "# %%" n "#+end_src")
+(src         "#+begin_src lang"         q n r n "#+end_src")
+(py          "#+begin_src python :async yes" n q n "#+end_src")
+(nix         "#+begin_src " n q n "#+end_src")
+(dot         "#+begin_src dot :eval no-export :exports both :file"  q n n "#+end_src")
+(shell       "#+begin_src sh :shebang #!/usr/bin/env bash :eval no-export :results output :exports both" n r n "#+end_src")
+(conf        "#+begin_src conf"     q n r n "#+end_src")
+(gnuplot     "#+begin_src gnuplot :var data=" (p "table") " :file " (p "plot.png") n r n "#+end_src") ;;  :post (org-edit-src-code))
+(elisp       "#+begin_src emacs-lisp" n r n "#+end_src") ;; :post (org-edit-src-code)  
+(inlsrc      "src_" p "[:exports code]{" q "}")
+(vardown      "#+header: :var outputVar=" :post (insert (concat org-download-image-dir "/filename.svg")))
 
-(py "#+begin_src python :async yes"  n n "#+end_src")
+(latex_equation            "\\begin{equation}" r> n> "\\end{equation}")
+(latex_equationaligned     "\\begin{equation}" n> "\\begin{aligned}" r> n> "\\end{aligned}" n> "\\end{equation}")
+(latex_equationlabel       "\\label{"  r  "}" )
+(latex_equationref         "\\ref{"    r  "}" )
 
+org-mode :when (re-search-backward "^#\\+begin_src\\b" (line-beginning-position) 'noerror)
+(async        "session "  :post (garid/choose-from-list-and-insert-it '("yes" "no")))
+(cache        "cache "    :post (garid/choose-from-list-and-insert-it '("yes" "no")))
+(comments     "comments " :post (garid/choose-from-list-and-insert-it '("noweb" "link" "no" "org" "both")))
+(dir          "dir "      :post (garid/choose-from-list-and-insert-it '("'attach" "(my/org-attach-dir \"\") ")))
+(eval         "eval "     :post (garid/choose-from-list-and-insert-it '("never-export" "no" "yes")))
+(exports      "exports "  :post (garid/choose-from-list-and-insert-it '("code" "results" "both" "none")))
+(file         "file (my/org-attach-dir \"" p "\") ")
+(lang         ""          :post (garid/choose-from-list-and-insert-it '("sh" "python" "conf" "nix")) )
+(mkdirp       "mkdirp "   :post (garid/choose-from-list-and-insert-it '("yes" "no")))
+(noweb        "noweb "    :post (garid/choose-from-list-and-insert-it '("yes" "no" "tangle" "strip-tangle" "no-export" "strip-export" "eval")))
+(results      "results "  :post (garid/choose-from-list-and-insert-it '("verbatim" "value" "output" "table" "file" "list" "scalar" "code" "drawer" "html" "latex" "link" "org" "pp" "silent" )))
+(session      "session "  :post (garid/choose-from-list-and-insert-it '("SessionName" "" "/ssh:localhost:py" "/jpy:localhost#8888")))
+(shebang      "shebang #!/usr/bin/env bash") ;; (shebang      "shebang #!/bin/bash")
+(tangle       "tangle ~/")
+(tangle_iff   "tangle (if (not file-exists-p \"foo\") \"foo\" \"no\")")
+(wrap         "wrap "     :post (garid/choose-from-list-and-insert-it '("example" "src python" "src sh" "src bash")))
+
+org-mode
+(dailywork           "Daily work today")
+(eq                  "\\(" r> "\\)")
+(Eq                  "\\[" r> "\\]")
+(frac                "\\frac{" p "}{" q "}")
+(project_path_insert "" :post (garid/choose-from-list-and-insert-it project--list))
 
 notmuch-message-mode  :when (re-search-backward "^To:" (line-beginning-position) 'noerror)
 (i :post (garid/insert-list-of-email-addresses))
+
 
 ;; Local Variables:
 ;; mode: lisp-data
