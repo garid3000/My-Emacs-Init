@@ -493,7 +493,7 @@ org-mode
 (eval         "eval "                     :post (garid/choose-from-list-and-insert-it '("never-export" "no" "yes")))
 (exports      "exports "                  :post (garid/choose-from-list-and-insert-it '("code" "results" "both" "none")))
 (file         "file (my/org-attach-dir \"" p "\") ")
-(dir          "dir (my/org-attach-dir \"\") ")
+(dir          "dir "  :post (garid/choose-from-list-and-insert-it '("'attach" "(my/org-attach-dir \"\") ")))
 (mkdirp       "mkdirp "                   :post (garid/choose-from-list-and-insert-it '("yes" "no")))
 (results      "results "                  :post (garid/choose-from-list-and-insert-it '("verbatim" "value" "output" "table" "file" "list" "scalar" "code" "drawer" "html" "latex" "link" "org" "pp" "silent" )))
 (session      "session "                  :post (garid/choose-from-list-and-insert-it '("SessionName" "" "/ssh:localhost:py" "/jpy:localhost#8888")))
