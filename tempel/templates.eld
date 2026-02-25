@@ -371,7 +371,7 @@ c-mode :when (re-search-backward "^\\S-*$" (line-beginning-position) 'noerror)
 python-mode
 
 (callback "self.ui." p ".clicked.connect(self." p ")")
-(fn       "def "     p "(" p ") -> None:" r> "return")
+(fn       "def "     p "(" p ") -> None:" n> "return")
 (mt       "def "     p "(self, " p ") -> None:" n> n> "return")
 (npd      ": np.ndarray[tuple[Literal[4]], np.dtype[np.float64]]")
 (npt      ": np.dtype[np.float64]")
