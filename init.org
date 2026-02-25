@@ -2385,6 +2385,8 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 #+begin_src emacs-lisp
 (use-package compile
   :straight nil
+  :custom
+  (compilation-scroll-output t)
   :general
   (:states 'normal
            "SPC <"  'recompile))
@@ -2596,6 +2598,8 @@ Similar to vim-signify.
   (:states 'insert
            :keymaps 'eshell-mode-map
            "C-a" 'eshell-bol)
+  :hook
+  (eshell-mode . compilation-shell-minor-mode) ;; from compilation
   )
 #+end_src
 
@@ -2789,6 +2793,9 @@ Probably requires external =rg= command.
            "m"   '(:which-key "mail...")
            "m a" 'notmuch
            "m n" 'notmuch-mua-new-mail)
+
+   ;; (:states '(normal notmuch-show-mode )
+   ;;          "SPC o o" 'notmuch-show-interactively-view-part) ;; probably no need
 
   :config
   (setq notmuch-identities '("Garid <garid@bpsensing.com>"))
@@ -3093,9 +3100,10 @@ that and instead tries to complete against dictionary entries."
                                    "\\*git-gutter:.*\\*"
                                    "\\* Merriam-Webster Thesaurus \\*"
                                    "CAPTURE-inbox.org"
-                                   "CAPTURE-20230926T010607--todo__todo.org"
+                                   ;; "CAPTURE-20230926T010607--todo__todo.org"
                                    help-mode
-                                   compilation-mode))
+                                   ;;compilation-mode
+                                   ))
   ;;:config
   (popper-mode      +1)
   (popper-echo-mode +1))
