@@ -173,11 +173,17 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
                   ))
 
   (org-mode . (lambda ()
-                (push '(?s  . ("#+begin_src lang" . "#+end_src"     )) evil-surround-pairs-alist)
-                (push '(?e  . ("#+begin_example"  . "#+end_example" )) evil-surround-pairs-alist)
+                (push '(?s  . ("#+begin_src LANG" . "#+end_src"     )) evil-surround-pairs-alist)
+                (push '(?S  . ("#+begin_src LANG" . "#+end_src"     )) evil-surround-pairs-alist)
+
+                (push '(?x  . ("#+begin_example"  . "#+end_example" )) evil-surround-pairs-alist)
+                (push '(?X  . ("#+begin_example"  . "#+end_example" )) evil-surround-pairs-alist)
+
                 (push '(?e  . ("\\("              . "\\)"           )) evil-surround-pairs-alist)
+                (push '(?E  . ("\\("              . "\\)"           )) evil-surround-pairs-alist)
+
                 (push '(?d . (":drawername:"      . ":end:"         )) evil-surround-pairs-alist)
-                ))
+                (push '(?D . (":drawername:"      . ":end:"         )) evil-surround-pairs-alist)))
 
   (python-base-mode . (lambda ()
                         (push '(?>  . ("#"      . "#"     )) evil-surround-pairs-alist)
@@ -1472,8 +1478,8 @@ https://stackoverflow.com/questions/78982629/in-emacs-how-to-prevent-org-babel-d
 
 Citation style files are downloaded and placed in the
 [[file:citation_styles/]] directory. Currently, this config includes the
-[[file:citation_styles/apa.csl][apa.csl]] style downloaded from https://citationstyles.org/, where it
-is distributed under the Creative Commons Attribution-ShareAlike 3.0
+[[file:citation_styles/apa.csl][apa.csl]] style downloaded from https://citationstyles.org/, where it is
+distributed under the Creative Commons Attribution-ShareAlike 3.0
 license.
 
 ** =citar-denote= citation
@@ -2813,7 +2819,7 @@ Probably requires external =rg= command.
             :sort-order newest-first
             :key ,(kbd "u"))
           ( :name "💼 BPS"
-            :query "tag:bps and tag:internal"
+            :query "tag:bps"
             :sort-order newest-first
             :key ,(kbd "b"))
           ( :name "🍌 esl"
