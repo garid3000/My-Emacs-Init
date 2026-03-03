@@ -1199,9 +1199,10 @@ and later sets cursor at that point when you open that file.
     (interactive)
     (if garid-orgvar-is-img-shown
         (progn (edraw-org-link-image-mode -1)
-               (org-remove-inline-images))
+             (org-link-preview-clear)) ;; (org-remove-inline-images)
       (progn (edraw-org-link-image-mode +1)
-             (org-display-inline-images))) ;; may need to check org-link-preview as of org mode 9.8 release
+               (org-link-preview) ;; (org-display-inline-images)
+             )) ;; may need to check org-link-preview as of org mode 9.8 release
     (setq garid-orgvar-is-img-shown (not garid-orgvar-is-img-shown)))
 
   (defun garid/org-toggle-link-n-emphasis ()
