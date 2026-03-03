@@ -987,6 +987,7 @@ and later sets cursor at that point when you open that file.
 
            "o i"     '(:which-key "images...")
            "o i t"   'garid/org-toggle-display-images-n-edraw
+           "o i p"   'yank-media
 
            "o l"     '(:which-key "links...")
            "o l c"   'org-cite-insert
@@ -2002,33 +2003,6 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
       (concat my-attach-dir input-fname))
     )
   )
-#+end_src
-
-** =org-download= 
-:PROPERTIES:
-:ID:       20250928T024644.200137
-:END:
-#+begin_src emacs-lisp
-(use-package org-download
-  :straight t
-  :after org
-  :custom
-  (org-download-display-inline-images  nil)
-  (org-download-heading-lvl            nil)
-  (org-download-edit-cmd        "pinta %s")
-
-  :general
-  (:states 'normal
-           :keymaps   'org-mode-map
-           :prefix    "SPC"
-           "o i p"    'org-download-clipboard
-           "o i P"    'org-download-image
-           "o i d"    'org-download-delete
-           "o i r"    'org-download-rename-at-point
-           "o i e"    'org-download-rename-at-point
-           )
-  :config
-  (org-download-enable))
 #+end_src
 
 ** =org-ipe=
@@ -3301,36 +3275,7 @@ that and instead tries to complete against dictionary entries."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(safe-local-variable-values
-   '((eval setq org-download-image-dir
-           (file-relative-name
-            (concat "./data/"
-                    (file-name-as-directory
-                     (org-id-get 1))))
-           org-ipe-folder org-download-image-dir)
-     (eval setq org-download-image-dir
-           (file-relative-name
-            (concat "./data/"
-                    (file-name-as-directory
-                     (car
-                      (split-string
-                       (file-name-base
-                        (buffer-file-name))
-                       "--")))))
-           org-ipe-folder org-download-image-dir)
-     (eval setq org-download-image-dir
-           (file-relative-name
-            (concat "./data/"
-                    (file-name-as-directory
-                     (org-id-get 1)))))
-     (eval setq org-download-image-dir
-           (file-relative-name
-            (concat "./data/"
-                    (file-name-as-directory
-                     (car
-                      (split-string
-                       (file-name-base
-                        (buffer-file-name))
-                       "--"))))))
-     (dired-omit-files . "\\`[.]?#\\|\\`[.][.]?\\'\\|\\.html\\'\\|\\.tex\\'"))))
+   '((dired-omit-files . "\\`[.]?#\\|\\`[.][.]?\\'\\|\\.html\\'\\|\\.tex\\'"))))
 #+end_src
+
 
