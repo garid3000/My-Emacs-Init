@@ -2736,7 +2736,12 @@ Probably requires external =rg= command.
 ** spell-checking & synonym
 #+begin_src emacs-lisp
 ;; (use-package langtool   :straight t) it required external jar / java  someday i will try
-;; (use-package jinx          :straight t)
+(use-package jinx :straight t)
+;; also needed to change nix config:
+;; ((emacsPackagesFor emacs-pgtk).emacsWithPackages (
+;;     epkgs: [ epkgs.jinx ]
+;; ))
+
 (use-package mw-thesaurus
   :straight t
   :general
