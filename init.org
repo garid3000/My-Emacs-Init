@@ -1329,7 +1329,13 @@ https://stackoverflow.com/questions/78982629/in-emacs-how-to-prevent-org-babel-d
   :demand t
   :custom
   (denote-excluded-directories-regexp  ".*export_.*\\|.*website.*")
-  (denote-directory                    "~/BrainDump/denote")
+  ;; (denote-directory                    "~/BrainDump/denote")
+  (denote-directory ;; can be list
+        (mapcar     ;; dynamically getting the list via name if it starts with "denote_"
+         (lambda (y) (concat "~/BrainDump/" y))
+         (seq-filter
+          (lambda (x) (string-match "denote.*" x))
+          (directory-files "~/BrainDump/"))))
   (denote-known-keywords               '("phd"  "code"  "python"))
   (denote-templates                    '((biblio . "* Abstract\n\n* Review")
                                          (plain  . nil)))
@@ -1353,7 +1359,7 @@ https://stackoverflow.com/questions/78982629/in-emacs-how-to-prevent-org-babel-d
 
             "n l"    '(:which-key "+link...")
             "n l i"  'denote-link         ;; 'denote-insert-link ;; "n l F"  'denote-link
-            "n l c"  'denote-link-or-create 
+            "n l c"  'denote-link-or-create
 
             "n L"    '(:which-key "+Link...")
             "n L b"  'denote-find-backlink
@@ -1456,14 +1462,17 @@ https://stackoverflow.com/questions/78982629/in-emacs-how-to-prevent-org-babel-d
   :custom
   (org-cite-csl-styles-dir (expand-file-name "citation_styles/" user-emacs-directory)) ;; newly added
 
-  (org-cite-global-bibliography (list (concat (file-name-as-directory denote-directory)
-                                              "20220101T010101--references__study.bib")))
+  ;; (org-cite-global-bibliography (list (concat (file-name-as-directory denote-directory)
+  ;;                                             "20220101T010101--references__study.bib")))
+  (org-cite-global-bibliography (list  "~/BrainDump/denote/20220101T010101--references__study.bib"))
+
   (org-cite-insert-processor    'citar                        )
   (org-cite-follow-processor    'citar                        )
   (org-cite-activate-processor  'citar                        )
   (citar-bibliography            org-cite-global-bibliography )
   (bibtex-dialect               'biblatex                     )
-  (citar-library-paths           (list (concat (file-name-as-directory denote-directory) "lit/")) )
+  ;; (citar-library-paths           (list (concat (file-name-as-directory denote-directory) "lit/")) )
+  (citar-library-paths           (list  "~/BrainDump/denote/lit/")) 
   (citar-file-open-functions '(("html" . citar-file-open-external )
                                ("pdf" . garid/ask-pdf-openner     )
                                (t . find-file                     )))
