@@ -2097,6 +2097,16 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
            :prefix "SPC"
            "o i e"     'edraw-org-edit-regular-file-link
            "o i i"     '(lambda () (interactive) (insert "[[edraw:]]")))
+
+  :bind (:map edraw-editor-map
+              ;;("M-q" .  nil)
+              ("u"    . edraw-editor-undo)
+              ("C-r"  . edraw-editor-redo)
+              ("y"    . edraw-editor-copy-selected-shapes)
+              ("S"    . edraw-editor-select-tool-custom-shape)
+              ("x"    . edraw-editor-cut-selected-shapes)
+              ("P"    . edraw-editor-paste-and-select)
+              )
   :config
   (require 'edraw-org)
   (edraw-org-setup-default)
