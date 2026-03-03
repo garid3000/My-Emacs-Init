@@ -1741,6 +1741,7 @@ license.
            :prefix "SPC o"
            "s c"      'org-gtd-clarify-item
            "g c"      'org-gtd-clarify-item
+           "g a"      'org-gtd-archive-completed-items
            )
   )
 #+end_src
@@ -2675,14 +2676,13 @@ Probably requires external =rg= command.
            :prefix "SPC"
            "G p"  'gptel
            "L g"  'gptel
-           "G m"  'gptel-menu
-           )
+           "G m"  'gptel-menu)
 
   (:states 'visual
-           ;; :prefix "SPC" ;; "G p"  'gptel-rewrite
-           ;;"SPC G R"  'gptel-rewrite
-           "g r"      'gptel-rewrite
-           )
+           "g r"      'gptel-rewrite)
+  :config
+  (setopt gptel-model        'gpt-5.2)
+  (setopt gptel-backend      (gptel-make-openai "OpenAI" :key 'gptel-api-key-from-auth-source))
   )
 #+end_src
 
