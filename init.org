@@ -85,19 +85,16 @@ run:
   :straight nil
   :delight ""
   :custom
-  (which-key-popup-type              'side-window               )
-  (which-key-side-window-location    'right                     )
-  (which-key-side-window-max-width    0.4                       )
-  ;; (which-key-popup-type              'minibuffer             )
-  (which-key-idle-delay               0.8                       )
-  (which-key-idle-secondary-delay     0.01                      )
-  (which-key-sort-order              'which-key-local-then-key-order )
+  (which-key-popup-type            'side-window) ; 'minibuffer
+  (which-key-side-window-location        'right)
+  (which-key-side-window-max-width          0.4)
+  (which-key-idle-delay                     0.8)
+  (which-key-idle-secondary-delay          0.01)
+  (which-key-sort-order            'which-key-local-then-key-order )
   (which-key-dont-use-unicode nil)
   (which-key-separator " → " )
   (which-key-unicode-correction 3)
-  ;; (which-key-show-prefix 'left)
-  :config
-  (which-key-mode)
+  :hook (after-init . which-key-mode)
   )
 #+end_src
 
@@ -105,7 +102,9 @@ run:
 #+begin_src emacs-lisp
 (use-package repeat
   :straight nil
-  :config (repeat-mode +1))
+  ;; :config (repeat-mode +1)
+  :hook (after-init . repeat-mode)
+  )
 #+end_src
 
 * Vi-movement and it's friends
@@ -125,12 +124,9 @@ run:
   (evil-want-C-i-jump                 t)
 
   :config
-  (evil-mode 1)
   (define-key evil-normal-state-map (kbd "SPC a") 'evil-avy-goto-char-2)
   ;; (evil-define-key 'normal  org-mode-map   (kbd "TAB") #'org-cycle)
   (global-set-key [mouse-3] 'evil-paste-after)
-
-
 
   :bind (
          :repeat-map evil/window-related
@@ -140,6 +136,7 @@ run:
          ("-" . evil-window-decrease-height  )
          ("+" . evil-window-increase-height  )
          )
+  :hook (after-init . evil-mode) ;; (evil-mode 1)
   )
 #+end_src
 ** =evil-collection=: vi-movements everywhere
@@ -148,8 +145,9 @@ run:
   :straight t
   :after evil
   :delight ""
-  :config
-  (evil-collection-init))
+  ;; :config (evil-collection-init)
+  :hook (after-init . evil-collection-init) 
+  )
 #+end_src
 
 ** =evil-surround=: easily surround selected region
@@ -188,8 +186,8 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   (python-base-mode . (lambda ()
                         (push '(?>  . ("#"      . "#"     )) evil-surround-pairs-alist)
                         ))
-  :config
-  (global-evil-surround-mode)
+  ;; :config (global-evil-surround-mode)
+  :hook (after-init . global-evil-surround-mode) 
   )
 #+end_src
 
@@ -223,7 +221,9 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   :straight t
   :after evil
   :config
-  (define-key evil-normal-state-map (kbd "<f3>") 'evil-visual-mark-mode))
+  :general (:states 'normal "<f3>" 'evil-visual-mark-mode)
+  ;; (define-key evil-normal-state-map (kbd "<f3>") 'evil-visual-mark-mode)
+  )
 #+end_src
 
 * Undo and Trash
@@ -238,13 +238,14 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 ** =trashed=: trash directory interaction
 #+begin_src emacs-lisp
 (use-package trashed
-  :straight t
-  :defer t)
+  :straight t)
 #+end_src
 * Theme & colors
 ** =delight=
 #+begin_src emacs-lisp
-(use-package delight :demand t :straight t)
+(use-package delight
+  :straight t
+  :demand t)
 #+end_src
 
 ** font related
@@ -275,33 +276,38 @@ Following is customization of the theme. Actual in the loading the theme is in t
 #+begin_src emacs-lisp
 (use-package modus-themes
   :straight  t
-  ;;:demand    t
   :custom
-  (modus-themes-to-toggle '(modus-vivendi-tinted modus-operandi-tinted))
+  (modus-themes-to-toggle '(modus-vivendi-tinted
+                            modus-operandi-tinted))
   (modus-themes-italic-constructs       t)
   (modus-themes-bold-constructs         t)
   (modus-themes-variable-pitch-ui       t)
   (modus-themes-mixed-fonts             t)
   (modus-themes-prompts           '(bold))
-  (modus-themes-completions          nil)
-  ;; (modus-themes-headings          '((0                . (medium variable-pitch 1.10 ))
-  ;;                                   (1                . (medium variable-pitch 1.10 ))
-  ;;                                   (2                . (medium variable-pitch 1.10 ))
-  ;;                                   (3                . (medium variable-pitch 1.05 ))
-  ;;                                   (agenda-date      . (                      1.1 ))
-  ;;                                   (agenda-structure . (variable-pitch light  1.1 ))
-  ;;                                   (t                . (medium variable-pitch 1.0 ))))
+  (modus-themes-completions           nil)
+  (modus-themes-common-palette-overrides `(;; Make the mode-line borderless
+                                           (bg-mode-line-active        bg-inactive )
+                                           (fg-mode-line-active        fg-main     )
+                                           (bg-mode-line-inactive      bg-inactive )
+                                           (fg-mode-line-active        fg-dim      )
+                                           (border-mode-line-active    bg-inactive )
+                                           (border-mode-line-inactive  bg-main     )
+                                           (fringe                     bg-main     )
+                                           ))
+
+  :bind ("<f5>" . modus-themes-toggle)
+
   :config
-  (customize-set-variable 'modus-themes-common-palette-overrides
-                          `(;; Make the mode-line borderless
-                            (bg-mode-line-active        bg-inactive )
-                            (fg-mode-line-active        fg-main     )
-                            (bg-mode-line-inactive      bg-inactive )
-                            (fg-mode-line-active        fg-dim      )
-                            (border-mode-line-active    bg-inactive )
-                            (border-mode-line-inactive  bg-main     )
-                            (fringe                     bg-main     )
-                            ))
+  ;; (customize-set-variable 'modus-themes-common-palette-overrides
+  ;;                         `(;; Make the mode-line borderless
+  ;;                           (bg-mode-line-active        bg-inactive )
+  ;;                           (fg-mode-line-active        fg-main     )
+  ;;                           (bg-mode-line-inactive      bg-inactive )
+  ;;                           (fg-mode-line-active        fg-dim      )
+  ;;                           (border-mode-line-active    bg-inactive )
+  ;;                           (border-mode-line-inactive  bg-main     )
+  ;;                           (fringe                     bg-main     )
+  ;;                           ))
   (modus-themes-with-colors
     (custom-set-faces
      `(font-lock-comment-face           ((t (:foreground ,border :slant italic))))
@@ -310,7 +316,7 @@ Following is customization of the theme. Actual in the loading the theme is in t
      ;;'(font-lock-comment-delimiter-face ((t (:foreground modus-themes-fg-cyan-faint)))))
      ))
 
-  :bind ("<f5>" . modus-themes-toggle)
+  (modus-themes-load-theme (car modus-themes-to-toggle)) ;; setting theme
   )
 #+end_src
 
@@ -321,8 +327,6 @@ Following is customization of the theme. Actual in the loading the theme is in t
   :custom
   (display-line-numbers-type 'relative)
   (ring-bell-function        'ignore)
-  :config
-  (global-display-line-numbers-mode -1)
 
   :general
   (:states 'normal
@@ -331,6 +335,9 @@ Following is customization of the theme. Actual in the loading the theme is in t
            "s l n" 'display-line-numbers-mode
            "s l N" 'global-display-line-numbers-mode
            )
+
+  ;; :config
+  ;; (global-display-line-numbers-mode -1)
   )
 #+end_src
 
@@ -345,19 +352,22 @@ Following is customization of the theme. Actual in the loading the theme is in t
   (pulsar-iterations      2)
   (pulsar-face            'pulsar-red)
   (pulsar-highlight-face  'pulsar-blue)
-  :config
-  (pulsar-global-mode))
+  ;; :config (pulsar-global-mode)
+  :hook (after-init . pulsar-global-mode)
+  )
 #+end_src
 
 ** Line visibility
 #+begin_src emacs-lisp
 (use-package hl-line
   :straight nil
-  :config (global-hl-line-mode 1))
+  ;; :config (global-hl-line-mode 1)
+  :hook (after-init . global-hl-line-mode))
 
 (use-package hl-todo
   :straight t
-  :config (global-hl-todo-mode 1))
+  ;; :config (global-hl-todo-mode 1)
+  :hook (after-init . global-hl-todo-mode))
 #+end_src
 
 ** =hilock= hightlight
@@ -368,8 +378,7 @@ Following is customization of the theme. Actual in the loading the theme is in t
   (:states 'normal
            :prefix "SPC"
            "z h"   'highlight-symbol-at-point
-           "z H"   'unhighlight-regexp
-           )
+           "z H"   'unhighlight-regexp)
   )
 #+end_src
 
@@ -411,47 +420,58 @@ Following is customization of the theme. Actual in the loading the theme is in t
 #+begin_src emacs-lisp
 (use-package dired
   :straight   nil
-  :demand   t
-  :commands (dired dired-jump)
-  :custom ((dired-listing-switches "-agho --group-directories-first")
-           ;;(dired-listing-switches "-a --group-directories-first")
-           (dired-kill-when-opening-new-dired-buffer t)
-           (dired-hide-details-mode t)
+  :demand     t
+  :commands   (dired dired-jump)
 
-           )
+  :custom ((dired-listing-switches  "-agho --group-directories-first")
+           (dired-kill-when-opening-new-dired-buffer t)
+           (dired-hide-details-mode                  t))
+
   :hook     ((dired-mode . denote-dired-mode       )
              (dired-mode . dired-omit-mode         )
              (dired-mode . auto-revert-mode        )
              (dired-mode . dired-hide-details-mode ))
-  :config
-  (evil-collection-define-key 'normal 'dired-mode-map
-    "h"          'dired-up-directory
-    "l"          'dired-find-file
-    " "          'nil
-    "N"          'dired-create-directory
-    "W"          'wdired-change-to-wdired-mode
-    (kbd "C-n")  'mkdir
-    (kbd "C-s")  'dired-omit-mode      ;; same keybinding with my lf config
-    )
 
-  (when (eq system-type 'berkeley-unix)   ;; change the main ls with gnu ls in bsd
-    (setq insert-directory-program "gls"))
+  ;; :config
+  ;; (evil-collection-define-key 'normal 'dired-mode-map
+  ;;   "h"          'dired-up-directory
+  ;;   "l"          'dired-find-file
+  ;;   " "          'nil
+  ;;   "N"          'dired-create-directory
+  ;;   "W"          'wdired-change-to-wdired-mode
+  ;;   (kbd "C-n")  'mkdir
+  ;;   (kbd "C-s")  'dired-omit-mode      ;; same keybinding with my lf config
+  ;;   )
+
+  ;; (when (eq system-type 'berkeley-unix)   ;; change the main ls with gnu ls in bsd
+  ;; (setq insert-directory-program "gls"))
 
   :general
   (:states 'normal
            :prefix "SPC"
-           "d"    'dired-jump
-           "D"  '(:which-key "dired...")
-           "D s"  'dired)
-  )
+           "d"     'dired-jump
+           "D"     '(:which-key "dired...")
+           "D s"   'dired)
+
+  (:states 'normal
+           :keymaps   'dired-mode-map
+           :prefix "SPC"
+           "h"          'dired-up-directory
+           "l"          'dired-find-file
+           " "          'nil
+           "N"          'dired-create-directory
+           "W"          'wdired-change-to-wdired-mode
+           (kbd "C-n")  'mkdir
+           (kbd "C-s")  'dired-omit-mode))
 
 (use-package wdired
   :straight   nil
   :general
   (:states 'normal
            :prefix "SPC"
-           :keymaps   'dired-mode-map
-           "D w"  'wdired-change-to-wdired-mode) ;; almoslty no need already bind with W
+           :keymaps  'dired-mode-map
+           "D w"     'wdired-change-to-wdired-mode)
+  ;; almoslty no need already bind with W
   )
 #+end_src
 
@@ -492,8 +512,10 @@ Following is customization of the theme. Actual in the loading the theme is in t
 #+begin_src emacs-lisp
 (use-package emacs
   :straight nil
-  :init
-  (require-theme 'modus-themes) ; `require-theme' is ONLY for the built-in Modus themes
+  ;; :init
+  ;; (require-theme 'modus-themes) ; `require-theme' is ONLY for the built-in Modus themes
+  ;; :after modus-themes
+
   :general
   (:states 'normal
            :prefix "SPC"
@@ -515,58 +537,59 @@ Following is customization of the theme. Actual in the loading the theme is in t
   (:states 'visual
            :prefix "SPC"
            "s n r"   'narrow-to-region
-           "s n f"   'narrow-to-defun
-           )
+           "s n f"   'narrow-to-defun)
+
   :custom
   (scroll-step                        1)
   (scroll-margin                      7)
   (scroll-conservatively           9999)
   (nobreak-char-display             nil) ;; <= NBSP
   (delete-by-moving-to-trash          t) ;; deletes to trash
+
+  :bind (:map minibuffer-local-map
+              ( "M-f" . forward-word ))
+
   :config
-  (define-key minibuffer-local-map (kbd "M-f") #'forward-word);; otherwise M-f globally bind to consult-line.
-
-  (defun garid/new-org-scratch ()
-    "Create a new scratch buffer in Org mode."
-    (interactive)
-    (let ((buf (generate-new-buffer "*org-scratch*")))
-      (switch-to-buffer buf)
-      (org-mode)))
-
-  (defun garid/new-python-scratch ()
-    "Create a new scratch buffer in Python mode."
-    (interactive)
-    (let ((buf (generate-new-buffer "*python-scratch*")))
-      (switch-to-buffer buf)
-      (python-mode)))
-
-  (defun garid/clear-kill-ring-and-garbage-collect ()
-    (interactive)
-    (setq kill-ring nil)
-    (garbage-collect))
-
-  (defun garid/open-terminal-at-current-working-dir ()
-    "Open a terminal at the current buffer's directory."
-    (interactive)
-    (call-process-shell-command
-     (concat
-      "foot"                                   ;; the terminal program to launch
-      " -D "                                   ;; specify the working directory
-      (file-name-directory (buffer-file-name)) ;; get the current buffer's directory
-      " &")))
-
-
   (setq-default tab-width 4)
-  (put 'narrow-to-region 'disabled nil)
   (setq-default truncate-lines t)             ;; <----------------------- tests ---------------
+  (put 'narrow-to-region 'disabled nil)
   (scroll-bar-mode       -1)   ; Disable visible scrollbar
   (tool-bar-mode         -1)   ; Disable the toolbar
   (tooltip-mode          -1)   ; Disable tooltips
   (menu-bar-mode         -1)   ; Disable the menu bar
   (set-fringe-mode       10)   ; Give some breathing room
-  (modus-themes-load-theme (car modus-themes-to-toggle)) ;; setting theme
-  ;; (global-corfu-mode   )
+  ;; ;; (global-corfu-mode   )
+  ;; ;; :hook (after-init . which-key-mode)
   )
+
+(defun garid/new-org-scratch ()
+  "Create a new scratch buffer in Org mode."
+  (interactive)
+  (let ((buf (generate-new-buffer "*org-scratch*")))
+    (switch-to-buffer buf)
+    (org-mode)))
+
+(defun garid/new-python-scratch ()
+  "Create a new scratch buffer in Python mode."
+  (interactive)
+  (let ((buf (generate-new-buffer "*python-scratch*")))
+    (switch-to-buffer buf)
+    (python-mode)))
+
+(defun garid/clear-kill-ring-and-garbage-collect ()
+  (interactive)
+  (setq kill-ring nil)
+  (garbage-collect))
+
+(defun garid/open-terminal-at-current-working-dir ()
+  "Open a terminal at the current buffer's directory."
+  (interactive)
+  (call-process-shell-command
+   (concat
+    "foot"                                   ;; the terminal program to launch
+    " -D "                                   ;; specify the working directory
+    (file-name-directory (buffer-file-name)) ;; get the current buffer's directory
+    " &")))
 #+end_src
 ** =ffap=
 #+begin_src emacs-lisp
@@ -584,25 +607,14 @@ Following is customization of the theme. Actual in the loading the theme is in t
 (use-package files
   :straight nil
   :custom
-  ;; from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][mastering emacs article]].
   (major-mode-remap-alist '((bash-mode   . bash-ts-mode)
                             (python-mode . python-ts-mode)))
-  :general (
-            :states 'normal
-            :prefix "SPC"
-            "f"  'find-file
-            "O c"  'citar-open
-            "L r"  'revert-buffer-quick
-            ;; I should I use bookmarks
-            ;; "O e"  '(lambda () (interactive) (find-file "~/.config/emacs/init.org"))
-            ;; "O E"  '(lambda () (interactive) (find-file "~/.config/emacs/init.el"))
-            ;; "O b"  '(lambda () (interactive) (find-file (nth 0 org-cite-global-bibliography)))
-            ;; "O p"  '(lambda () (interactive) (find-file "~/BrainDump/bookshelf/"))
-            ;; "O O"  '(lambda () (interactive) (find-file org-default-notes-file))
-            ;; "O i"  '(lambda () (interactive) (find-file "~/BrainDump/inbox.org"))
-            ;; "O m"  '(lambda () (interactive) (find-file "~/BrainDump/denote_bps/20250911T174108--bps__gtd.org"))
-            ;; "O s"  '(lambda () (interactive) (find-file "/etc/nixos/configuration.nix"))
-            ))
+  :general (:states 'normal
+                    :prefix "SPC"
+                    "f"  'find-file
+                    "O c"  'citar-open
+                    "L r"  'revert-buffer-quick
+                    ))
 #+end_src
 ** =flyspell=
 #+begin_src emacs-lisp
@@ -630,12 +642,8 @@ Following is customization of the theme. Actual in the loading the theme is in t
   :general
   (:states '(normal insert)
            "C-/"  'comment-line)
-
   (:states '(visual)
-           "C-/"  'comment-or-uncomment-region
-           ;;"C-?"  'comment-box
-           )
-
+           "C-/"  'comment-or-uncomment-region)
   )
 #+end_src
 
@@ -668,14 +676,17 @@ and later sets cursor at that point when you open that file.
 #+begin_src emacs-lisp
 (use-package saveplace
   :straight nil
-  :config (save-place-mode 1))
+  ;; :config (save-place-mode 1)
+  :hook (after-init . save-place-mode)
+  )
 #+end_src
 ** =simple=
 #+begin_src emacs-lisp
 (use-package simple
   :straight nil
   :custom
-  (mail-user-agent 'notmuch-user-agent)
+  (mail-user-agent     'notmuch-user-agent)
+  (indent-tabs-mode     nil)
   :general
   (:states 'normal
            :prefix "SPC"
@@ -684,9 +695,10 @@ and later sets cursor at that point when you open that file.
            "L R"  'read-only-mode)
   :bind
   ("M-Q" . kill-current-buffer)
-  :config
-  (setq-default indent-tabs-mode nil )
-  (column-number-mode)         ; Shows the column number in the mod bar
+  ;; :config
+  ;; (setq-default indent-tabs-mode nil )
+  ;; (column-number-mode)         ; Shows the column number in the mod bar
+  :hook (after-init . column-number-mode)
   )
 #+end_src
 
@@ -767,14 +779,15 @@ and later sets cursor at that point when you open that file.
               ("M-h" . vertico-exit         )
               ("M-q" . vertico-quick-insert )
               ("C-q" . vertico-quick-exit   ))
-  :init
-  (require 'vertico-quick)
+  ;; :init (require 'vertico-quick)
   :custom
   (vertico-cycle     t  )
   (vertico-count     15 )
   (vertico-resize    nil)
-  :config
-  (vertico-mode))
+
+  ;; :config (vertico-mode)
+  :hook (after-init . vertico-mode)
+  )
 #+end_src
 ** =consult=: consulting
 #+begin_src emacs-lisp
@@ -782,9 +795,11 @@ and later sets cursor at that point when you open that file.
   :straight t
   :custom
   (consult-preview-key (list :debounce 0.5 'any))
+
   :bind
   ("M-y" . consult-yank-from-kill-ring)
   ("M-f" . consult-line               )
+
   :general
   (:states 'normal
            :prefix "SPC"
@@ -817,15 +832,15 @@ and later sets cursor at that point when you open that file.
            "o f r"    '(labmda () (interactive)  (consult-line "\\\\ref{.*}" )   )
            )
 
-  :config
-  (defun garid/consult-preview-change ()
-    (interactive)
-    (setq consult-preview-key 'any)
-    (let ((tmp-chose (completing-read "choose" '("nil" "any" "0.5sec"))))
-      (when (string= "nil" tmp-chose)    (setq consult-preview-key nil))
-      (when (string= "any" tmp-chose)    (setq consult-preview-key 'any))
-      (when (string= "0.5sec" tmp-chose) (setq consult-preview-key (list :debounce 0.5 'any)))
-      ))
+  ;; :config
+  ;; (defun garid/consult-preview-change ()
+  ;;   (interactive)
+  ;;   (setq consult-preview-key 'any)
+  ;;   (let ((tmp-chose (completing-read "choose" '("nil" "any" "0.5sec"))))
+  ;;     (when (string= "nil" tmp-chose)    (setq consult-preview-key nil))
+  ;;     (when (string= "any" tmp-chose)    (setq consult-preview-key 'any))
+  ;;     (when (string= "0.5sec" tmp-chose) (setq consult-preview-key (list :debounce 0.5 'any)))
+  ;;     ))
   )
 #+end_src
 
@@ -846,25 +861,24 @@ and later sets cursor at that point when you open that file.
          ("e"      . garid/embark-org-insert-ref-to-label-inside-eq ))
 
   :init
-  (setq prefix-help-command #'embark-prefix-help-command)
+  (setq prefix-help-command #'embark-prefix-help-command) ;; what is this ?
   :config
-
-  (defun garid/embark-org-insert-ref-of-tbl-fig-src-eq (x)
-    (interactive "sSearch Term: ")
-    (insert
-     (format "[[%s]]"
-             (nth 1 (split-string
-                     (replace-regexp-in-string "[^[:alnum:-]]" "" x)
-                     )))))
-
-  (defun garid/embark-org-insert-ref-to-label-inside-eq (input-string)
-    (interactive "sSearch Term: ")
-    (insert
-     (format "\\ref{%s}"
-             (if (string-match "\\\\label{\\([^}]+\\)}" input-string)
-                 (match-string 1 input-string)
-               nil
-               ))))
+  (defun garid/embark-org-insert-ref-of-tbl-fig-src-eq (x)             ;; 
+    (interactive "sSearch Term: ")                                     ;; 
+    (insert                                                            ;; 
+     (format "[[%s]]"                                                  ;; 
+             (nth 1 (split-string                                      ;; 
+                     (replace-regexp-in-string "[^[:alnum:-]]" "" x)   ;; 
+                     )))))                                             ;; 
+                                                                       ;;  I dont really use these
+  (defun garid/embark-org-insert-ref-to-label-inside-eq (input-string) ;; 
+    (interactive "sSearch Term: ")                                     ;; 
+    (insert                                                            ;; 
+     (format "\\ref{%s}"                                               ;; 
+             (if (string-match "\\\\label{\\([^}]+\\)}" input-string)  ;; 
+                 (match-string 1 input-string)                         ;; 
+               nil                                                     ;; 
+               ))))                                                    ;; 
   )
 #+end_src
 ** =marginalia=
@@ -875,7 +889,8 @@ and later sets cursor at that point when you open that file.
   :custom
   (marginalia-annotators '(marginalia-annotators-heavy
                            marginalia-annotators-light nil))
-  :init (marginalia-mode))
+  :hook (after-init . marginalia-mode) ;; :init (marginalia-mode)
+  )
 #+end_src
 ** =orderless=: orderless completion
 #+begin_src emacs-lisp
@@ -906,40 +921,29 @@ and later sets cursor at that point when you open that file.
   :demand t
   :delight "org"
   :bind (:map org-mode-map
-              ("C-S-k"     . org-previous-visible-heading    )
-              ("C-S-j"     . org-next-visible-heading        )
+              ("C-S-k"     . org-previous-visible-heading)
+              ("C-S-j"     . org-next-visible-heading    )
               :repeat-map garid/org-repeat
-              ("["         . org-previous-visible-heading    )
-              ("]"         . org-next-visible-heading        )
-              ("u"         . org-up-heading                  )
-              ("{"         . org-backward-paragraph          )
-              ("}"         . org-forward-paragraph           )
-              ;; ("<tab>"     . org-cycle                    )
-              ;; ("<backtab>" . org-shifttab                 )
-              ("n"         . org-next-block                  )
-              ("p"         . org-previous-block              )
-              ("c"         . org-ctrl-c-ctrl-c               )
+              ("["         . org-previous-visible-heading)
+              ("]"         . org-next-visible-heading    )
+              ("u"         . org-up-heading              )
+              ("{"         . org-backward-paragraph      )
+              ("}"         . org-forward-paragraph       )
+              ("n"         . org-next-block              )
+              ("p"         . org-previous-block          )
+              ("c"         . org-ctrl-c-ctrl-c           )
               :exit
-              ("'"         . org-edit-special                )
-
+              ("'"         . org-edit-special            )
               :repeat-map garid/org-repeat-heading
-              ("n"         . org-next-visible-heading        )
-              ("p"         . org-previous-visible-heading    )
-
+              ("n"         . org-next-visible-heading    )
+              ("p"         . org-previous-visible-heading)
               :repeat-map garid/org-repeat-babel-src-block
-              ("n"         . org-babel-next-src-block        )
-              ("p"         . org-babel-previous-src-block    )
-
-
-              )
+              ("n"         . org-babel-next-src-block    )
+              ("p"         . org-babel-previous-src-block))
   :general
   (:states 'normal
-           :keymaps      'org-mode-map
-           :prefix "SPC"
-           ;; :states '(emacs insert normal)
-           ;; :prefix-map 'my-prefix-map
-           ;; :global-prefix "C-c"
-           ;; :non-normal-prefix "M-SPC"
+           :keymaps  'org-mode-map
+           :prefix   "SPC"
            ","       'org-ctrl-c-ctrl-c
            "j"       'org-next-block
            "k"       'org-previous-block
@@ -951,7 +955,7 @@ and later sets cursor at that point when you open that file.
            "o d"     'garid/open-org-link-at-point-with-dired
            "o f h"   'consult-org-heading
 
-           "o T"       '(:which-key "Table...")
+           "o T"     '(:which-key "Table...")
            "o T C"   'org-table-toggle-coordinate-overlays
            "o T T"   'org-table-toggle-column-width
            "o T c"   'orgtbl-create-or-convert-from-region
@@ -984,7 +988,6 @@ and later sets cursor at that point when you open that file.
            "o b j r" 'org-babel-goto-named-result
            "o b j s" 'org-babel-goto-named-src-block
 
-
            "o i"     '(:which-key "images...")
            "o i t"   'garid/org-toggle-display-images-n-edraw
            "o i p"   'yank-media
@@ -1016,7 +1019,7 @@ and later sets cursor at that point when you open that file.
            "o s y"   'org-copy-subtree)
 
   (:states '(normal visual)
-           :keymaps      'org-mode-map
+           :keymaps  'org-mode-map
            :prefix "SPC"
            "o t"     'org-todo
            "o l i"   'org-insert-link
@@ -1052,24 +1055,23 @@ and later sets cursor at that point when you open that file.
   (org-edit-src-content-indentation  0      )
 
   ;; ---------------- how to open links in the org mode ----------------------------------
-  (org-file-apps '((auto-mode                  . emacs                       )
-                   ("\\.html\\'"               . "firefox   \"%s\""          )
-                   ("\\.gif\\'"                . "mpv     \"%s\""            )
-                   ("\\.mp4\\'"                . "mpv     \"%s\""            )
-                   ("\\.png\\'"                . "nsxiv    \"%s\""           )
-                   ("\\.svg\\'"                . "inkview \"%s\""            )
-                   ("\\.jpeg\\'"               . "nsxiv    \"%s\""           )
-                   ("\\.jpg\\'"                . "nsxiv    \"%s\""           )
-                   ("\\.pdf\\'"                . "sioyek  \"%s\""            )
-                   ("\\.pdf::\\([0-9]+\\)?\\'" . "sioyek  \"%s\" --page %1"  )
-                   ("\\.mkv\\'"                . "mpv     \"%s\""            )
-                   ("\\.xopp\\'"               . "xournalpp \"%s\""          )))
+  (org-file-apps '((auto-mode     . emacs             )
+                   ("\\.html\\'"  . "firefox   \"%s\"")
+                   ("\\.gif\\'"   . "mpv       \"%s\"")
+                   ("\\.mp4\\'"   . "mpv       \"%s\"")
+                   ("\\.png\\'"   . "nsxiv     \"%s\"")
+                   ("\\.svg\\'"   . "inkview   \"%s\"")
+                   ("\\.jpeg\\'"  . "nsxiv     \"%s\"")
+                   ("\\.jpg\\'"   . "nsxiv     \"%s\"")
+                   ("\\.pdf\\'"   . "sioyek    \"%s\"")
+                   ("\\.mkv\\'"   . "mpv       \"%s\"")
+                   ("\\.xopp\\'"  . "xournalpp \"%s\"")))
+  ;; ("\\.pdf::\\([0-9]+\\)?\\'" . "sioyek    \"%s\" --page %1")
 
   ;; ---------------- TODO tabs ----------------------------------------------------------
   (org-todo-keywords      '((sequence
                              "TODO(t)" "NEXT(n)" "WAIT(w)" "PRJT(p)" "VAGUE(v)"
                              "|"  "DONE(d)" "CNCL(c)")))
-  ;;//"NEAR(N)" "DONE(d)"
 
   ( org-todo-keyword-faces '(("TODO"  . org-todo                           )
                              ("PRJT"  . org-tag                            )
@@ -1080,10 +1082,10 @@ and later sets cursor at that point when you open that file.
                              ("CNCL"  . (:foreground "gray30" :weight bold ))))
 
   (org-log-done            'time)
-  (org-tags-column         -93) ;;-100)   ;; how many spaces left padding for tags
+  (org-tags-column           -93)
   (org-tag-alist           '((:startgroup . nil)
-                             ("bps"  . ?b) ;; should it be like at during work time?
-                             ("life" . ?l) ;; should it be more like at leasure time?
+                             ("bps"       . ?b)
+                             ("life"      . ?l)
                              (:endgroup   . nil)
                              ("4bc"       . ?4)
                              ("yak"       . ?y)
@@ -1097,13 +1099,8 @@ and later sets cursor at that point when you open that file.
                              ("device"    . ?d)
                              ("floatmeal" . ?f)
                              ("uavsoft"   . ?U)
-                             ("ernd"      . ?E)
-
-                             ;; ("phd"  . ?p)  ("lit"  . ?l)
-                             ;; ("hkdn" . ?H)
-                             ;; ("read" . ?R)
-                             ))
-  (org-return-follows-link      t) ;; org-keys?
+                             ("ernd"      . ?E)))
+  (org-return-follows-link      t) ;; org-keys? Package?
 
   ;; ---------------- Personal vars ----------------------------------------------------------
   (garid-orgvar-is-img-shown nil "Personal variable that control both inline-image and edraw")
@@ -1202,9 +1199,9 @@ and later sets cursor at that point when you open that file.
     (interactive)
     (if garid-orgvar-is-img-shown
         (progn (edraw-org-link-image-mode -1)
-             (org-link-preview-clear)) ;; (org-remove-inline-images)
+               (org-link-preview-clear)) ;; (org-remove-inline-images)
       (progn (edraw-org-link-image-mode +1)
-               (org-link-preview) ;; (org-display-inline-images)
+             (org-link-preview) ;; (org-display-inline-images)
              )) ;; may need to check org-link-preview as of org mode 9.8 release
     (setq garid-orgvar-is-img-shown (not garid-orgvar-is-img-shown)))
 
@@ -1258,10 +1255,11 @@ and later sets cursor at that point when you open that file.
 #+begin_src emacs-lisp
 (use-package org-appear
   :straight t
-  :hook (org-mode . org-appear-mode)
   :custom
-  (org-appear-autolinks t)
-  (org-appear-delay     0.25))
+  (org-appear-autolinks    t)
+  (org-appear-delay     0.25)
+  :hook
+  (org-mode . org-appear-mode))
 #+end_src
 
 ** =org-num=
@@ -1285,9 +1283,8 @@ and later sets cursor at that point when you open that file.
 #+begin_src emacs-lisp
 (use-package org-auto-tangle
   :straight t
-  :defer  t
   :after org
-  :delight "" ;; " oat"
+  :delight ""
   :custom (org-auto-tangle-default    nil)
   :hook   (org-mode . org-auto-tangle-mode))
 #+end_src
@@ -1334,16 +1331,15 @@ https://stackoverflow.com/questions/78982629/in-emacs-how-to-prevent-org-babel-d
   (denote-excluded-directories-regexp  ".*export_.*\\|.*website.*")
   ;; (denote-directory                    "~/BrainDump/denote")
   (denote-directory ;; can be list
-        (mapcar     ;; dynamically getting the list via name if it starts with "denote_"
-         (lambda (y) (concat "~/BrainDump/" y))
-         (seq-filter
-          (lambda (x) (string-match "denote.*" x))
-          (directory-files "~/BrainDump/"))))
+   (mapcar     ;; dynamically getting the list via name if it starts with "denote_"
+    (lambda (y) (concat "~/BrainDump/" y))
+    (seq-filter
+     (lambda (x) (string-match "denote.*" x))
+     (directory-files "~/BrainDump/"))))
   (denote-known-keywords               '("phd"  "code"  "python"))
   (denote-templates                    '((biblio . "* Abstract\n\n* Review")
                                          (plain  . nil)))
   (denote-file-type                    'org)
-  ;;:bind
   :general (
             :states  'normal
             :prefix  "SPC"
@@ -1395,8 +1391,7 @@ https://stackoverflow.com/questions/78982629/in-emacs-how-to-prevent-org-babel-d
 (use-package denote-journal
   :straight t ;; :after denote
   :custom
-  (denote-journal-title-format "Week-%V %A (Date: %Y-%B-%e)") ;; 'day
-
+  (denote-journal-title-format "Week-%V %A (Date: %Y-%B-%e)")
   :general (
             :states 'normal
             :prefix "SPC"
@@ -1412,7 +1407,6 @@ https://stackoverflow.com/questions/78982629/in-emacs-how-to-prevent-org-babel-d
 ** =denote-org=                                                                      :by_prot:
 #+begin_src emacs-lisp
 (use-package denote-org
-  ;; :after denote
   :straight t
   :general (
             :states  'normal
@@ -1421,7 +1415,6 @@ https://stackoverflow.com/questions/78982629/in-emacs-how-to-prevent-org-babel-d
             "n o d" 'denote-org-dblock-insert-links
             "n o e" 'denote-org-extract-org-subtree
             "n o l" 'denote-org-link-to-heading
-            ;; "n l I o"  'denote-org-link-to-heading
             )
   )
 #+end_src
@@ -1429,8 +1422,7 @@ https://stackoverflow.com/questions/78982629/in-emacs-how-to-prevent-org-babel-d
 ** =denote-silo=                                                                     :by_prot:
 #+begin_src emacs-lisp
 (use-package denote-silo
-  :straight t               ;; :after denote
-
+  :straight t
   :custom
   (denote-silo-directories
    (mapcar
@@ -1438,8 +1430,6 @@ https://stackoverflow.com/questions/78982629/in-emacs-how-to-prevent-org-babel-d
     (seq-filter
      (lambda (x) (string-match "denote.*" x))
      (directory-files "~/BrainDump/"))))
-
-
   :general (
             :states 'normal
             :prefix "SPC"
@@ -1447,8 +1437,6 @@ https://stackoverflow.com/questions/78982629/in-emacs-how-to-prevent-org-babel-d
             "n s t" 'denote-silo-select-silo-then-command
             "n s d" 'denote-silo-dired
             "n s f" 'denote-silo-open-or-create
-            ;; "N f"  'denote-silo-open-or-create
-            ;; "N d"  'denote-silo-dired
             )
   )
 #+end_src
@@ -1460,13 +1448,8 @@ https://stackoverflow.com/questions/78982629/in-emacs-how-to-prevent-org-babel-d
 #+begin_src emacs-lisp
 (use-package citar
   :straight t
-  ;; :after org denote ;; must load after denote must be because it uses variable that's defined in denote
-  ;; :no-require
   :custom
-  (org-cite-csl-styles-dir (expand-file-name "citation_styles/" user-emacs-directory)) ;; newly added
-
-  ;; (org-cite-global-bibliography (list (concat (file-name-as-directory denote-directory)
-  ;;                                             "20220101T010101--references__study.bib")))
+  (org-cite-csl-styles-dir      (expand-file-name "citation_styles/" user-emacs-directory))
   (org-cite-global-bibliography (list  "~/BrainDump/denote/20220101T010101--references__study.bib"))
 
   (org-cite-insert-processor    'citar                        )
@@ -1474,19 +1457,19 @@ https://stackoverflow.com/questions/78982629/in-emacs-how-to-prevent-org-babel-d
   (org-cite-activate-processor  'citar                        )
   (citar-bibliography            org-cite-global-bibliography )
   (bibtex-dialect               'biblatex                     )
-  ;; (citar-library-paths           (list (concat (file-name-as-directory denote-directory) "lit/")) )
-  (citar-library-paths           (list  "~/BrainDump/denote/lit/")) 
+  (citar-library-paths           (list  "~/BrainDump/denote/lit/"))
   (citar-file-open-functions '(("html" . citar-file-open-external )
-                               ("pdf" . garid/ask-pdf-openner     )
-                               (t . find-file                     )))
+                               ("pdf"  . garid/ask-pdf-openner    )
+                               (t      . find-file                )))
   :hook
   (org-mode   . citar-capf-setup)
   (LaTeX-mode . citar-capf-setup)
-  :config
-  (defun garid/ask-pdf-openner (file)
-    (interactive)
-    (call-process (completing-read "Application" '("sioyek" "okular" "xournalpp")) nil 0 nil file))
   )
+
+
+(defun garid/ask-pdf-openner (file)
+  (interactive)
+  (call-process (completing-read "Application" '("sioyek" "okular" "xournalpp")) nil 0 nil file))
 #+end_src
 
 Citation style files are downloaded and placed in the
@@ -1499,35 +1482,32 @@ license.
 #+begin_src emacs-lisp
 (use-package citar-denote
   :straight t
-  ;; :demand t
-  ;; :after citar denote
   :custom
-  (citar-denote-file-type             'org          )
-  (citar-denote-keyword               "bib"         )
-  (citar-denote-signature             nil           )
-  (citar-denote-subdir                "lit"         )
-  (citar-denote-template              nil           )
-  (citar-denote-title-format          "author-year" )
-  (citar-denote-title-format-andstr   "and"         )
-  (citar-denote-title-format-authors  1             )
-  (citar-denote-use-bib-keywords      nil           )
-  :preface
-  (bind-key "C-c w n" #'citar-denote-open-note)
-  :bind (("C-c w d" . citar-denote-dwim                 )
-         ("C-c w e" . citar-denote-open-reference-entry )
-         ("C-c w a" . citar-denote-add-citekey          )
-         ("C-c w k" . citar-denote-remove-citekey       )
-         ("C-c w r" . citar-denote-find-reference       )
-         ("C-c w l" . citar-denote-link-reference       )
-         ("C-c w f" . citar-denote-find-citation        )
-         ("C-c w x" . citar-denote-nocite               )
-         ("C-c w y" . citar-denote-cite-nocite          )
-         ("C-c w z" . citar-denote-nobib                )
-         )
+  (citar-denote-file-type             'org         )
+  (citar-denote-keyword               "bib"        )
+  (citar-denote-signature             nil          )
+  (citar-denote-subdir                "lit"        )
+  (citar-denote-template              nil          )
+  (citar-denote-title-format          "author-year")
+  (citar-denote-title-format-andstr   "and"        )
+  (citar-denote-title-format-authors  1            )
+  (citar-denote-use-bib-keywords      nil          )
+  ;; :preface
+  ;; (bind-key "C-c w n" #'citar-denote-open-note)
+  ;; :bind (("C-c w d" . citar-denote-dwim                 )
+  ;;        ("C-c w e" . citar-denote-open-reference-entry )
+  ;;        ("C-c w a" . citar-denote-add-citekey          )
+  ;;        ("C-c w k" . citar-denote-remove-citekey       )
+  ;;        ("C-c w r" . citar-denote-find-reference       )
+  ;;        ("C-c w l" . citar-denote-link-reference       )
+  ;;        ("C-c w f" . citar-denote-find-citation        )
+  ;;        ("C-c w x" . citar-denote-nocite               )
+  ;;        ("C-c w y" . citar-denote-cite-nocite          )
+  ;;        ("C-c w z" . citar-denote-nobib                )
+  ;;        )
 
-  ;:init
-  :config
-  (citar-denote-mode)
+  ;:init ;; :config (citar-denote-mode)
+  :hook (after-hook . citar-denote-mode)
   )
 
 #+end_src
@@ -1545,28 +1525,21 @@ license.
   :after      org
   :straight   nil
   :custom
-  (org-agenda-files '(;;"~/BrainDump/denote/20250911T175810--personal__gtd.org"
-                      ;;"~/BrainDump/denote_bps/20250911T174108--bps__gtd.org"
+  (org-agenda-files '("~/BrainDump/gtd/org-gtd-tasks.org"
                       ;;//"~/BrainDump/inbox.org"
-                      "~/BrainDump/gtd/org-gtd-tasks.org"
+                      ;;"~/BrainDump/denote/20250911T175810--personal__gtd.org"
+                      ;;"~/BrainDump/denote_bps/20250911T174108--bps__gtd.org"
                       ;;//"~/BrainDump/inbox.org"
                       ))
   (org-agenda-span             1) ;;  90)
   (org-agenda-custom-commands
    '(("i" "Inbox"                tags-todo "+TODO=\"VAGUE\"" ((org-agenda-files (file-expand-wildcards "~/BrainDump/gtd/inbox.org"))))
      ("n" "Next actions"         tags-todo "+TODO=\"NEXT\"")
-     ;; ("p" "Projects"             tags-todo "+TODO=\"PRJT\"")
      ("w" "Waiting"              tags-todo "+TODO=\"WAIT\"")
      ("s" "Someday"              tags-todo "+TODO=\"TODO\"|TODO=\"PRJT\"" ((org-agenda-files (file-expand-wildcards "~/BrainDump/gtd/someday.org"))))
      ("o" "Actions and Projects" tags-todo "+TODO=\"TODO\"|TODO=\"PRJT\"")))
 
   (org-agenda-current-time-string "← now ───────────────────────────────────────────────")
-  ;;(org-agenda-prefix-format '((agenda   . "  %-25:c%?-12t% s" )
-  ;;                            (timeline . "  % s"             )
-  ;;                            (todo     . "  %-12:c"          )
-  ;;                            (tags     . "  %-25:c"          )
-  ;;                            (search   . "  %-12:c"          )))
-
   (org-agenda-prefix-format '((agenda . " %i %-16:c%?-12t% s")
                               (timeline . "  % s"             )
                               (todo     . "  %-12:c"          )
@@ -1604,9 +1577,10 @@ license.
      ;;("s" "Someday"    entry (file+headline "~/BrainDump/gtd/someday.org" "Someday")  "* TODO  %?\nAdded: %U\n"                                         :empty-lines 1 :prepend t)
      ))
 
-  :config
-  ;; (add-hook 'org-agenda-finalize-hook (lambda () (org-agenda-write "/tmp/current-agenda-text")))
-  (add-hook 'org-capture-mode-hook 'evil-insert-state)
+  ;; :config
+  ;; ;; (add-hook 'org-agenda-finalize-hook (lambda () (org-agenda-write "/tmp/current-agenda-text")))
+  ;; (add-hook 'org-capture-mode-hook 'evil-insert-state)
+  :hook (org-capture-mode . evil-insert-state)
   )
 #+end_src
 ** org super agenda
@@ -1971,16 +1945,16 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   (org-attach-id-to-path-function-list '(my/org-attach-dir-calculator
                                          org-attach-id-ts-folder-format
                                          org-attach-id-uuid-folder-format))
-  (org-attach-use-inheritance t) ;; 2025-09-28 TODO
-  ;; (org-attach-auto-tag      nil) TODO
+  (org-attach-use-inheritance t)
+  (org-attach-auto-tag      nil)
+
   :general
   (:states 'normal
            :keymaps 'dired-mode-map
-           "SPC D a" 'org-attach-dired-to-subtree
-           )
-  :config
+           "SPC D a" 'org-attach-dired-to-subtree)
 
-  (require 'org-attach-git) ;; 2025-09-28 TODO test
+  :config
+  (require 'org-attach-git)
   (defun my/org-attach-dir-calculator (id)
     "id"
     (let ((possible-denote-id (car                     ;; 4. "20241002T190027"
@@ -2018,13 +1992,11 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
              :host github
              :branch "master"
              :repo "Stefanomarton/org-ipe")
-
   :general
   (:states 'normal
            :keymaps 'org-mode-map
            :prefix  "SPC"
-           "o i c"  'org-ipe-insert-drawing)
-  )
+           "o i c"  'org-ipe-insert-drawing))
 #+end_src
 
 ** org odt libreoffice-draw
@@ -2041,7 +2013,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 (add-to-list 'org-file-apps '("\\ode.svg\\'" . garid/odt-edit-open))
 #+end_src
 
-** =edraw= svg drawing inline in org
+** =edraw= svg drawing inline in org                                                    :here:
 #+begin_src emacs-lisp
 (use-package edraw-mode
   :straight (edraw-mode
@@ -2050,8 +2022,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
              :branch "master"
              :repo "misohena/el-easydraw")
   ;; :after org ox ox-latex ox-html
-  :demand t ;; needed <== don't know why
-  :hook (edraw-property-editor-mode . turn-off-evil-mode)
+  ;; :demand t ;; needed <== don't know why
   :custom
   (edraw-editor-default-grid-interval 10)
   (edraw-default-shape-properties '((rect (fill            . #1="#f8f8f8")
@@ -2098,6 +2069,12 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   (require 'edraw-org)
   (edraw-org-setup-default)
   (edraw-org-setup-exporter)
+
+  ;; :hook
+  :hook
+  ;;(after-init                 . edraw-org-setup-default)
+  ;;(after-init                 . edraw-org-setup-exporter)
+  (edraw-property-editor-mode . turn-off-evil-mode)
   )
 #+end_src
 
