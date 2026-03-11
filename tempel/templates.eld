@@ -446,7 +446,7 @@ org-mode :when (re-search-backward "^\\S-*$" (line-beginning-position) 'noerror)
              "#+reveal_version:       4"                                                                     n
              "#+options:              reveal_center:t reveal_progress:t reveal_history:nil reveal_control:t" n
              "#+options:              reveal_rolling_links:t reveal_keyboard:t reveal_overview:t num:nil"    n
-             "#+options:              reveal_width:1920 reveal_height:1080"                                  n
+             ;; "#+options:              reveal_width:1920 reveal_height:1080"                                  n
              "#+options:              toc:1"                                                                 n
              "#+options:              reveal_klipsify_src:t"                                                 n
              "#+reveal_min_scale:     1.0"                                                                   n
