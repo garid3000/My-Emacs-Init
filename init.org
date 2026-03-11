@@ -1032,6 +1032,8 @@ and later sets cursor at that point when you open that file.
            "o c  "     'org-gtd-capture
            )
   :custom
+  (org-extend-today-until 2) ;; for the night owl
+  (org-use-effective-time t) ;; for the night owl
   ;; ---------------- theme/styling ------------------------------------------------------
   (org-hide-emphasis-markers         t                        )
   (org-hide-leading-stars t                                   )
