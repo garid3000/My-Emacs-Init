@@ -550,8 +550,8 @@ Following is customization of the theme. Actual in the loading the theme is in t
   (tooltip-mode          -1)   ; Disable tooltips
   (menu-bar-mode         -1)   ; Disable the menu bar
   (set-fringe-mode       10)   ; Give some breathing room
-  ;; ;; (global-corfu-mode   )
-  ;; ;; :hook (after-init . which-key-mode)
+
+  (use-short-answers      t)   ;; yes/no to y/n
   )
 
 (defun garid/new-org-scratch ()
@@ -2013,8 +2013,8 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
              :host github
              :branch "master"
              :repo "misohena/el-easydraw")
-  ;; :after org ox ox-latex ox-html
-  ;; :demand t ;; needed <== don't know why
+  ;; :after org ;; ox ox-latex ox-html
+  :demand t ;; needed <== don't know why (dont know why :config not running )
   :custom
   (edraw-editor-default-grid-interval 10)
   (edraw-default-shape-properties '((rect (fill            . #1="#f8f8f8")
