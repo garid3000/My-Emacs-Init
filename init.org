@@ -123,19 +123,26 @@ run:
   (evil-toggle-key                   "")      ;; removes the C-z toggling evil accidentally
   (evil-want-C-i-jump                 t)
 
-  :config
-  (define-key evil-normal-state-map (kbd "SPC a") 'evil-avy-goto-char-2)
+  ;; :config
   ;; (evil-define-key 'normal  org-mode-map   (kbd "TAB") #'org-cycle)
-  (global-set-key [mouse-3] 'evil-paste-after)
+  ;; (global-set-key [mouse-3] 'evil-paste-after)
 
-  :bind (
-         :repeat-map evil/window-related
-         ("<" . evil-window-decrease-width   )
-         (">" . evil-window-increase-width   )
-         ("r" . evil-window-rotate-downwards )
-         ("-" . evil-window-decrease-height  )
-         ("+" . evil-window-increase-height  )
-         )
+  :bind (:repeat-map evil/window-related
+                     ("<" . evil-window-decrease-width   )
+                     (">" . evil-window-increase-width   )
+                     ("r" . evil-window-rotate-downwards )
+                     ("-" . evil-window-decrease-height  )
+                     ("+" . evil-window-increase-height  ))
+
+  :general
+  (:states 'normal
+           :prefix "SPC"
+           "a" 'evil-avy-goto-char-2
+           ;; (define-key evil-normal-state-map (kbd "SPC a") ')
+           )
+
+
+
   :hook (after-init . evil-mode) ;; (evil-mode 1)
   )
 #+end_src
@@ -220,7 +227,6 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 (use-package evil-visual-mark-mode
   :straight t
   :after evil
-  :config
   :general (:states 'normal "<f3>" 'evil-visual-mark-mode)
   ;; (define-key evil-normal-state-map (kbd "<f3>") 'evil-visual-mark-mode)
   )
@@ -294,29 +300,27 @@ Following is customization of the theme. Actual in the loading the theme is in t
                                            (border-mode-line-inactive  bg-main     )
                                            (fringe                     bg-main     )
                                            ))
-
   :bind ("<f5>" . modus-themes-toggle)
-
   :config
-  ;; (customize-set-variable 'modus-themes-common-palette-overrides
-  ;;                         `(;; Make the mode-line borderless
-  ;;                           (bg-mode-line-active        bg-inactive )
-  ;;                           (fg-mode-line-active        fg-main     )
-  ;;                           (bg-mode-line-inactive      bg-inactive )
-  ;;                           (fg-mode-line-active        fg-dim      )
-  ;;                           (border-mode-line-active    bg-inactive )
-  ;;                           (border-mode-line-inactive  bg-main     )
-  ;;                           (fringe                     bg-main     )
-  ;;                           ))
-  (modus-themes-with-colors
-    (custom-set-faces
-     `(font-lock-comment-face           ((t (:foreground ,border :slant italic))))
-     `(font-lock-comment-delimiter-face ((t (:foreground ,border :slant italic))))
-     ;;`(font-lock-comment-face ((t (:foreground ,fg-dim :slant italic))))))
-     ;;'(font-lock-comment-delimiter-face ((t (:foreground modus-themes-fg-cyan-faint)))))
-     ))
+  (modus-themes-load-theme (car modus-themes-to-toggle))
+  ;; (modus-themes-with-colors
+  ;;   (custom-set-faces
+  ;;    `(font-lock-comment-face           ((t (:foreground ,border :slant italic))))
+  ;;    `(font-lock-comment-delimiter-face ((t (:foreground ,border :slant italic))))
+  ;;    ;;`(font-lock-comment-face ((t (:foreground ,fg-dim :slant italic))))))
+  ;;    ;;'(font-lock-comment-delimiter-face ((t (:foreground modus-themes-fg-cyan-faint)))))
+  ;;    ))
 
-  (modus-themes-load-theme (car modus-themes-to-toggle)) ;; setting theme
+  ;;:hook
+  ;;(after-init . (lambda ()
+  ;; (modus-themes-load-theme (car modus-themes-to-toggle)) ;; setting theme
+  ;;                ))
+  ;; :hook
+  ;; (modus-themes-after-load-theme .
+  ;; (lambda ()
+  ;; (modus-themes-load-theme (car modus-themes-to-toggle)) ;; setting theme
+  ;; )
+  ;; )
   )
 #+end_src
 
@@ -432,17 +436,6 @@ Following is customization of the theme. Actual in the loading the theme is in t
              (dired-mode . auto-revert-mode        )
              (dired-mode . dired-hide-details-mode ))
 
-  ;; :config
-  ;; (evil-collection-define-key 'normal 'dired-mode-map
-  ;;   "h"          'dired-up-directory
-  ;;   "l"          'dired-find-file
-  ;;   " "          'nil
-  ;;   "N"          'dired-create-directory
-  ;;   "W"          'wdired-change-to-wdired-mode
-  ;;   (kbd "C-n")  'mkdir
-  ;;   (kbd "C-s")  'dired-omit-mode      ;; same keybinding with my lf config
-  ;;   )
-
   ;; (when (eq system-type 'berkeley-unix)   ;; change the main ls with gnu ls in bsd
   ;; (setq insert-directory-program "gls"))
 
@@ -454,8 +447,7 @@ Following is customization of the theme. Actual in the loading the theme is in t
            "D s"   'dired)
 
   (:states 'normal
-           :keymaps   'dired-mode-map
-           :prefix "SPC"
+           :keymaps     'dired-mode-map
            "h"          'dired-up-directory
            "l"          'dired-find-file
            " "          'nil
@@ -2278,34 +2270,30 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   ;; (tempel-trigger-prefix "<")
   :bind (("M-8" . tempel-complete) ;; Alternative tempel-expand
          ("M-*" . tempel-insert))
-
-  ;; :init
-  ;; (setq tempel-path "~/.config/emacs/tempel/templates.eld")
   :custom
   (tempel-path "~/.config/emacs/tempel/templates.eld")
 
-  ;; Setup completion at point
-  (defun tempel-setup-capf ()
-    ;; Add the Tempel Capf to `completion-at-point-functions'.
-    ;; `tempel-expand' only triggers on exact matches. Alternatively use
-    ;; `tempel-complete' if you want to see all matches, but then you
-    ;; should also configure `tempel-trigger-prefix', such that Tempel
-    ;; does not trigger too often when you don't expect it. NOTE: We add
-    ;; `tempel-expand' *before* the main programming mode Capf, such
-    ;; that it will be tried first.
-    (setq-local completion-at-point-functions
-                (cons #'tempel-expand
-                      completion-at-point-functions)))
+  ;; ;; Setup completion at point
+  ;; (defun tempel-setup-capf ()
+  ;;   ;; Add the Tempel Capf to `completion-at-point-functions'.
+  ;;   ;; `tempel-expand' only triggers on exact matches. Alternatively use
+  ;;   ;; `tempel-complete' if you want to see all matches, but then you
+  ;;   ;; should also configure `tempel-trigger-prefix', such that Tempel
+  ;;   ;; does not trigger too often when you don't expect it. NOTE: We add
+  ;;   ;; `tempel-expand' *before* the main programming mode Capf, such
+  ;;   ;; that it will be tried first.
+  ;;   (setq-local completion-at-point-functions
+  ;;               (cons #'tempel-expand
+  ;;                     completion-at-point-functions)))
 
-  (add-hook 'conf-mode-hook 'tempel-setup-capf)
-  (add-hook 'prog-mode-hook 'tempel-setup-capf)
-  (add-hook 'text-mode-hook 'tempel-setup-capf)
+  ;; (add-hook 'conf-mode-hook 'tempel-setup-capf)
+  ;; (add-hook 'prog-mode-hook 'tempel-setup-capf)
+  ;; (add-hook 'text-mode-hook 'tempel-setup-capf)
 
-  ;; :config
-  ;; (defun garid/choose-from-list-and-return-it (asdf)
-  ;;   (interactive)
-  ;;   (let ((choices asdf))
-  ;;     (completing-read "Choose: " choices)))
+  :hook
+  (conf-mode . (lambda () (setq-local completion-at-point-functions (cons #'tempel-expand completion-at-point-functions))))
+  (prog-mode . (lambda () (setq-local completion-at-point-functions (cons #'tempel-expand completion-at-point-functions))))
+  (text-mode . (lambda () (setq-local completion-at-point-functions (cons #'tempel-expand completion-at-point-functions))))
   )
 
 (defun garid/choose-from-list-and-insert-it (asdf)
@@ -2344,15 +2332,14 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 (use-package abbrev
   :straight nil
   :delight "" ;;" abb"
-  :defer 1
   ;;:custom
   ;;(abbrev-file-name (expand-file-name "abbrev_defs" user-emacs-directory))
-  :config
-  (if (file-exists-p abbrev-file-name)
-      (quietly-read-abbrev-file))
 
-  ;;(abbrev-mode 1)
-  (setq-default abbrev-mode t)
+  ;; :config
+  ;; (if (file-exists-p abbrev-file-name) (quietly-read-abbrev-file))
+
+  :hook
+  (after-init . abbrev-mode) ;; (setq-default abbrev-mode t)
   )
 #+end_src
 
@@ -2362,9 +2349,10 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   :straight t
   :bind ("C-c p" . cape-prefix-map)
   :init
-  (add-hook 'completion-at-point-functions #'cape-dabbrev )
-  (add-hook 'completion-at-point-functions #'cape-file    )
+  (add-hook 'completion-at-point-functions #'cape-dabbrev ) ;; why add-hook is used here? 
+  (add-hook 'completion-at-point-functions #'cape-file    ) ;; 
   (add-hook 'completion-at-point-functions #'cape-history )
+
   ;; (add-hook 'completion-at-point-functions #'cape-elisp-block)
 )
 #+end_src
@@ -2416,19 +2404,22 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
            "SPC s c o"  'corfu-mode
            )
 
-  :config
-  (global-corfu-mode   )
-  (corfu-history-mode  )
-  (corfu-popupinfo-mode)
+  ;; :config
+  ;; (global-corfu-mode   )
+  ;; (corfu-history-mode  )
+  ;; (corfu-popupinfo-mode)
 
   :hook
+  (after-init . global-corfu-mode   )
+  (after-init . corfu-history-mode  )
+  (after-init . corfu-popupinfo-mode)
   (eshell-mode-hook . (lambda () (setq-local corfu-quit-at-boundary t
-        			             corfu-quit-no-match t
-        			             corfu-auto nil)
+        			                         corfu-quit-no-match t
+        			                         corfu-auto nil)
                         (corfu-mode)))
   )
 #+end_src
-** =eglot=: lsp
+** TODO =eglot=: lsp
 #+begin_src emacs-lisp
 (use-package eglot
   :straight nil ;; :after project
@@ -2469,8 +2460,10 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
              :host github
              :repo "jdtsmith/eglot-booster")
   :after eglot
-  :config
-  (eglot-booster-mode +1))
+  ;; :config (eglot-booster-mode +1)
+  :hook 
+  (after-init . eglot-booster-mode)
+  )
 #+end_src
 
 ** =project.el=
@@ -2498,8 +2491,8 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
             "p c"     'project-recompile
             "p q r r" 'project-query-replace-regexp
             )
-  :config
-  (keymap-set project-prefix-map "m" #'magit-project-status)
+  ;; :config
+  ;; (keymap-set project-prefix-map "m" #'magit-project-status)
   )
 #+end_src
 
@@ -2545,10 +2538,11 @@ Similar to vim-signify.
             "g g"  'git-gutter-mode
             "g n"  'git-gutter:next-hunk
             "g p"  'git-gutter:previous-hunk)
-  :config
-  (global-git-gutter-mode)
   ;; (add-hook 'magit-post-commit-hook 'git-gutter:update-all-windows)
-  :hook (magit-post-commit-hook . git-gutter:update-all-windows)
+  :hook
+  (magit-post-commit-hook . git-gutter:update-all-windows)
+  (after-init             . global-git-gutter-mode) ;; :config (global-git-gutter-mode)
+
   )
 #+end_src
 
@@ -2561,10 +2555,10 @@ Similar to vim-signify.
   ;; (direnv-always-show-summary t)
   ;; (direnv-show-paths-in-summary t)
   ;; (direnv-use-faces-in-summary nil)
-  :config
-  (direnv-mode)
 
-  )
+
+  ;; :config (direnv-mode)
+  :hook (after-init . direnv-mode))
 #+end_src
 
 ** =eshell=
@@ -2581,8 +2575,7 @@ Similar to vim-signify.
            :keymaps 'eshell-mode-map
            "C-a" 'eshell-bol)
   :hook
-  (eshell-mode . compilation-shell-minor-mode) ;; from compilation
-  )
+  (eshell-mode . compilation-shell-minor-mode))
 #+end_src
 
 ** =eshell-atuin=
@@ -2590,15 +2583,13 @@ Similar to vim-signify.
 (use-package eshell-atuin
   :straight t
   :after eshell
-  :config
-  (eshell-atuin-mode)
   :general
   (:states 'insert
            :keymaps 'eshell-mode-map
            "C-r" 'eshell-atuin-history
            )
-
-  )
+  ;; :config (eshell-atuin-mode)
+  :hook (after-init . eshell-atuin-mode))
 #+end_src
 
 ** =harpoon=
@@ -2635,8 +2626,7 @@ Probably requires external =rg= command.
   :straight t
   :general
   (:states '(normal visual)
-           "SPC r g"  'rg)
-  )
+           "SPC r g"  'rg))
 #+end_src
 * AI helpers:
 ** =gptel= : gpt.el by karthinks                                                 :by_karthink:
@@ -2644,8 +2634,12 @@ Probably requires external =rg= command.
 (use-package gptel
   :straight t
   :after org
+
   :custom
   (gptel-default-mode 'org-mode)
+  ;; (gptel-model        'gpt-5.2)
+  ;; (gptel-backend      (gptel-make-openai "OpenAI" :key 'gptel-api-key-from-auth-source))
+
   :general
   (:states 'normal
            :prefix "SPC"
@@ -2655,11 +2649,14 @@ Probably requires external =rg= command.
 
   (:states 'visual
            "g r"      'gptel-rewrite)
+
   :config
   (setopt gptel-model        'gpt-5.2)
   (setopt gptel-backend      (gptel-make-openai "OpenAI" :key 'gptel-api-key-from-auth-source))
   )
 #+end_src
+
+#+RESULTS:
 
 ** =gptel-commit=
 #+begin_src emacs-lisp
@@ -2724,9 +2721,7 @@ Probably requires external =rg= command.
   :straight t
   :general
   (:states 'normal
-           "SPC s f m " 'focus-mode
-           )
-  )
+           "SPC s f m " 'focus-mode))
 #+end_src
 
 ** =pdf-tools=: reading pdf in Emacs
@@ -2735,8 +2730,9 @@ Probably requires external =rg= command.
   :straight t
   :bind (:map pdf-view-mode-map ("t" . pdf-outline))
   :mode  ("\\.pdf\\'" . pdf-view-mode)
-  :config
-  (pdf-tools-install))
+  ;; :config (pdf-tools-install)
+  :hook (after-init . pdf-tools-install)
+  )
 #+end_src
 
 ** =captain= Capitalizes first word of sentences.
@@ -2749,14 +2745,12 @@ Probably requires external =rg= command.
   (sentence-end-double-space nil)
 
   :hook
+  (after-init . global-captain-mode) ;; :config (global-captain-mode t)
   (latex-mode . (lambda () (captain-mode -1)))
   (text-mode  . (lambda () (setq captain-predicate (lambda () t))))
   (org-mode   . (lambda () (setq captain-predicate (lambda () (not (org-in-src-block-p))))))
   (prog-mode  . (lambda () (setq captain-predicate (lambda () (nth 8 (syntax-ppss (point)))))))
   ;; this (org-in-src-block-p) checks whether cursor is in the src block
-
-  :config
-  (global-captain-mode t)
   )
 #+end_src
 
@@ -2772,7 +2766,52 @@ Probably requires external =rg= command.
   :defer    t
   :custom
   (notmuch-search-oldest-first nil)
-  (notmuch-address-command nil)
+  (notmuch-address-command     nil)
+  (notmuch-identities           '("Garid <garid@bpsensing.com>"))
+  (notmuch-fcc-dirs             '(("garid@bpsensing.com" . "posteo/Sent")))
+  (notmuch-search-result-format `(("date" . "%12s  ")
+                                  ("count" . "%-7s  ")
+                                  (,#'my-notmuch-search-authors-field . "%s")
+                                  (,#'my-notmuch-search-subject-field . "%s")
+                                  ("tags" . "(%s)")))
+  (notmuch-tree-result-format   `(("date" . "%12s  ")
+                                  ("authors" . "%-30s")
+                                  ;;(,#'my-notmuch-search-authors-field . "%s")
+                                  ((("tree" . "%s") ("subject" . "%s")) . " %-54s ")
+                                  ("tags" . "(%s)")))
+  (notmuch-saved-searches        `(( :name "📥 inbox"
+                                     :query "tag:inbox and tag:bps"
+                                     :sort-order newest-first
+                                     :key ,(kbd "i"))
+                                   ( :name "💬 all unread (inbox)"
+                                     :query "tag:unread and tag:inbox and tag:bps"
+                                     :sort-order newest-first
+                                     :key ,(kbd "u"))
+                                   ( :name "💼 BPS"
+                                     :query "tag:bps"
+                                     :sort-order newest-first
+                                     :key ,(kbd "b"))
+                                   ( :name "🍌 esl"
+                                     :query "tag:esl and tag:bps"
+                                     :sort-order newest-first
+                                     :key ,(kbd "e"))
+                                   ( :name "🌱 floatmeal"
+                                     :query "tag:floatmeal and tag:bps"
+                                     :sort-order newest-first
+                                     :key ,(kbd "f"))
+                                   ( :name "🌾 shinmei"
+                                     :query "tag:shinmei and tag:bps"
+                                     :sort-order newest-first
+                                     :key ,(kbd "s"))
+                                   ( :name "✈️ uavsoft"
+                                     :query "tag:uavsoft and tag:bps"
+                                     :sort-order newest-first
+                                     :key ,(kbd "U"))
+                                   ( :name "📌 todo"
+                                     :query "tag:todo  and tag:bps"
+                                     :sort-order newest-first
+                                     :key ,(kbd "t"))))
+
   :general
   (:states 'normal
            :prefix "SPC"
@@ -2780,111 +2819,56 @@ Probably requires external =rg= command.
            "m a" 'notmuch
            "m n" 'notmuch-mua-new-mail)
 
-   ;; (:states '(normal notmuch-show-mode )
-   ;;          "SPC o o" 'notmuch-show-interactively-view-part) ;; probably no need
-
-  :config
-  (setq notmuch-identities '("Garid <garid@bpsensing.com>"))
-  (setq notmuch-fcc-dirs
-        '(("garid@bpsensing.com" . "posteo/Sent")
-          ))
-
-  (setq notmuch-saved-searches
-        `(( :name "📥 inbox"
-            :query "tag:inbox and tag:bps"
-            :sort-order newest-first
-            :key ,(kbd "i"))
-          ( :name "💬 all unread (inbox)"
-            :query "tag:unread and tag:inbox and tag:bps"
-            :sort-order newest-first
-            :key ,(kbd "u"))
-          ( :name "💼 BPS"
-            :query "tag:bps"
-            :sort-order newest-first
-            :key ,(kbd "b"))
-          ( :name "🍌 esl"
-            :query "tag:esl and tag:bps"
-            :sort-order newest-first
-            :key ,(kbd "e"))
-          ( :name "🌱 floatmeal"
-            :query "tag:floatmeal and tag:bps"
-            :sort-order newest-first
-            :key ,(kbd "f"))
-          ( :name "🌾 shinmei"
-            :query "tag:shinmei and tag:bps"
-            :sort-order newest-first
-            :key ,(kbd "s"))
-          ( :name "✈️ uavsoft"
-            :query "tag:uavsoft and tag:bps"
-            :sort-order newest-first
-            :key ,(kbd "U"))
-          ( :name "📌 todo"
-            :query "tag:todo  and tag:bps"
-            :sort-order newest-first
-            :key ,(kbd "t"))
-          ))
-
-  (defun garid/insert-list-of-email-addresses ()
-    ""
-    (interactive)
-    (insert
-     (completing-read "contacts: "
-                      (append
-                       (seq-filter
-                        #'identity
-                        (mapcar
-                         (lambda (entry)
-                           (let* ((name  (org-no-properties (car entry)))
-                                  (plist (nth 2 entry))
-                                  (email (cdr (assoc "EMAIL" plist))))
-                             (when (and email
-                                        (not (string-match-p "%(org-contacts-template-email)" email)))
-                               (format "\"%s\" <%s>" name email))))
-                         (org-contacts-db)))
-
-                       (split-string                                                        ;; splits it into list of strings
-                        (shell-command-to-string "notmuch address \"*\" | sort | uniq -i")  ;; runs cmd in shell
-                        "[\r\n]+" t)
-                       ))))
-
-  (defun my-notmuch--truncate/pad-to-width (s width &optional pad ellipsis)
-    (let* ((pad (or pad ?\s))
-           (ellipsis (or ellipsis "…"))
-           (s (truncate-string-to-width s width 0 pad ellipsis)))
-      (concat s (make-string (max 0 (- width (string-width s))) pad))))
-
-  (defun my-notmuch-search-authors-field (_fmt result)
-    (let* ((w 30) ;; 20 -> 30
-           (a (notmuch-sanitize (plist-get result :authors)))
-           (s (my-notmuch--truncate/pad-to-width a w)))
-      (concat
-       (propertize s 'face 'notmuch-search-matching-authors)
-       "  ")))   ;; <-- column separator
-
-  (defun my-notmuch-search-subject-field (_fmt result)
-    (let* ((w 80)
-           (subj (notmuch-sanitize (plist-get result :subject)))
-           (s (my-notmuch--truncate/pad-to-width subj w)))
-      (concat
-       (propertize s 'face 'notmuch-search-subject)
-       "  ")))   ;; <-- column separator
-
-  (setq notmuch-search-result-format
-        `(("date" . "%12s  ")
-          ("count" . "%-7s  ")
-          (,#'my-notmuch-search-authors-field . "%s")
-          (,#'my-notmuch-search-subject-field . "%s")
-          ("tags" . "(%s)")))
-
-  (setq notmuch-tree-result-format
-        `(
-          ("date" . "%12s  ")
-          ("authors" . "%-30s") ;;(,#'my-notmuch-search-authors-field . "%s")
-          ((("tree" . "%s") ("subject" . "%s")) . " %-54s ")
-          ("tags" . "(%s)")
-          )
-        )
+  ;; (:states '(normal notmuch-show-mode )
+  ;;          "SPC o o" 'notmuch-show-interactively-view-part) ;; probably no need
+  ;; :config
   )
+
+
+(defun garid/insert-list-of-email-addresses ()
+  ""
+  (interactive)
+  (insert
+   (completing-read "contacts: "
+                    (append
+                     (seq-filter
+                      #'identity
+                      (mapcar
+                       (lambda (entry)
+                         (let* ((name  (org-no-properties (car entry)))
+                                (plist (nth 2 entry))
+                                (email (cdr (assoc "EMAIL" plist))))
+                           (when (and email
+                                      (not (string-match-p "%(org-contacts-template-email)" email)))
+                             (format "\"%s\" <%s>" name email))))
+                       (org-contacts-db)))
+
+                     (split-string                                                        ;; splits it into list of strings
+                      (shell-command-to-string "notmuch address \"*\" | sort | uniq -i")  ;; runs cmd in shell
+                      "[\r\n]+" t)
+                     ))))
+
+(defun my-notmuch--truncate/pad-to-width (s width &optional pad ellipsis)
+  (let* ((pad (or pad ?\s))
+         (ellipsis (or ellipsis "…"))
+         (s (truncate-string-to-width s width 0 pad ellipsis)))
+    (concat s (make-string (max 0 (- width (string-width s))) pad))))
+
+(defun my-notmuch-search-authors-field (_fmt result)
+  (let* ((w 30) ;; 20 -> 30
+         (a (notmuch-sanitize (plist-get result :authors)))
+         (s (my-notmuch--truncate/pad-to-width a w)))
+    (concat
+     (propertize s 'face 'notmuch-search-matching-authors)
+     "  ")))   ;; <-- column separator
+
+(defun my-notmuch-search-subject-field (_fmt result)
+  (let* ((w 80)
+         (subj (notmuch-sanitize (plist-get result :subject)))
+         (s (my-notmuch--truncate/pad-to-width subj w)))
+    (concat
+     (propertize s 'face 'notmuch-search-subject)
+     "  ")))   ;; <-- column separator
 #+end_src
 *** TODO COMMENT Some test from
 #+begin_src emacs-lisp :tangle nil
@@ -2972,37 +2956,21 @@ that and instead tries to complete against dictionary entries."
 #+begin_src emacs-lisp
 (use-package sendmail
   :straight nil
-  :defer    t
   :custom
   (send-mail-function              'sendmail-send-it )
-  ;;:w (sendmail-program                "/usr/bin/msmtp"  ) < removed cause of nixos
+  (sendmail-program                "msmtp"           )
   (mail-specify-envelope-from      t                 )
   (message-sendmail-envelope-from  'header           )
   (mail-envelope-from              'header           )
-  :config
-  ;; Use msmtp for sending
-  (setq message-send-mail-function     'message-send-mail-with-sendmail
-        sendmail-program               "msmtp"
-        mail-specify-envelope-from     t
-        message-sendmail-envelope-from 'header
-        mail-envelope-from             'header)
 
-  ;; Identity
-  (setq user-full-name "Garid Zorigoo"
-        user-mail-address "garid@bpsensing.com")
+  (user-full-name                "Garid Zorigoo"       )
+  (user-mail-address             "garid@bpsensing.com" )
 
-  ;; Tell Emacs where the Maildir tree lives (matches mbsync config)
-  (setq message-directory "~/Maildir/posteo/")
-
-  ;; Save sent mail in IMAP Sent (relative to message-directory)
-  (setq message-sent-folder "Sent")
-
-  ;; Optional signature
-  (setq message-signature
-        "Best regards,\nGarid Z.")
-
-  (setq message-default-mail-headers "Bcc: garid@bpsensing.com")
-
+  (message-default-mail-headers  "Bcc: garid@bpsensing.com"      )
+  (message-directory             "~/Maildir/posteo/"             )
+  (message-send-mail-function   'message-send-mail-with-sendmail )
+  (message-sent-folder           "Sent"                          )
+  (message-signature             "Best regards,\nGarid Z."       )
   )
 #+end_src
 
@@ -3010,7 +2978,6 @@ that and instead tries to complete against dictionary entries."
 #+begin_src emacs-lisp
 (use-package org-mime
   :straight t
-  :defer    t
   :after    org
   :custom
   (org-mime-library 'mml)
@@ -3023,9 +2990,7 @@ that and instead tries to complete against dictionary entries."
   :general
    (:states '(normal notmuch-message-mode )
             "SPC m m m" 'org-mime-edit-mail-in-org-mode
-            "SPC m m h" 'org-mime-htmlize
-            )
-
+            "SPC m m h" 'org-mime-htmlize)
   )
 #+end_src
 
@@ -3033,12 +2998,9 @@ that and instead tries to complete against dictionary entries."
 #+begin_src emacs-lisp
 (use-package consult-notmuch
   :straight t
-  :defer    t
-  ;;:after    notmuch consult
   :general
   (:states 'normal
-           "SPC m s" 'consult-notmuch)
-  )
+           "SPC m s" 'consult-notmuch))
 #+end_src
 
 ** =ol-notmuch= (org link notmuch)
@@ -3058,41 +3020,65 @@ that and instead tries to complete against dictionary entries."
 ** =popper=                                                                      :by_karthink:
 #+begin_src emacs-lisp
 (use-package popper
-  :straight t ; or :straight t
+  :straight t
   :bind (("C-`"   . popper-toggle      )
          ("M-`"   . popper-cycle       )
          ("C-M-`" . popper-toggle-type )
          :repeat-map garid/popper-repeat
          ("`" .      popper-cycle )
-         ("q" .      popper-close-latest )
+         ("q" .      popper-close-latest ))
+  :custom
+  (popper-reference-buffers '("\\*Messages\\*"
+                              "\\*eldoc\\*"
+                              "\\*eldoc.*\\*"
+                              "\\*Outline.*\\*"
+                              "\\*xref\\*"
+                              "\\*Help\\*"
+                              "Output\\*$"
+                              "\\*Async Shell Command\\*"
+                              "\\*devdocs\\*"
+                              "\\*lsp-bridge-doc\\*"
+                              "\\*git-gutter:diff\\*"
+                              "\\*Org Select\\*"
+                              "\\*Google Translate\\*"
+                              "\\*Org Attach\\*"
+                              "\\*Org Lint\\*"
+                              "\\*git-gutter:.*\\*"
+                              "\\* Merriam-Webster Thesaurus \\*"
+                              "CAPTURE-inbox.org"
+                              help-mode
+                              compilation-mode))
 
-         )
-  :init
-  (setq popper-reference-buffers '("\\*Messages\\*"
-                                   "\\*eldoc\\*"
-                                   "\\*eldoc.*\\*"
-                                   "\\*Outline.*\\*"
-                                   "\\*xref\\*"
-                                   "\\*Help\\*"
-                                   "Output\\*$"
-                                   "\\*Async Shell Command\\*"
-                                   "\\*devdocs\\*"
-                                   "\\*lsp-bridge-doc\\*"
-                                   "\\*git-gutter:diff\\*"
-                                   "\\*Org Select\\*"
-                                   "\\*Google Translate\\*"
-                                   "\\*Org Attach\\*"
-                                   "\\*Org Lint\\*"
-                                   "\\*git-gutter:.*\\*"
-                                   "\\* Merriam-Webster Thesaurus \\*"
-                                   "CAPTURE-inbox.org"
-                                   ;; "CAPTURE-20230926T010607--todo__todo.org"
-                                   help-mode
-                                   compilation-mode
-                                   ))
-  ;;:config
-  (popper-mode      +1)
-  (popper-echo-mode +1))
+  :hook
+  (after-init . popper-mode)
+  (after-init . popper-echo-mode)
+
+  ;; (popper-mode      +1)
+  ;; (popper-echo-mode +1)
+  )
+;; :init
+;; (setq popper-reference-buffers '("\\*Messages\\*"
+;;                                  "\\*eldoc\\*"
+;;                                  "\\*eldoc.*\\*"
+;;                                  "\\*Outline.*\\*"
+;;                                  "\\*xref\\*"
+;;                                  "\\*Help\\*"
+;;                                  "Output\\*$"
+;;                                  "\\*Async Shell Command\\*"
+;;                                  "\\*devdocs\\*"
+;;                                  "\\*lsp-bridge-doc\\*"
+;;                                  "\\*git-gutter:diff\\*"
+;;                                  "\\*Org Select\\*"
+;;                                  "\\*Google Translate\\*"
+;;                                  "\\*Org Attach\\*"
+;;                                  "\\*Org Lint\\*"
+;;                                  "\\*git-gutter:.*\\*"
+;;                                  "\\* Merriam-Webster Thesaurus \\*"
+;;                                  "CAPTURE-inbox.org"
+;;                                  help-mode
+;;                                  compilation-mode
+;;                                  ))
+;;:config
 #+end_src
 
 #+RESULTS:
@@ -3121,12 +3107,20 @@ that and instead tries to complete against dictionary entries."
   (:states 'normal
            "SPC v q" 'format-all-buffer )
 
-  :config
-  (setq-default format-all-formatters
+  ;; :config
+  ;; (setq-default format-all-formatters
+  ;;               '(("C"      (astyle "--mode=c"                     ))
+  ;;                 ("Python" (ruff   "format" "--line-length" "120" ))
+  ;;                 ("Shell"  (shfmt  "-i" "4" "-ci"                 ))
+  ;;                 ))
+
+  :custom
+  (format-all-formatters
                 '(("C"      (astyle "--mode=c"                     ))
                   ("Python" (ruff   "format" "--line-length" "120" ))
                   ("Shell"  (shfmt  "-i" "4" "-ci"                 ))
-                  )))
+                  ))
+  )
 #+end_src
 ** =crux=
 #+begin_src emacs-lisp
@@ -3155,7 +3149,6 @@ that and instead tries to complete against dictionary entries."
 (use-package zoom-window
   :straight t
   :custom
-  ;; (zoom-window-mode-line-color "dark slate gray")
   (zoom-window-mode-line-color "gray60")
   :bind (("M-F" . zoom-window-zoom)
          :repeat-map garid/windmove-repeat
@@ -3171,43 +3164,50 @@ that and instead tries to complete against dictionary entries."
 #+begin_src emacs-lisp
 (use-package gif-screencast
   :straight t
-  ;; :custom
   :general
   (:states 'normal
            "SPC s s s" 'gif-screencast-start-or-stop)
+  :custom
+  (gif-screencast-program "hyprshot")
+  (gif-screencast-args    '("-m" "window" "-m" "active" "-o" "/" "-f"))
 
-  :config
-  ;; for niri 
-  (setq gif-screencast-program "niri")
-  (setq gif-screencast-args    '("msg" "action" "screenshot-window" "--path"))
-
-
-  ;; for hyprland
-  ;; (setq gif-screencast-program "hyprshot")
-  ;; (setq gif-screencast-args    '("-m" "window" "-m" "active" "-o" "/" "-f"))
+  ;; :config
+  ;; ;; for niri 
+  ;; (setq gif-screencast-program "niri")
+  ;; (setq gif-screencast-args    '("msg" "action" "screenshot-window" "--path"))
+  ;; ;; for hyprland
+  ;; ;; (setq gif-screencast-program "hyprshot")
+  ;; ;; (setq gif-screencast-args    '("-m" "window" "-m" "active" "-o" "/" "-f"))
   )
 #+end_src
 ** garbage-collect
 #+begin_src emacs-lisp
 (use-package gcmh
   :straight t
-  :config (gcmh-mode 1)
-  :delight " gb")
+  :delight " gb"
+  ;; :config (gcmh-mode 1)
+  :hook (after-init . gcmh-mode)
+  )
 #+end_src
 ** google related
 #+begin_src emacs-lisp
 (use-package google-translate
   :straight t
-  :init
-  (setq google-translate-translation-directions-alist '(("ja" . "en")
-                                                        ("en" . "ja")
-                                                        ("en" . "mn")
-                                                        ("mn" . "en")))
+  ;; :init
+  ;; (setq google-translate-translation-directions-alist '(("ja" . "en")
+  ;;                                                       ("en" . "ja")
+  ;;                                                       ("en" . "mn")
+  ;;                                                       ("mn" . "en")))
+  :custom
+  (google-translate-translation-directions-alist '(("ja" . "en")
+                                                   ("en" . "ja")
+                                                   ("en" . "mn")
+                                                   ("mn" . "en")))
+
   :general
   (:states '(normal visual)
            :prefix "SPC"
            "G t" 'google-translate-smooth-translate)
-
   )
 
 (use-package google-this
