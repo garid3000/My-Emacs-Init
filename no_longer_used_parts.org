@@ -2482,3 +2482,52 @@ Because yank-media exists
 #+end_src
 
 
+* COMMENT =modus= theme (old version)                                                :by_prot:
+[[https://protesilaos.com/emacs/modus-themes][Modus themes]] is a nice built-in theme for emacs that [[https://protesilaos.com/][Protesilaos Stavrou]].
+Following is customization of the theme. Actual in the loading the theme is in the section [[id:20251007T133457.470613][=emacs=]] 
+
+#+begin_src emacs-lisp
+(use-package modus-themes
+  :straight  t
+  :custom
+  (modus-themes-to-toggle '(modus-vivendi-tinted
+                            modus-operandi-tinted))
+  (modus-themes-italic-constructs       t)
+  (modus-themes-bold-constructs         t)
+  (modus-themes-variable-pitch-ui       t)
+  (modus-themes-mixed-fonts             t)
+  (modus-themes-prompts           '(bold))
+  (modus-themes-completions           nil)
+  (modus-themes-common-palette-overrides `(;; Make the mode-line borderless
+                                           (bg-mode-line-active        bg-inactive )
+                                           (fg-mode-line-active        fg-main     )
+                                           (bg-mode-line-inactive      bg-inactive )
+                                           (fg-mode-line-active        fg-dim      )
+                                           (border-mode-line-active    bg-inactive )
+                                           (border-mode-line-inactive  bg-main     )
+                                           (fringe                     bg-main     )
+                                           ))
+  :bind ("<f5>" . modus-themes-toggle)
+  :config
+  (modus-themes-load-theme (car modus-themes-to-toggle))
+  ;; (modus-themes-with-colors
+  ;;   (custom-set-faces
+  ;;    `(font-lock-comment-face           ((t (:foreground ,border :slant italic))))
+  ;;    `(font-lock-comment-delimiter-face ((t (:foreground ,border :slant italic))))
+  ;;    ;;`(font-lock-comment-face ((t (:foreground ,fg-dim :slant italic))))))
+  ;;    ;;'(font-lock-comment-delimiter-face ((t (:foreground modus-themes-fg-cyan-faint)))))
+  ;;    ))
+
+  ;;:hook
+  ;;(after-init . (lambda ()
+  ;; (modus-themes-load-theme (car modus-themes-to-toggle)) ;; setting theme
+  ;;                ))
+  ;; :hook
+  ;; (modus-themes-after-load-theme .
+  ;; (lambda ()
+  ;; (modus-themes-load-theme (car modus-themes-to-toggle)) ;; setting theme
+  ;; )
+  ;; )
+  )
+#+end_src
+
