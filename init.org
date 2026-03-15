@@ -147,13 +147,58 @@ run:
   :straight t
   :after evil
   :delight ""
+
+  :custom
+  (evil-collection-mode-list
+   '(
+        org vundo bookmark
+     ))
+  ;; maybe use;
+  ;; bm calc calendar comint compile consult corfu (csv
+  ;; "csv-mode") diff-hl diff-mode ediff eglot flycheck flymake gptel
+  ;; grep ibufferr (magit magit-submodule) magit-repos magit-section
+  ;; magit-todos notmuch pass (pdf pdf-view) python rg ripgrep
+  ;; smerge-mode trashed vertico  which-key xref
+
+  ;; stoped 
+  ;; dired dired-sidebar wdired
+
+  ;; bluetooth ag alchemist anaconda-mode apropos arc-mode
+  ;; atomic-chrome 2048-game kotlin-mode eat auto-package-update
+  ;; beginend (buff-menu "buff-menu") bufler cider citre cmake-mode
+  ;; color-rg company crdt (custom cus-edit) cus-theme dape dashboard
+  ;; daemons deadgrep debbugs debug devdocs dictionary difftastic
+  ;; disk-usage distel doc-view docker ebib ebuku edbi edebug elpaca
+  ;; ement explain-pause-mode eldoc elfeed elisp-mode elisp-refs
+  ;; elisp-slime-nav embark emms emoji epa ert eshell eval-sexp-fu
+  ;; evil-mc eww fanyi finder forge free-keys geiser ggtags
+  ;; git-timemachine gited gnus go-mode guix hackernews helm help
+  ;; helpful hg-histedit hideshow hungry-delete hyrolo (image
+  ;; image-mode) image-dired image+ imenu imenu-list (indent "indent")
+  ;; indium info ivy js2-mode kmacro leetcode lispy lms log-edit
+  ;; log-view lsp-ui-imenu lua-mode macrostep man markdown-mode
+  ;; message minesweeper monky mpc mpdel mpdired mu4e
+  ;; mu4e-conversation neotree newsticker nov omnisharp org-present
+  ;; org-roam osx-dictionary outline ovpn-mode p4 (package-menu
+  ;; package) popup proced (process-menu simple) prodigy profiler
+  ;; p-search quickrun racer racket-describe reader realgud reftex
+  ;; replace restclient rjsx-mode robe rtags ruby-mode scheme
+  ;; scroll-lock selectrum sh-script shortdoc simple simple-mpc slime
+  ;; sly snake so-long speedbar tab-bar tablist tabulated-list
+  ;; tar-mode telega (term term ansi-term multi-term) tetris thread
+  ;; tide timer-list transmission tuareg typescript-mode ultra-scroll
+  ;; vc-annotate vc-dir vc-git vdiff view vlf vterm w3m wgrep
+  ;; with-editor woman xwidget yaml-mode youtube-dl zmusic (ztree
+  ;; ztree-diff ztree-dir)
+
   :hook
-  (after-init . evil-collection-init) 
+  (after-init . evil-collection-init)
   )
 #+end_src
 
 ** =evil-surround=: easily surround selected region
-I sometimes use. It can wrap (visually) selected region with quotation mark or parenthesis.
+It can wrap (visually) selected region with quotation
+mark or parenthesis.
 
 #+begin_src emacs-lisp
 (use-package evil-surround
@@ -196,7 +241,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
   (define-key evil-inner-text-objects-map "f" (evil-textobj-tree-sitter-get-textobj "function.inner" ))
   (define-key evil-inner-text-objects-map "c" (evil-textobj-tree-sitter-get-textobj "class.inner"    ))
 
-  ;; (define-key evil-outer-text-objects-map "f" (evil-textobj-tree-sitter-get-textobj "function.outer"                  ))
+  (define-key evil-outer-text-objects-map "f" (evil-textobj-tree-sitter-get-textobj "function.outer"                  ))
   (define-key evil-outer-text-objects-map "c" (evil-textobj-tree-sitter-get-textobj "class.inner"                     ))
   (define-key evil-outer-text-objects-map "a" (evil-textobj-tree-sitter-get-textobj ("conditional.outer" "loop.outer" )))
 
@@ -221,9 +266,7 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 (use-package evil-visual-mark-mode
   :straight t
   :after evil
-  :general
-  (:states 'normal "<f3>" 'evil-visual-mark-mode)
-  )
+  :general (:states 'normal "<f3>" 'evil-visual-mark-mode))
 #+end_src
 
 * Undo and Trash
@@ -246,7 +289,8 @@ I sometimes use. It can wrap (visually) selected region with quotation mark or p
 #+begin_src emacs-lisp
 (use-package delight
   :straight t
-  :demand t)
+  ;; :demand t
+  )
 #+end_src
 
 ** font related
@@ -418,27 +462,25 @@ loading the theme is in the section [[id:20251007T133457.470613][=emacs=]]
   )
 #+end_src
 
-** TODO =dired= - Directory [0/1]
-
-- [ ] Need to bind SPC to nil in the code
+** Dired related
+*** =dired= - directory
 
 #+begin_src emacs-lisp
 (use-package dired
   :straight   nil
-  ;; :demand     t
-  :commands   (dired dired-jump)
-
+  :commands   (dired dired-jump) ;; :after  evil-collection (test if the evil-collection-mode-list is default value)
   :custom ((dired-listing-switches  "-agho --group-directories-first")
            (dired-kill-when-opening-new-dired-buffer t)
-           (dired-hide-details-mode                  t))
+           (dired-hide-details-mode                  t)
+           (insert-directory-program (if (eq system-type 'berkeley-unix) "gls"  ;; in case for BSD
+                                       "ls"))
+           )
 
   :hook     (;;(dired-mode . denote-dired-mode       ) <-- perhaps should be at denote conf
              (dired-mode . dired-omit-mode         )
              (dired-mode . auto-revert-mode        )
              (dired-mode . dired-hide-details-mode ))
 
-  ;; (when (eq system-type 'berkeley-unix)   ;; change the main ls with gnu ls in bsd
-  ;; (setq insert-directory-program "gls"))
 
   :general
   (:states 'normal
@@ -448,40 +490,41 @@ loading the theme is in the section [[id:20251007T133457.470613][=emacs=]]
            "N"          'dired-create-directory
            (kbd "C-n")  'mkdir
            (kbd "C-s")  'dired-omit-mode
-           ;; "SPC"        'nil                  ;; not  working 
-           ;; "SPC"         nil                  ;; not  working 
-           ;; " "          'nil                  ;; not  working 
-           ;; " "           nil                  ;; not  working 
+           ;; (kbd "SPC")  'dired-omit-mode
+           ;; " "          'nil                  ;; not  working
+           ;; " "           nil                  ;; not  working
+           ;; "SPC"         nil                  ;; not  working
+           ;; "SPC"         nil                  ;; not  working
            )
   (:states 'normal
            :prefix "SPC"
+           ;; :global-prefix "C-SPC"
+           ;; "D"     '(:which-key "dired...")
            "d"     'dired-jump
-           "D"     '(:which-key "dired...")
            "D s"   'dired)
-
   )
 #+end_src
 
-** =wdired=
+*** =wdired=
 #+begin_src emacs-lisp
 (use-package wdired
   :straight   nil
+  :after dired
   :general
   (:states 'normal
-           :prefix "SPC"
            :keymaps  'dired-mode-map
-           ;; "D w"     'wdired-change-to-wdired-mode
-           "W"       'wdired-change-to-wdired-mode
-           )
+           :prefix   "SPC"
+           "W"       'wdired-change-to-wdired-mode)
   )
 #+end_src
 
 #+RESULTS:
 
-** =dired-preview= - preview
+*** =dired-preview= - preview                                                       :by_prot:
 #+begin_src emacs-lisp
 (use-package dired-preview
   :straight t
+  :after dired
   :bind (:map dired-preview-mode-map
               ("J" . dired-preview-page-down)
               ("K" . dired-preview-page-up))
@@ -493,29 +536,35 @@ loading the theme is in the section [[id:20251007T133457.470613][=emacs=]]
   )
 #+end_src
 
-** TODO =dired-filter= need to do further the key-bind [0/1]
-
-- [ ] mostly because of the SPC is still bind to dired-next in the dired-mode-map
+*** =dired-filter=
 
 #+begin_src emacs-lisp
 (use-package dired-filter
   :straight t
+  :after dired
   :general
   (:states 'normal
            :keymaps   'dired-mode-map
-           "SPC f"  'dired-filter-by-name
-           "SPC F"  'dired-filter-pop
+           "g f"  'dired-filter-by-name
+           "g F"  'dired-filter-pop
            ))
 #+end_src
 
 ** =emacs=
-:PROPERTIES:
-:ID:       20251007T133457.470613
-:END:
 
 #+begin_src emacs-lisp
 (use-package emacs
   :straight nil
+  :init
+  (setq-default tab-width 4)
+  ;; (setq-default truncate-lines t)             ;; <----------------------- tests ---------------
+  (put 'narrow-to-region 'disabled nil)
+  (scroll-bar-mode       -1)   ; Disable visible scrollbar
+  (tool-bar-mode         -1)   ; Disable the toolbar
+  (tooltip-mode          -1)   ; Disable tooltips
+  (menu-bar-mode         -1)   ; Disable the menu bar
+  (set-fringe-mode       10)   ; Give some breathing room
+
   :general
   (:states 'normal
            :prefix "SPC"
@@ -551,15 +600,6 @@ loading the theme is in the section [[id:20251007T133457.470613][=emacs=]]
   :bind (:map minibuffer-local-map
               ( "M-f" . forward-word ))
 
-  :config
-  (setq-default tab-width 4)
-  ;; (setq-default truncate-lines t)             ;; <----------------------- tests ---------------
-  (put 'narrow-to-region 'disabled nil)
-  (scroll-bar-mode       -1)   ; Disable visible scrollbar
-  (tool-bar-mode         -1)   ; Disable the toolbar
-  (tooltip-mode          -1)   ; Disable tooltips
-  (menu-bar-mode         -1)   ; Disable the menu bar
-  (set-fringe-mode       10)   ; Give some breathing room
   )
 
 (defun garid/new-org-scratch ()
@@ -598,7 +638,7 @@ loading the theme is in the section [[id:20251007T133457.470613][=emacs=]]
   :general
   (:states 'normal
            :prefix "SPC"
-           "D f"     'ffap
+           "D f"     'ffap           ;; already bind to normal mode: g-f 
            "D F m"   'ffap-menu
            ))
 #+end_src
@@ -625,24 +665,13 @@ loading the theme is in the section [[id:20251007T133457.470613][=emacs=]]
            "SPC z s f" 'flyspell-mode))
 #+end_src
 
-** =ibuffer=
-#+begin_src emacs-lisp
-(use-package ibuffer
-  :straight nil
-  :general
-  (:states 'normal
-           "SPC L i"  'ibuffer))
-#+end_src
-
 ** =newcomment=
 #+begin_src emacs-lisp
 (use-package newcomment
   :straight nil
   :general
-  (:states '(normal insert)
-           "C-/"  'comment-line)
-  (:states '(visual)
-           "C-/"  'comment-or-uncomment-region)
+  (:states '(normal insert) "C-/"  'comment-line)
+  (:states '(visual)        "C-/"  'comment-or-uncomment-region)
   )
 #+end_src
 
@@ -655,8 +684,7 @@ loading the theme is in the section [[id:20251007T133457.470613][=emacs=]]
   (recentf-max-menu-items   40)
   (recentf-max-saved-items  40)
   :hook
-  (after-init . recentf-mode) ;; :config (recentf-mode 1)
-  )
+  (after-init  .  recentf-mode))
 #+end_src
 ** =replace=
 #+begin_src emacs-lisp
@@ -674,9 +702,7 @@ and later sets cursor at that point when you open that file.
 #+begin_src emacs-lisp
 (use-package saveplace
   :straight nil
-  ;; :config (save-place-mode 1)
-  :hook (after-init . save-place-mode)
-  )
+  :hook (after-init . save-place-mode))
 #+end_src
 ** =simple=
 #+begin_src emacs-lisp
@@ -684,7 +710,7 @@ and later sets cursor at that point when you open that file.
   :straight nil
   :custom
   (mail-user-agent     'notmuch-user-agent)
-  (indent-tabs-mode     nil)
+  (indent-tabs-mode     nil               )
   :general
   (:states 'normal
            :prefix "SPC"
@@ -693,9 +719,6 @@ and later sets cursor at that point when you open that file.
            "L R"  'read-only-mode)
   :bind
   ("M-Q" . kill-current-buffer)
-  ;; :config
-  ;; (setq-default indent-tabs-mode nil )
-  ;; (column-number-mode)         ; Shows the column number in the mod bar
   :hook (after-init . column-number-mode)
   )
 #+end_src
@@ -717,7 +740,8 @@ and later sets cursor at that point when you open that file.
   (:states 'normal "SPC s w" 'whitespace-mode))
 #+end_src
 
-** =window=
+** Window & buffer realted
+*** =window=
 #+begin_src emacs-lisp
 (use-package window
   :straight nil
@@ -736,7 +760,7 @@ and later sets cursor at that point when you open that file.
   )
 #+end_src
 
-** =window= movements
+*** =window= movements
 #+begin_src emacs-lisp
 (use-package windmove
   :straight nil
@@ -764,6 +788,15 @@ and later sets cursor at that point when you open that file.
          ;; :exit
          ;; ("RET"   . nil                        )
          ))
+#+end_src
+
+*** =ibuffer=
+#+begin_src emacs-lisp
+(use-package ibuffer
+  :straight nil
+  :general
+  (:states 'normal
+           "SPC L i"  'ibuffer))
 #+end_src
 
 * Mini-buffer related
@@ -860,7 +893,6 @@ and later sets cursor at that point when you open that file.
          )
 
   ;; :init (setq prefix-help-command #'embark-prefix-help-command) ;; what is this ?
-  ;; :config
   )
 
 
@@ -907,15 +939,12 @@ and later sets cursor at that point when you open that file.
 #+begin_src emacs-lisp
 (use-package savehist
   :straight t
-  ;; :config (savehist-mode)
-  :hook
-  (after-init . savehist-mode)
-  )
+  :hook (after-init . savehist-mode))
 #+end_src
 
-* Org
-** =org=: org-mode configuration
- 
+* Org related
+** Core org
+*** =org=: org-mode configuration
 #+caption: org config
 #+name: lst_org
 #+begin_src emacs-lisp
@@ -943,7 +972,17 @@ and later sets cursor at that point when you open that file.
               :repeat-map garid/org-repeat-babel-src-block
               ("n"         . org-babel-next-src-block    )
               ("p"         . org-babel-previous-src-block))
+
+
+
+
   :general
+  (:states 'normal
+           :keymaps  'org-mode-map
+           "M-S-<return>" 'org-insert-todo-heading-respect-content
+           )
+
+  
   (:states 'normal
            :keymaps  'org-mode-map
            :prefix   "SPC"
@@ -1025,8 +1064,7 @@ and later sets cursor at that point when you open that file.
            :keymaps  'org-mode-map
            :prefix "SPC"
            "o t"     'org-todo
-           "o l i"   'org-insert-link
-           )
+           "o l i"   'org-insert-link)
 
   (:states 'normal
            :prefix "SPC"
@@ -1034,12 +1072,12 @@ and later sets cursor at that point when you open that file.
            "o b d"     'org-babel-detangle
            "o b j"     'org-babel-tangle-jump-to-org
            "o b g d"   'org-babel-tangle-jump-to-org
-           "o C  "     'org-capture
-           "o c  "     'org-gtd-capture
-           )
+           "o C  "     'org-capture)
+
+
   :custom
-  (org-extend-today-until 2) ;; for the night owl
-  (org-use-effective-time t) ;; for the night owl
+  (org-extend-today-until                                    2) ;; for the night owl
+  (org-use-effective-time                                    t) ;; for the night owl
   ;; ---------------- theme/styling ------------------------------------------------------
   (org-hide-emphasis-markers         t                        )
   (org-hide-leading-stars t                                   )
@@ -1058,6 +1096,7 @@ and later sets cursor at that point when you open that file.
   (org-edit-src-content-indentation  0      )
 
   ;; ---------------- how to open links in the org mode ----------------------------------
+  (org-return-follows-link                           t)
   (org-file-apps '((auto-mode     . emacs             )
                    ("\\.html\\'"  . "firefox   \"%s\"")
                    ("\\.gif\\'"   . "mpv       \"%s\"")
@@ -1071,7 +1110,7 @@ and later sets cursor at that point when you open that file.
                    ("\\.xopp\\'"  . "xournalpp \"%s\"")))
   ;; ("\\.pdf::\\([0-9]+\\)?\\'" . "sioyek    \"%s\" --page %1")
 
-  ;; ---------------- TODO tabs ----------------------------------------------------------
+  ;; ---------------- TODO --------------------------------------------------------------
   (org-todo-keywords      '((sequence
                              "TODO(t)" "NEXT(n)" "WAIT(w)" "PRJT(p)" "VAGUE(v)"
                              "|"  "DONE(d)" "CNCL(c)")))
@@ -1103,7 +1142,11 @@ and later sets cursor at that point when you open that file.
                              ("floatmeal" . ?f)
                              ("uavsoft"   . ?U)
                              ("ernd"      . ?E)))
-  (org-return-follows-link      t) ;; org-keys? Package?
+  (org-latex-packages-alist '((#1="" "color") (#1# "listings")))
+  ;; (add-to-list 'org-latex-packages-alist   '("" "listings" ))
+  ;; (add-to-list 'org-latex-packages-alist   '("" "color"    ))
+  ;; (setq org-inline-image-background "white")
+  (org-inline-image-background "white")
 
   ;; ---------------- Personal vars ----------------------------------------------------------
   (garid-orgvar-is-img-shown nil "Personal variable that control both inline-image and edraw")
@@ -1111,31 +1154,20 @@ and later sets cursor at that point when you open that file.
   :config
   (make-variable-buffer-local    'garid-orgvar-is-img-shown)
   (plist-put    org-format-latex-options   :scale 1.7      )    ;; latex equation previewing
-  (add-to-list 'org-latex-packages-alist   '("" "listings" ))
-  (add-to-list 'org-latex-packages-alist   '("" "color"    ))
 
   (org-babel-do-load-languages 'org-babel-load-languages
                                '((awk        . t)
                                  (calc       . t)
-                                 (dot        . t)
-                                 (emacs-lisp . t)
-                                 (gnuplot    . t)
-                                 (latex      . t)
-                                 (makefile   . t)
-                                 (maxima     . t)
-                                 (python     . t)
-                                 (shell      . t)
+                                 (dot        . t)   ;; (asymptote  . t)
+                                 (emacs-lisp . t)   ;; (ditaa      . t)
+                                 (gnuplot    . t)   ;; (go         . t)
+                                 (latex      . t)   ;; (jupyter    . t)
+                                 (makefile   . t)   ;; (lua        . t)
+                                 (maxima     . t)   ;; (mermaid    . t)
+                                 (python     . t)   ;; (nim        . t)
+                                 (shell      . t)   ;; (nix        . t)
                                  (sqlite     . t)
-                                 (plantuml   . t)
-                                 ;; (asymptote  . t)
-                                 ;; (ditaa      . t)
-                                 ;; (go         . t)
-                                 ;; (jupyter    . t)
-                                 ;; (lua        . t)
-                                 ;; (mermaid    . t)
-                                 ;; (nim        . t)
-                                 ;; (nix        . t)
-                                 ))
+                                 (plantuml   . t)))
 
   (defcustom org-inline-image-background nil
     "The color used as the default background for inline images. When nil, use the default face background."
@@ -1156,10 +1188,7 @@ and later sets cursor at that point when you open that file.
   (advice-add 'create-image :filter-args
               #'create-image-with-background-color)
 
-  (setq org-inline-image-background "white")
 
-  (evil-define-key 'normal org-mode-map
-    (kbd "M-S-<return>") 'org-insert-todo-heading-respect-content)
 
 
   (defun garid/open-org-link-at-point-with-dired (&optional arg) ;; https://emacs.stackexchange.com/a/60555/38482
@@ -1187,11 +1216,6 @@ and later sets cursor at that point when you open that file.
             (consult-line (format "\\label{%s}" content))
             )
         (message "No matching braces found."))))
-  ;;(defvar garid-orgvar-is-img-shown nil "A buffer-local variable for Org mode.")
-  ;;(make-variable-buffer-local 'garid-orgvar-is-img-shown)
-
-
-
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; setting latex preview
   ;;(setq org-preview-latex-default-process 'imagemagick)
@@ -1219,8 +1243,6 @@ and later sets cursor at that point when you open that file.
   ;; from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][mastering emacs article]].
   (setf (alist-get "python" org-src-lang-modes nil nil #'equal) 'python-ts)
 
-
-  (add-hook 'org-after-refile-insert-hook 'org-mode-restart)
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
   (defun garid/org-up-heading-dwim (&optional arg)
@@ -1233,10 +1255,14 @@ and later sets cursor at that point when you open that file.
   (with-eval-after-load 'evil
     (evil-define-key 'normal org-mode-map (kbd "z u") #'garid/org-up-heading-dwim))
 
+
+  :hook
+  (org-after-refile-insert . org-mode-restart)
+  ;; (add-hook 'org-after-refile-insert-hook 'org-mode-restart)
   )
 #+end_src
 
-** =org-link=
+*** =org-link=
 #+begin_src emacs-lisp
 (use-package ol
   :straight nil
@@ -1247,17 +1273,19 @@ and later sets cursor at that point when you open that file.
               ("P"  . org-previous-link ))
   )
 #+end_src
-** =org-indent=
+*** =org-indent=
 #+begin_src emacs-lisp
 (use-package org-indent
   :straight nil
+  :after org
   :custom (org-indent-mode-turns-on-hiding-stars t)
   :delight "")
 #+end_src
-** =org-appear= 
+*** =org-appear= 
 #+begin_src emacs-lisp
 (use-package org-appear
   :straight t
+  :after org
   :custom
   (org-appear-autolinks    t)
   (org-appear-delay     0.25)
@@ -1265,55 +1293,49 @@ and later sets cursor at that point when you open that file.
   (org-mode . org-appear-mode))
 #+end_src
 
-** =org-num=
+*** =org-num=
 #+begin_src emacs-lisp
 (use-package org-num
   :straight nil
+  :after org
   :delight "")
 #+end_src
-** =org-contacts=
+*** =org-contacts=
 #+begin_src emacs-lisp
 (use-package org-contacts
   :straight t
-  :after org ;;  denote)
+  :after org
   :custom
   (org-contacts-files
         '("~/BrainDump/denote/20240802T185223--contacts__info.org"
           "~/BrainDump/denote_bps/20250306T114521--contacts__info.org"))
   )
 #+end_src
-** =org-auto-tangle=
+*** =org-auto-tangle=
 #+begin_src emacs-lisp
 (use-package org-auto-tangle
   :straight t
-  :after org
-  :delight ""
+  :after    org
+  :delight  ""
   :custom (org-auto-tangle-default    nil)
   :hook   (org-mode . org-auto-tangle-mode))
 #+end_src
 
-** org-babel languages related
+*** org-babel languages related
 #+begin_src emacs-lisp
-(use-package plantuml-mode :straight t
-  :after org
+(use-package plantuml-mode :after org :straight t
   :custom
   (org-plantuml-executable-path  "plantuml")
   (org-plantuml-exec-mode        'plantuml))
-
 (use-package ob-nim       :after org :straight t)
 (use-package ob-go        :after org :straight t)
 (use-package ob-asymptote :after org :straight t)
-
-(use-package mermaid-mode :straight t)
-(use-package ob-mermaid
-  :after org
-  :straight t
-  :custom
-  (ob-mermaid-cli-path "mmdc") ;; or  "/usr/bin/mmdc"
-  )
+(use-package mermaid-mode :after org :straight t)
+(use-package ob-mermaid   :after org :straight t
+  :custom (ob-mermaid-cli-path "mmdc"))
 #+end_src
 
-*** COMMENT Later
+**** COMMENT Later
 https://stackoverflow.com/questions/78982629/in-emacs-how-to-prevent-org-babel-detangle-from-changing-my-frame-window-buffer
 #+begin_src emacs-lisp :tangle no
 (defun org-babel-detangle-no-buffer-pop-up (orig-fun &rest args)
@@ -1325,19 +1347,16 @@ https://stackoverflow.com/questions/78982629/in-emacs-how-to-prevent-org-babel-d
 (advice-add 'org-babel-detangle :around #'org-babel-detangle-no-buffer-pop-up)
 #+end_src
 
-* Org taking notes related
-** =denote=: Note taking package                                                     :by_prot:
+** Org taking notes related
+*** =denote=: Note taking package                                                   :by_prot:
 #+begin_src emacs-lisp
 (use-package denote
   :straight t
   :after   org
-  :demand  t
-
+  ;; :demand  t
   :custom
   (denote-excluded-directories-regexp  ".*export_.*\\|.*website.*")
-  ;; (denote-directory "~/BrainDump/denote")
-  ;; can be list  ;; dynamically getting the list via name if it starts with "denote_"
-  (denote-directory (mapcar
+  (denote-directory (mapcar             ;; dynamically creating list based on directory name
                      (lambda (y) (concat "~/BrainDump/" y))
                      (seq-filter
                       (lambda (x) (string-match "denote.*" x))
@@ -1363,19 +1382,17 @@ https://stackoverflow.com/questions/78982629/in-emacs-how-to-prevent-org-babel-d
             "n n S"  'denote-singature
 
             "n l"    '(:which-key "+link...")
-            "n l i"  'denote-link         ;; 'denote-insert-link ;; "n l F"  'denote-link
+            "n l i"  'denote-link
             "n l c"  'denote-link-or-create
 
             "n L"    '(:which-key "+Link...")
             "n L b"  'denote-find-backlink
             "n L f"  'denote-find-link
             "n L B"  'denote-backlinks
-            "n L a"  'denote-add-links
-            )
+            "n L a"  'denote-add-links)
 
   :hook (dired-mode . denote-dired-mode)
   )
-
 
 ;; :config
 ;; (when (not (assoc 'python denote-file-types))
@@ -1395,7 +1412,7 @@ https://stackoverflow.com/questions/78982629/in-emacs-how-to-prevent-org-babel-d
 
 #+RESULTS:
 
-** =denote-journal= denote journal                                                   :by_prot:
+*** =denote-journal= denote journal                                                 :by_prot:
 #+begin_src emacs-lisp
 (use-package denote-journal
   :straight t
@@ -1414,11 +1431,11 @@ https://stackoverflow.com/questions/78982629/in-emacs-how-to-prevent-org-babel-d
 
 #+RESULTS:
 
-** =denote-org=                                                                      :by_prot:
+*** =denote-org=                                                                    :by_prot:
 #+begin_src emacs-lisp
 (use-package denote-org
-  :after denote
   :straight t
+  :after denote
   :general (
             :states  'normal
             :prefix  "SPC"
@@ -1430,10 +1447,11 @@ https://stackoverflow.com/questions/78982629/in-emacs-how-to-prevent-org-babel-d
   )
 #+end_src
 
-** =denote-silo=                                                                     :by_prot:
+*** =denote-silo=                                                                   :by_prot:
 #+begin_src emacs-lisp
 (use-package denote-silo
   :straight t
+  :after denote
   :custom
   (denote-silo-directories (mapcar
                             (lambda (y) (concat "~/BrainDump/" y))
@@ -1453,7 +1471,7 @@ https://stackoverflow.com/questions/78982629/in-emacs-how-to-prevent-org-babel-d
 
 #+RESULTS:
 
-** =citar=: citation
+*** =citar=: citation
 
 #+begin_src emacs-lisp
 (use-package citar
@@ -1461,11 +1479,14 @@ https://stackoverflow.com/questions/78982629/in-emacs-how-to-prevent-org-babel-d
   :after    org
   :custom
   (bibtex-dialect               'biblatex                         )
+
   (org-cite-activate-processor  'citar                            )
   (org-cite-follow-processor    'citar                            )
   (org-cite-insert-processor    'citar                            )
   (org-cite-csl-styles-dir      (expand-file-name   "citation_styles/" user-emacs-directory       ))
   (org-cite-global-bibliography (list "~/BrainDump/denote/20220101T010101--references__study.bib" ))
+
+
 
   (citar-bibliography            org-cite-global-bibliography     )
   (citar-library-paths           (list  "~/BrainDump/denote/lit/"))
@@ -1489,10 +1510,11 @@ Citation style files are downloaded and placed in the
 distributed under the Creative Commons Attribution-ShareAlike 3.0
 license.
 
-** =citar-denote= citation
+*** =citar-denote= citation
 #+begin_src emacs-lisp
 (use-package citar-denote
   :straight t
+  :after (citar denote)
   :custom
   (citar-denote-file-type             'org         )
   (citar-denote-keyword               "bib"        )
@@ -1508,14 +1530,14 @@ license.
   (after-hook . citar-denote-mode))
 #+end_src
 
-* Org Time managements
-** =calendar=
+** Org Time managements
+*** =calendar=
 #+begin_src emacs-lisp
 (use-package calendar
   :straight nil
   :custom (calendar-week-start-day 1))
 #+end_src
-** =org-agenda=: the agenda
+*** =org-agenda=: the agenda
 #+begin_src emacs-lisp :results none
 (use-package org-agenda
   :after      org
@@ -1572,7 +1594,7 @@ license.
   (org-capture-mode . evil-insert-state)
   )
 #+end_src
-** COMMENT org super agenda
+*** COMMENT org super agenda
 #+begin_src emacs-lisp
 (use-package org-super-agenda
   :straight t
@@ -1623,7 +1645,7 @@ license.
   (org-super-agenda-mode t)
   )
 #+end_src
-** =casual-agenda=: casual agenda based on transient
+*** =casual-agenda=: casual agenda based on transient
 #+begin_src emacs-lisp
 (use-package casual-suite
   :straight t
@@ -1638,7 +1660,7 @@ license.
            ","        'casual-dired-sort-by-tmenu )
   )
 #+end_src
-** =consult-todo=
+*** =consult-todo=
 #+begin_src emacs-lisp
 (use-package consult-todo
   :straight t
@@ -1648,26 +1670,21 @@ license.
            "c t" 'consult-todo
            "c T" 'consult-todo-project))
 #+end_src
-** =org-edna= for GTD
+*** =org-edna= for GTD
 #+begin_src emacs-lisp
 (use-package org-edna
   :straight t
   :after  org-agenda
   :hook (after-init . org-edna-mode))
 #+end_src
-** TODO =org-gtd=
-
-- [ ]  =:demand t= was required because =:map org-gtd-clarify-mode-map ("C-c C-c" . org-gtd-organize)= is not working
+*** =org-gtd=
 
 #+begin_src emacs-lisp
 (use-package org-gtd
   :straight t
-  ;; :ensure t
-  :after  org-edna org
-  :demand t
+  :after  org-edna
   :init
-  ;; Suppress upgrade warnings (must be set before package loads)
-  (setq org-gtd-update-ack "4.0.0")
+  (setq org-gtd-update-ack "4.0.0") ;; Suppress upgrade warnings (must be set before package loads)
 
   :custom
   (org-gtd-directory             "~/BrainDump/gtd/")
@@ -1677,25 +1694,19 @@ license.
                                  (wait     . "WAIT")
                                  (canceled . "CNCL")))
 
-  :bind (("C-c d c" . org-gtd-capture               )
-         ("C-c d e" . org-gtd-engage                )
-         ("C-c d p" . org-gtd-process-inbox         )
-         ("C-c d n" . org-gtd-show-all-next         )
-         ("C-c d s" . org-gtd-reflect-stuck-projects)
-
-         :map org-gtd-clarify-mode-map
-         ("C-c C-c" . org-gtd-organize)
-
-         :map org-agenda-mode-map
-         ("C-c ." . org-gtd-agenda-transient)
-         ("<f8>"  . org-gtd-agenda-transient))
-
   :general
+  (:keymaps 'org-gtd-clarify-mode-map
+            "C-c C-c" 'org-gtd-organize)
+
+  (:keymaps 'org-agenda-mode-map
+            "C-c ." 'org-gtd-agenda-transient)
+
   (:states 'normal
            :prefix "SPC o g"
            "p"      'org-gtd-process-inbox
            "e"      'org-gtd-engage
-           "n"      'org-gtd-show-all-next)
+           "n"      'org-gtd-show-all-next
+           "s"      'org-gtd-reflect-stuck-projects)
 
   (:states 'normal
            :keymaps 'org-mode-map
@@ -1703,10 +1714,19 @@ license.
            "s c"      'org-gtd-clarify-item
            "g c"      'org-gtd-clarify-item
            "g a"      'org-gtd-archive-completed-items)
+
+  (:states 'normal
+           :prefix "SPC"
+           "o c  "     'org-gtd-capture)
+
+  (:states 'normal
+           :keymaps 'org-agenda-mode-map
+           :prefix "SPC"
+           "o c  "     'org-gtd-capture)
   )
 #+end_src
-* Org Exporting related
-** =ox=
+** Org Exporting related
+*** =ox=
 ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stackexchange]]
 
 #+begin_src emacs-lisp
@@ -1747,13 +1767,13 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   )
 #+end_src
 
-** Latex related
+*** Latex related
 #+begin_src emacs-lisp
 (use-package tex-mode :straight nil)
-(use-package auctex   :straight t)
-(use-package cdlatex  :straight t)
+(use-package auctex   :straight   t)
+(use-package cdlatex  :straight   t)
 #+end_src
-** =ox-latex= org export latex
+*** =ox-latex= org export latex
 #+begin_src emacs-lisp
 (use-package ox-latex
   :straight nil
@@ -1801,7 +1821,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
         (format "\\hfill{}\\textsc{%s}"
                 (mapconcat #'org-latex--protect-text tags ":")))))
 #+end_src
-** =ox-odt= org export ODT
+*** =ox-odt= org export ODT
 #+begin_src emacs-lisp
 (use-package ox-odt
   :straight nil
@@ -1836,7 +1856,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   (advice-add 'org-odt-timestamp :override #'my-org-odt-timestamp-unstyled)
   )
 #+end_src
-** =ox-html=
+*** =ox-html=
 #+begin_src emacs-lisp
 (use-package ox-html
   :straight nil
@@ -1864,7 +1884,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   )
 #+end_src
 
-** =org-re-reveal=
+*** =org-re-reveal=
 #+begin_src emacs-lisp
 (use-package org-re-reveal
   :after ox
@@ -1881,7 +1901,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   )
 #+end_src
 
-*** test with chalkboard
+**** test with chalkboard
 #+begin_src org :tangle no
 ,#+reveal_root: https://cdn.jsdelivr.net/npm/reveal.js
 ,#+reveal_version: 4
@@ -1905,8 +1925,8 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 
 ,#+reveal_preamble:
 #+end_src
-* Org Attachments, Images, Figures related
-** TODO =org-attach=
+** Org Attachments, Images, Figures related
+*** TODO =org-attach=
 
 - [ ] need to learn about org-attach-git
 
@@ -1955,7 +1975,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   )
 #+end_src
 
-** =org-ipe=
+*** =org-ipe=
 #+begin_src emacs-lisp
 (use-package f :straight t)
 
@@ -1973,7 +1993,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
            "o i c"  'org-ipe-insert-drawing))
 #+end_src
 
-** org ODT libreoffice-draw
+*** org ODT libreoffice-draw
 #+begin_src emacs-lisp
 (defun garid/odt-edit-open  (path &optional _)
   (interactive)
@@ -1987,7 +2007,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 (add-to-list 'org-file-apps '("\\ode.svg\\'" . garid/odt-edit-open))
 #+end_src
 
-** =edraw= SVG drawing inline in org                                                    :here:
+*** TODO =edraw= SVG drawing inline in org
 #+begin_src emacs-lisp
 (use-package edraw-mode
   :straight (edraw-mode
@@ -1995,7 +2015,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
              :host github
              :branch "master"
              :repo "misohena/el-easydraw")
-  :after org ;; ox ox-latex ox-html
+  :after org
   :demand t  ;; needed <== don't know why (dont know why :config not running )
   :custom
   (edraw-editor-default-grid-interval 10)
@@ -2631,7 +2651,7 @@ Probably requires external =rg= command.
            "g r"      'gptel-rewrite)
 
   :config
-  (setopt gptel-model        'gpt-5.2)
+
   (setopt gptel-backend      (gptel-make-openai "OpenAI" :key 'gptel-api-key-from-auth-source))
   )
 #+end_src
@@ -2642,7 +2662,7 @@ Probably requires external =rg= command.
 #+begin_src emacs-lisp
 (use-package gptel-commit
   :straight t
-  ;;:after (gptel magit)
+  :after (gptel magit)
   :commands gptel-commit gptel-commit-rationale
   :custom
   (gptel-commit-stream t)
@@ -2712,7 +2732,6 @@ Probably requires external =rg= command.
   :straight t
   :bind (:map pdf-view-mode-map ("t" . pdf-outline))
   :mode  ("\\.pdf\\'" . pdf-view-mode)
-  ;; :config (pdf-tools-install)
   :hook (after-init . pdf-tools-install)
   )
 #+end_src
@@ -2969,7 +2988,7 @@ that and instead tries to complete against dictionary entries."
                              :with-author nil
                              :with-toc nil))
   :general
-   (:states '(normal notmuch-message-mode )
+   (:states '(normal notmuch-message-mode)
             "SPC m m m" 'org-mime-edit-mail-in-org-mode
             "SPC m m h" 'org-mime-htmlize)
   )
@@ -2989,9 +3008,6 @@ that and instead tries to complete against dictionary entries."
 #+begin_src emacs-lisp
 (use-package ol-notmuch
   :straight  t
-  ;;:config
-  ;;(define-key global-map "\C-c l" 'org-store-link) ;; make is more :general later
-
   :general
   (:states 'normal
            "SPC o l s" 'org-store-link))
@@ -3139,18 +3155,11 @@ that and instead tries to complete against dictionary entries."
 #+begin_src emacs-lisp
 (use-package google-translate
   :straight t
-  :commands   google-translate-smooth-translate
   :init
-  (setq google-translate-translation-directions-alist '(("ja" . "en")
-                                                        ("en" . "ja")
+  (setq google-translate-translation-directions-alist '(("ja" . "en") ;; This only works with :init
+                                                        ("en" . "ja") ;; won't work with :custom & :config
                                                         ("en" . "mn")
                                                         ("mn" . "en")))
-  ;; :custom
-  ;; (google-translate-translation-directions-alist '(("ja" . "en")
-  ;;                                                  ("en" . "ja")
-  ;;                                                  ("en" . "mn")
-  ;;                                                  ("mn" . "en")))
-
   :general
   (:states '(normal visual)
            :prefix "SPC"
@@ -3162,16 +3171,13 @@ that and instead tries to complete against dictionary entries."
   :general
   (:states '(normal visual)
            :prefix "SPC"
-           "G"   '(:which-key "Google...")
+           ;; "G"   '(:which-key "Google...") ;; which stops loading google-translate package
            "G w" 'google-this-forecast
            "G s" 'google-this-search
            "G r" 'google-this-region
            "G m" 'google-this-maps
-           )
-  )
+           ))
 #+end_src
-
-#+RESULTS:
 
 ** =csv-mode=
 #+begin_src emacs-lisp
@@ -3181,7 +3187,7 @@ that and instead tries to complete against dictionary entries."
 
 #+RESULTS:
 
-* Daemon
+* COMMENT Daemon
 #+begin_src emacs-lisp
 (use-package server
   :straight nil
