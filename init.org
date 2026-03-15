@@ -937,7 +937,7 @@ and later sets cursor at that point when you open that file.
   :straight t
   ;; :after repeat-mode
   :delight "org"
-  ;; :demand t
+  :demand t
   :bind (:map org-mode-map
               ("C-S-k"  . org-previous-visible-heading   )
               ("C-S-j"  . org-next-visible-heading       )
@@ -1533,6 +1533,7 @@ license.
 (use-package org-agenda
   :after      org
   :straight   nil
+  :demand     t
   :custom
   (org-agenda-files '("~/BrainDump/gtd/org-gtd-tasks.org"))
   (org-agenda-span             1) ;;  90)
@@ -1666,7 +1667,11 @@ license.
 (use-package org-edna
   :straight t
   :after  org-agenda
-  :hook (after-init . org-edna-mode))
+  :demand t
+  :hook
+  ;; (after-init . org-edna-mode)
+  (emacs-startup . org-edna-mode)
+  )
 #+end_src
 *** =org-gtd=
 
@@ -1674,6 +1679,7 @@ license.
 (use-package org-gtd
   :straight t
   :after  org-edna
+  :demand t
   :init
   (setq org-gtd-update-ack "4.0.0") ;; Suppress upgrade warnings (must be set before package loads)
 
@@ -1714,6 +1720,9 @@ license.
            :keymaps 'org-agenda-mode-map
            :prefix "SPC"
            "o c  "     'org-gtd-capture)
+  :hook
+  ;; (after-init    . org-gtd-mode)
+  (emacs-startup . org-gtd-mode)
   )
 #+end_src
 ** Org Exporting related
@@ -2503,6 +2512,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 #+begin_src emacs-lisp
 (use-package magit
   :straight t
+  :demand t
   :general
   (:states 'normal
            :prefix "SPC"
@@ -2628,7 +2638,7 @@ Probably requires external =rg= command.
 (use-package gptel
   :straight t
   :after    org
-
+  :demand t
   :custom
   (gptel-default-mode 'org-mode)
   ;; (gptel-model        'gpt-5.2)
@@ -2658,7 +2668,6 @@ Probably requires external =rg= command.
   :straight t
   :after (gptel magit)
   :demand t
-
   :custom
   (gptel-commit-stream t)
 
