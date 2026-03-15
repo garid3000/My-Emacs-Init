@@ -58,28 +58,6 @@ run:
   )
 #+end_src
 
-#+begin_example
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; ;; Keybindings for everywhere                                ;;
-;; (general-create-definer garids-keybind/for-all-modes         ;;
-;;   :keymaps  '(normal visual emacs)                           ;;
-;;   :prefix         "SPC"                                      ;;
-;;   :global-prefix  "C-SPC")                                   ;;
-;;                                                              ;;
-;; ;; Keybindings inside Org-mode-map                           ;;
-;; (general-create-definer garids-keybind/in-org-mode           ;;
-;;   :states '(normal visual)                                   ;;
-;;   :keymaps '(org-mode-map)                                   ;;
-;;   :prefix        "SPC"                                       ;;
-;;   :global-prefix "C-SPC")                                    ;;
-;;                                                              ;;
-;; (general-create-definer garids-keybind/easier-window-surfing ;;
-;;   :keymaps  '(normal visual emacs insert)                    ;;
-;;   :prefix         "<f2>"                                     ;;
-;;   :global-prefix  "C-<f2>")                                  ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-#+end_example
-
 ** =which-key= keybinding shower
 
 #+begin_src emacs-lisp
@@ -105,8 +83,8 @@ run:
 #+begin_src emacs-lisp
 (use-package repeat
   :straight nil
-  :hook
-  (after-init . repeat-mode)
+  :hook 
+  (emacs-startup . repeat-mode) ;; (after-init . repeat-mode)
   )
 #+end_src
 
@@ -151,16 +129,17 @@ run:
   :custom
   (evil-collection-mode-list
    '(
-        org vundo bookmark
+     org org-present
+     vundo bookmark
+     (magit magit-submodule) magit-repos magit-section  magit-todos
      ))
   ;; maybe use;
-  ;; bm calc calendar comint compile consult corfu (csv
-  ;; "csv-mode") diff-hl diff-mode ediff eglot flycheck flymake gptel
-  ;; grep ibufferr (magit magit-submodule) magit-repos magit-section
-  ;; magit-todos notmuch pass (pdf pdf-view) python rg ripgrep
-  ;; smerge-mode trashed vertico  which-key xref
+  ;; bm calc calendar comint compile consult corfu (csv "csv-mode")
+  ;; diff-hl diff-mode ediff eglot flycheck flymake gptel grep
+  ;; ibufferr notmuch pass (pdf pdf-view) python rg ripgrep
+  ;; smerge-mode trashed vertico which-key xref
 
-  ;; stoped 
+  ;; stoped
   ;; dired dired-sidebar wdired
 
   ;; bluetooth ag alchemist anaconda-mode apropos arc-mode
@@ -178,7 +157,7 @@ run:
   ;; indium info ivy js2-mode kmacro leetcode lispy lms log-edit
   ;; log-view lsp-ui-imenu lua-mode macrostep man markdown-mode
   ;; message minesweeper monky mpc mpdel mpdired mu4e
-  ;; mu4e-conversation neotree newsticker nov omnisharp org-present
+  ;; mu4e-conversation neotree newsticker nov omnisharp 
   ;; org-roam osx-dictionary outline ovpn-mode p4 (package-menu
   ;; package) popup proced (process-menu simple) prodigy profiler
   ;; p-search quickrun racer racket-describe reader realgud reftex
@@ -950,11 +929,16 @@ and later sets cursor at that point when you open that file.
 #+begin_src emacs-lisp
 (use-package org
   :straight t
-  :demand t
+  ;; :after repeat-mode
   :delight "org"
   :bind (:map org-mode-map
-              ("C-S-k"     . org-previous-visible-heading)
-              ("C-S-j"     . org-next-visible-heading    )
+              ("C-S-k"  . org-previous-visible-heading   )
+              ("C-S-j"  . org-next-visible-heading       )
+              ("C-k"    . org-backward-heading-same-level)
+              ("C-j"    . org-forward-heading-same-level )
+
+              ("C-S-p"  . org-previous-visible-heading   )
+              ("C-S-n"  . org-next-visible-heading       )
               :repeat-map garid/org-repeat
               ("["         . org-previous-visible-heading)
               ("]"         . org-next-visible-heading    )
@@ -964,25 +948,20 @@ and later sets cursor at that point when you open that file.
               ("n"         . org-next-block              )
               ("p"         . org-previous-block          )
               ("c"         . org-ctrl-c-ctrl-c           )
-              :exit
-              ("'"         . org-edit-special            )
-              :repeat-map garid/org-repeat-heading
-              ("n"         . org-next-visible-heading    )
-              ("p"         . org-previous-visible-heading)
-              :repeat-map garid/org-repeat-babel-src-block
-              ("n"         . org-babel-next-src-block    )
-              ("p"         . org-babel-previous-src-block))
-
-
-
+              ;; :exit
+              ;; ("'"         . org-edit-special            )
+              ;; :repeat-map garid/org-repeat-heading
+              ;; ("n"         . org-next-visible-heading    )
+              ;; ("p"         . org-previous-visible-heading)
+              ;; :repeat-map garid/org-repeat-babel-src-block
+              ;; ("n"         . org-babel-next-src-block    )
+              ;; ("p"         . org-babel-previous-src-block)
+              )
 
   :general
-  (:states 'normal
-           :keymaps  'org-mode-map
-           "M-S-<return>" 'org-insert-todo-heading-respect-content
-           )
+  (:keymaps  'org-mode-map
+             "M-S-<return>" 'org-insert-todo-heading-respect-content)
 
-  
   (:states 'normal
            :keymaps  'org-mode-map
            :prefix   "SPC"
@@ -1125,23 +1104,23 @@ and later sets cursor at that point when you open that file.
 
   (org-log-done            'time)
   (org-tags-column           -93)
-  (org-tag-alist           '((:startgroup . nil)
-                             ("bps"       . ?b)
-                             ("life"      . ?l)
-                             (:endgroup   . nil)
-                             ("4bc"       . ?4)
-                             ("yak"       . ?y)
-                             ("tdbt"      . ?t)
-                             ("meet"      . ?m)
-                             ("qstn"      . ??)
-                             ("msg"       . ?M)
-                             ("esl"       . ?e)
-                             ("rsch"      . ?r)
-                             ("slide"     . ?s)
-                             ("device"    . ?d)
-                             ("floatmeal" . ?f)
-                             ("uavsoft"   . ?U)
-                             ("ernd"      . ?E)))
+  (org-tag-alist           '((:startgroup .  nil)
+                             ("bps"       .   ?b)
+                             ("life"      .   ?l)
+                             (:endgroup   .  nil)
+                             ("4bc"       .   ?4)
+                             ("yak"       .   ?y)
+                             ("tdbt"      .   ?t)
+                             ("meet"      .   ?m)
+                             ("qstn"      .   ??)
+                             ("msg"       .   ?M)
+                             ("esl"       .   ?e)
+                             ("rsch"      .   ?r)
+                             ("slide"     .   ?s)
+                             ("device"    .   ?d)
+                             ("floatmeal" .   ?f)
+                             ("uavsoft"   .   ?U)
+                             ("ernd"      .   ?E)))
   (org-latex-packages-alist '((#1="" "color") (#1# "listings")))
   ;; (add-to-list 'org-latex-packages-alist   '("" "listings" ))
   ;; (add-to-list 'org-latex-packages-alist   '("" "color"    ))
@@ -1216,7 +1195,7 @@ and later sets cursor at that point when you open that file.
             (consult-line (format "\\label{%s}" content))
             )
         (message "No matching braces found."))))
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; setting latex preview
   ;;(setq org-preview-latex-default-process 'imagemagick)
   ;;(setf (plist-get (cdr (assq 'imagemagick org-preview-latex-process-alist)) :latex-compiler)
@@ -1243,7 +1222,7 @@ and later sets cursor at that point when you open that file.
   ;; from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][mastering emacs article]].
   (setf (alist-get "python" org-src-lang-modes nil nil #'equal) 'python-ts)
 
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
   (defun garid/org-up-heading-dwim (&optional arg)
     "If on a heading, go to parent heading. If in body text, go to the current entry's heading."
@@ -1975,12 +1954,15 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   )
 #+end_src
 
-*** =org-ipe=
+*** =f= for =org-ipe=
 #+begin_src emacs-lisp
 (use-package f :straight t)
+#+end_src
 
+*** =org-ipe=
+#+begin_src emacs-lisp
 (use-package org-ipe
-  :after f
+  :after (f org)
   :straight (org-ipe
              :type git
              :host github
@@ -1993,7 +1975,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
            "o i c"  'org-ipe-insert-drawing))
 #+end_src
 
-*** org ODT libreoffice-draw
+*** COMMENT org ODT libreoffice-draw
 #+begin_src emacs-lisp
 (defun garid/odt-edit-open  (path &optional _)
   (interactive)
@@ -2007,7 +1989,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 (add-to-list 'org-file-apps '("\\ode.svg\\'" . garid/odt-edit-open))
 #+end_src
 
-*** TODO =edraw= SVG drawing inline in org
+*** =edraw= SVG drawing inline in org
 #+begin_src emacs-lisp
 (use-package edraw-mode
   :straight (edraw-mode
@@ -2016,60 +1998,60 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
              :branch "master"
              :repo "misohena/el-easydraw")
   :after org
-  :demand t  ;; needed <== don't know why (dont know why :config not running )
   :custom
-  (edraw-editor-default-grid-interval 10)
-  (edraw-default-shape-properties '((rect (fill            . #1="#f8f8f8")
-                                          (stroke          . #2="#101010")
-                                          (stroke-width    . 2))
-                                    (ellipse (fill         . #1#)
-                                             (stroke       . #2#)
-                                             (stroke-width . 2))
-                                    (path (fill            . "none")
-                                          (stroke          . #2#)
-                                          (stroke-width    . 2) ;;(marker-end . "arrow")   p > or p <
-                                          )
-                                    (text (fill            . #2#)
-                                          ;; (font-size       . 20)
-                                          (font-size       . 24)
-                                          ;; (font-family  . "sans-serif")
-                                          ;; (font-family  . "Linux Libertine")
-                                          (font-family     . "Linux Libertine O")
-                                          ;;(font-family     . "xkcd Script")
-                                          (text-anchor     . "middle"))
-                                    (image)))
+  (edraw-editor-default-grid-interval  10)
+  (edraw-default-shape-properties     '((rect (fill            . #1="#f8f8f8")
+                                              (stroke          . #2="#101010")
+                                              (stroke-width    . 2))
+                                        (ellipse (fill         . #1#)
+                                                 (stroke       . #2#)
+                                                 (stroke-width . 2))
+                                        (path (fill            . "none")
+                                              (stroke          . #2#)
+                                              (stroke-width    . 2)
+                                              ;;(marker-end . "arrow")   p > or p <
+                                              )
+                                        (text (fill            . #2#)
+                                              (font-size       . 24)
+                                              (font-family     . "Linux Libertine O")
+                                              (text-anchor     . "middle"))
+                                        ;; (image)
+                                        ))
   (edraw-default-document-properties '((width .  900)
                                        (height . 400)
                                        (background . "#fff")))
 
-
   :general
+  (:keymaps 'edraw-editor-map
+            "C-r"  'edraw-editor-redo
+            "P"    'edraw-editor-paste-and-select
+            "S"    'edraw-editor-select-tool-custom-shape
+            "u"    'edraw-editor-undo
+            "x"    'edraw-editor-cut-selected-shapes
+            "y"    'edraw-editor-copy-selected-shapes)
+
   (:states 'normal
            :keymaps 'org-mode-map
            :prefix "SPC"
            "o i e"     'edraw-org-edit-regular-file-link
            "o i i"     '(lambda () (interactive) (insert "[[edraw:]]")))
 
-  :bind (:map edraw-editor-map
-              ;;("M-q" .  nil)
-              ("C-r"  . edraw-editor-redo                     )
-              ("P"    . edraw-editor-paste-and-select         )
-              ("S"    . edraw-editor-select-tool-custom-shape )
-              ("u"    . edraw-editor-undo                     )
-              ("x"    . edraw-editor-cut-selected-shapes      )
-              ("y"    . edraw-editor-copy-selected-shapes     )
-              )
-  :config
+  :init
   (require 'edraw-org)
-  (edraw-org-setup-default)
-  (edraw-org-setup-exporter)
+
+  ;; :config
+  ;; (require 'edraw-org)
+  ;; (edraw-org-setup-default)
+  ;; (edraw-org-setup-exporter)
 
   :hook
-  ;;(after-init                 . edraw-org-setup-default)
-  ;;(after-init                 . edraw-org-setup-exporter)
-  (edraw-property-editor-mode . turn-off-evil-mode)
-  )
+  (after-init                 . edraw-org-setup-default)
+  (after-init                 . edraw-org-setup-exporter)
+  (edraw-property-editor-mode . turn-off-evil-mode))
+
+
 #+end_src
+
 
 * Programming languages
 ** =prog-mode=
