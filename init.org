@@ -89,7 +89,7 @@ run:
 #+end_src
 
 * Vi-movement and it's friends
-** =evil=: vi-movements
+** =evil=: vi-movements                                                               :demand:
 #+begin_src emacs-lisp
 ;; Vim Bindings
 (use-package evil
@@ -136,6 +136,7 @@ run:
      info
      notmuch
      (pdf pdf-view)
+     dired dired-sidebar wdired
      ))
   ;; maybe use;
   ;; bm calc calendar comint compile consult corfu (csv "csv-mode")
@@ -450,7 +451,8 @@ loading the theme is in the section [[id:20251007T133457.470613][=emacs=]]
 #+begin_src emacs-lisp
 (use-package dired
   :straight   nil
-  :commands   (dired dired-jump) ;; :after  evil-collection (test if the evil-collection-mode-list is default value)
+  :demand t
+  ;; :commands   (dired dired-jump) ;; :after  evil-collection (test if the evil-collection-mode-list is default value)
   :custom ((dired-listing-switches  "-agho --group-directories-first")
            (dired-kill-when-opening-new-dired-buffer t)
            (dired-hide-details-mode                  t)
@@ -473,9 +475,9 @@ loading the theme is in the section [[id:20251007T133457.470613][=emacs=]]
            (kbd "C-n")  'mkdir
            (kbd "C-s")  'dired-omit-mode
            ;; (kbd "SPC")  'dired-omit-mode
-           ;; " "          'nil                  ;; not  working
            ;; " "           nil                  ;; not  working
-           ;; "SPC"         nil                  ;; not  working
+           ;; " "           nil                  ;; not  working
+           "SPC"         nil                  ;; not  working
            ;; "SPC"         nil                  ;; not  working
            )
   (:states 'normal
@@ -537,6 +539,7 @@ loading the theme is in the section [[id:20251007T133457.470613][=emacs=]]
 #+begin_src emacs-lisp
 (use-package emacs
   :straight nil
+  ;; :demand t
   :init
   (setq-default tab-width 4)
   ;; (setq-default truncate-lines t)             ;; <----------------------- tests ---------------
@@ -545,7 +548,7 @@ loading the theme is in the section [[id:20251007T133457.470613][=emacs=]]
   (tool-bar-mode         -1)   ; Disable the toolbar
   (tooltip-mode          -1)   ; Disable tooltips
   (menu-bar-mode         -1)   ; Disable the menu bar
-  (set-fringe-mode       10)   ; Give some breathing room
+  ;; (set-fringe-mode       10)   ; Give some breathing room
 
   :general
   (:states 'normal
@@ -935,8 +938,8 @@ and later sets cursor at that point when you open that file.
 #+begin_src emacs-lisp
 (use-package org
   :straight t
-  :delight "org"
   :demand t
+  :delight "org"
   :bind (:map org-mode-map
               ("C-S-k"  . org-previous-visible-heading   )
               ("C-S-j"  . org-next-visible-heading       )
@@ -968,10 +971,6 @@ and later sets cursor at that point when you open that file.
   (:keymaps  'org-mode-map
              "M-S-<return>" 'org-insert-todo-heading-respect-content
              )
-  ;; (:states 'normal
-  ;;          :keymaps  'org-mode-map
-  ;;          "] ]"     'org-next-visible-heading
-  ;;          "[ ["     'org-previous-visible-heading)
 
   (:states 'normal
            :keymaps  'org-mode-map
@@ -1732,6 +1731,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 (use-package ox
   :straight nil
   :after org
+  :demand t
   :general
   (:states 'normal
            :keymaps  'org-mode-map
@@ -1777,6 +1777,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 (use-package ox-latex
   :straight nil
   :after ox
+  :demand t
   :custom
   (org-latex-compiler                    "lualatex"                      )
   (org-latex-src-block-backend           'listings                       )
@@ -1825,6 +1826,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 (use-package ox-odt
   :straight nil
   :after ox
+  ;; :demand t
   :general
   (:states 'normal
            :keymaps 'org-mode-map
@@ -1860,6 +1862,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 (use-package ox-html
   :straight nil
   :after ox
+  :demand t
   :custom
   (org-html-validation-link              nil) ;; Don't show validation link
   ;; (org-html-htmlize-output-type 'inline-css) <-- default
@@ -1888,6 +1891,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 (use-package org-re-reveal
   :after ox
   :straight t
+  :demand t
   :general
   (:states 'normal
            :keymaps 'org-mode-map
@@ -2017,7 +2021,9 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
              :host github
              :branch "master"
              :repo "misohena/el-easydraw")
-  :after org
+  :after (org ox)
+  :demand t
+
   :custom
   (edraw-editor-default-grid-interval  10)
   (edraw-default-shape-properties     '((rect (fill            . #1="#f8f8f8")
@@ -2034,8 +2040,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
                                         (text (fill            . #2#)
                                               (font-size       . 24)
                                               (font-family     . "Linux Libertine O")
-                                              (text-anchor     . "middle"))
-                                        ;; (image)
+                                              (text-anchor     . "middle")) ;; (image)
                                         ))
   (edraw-default-document-properties '((width .  900)
                                        (height . 400)
@@ -2056,20 +2061,12 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
            "o i e"     'edraw-org-edit-regular-file-link
            "o i i"     '(lambda () (interactive) (insert "[[edraw:]]")))
 
-  :init
+
+  :config
   (require 'edraw-org)
-
-  ;; :config
-  ;; (require 'edraw-org)
-  ;; (edraw-org-setup-default)
-  ;; (edraw-org-setup-exporter)
-
-  :hook
-  (after-init                 . edraw-org-setup-default)
-  (after-init                 . edraw-org-setup-exporter)
-  (edraw-property-editor-mode . turn-off-evil-mode))
-
-
+  (edraw-org-setup-default)
+  (edraw-org-setup-exporter)
+  )
 #+end_src
 
 
