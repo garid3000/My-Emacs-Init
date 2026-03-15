@@ -299,7 +299,7 @@ mark or parenthesis.
   :hook (org-mode . variable-pitch-mode))
 #+end_src
 
-** =modus= theme                                                                     :by_prot:
+** =modus= theme                                                                   :by_prot:
 [[https://protesilaos.com/emacs/modus-themes][Modus themes]] is a nice built-in theme for emacs that [[https://protesilaos.com/][Protesilaos
 Stavrou]]. Following is customization of the theme. Actual in the
 loading the theme is in the section [[id:20251007T133457.470613][=emacs=]]
@@ -929,13 +929,12 @@ and later sets cursor at that point when you open that file.
 
 * Org related
 ** Core org
-*** =org=: org-mode configuration
+*** =org=: org-mode configuration                                                   :demand:
 #+caption: org config
 #+name: lst_org
 #+begin_src emacs-lisp
 (use-package org
   :straight t
-  ;; :after repeat-mode
   :delight "org"
   :demand t
   :bind (:map org-mode-map
@@ -2508,7 +2507,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 #+end_src
 
 * Git version control
-** =magit=:
+** =magit=:                                                                           :demand:
 #+begin_src emacs-lisp
 (use-package magit
   :straight t
@@ -2633,7 +2632,7 @@ Probably requires external =rg= command.
            "SPC r g"  'rg))
 #+end_src
 * AI helpers:
-** =gptel=                                                                       :by_karthink:
+** =gptel=                                                                :demand:by_karthink:
 #+begin_src emacs-lisp
 (use-package gptel
   :straight t
@@ -2662,7 +2661,7 @@ Probably requires external =rg= command.
 
 #+RESULTS:
 
-** =gptel-commit=
+** =gptel-commit=                                                                     :demand:
 #+begin_src emacs-lisp
 (use-package gptel-commit
   :straight t
