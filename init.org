@@ -133,6 +133,7 @@ run:
      vundo bookmark
      (magit magit-submodule) magit-repos magit-section  magit-todos
      gptel
+     info
      ))
   ;; maybe use;
   ;; bm calc calendar comint compile consult corfu (csv "csv-mode")
@@ -155,7 +156,7 @@ run:
   ;; git-timemachine gited gnus go-mode guix hackernews helm help
   ;; helpful hg-histedit hideshow hungry-delete hyrolo (image
   ;; image-mode) image-dired image+ imenu imenu-list (indent "indent")
-  ;; indium info ivy js2-mode kmacro leetcode lispy lms log-edit
+  ;; indium  ivy js2-mode kmacro leetcode lispy lms log-edit
   ;; log-view lsp-ui-imenu lua-mode macrostep man markdown-mode
   ;; message minesweeper monky mpc mpdel mpdired mu4e
   ;; mu4e-conversation neotree newsticker nov omnisharp
@@ -2527,7 +2528,8 @@ Similar to vim-signify.
             "g p"  'git-gutter:previous-hunk)
   :hook
   (magit-post-commit . git-gutter:update-all-windows )
-  (after-init        . global-git-gutter-mode        )
+  (emacs-startup     . global-git-gutter-mode        )
+  ;; (after-init     . global-git-gutter-mode        )
   )
 #+end_src
 
@@ -2646,7 +2648,9 @@ Probably requires external =rg= command.
 (use-package gptel-commit
   :straight t
   :demand t
+  ;; :commands global-command-log-mode clm/open-command-log-buffer
   :after (gptel magit)
+  :commands ( magit-commit-create magit-status )
 
   :custom
   (gptel-commit-stream t)
@@ -2656,8 +2660,7 @@ Probably requires external =rg= command.
            :keymaps 'git-commit-mode-map
            :prefix "SPC"
            "g c"  'gptel-commit
-           "g C"  'gptel-commit-rationale
-           )
+           "g C"  'gptel-commit-rationale)
   )
 #+end_src
 
