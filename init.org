@@ -2532,7 +2532,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 #+end_src
 
 * Git version control
-** =magit=:                                                                         :demand:
+** =magit=:                                                                           :demand:
 #+begin_src emacs-lisp
 (use-package magit
   :straight t
@@ -2671,7 +2671,7 @@ Probably requires external =rg= command.
            "SPC r g"  'rg))
 #+end_src
 * AI helpers:
-** =gptel=                                                              :demand:by_karthink:
+** =gptel=                                                                :demand:by_karthink:
 #+begin_src emacs-lisp
 (use-package gptel
   :straight t
@@ -2700,7 +2700,7 @@ Probably requires external =rg= command.
 
 #+RESULTS:
 
-** =gptel-commit=                                                                   :demand:
+** =gptel-commit=                                                                     :demand:
 #+begin_src emacs-lisp
 (use-package gptel-commit
   :straight t
@@ -2803,7 +2803,7 @@ Probably requires external =rg= command.
   )
 #+end_src
 
-** =tmr=: timer may ring                                                           :by_prot:
+** =tmr=: timer may ring                                                             :by_prot:
 #+begin_src emacs-lisp
 (use-package tmr :straight t)
 #+end_src
@@ -2980,7 +2980,7 @@ Probably requires external =rg= command.
 #+end_src
 
 * Misc Packages
-** =popper=                                                                    :by_karthink:
+** =popper=                                                                      :by_karthink:
 #+begin_src emacs-lisp
 (use-package popper
   :straight t
@@ -2991,6 +2991,7 @@ Probably requires external =rg= command.
          ("`" .      popper-cycle )
          ("q" .      popper-close-latest ))
   :custom
+  (popper-window-height 15)
   (popper-reference-buffers '("\\*Messages\\*"
                               "\\*eldoc\\*"
                               "\\*eldoc.*\\*"
