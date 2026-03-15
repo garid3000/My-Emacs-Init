@@ -580,7 +580,10 @@ loading the theme is in the section [[id:20251007T133457.470613][=emacs=]]
 
   :bind (:map minibuffer-local-map
               ( "M-f" . forward-word ))
-
+  :hook
+  (emacs-startup . (lambda ()
+                     (call-process-shell-command "notify-send \"Emacs\" \"Emacs startup initialized\"")
+                     ))
   )
 
 (defun garid/new-org-scratch ()
@@ -2653,7 +2656,6 @@ Probably requires external =rg= command.
 (use-package gptel-commit
   :straight t
   :demand t
-  ;; :commands global-command-log-mode clm/open-command-log-buffer
   :after (gptel magit)
   :commands ( magit-commit-create magit-status )
 
@@ -3084,6 +3086,7 @@ that and instead tries to complete against dictionary entries."
 #+begin_src emacs-lisp
 (use-package crux
   :straight t
+  :demand t
   :general
   (:states 'normal
            "SPC L d"   'crux-delete-file-and-buffer
