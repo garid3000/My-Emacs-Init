@@ -132,10 +132,11 @@ run:
      org org-present
      vundo bookmark
      (magit magit-submodule) magit-repos magit-section  magit-todos
+     gptel
      ))
   ;; maybe use;
   ;; bm calc calendar comint compile consult corfu (csv "csv-mode")
-  ;; diff-hl diff-mode ediff eglot flycheck flymake gptel grep
+  ;; diff-hl diff-mode ediff eglot flycheck flymake  grep
   ;; ibufferr notmuch pass (pdf pdf-view) python rg ripgrep
   ;; smerge-mode trashed vertico which-key xref
 
@@ -157,7 +158,7 @@ run:
   ;; indium info ivy js2-mode kmacro leetcode lispy lms log-edit
   ;; log-view lsp-ui-imenu lua-mode macrostep man markdown-mode
   ;; message minesweeper monky mpc mpdel mpdired mu4e
-  ;; mu4e-conversation neotree newsticker nov omnisharp 
+  ;; mu4e-conversation neotree newsticker nov omnisharp
   ;; org-roam osx-dictionary outline ovpn-mode p4 (package-menu
   ;; package) popup proced (process-menu simple) prodigy profiler
   ;; p-search quickrun racer racket-describe reader realgud reftex
@@ -2495,7 +2496,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   :general
   (:states 'normal
            :prefix "SPC"
-           "g"   '(:which-key "git...")
+           ;; "g"   '(:which-key "git...")
            "g m"  'magit-status
            "g d"  'magit-ediff-compare
            )
@@ -2633,7 +2634,7 @@ Probably requires external =rg= command.
            "g r"      'gptel-rewrite)
 
   :config
-
+  (setopt gptel-model        'gpt-5.2)
   (setopt gptel-backend      (gptel-make-openai "OpenAI" :key 'gptel-api-key-from-auth-source))
   )
 #+end_src
@@ -2644,14 +2645,19 @@ Probably requires external =rg= command.
 #+begin_src emacs-lisp
 (use-package gptel-commit
   :straight t
+  :demand t
   :after (gptel magit)
-  :commands gptel-commit gptel-commit-rationale
+
   :custom
   (gptel-commit-stream t)
+
   :general
   (:states 'normal
-           "SPC g c"  'gptel-commit
-           "SPC g C"  'gptel-commit-rationale)
+           :keymaps 'git-commit-mode-map
+           :prefix "SPC"
+           "g c"  'gptel-commit
+           "g C"  'gptel-commit-rationale
+           )
   )
 #+end_src
 
