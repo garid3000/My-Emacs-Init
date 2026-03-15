@@ -962,7 +962,12 @@ and later sets cursor at that point when you open that file.
 
   :general
   (:keymaps  'org-mode-map
-             "M-S-<return>" 'org-insert-todo-heading-respect-content)
+             "M-S-<return>" 'org-insert-todo-heading-respect-content
+             )
+  ;; (:states 'normal
+  ;;          :keymaps  'org-mode-map
+  ;;          "] ]"     'org-next-visible-heading
+  ;;          "[ ["     'org-previous-visible-heading)
 
   (:states 'normal
            :keymaps  'org-mode-map
