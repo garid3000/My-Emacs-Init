@@ -270,7 +270,7 @@ mark or parenthesis.
 #+begin_src emacs-lisp
 (use-package delight
   :straight t
-  ;; :demand t
+  :demand t
   )
 #+end_src
 
