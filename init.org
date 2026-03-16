@@ -332,8 +332,8 @@ mark or parenthesis.
   (modus-themes-variable-pitch-ui         t                                            )
 
   ;; (modus-themes-headings         '((agenda-structure . (variable-pitch light   1.25))
-  ;;                                  (agenda-date      . (variable-pitch regular 1.25))
-  ;;                                  (t                . (regular                1.15))))
+                                   ;; (agenda-date      . (variable-pitch regular 1.25))
+                                   ;; (t                . (regular                1.15))))
 
   (modus-themes-common-palette-overrides `(;; Make the mode-line borderless
                                            (bg-mode-line-active        bg-inactive )
@@ -344,8 +344,16 @@ mark or parenthesis.
                                            (border-mode-line-inactive  bg-main     )
                                            (fringe                     bg-main     )))
 
-  ;; :config
-  ;; (modus-themes-load-theme (car modus-themes-to-toggle))
+  :config
+  (modus-themes-load-theme (car modus-themes-to-toggle))
+  (modus-themes-with-colors
+    (custom-set-faces
+     `(font-lock-comment-face           ((t (:foreground ,border :slant italic))))
+     `(font-lock-comment-delimiter-face ((t (:foreground ,border :slant italic))))
+     ;;`(font-lock-comment-face ((t (:foreground ,fg-dim :slant italic))))))
+     ;;'(font-lock-comment-delimiter-face ((t (:foreground modus-themes-fg-cyan-faint)))))
+     ))
+
   :hook
   (after-init-hook . (lambda () (modus-themes-load-theme (car modus-themes-to-toggle))))
   ;; (emacs-startup-hook . (lambda () (modus-themes-load-theme (car modus-themes-to-toggle))))
@@ -1018,11 +1026,15 @@ and later sets cursor at that point when you open that file.
            "o T s"   'org-table-sum
            "o T x"   'org-table-export
 
-           "o a"     '(:which-key "agenda/schedule...")
-           "o a C"   'org-clock-out
-           "o a c"   'org-clock-in
-           "o a d"   'org-deadline
-           "o a s"   'org-schedule
+           ;; "o a"     '(:which-key "agenda/schedule...")
+           "o a" 'org-attach
+           ;; "o a C"   'org-clock-out
+           ;; "o a c"   'org-clock-in
+           ;; "o a d"   'org-deadline
+           ;; "o a s"   'org-schedule
+
+           ;; "o a"     '(:which-key "agenda/schedule...")
+           ;; "o a o"   'org-attach-open
 
            "o b"     '(:which-key "babel...")
            "o b ,"   'org-babel-execute-subtree
@@ -1079,7 +1091,7 @@ and later sets cursor at that point when you open that file.
 
   (:states 'normal
            :prefix "SPC"
-           "o a g"     'org-agenda
+           ;; "o a g"     'org-agenda
            "o b d"     'org-babel-detangle
            "o b j"     'org-babel-tangle-jump-to-org
            "o b g d"   'org-babel-tangle-jump-to-org
@@ -1363,8 +1375,8 @@ https://stackoverflow.com/questions/78982629/in-emacs-how-to-prevent-org-babel-d
 #+begin_src emacs-lisp
 (use-package denote
   :straight t
-  :after   org
-  ;; :demand  t
+  :after    org
+  :demand   t   ;; because I usually it just after starting emacs 
   :custom
   (denote-excluded-directories-regexp  ".*export_.*\\|.*website.*")
   (denote-directory (mapcar             ;; dynamically creating list based on directory name
@@ -2747,7 +2759,9 @@ Probably requires external =rg= command.
 
 ** Writing package
 #+begin_src emacs-lisp
-(use-package darkroom :straight t)
+(use-package darkroom
+  :straight t)
+
 (use-package focus
   :straight t
   :general
