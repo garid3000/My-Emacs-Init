@@ -47,6 +47,11 @@ run:
 #+begin_src emacs-lisp
 (setq straight-built-in-pseudo-packages '(project xref))
 #+end_src
+** use-package
+#+begin_src emacs-lisp
+(setopt use-package-hook-name-suffix nil)
+#+end_src
+
 * Keybinding related
 ** =general= configuration
 #+begin_src emacs-lisp
@@ -75,7 +80,7 @@ run:
   (which-key-sort-order            'which-key-local-then-key-order)
   (which-key-unicode-correction                                 3)
   :hook
-  (after-init . which-key-mode)
+  (after-init-hook . which-key-mode)
   )
 #+end_src
 
@@ -84,7 +89,7 @@ run:
 (use-package repeat
   :straight nil
   :hook 
-  (emacs-startup . repeat-mode) ;; (after-init . repeat-mode)
+  (emacs-startup-hook . repeat-mode) ;; (after-init-hook . repeat-mode)
   )
 #+end_src
 
@@ -116,7 +121,7 @@ run:
            "a" 'evil-avy-goto-char-2)
 
   :hook
-  (after-init . evil-mode)
+  (after-init-hook . evil-mode)
   )
 #+end_src
 ** =evil-collection=: vi-movements everywhere
@@ -178,11 +183,11 @@ run:
   ;; ztree-diff ztree-dir)
 
   ;; :hook
-  ;; (after-init . evil-collection-init) ;; 
+  ;; (after-init-hook . evil-collection-init) ;; 
   :config
   (evil-collection-init)
   ;; I needed to load this as :config, because hooking above
-  ;; (evil-collection-init) with after-init causes overrides 
+  ;; (evil-collection-init) with after-init-hook causes overrides 
   ;; keybinding setup in the below configurations
   )
 #+end_src
@@ -196,8 +201,8 @@ mark or parenthesis.
   :straight t
   :after evil
   :hook
-  (after-init . global-evil-surround-mode)
-  (LaTeX-mode . (lambda ()
+  (after-init-hook . global-evil-surround-mode)
+  (LaTeX-mode-hook . (lambda ()
                   (push '(40  . ("\\left("          . "\\right)"  )) evil-surround-pairs-alist)    ;; ?(
                   (push '(123 . ("\\left\\{"        . "\\right\\}")) evil-surround-pairs-alist)    ;; ?{
                   (push '(91  . ("\\left["          . "\\right]"  )) evil-surround-pairs-alist)    ;; ?[
@@ -208,7 +213,7 @@ mark or parenthesis.
                   (push '(95  . ("\\underbrace{"    . "}_{ }"     )) evil-surround-pairs-alist)    ;; ?_
                   (push '(45  . ("\\overbrace{"     . "}_{ }"     )) evil-surround-pairs-alist)))  ;; -
 
-  (org-mode   . (lambda ()
+  (org-mode-hook   . (lambda ()
                   (push '(?s  . ("#+begin_src LANG" . "#+end_src"     )) evil-surround-pairs-alist)
                   (push '(?S  . ("#+begin_src LANG" . "#+end_src"     )) evil-surround-pairs-alist)
                   (push '(?x  . ("#+begin_example"  . "#+end_example" )) evil-surround-pairs-alist)
@@ -218,7 +223,7 @@ mark or parenthesis.
                   (push '(?d  . (":drawername:"     . ":end:"         )) evil-surround-pairs-alist)
                   (push '(?D  . (":drawername:"     . ":end:"         )) evil-surround-pairs-alist)))
 
-  (python-base-mode . (lambda ()
+  (python-base-mode-hook . (lambda ()
                         (push '(?>  . ("#"          . "#"             )) evil-surround-pairs-alist)))
   )
 #+end_src
@@ -304,7 +309,7 @@ mark or parenthesis.
 (use-package faces-remap
   :delight ""
   :straight nil
-  :hook (org-mode . variable-pitch-mode))
+  :hook (org-mode-hook . variable-pitch-mode))
 #+end_src
 
 ** =modus= theme                                                                     :by_prot:
@@ -342,8 +347,8 @@ mark or parenthesis.
   ;; :config
   ;; (modus-themes-load-theme (car modus-themes-to-toggle))
   :hook
-  (after-init . (lambda () (modus-themes-load-theme (car modus-themes-to-toggle))))
-  ;; (emacs-startup . (lambda () (modus-themes-load-theme (car modus-themes-to-toggle))))
+  (after-init-hook . (lambda () (modus-themes-load-theme (car modus-themes-to-toggle))))
+  ;; (emacs-startup-hook . (lambda () (modus-themes-load-theme (car modus-themes-to-toggle))))
   )
 #+end_src
 
@@ -351,6 +356,7 @@ mark or parenthesis.
 #+begin_src emacs-lisp
 (use-package display-line-numbers
   :straight nil
+  :demand t
   :custom
   (display-line-numbers-type 'relative)
   (ring-bell-function        'ignore)
@@ -380,7 +386,7 @@ mark or parenthesis.
   (pulsar-highlight-face  'pulsar-blue )
   (pulsar-iterations                 2 )
   ;; :config (pulsar-global-mode)
-  :hook (after-init . pulsar-global-mode)
+  :hook (after-init-hook . pulsar-global-mode)
   )
 #+end_src
 
@@ -388,11 +394,11 @@ mark or parenthesis.
 #+begin_src emacs-lisp
 (use-package hl-line
   :straight nil
-  :hook (after-init . global-hl-line-mode))
+  :hook (after-init-hook . global-hl-line-mode))
 
 (use-package hl-todo
   :straight t
-  :hook (after-init . global-hl-todo-mode))
+  :hook (after-init-hook . global-hl-todo-mode))
 #+end_src
 
 ** =hilock= highlight
@@ -411,6 +417,7 @@ mark or parenthesis.
 #+begin_src emacs-lisp
 (use-package indent-bars
   :straight t
+  :demand t
 
   :general
   (:states 'normal
@@ -467,9 +474,9 @@ mark or parenthesis.
            )
 
   :hook     (;;(dired-mode . denote-dired-mode       ) <-- perhaps should be at denote conf
-             (dired-mode . dired-omit-mode         )
-             (dired-mode . auto-revert-mode        )
-             (dired-mode . dired-hide-details-mode ))
+             (dired-mode-hook . dired-omit-mode         )
+             (dired-mode-hook . auto-revert-mode        )
+             (dired-mode-hook . dired-hide-details-mode ))
 
 
   :general
@@ -595,9 +602,9 @@ mark or parenthesis.
   :bind (:map minibuffer-local-map
               ( "M-f" . forward-word ))
   :hook
-  (emacs-startup . (lambda ()
-                     (call-process-shell-command "notify-send \"Emacs\" \"Emacs startup initialized\"")
-                     ))
+  (emacs-startup-hook . (lambda ()
+                          (call-process-shell-command
+                           "notify-send \"Emacs\" \"Emacs startup initialized\"")))
   )
 
 (defun garid/new-org-scratch ()
@@ -682,7 +689,7 @@ mark or parenthesis.
   (recentf-max-menu-items   40)
   (recentf-max-saved-items  40)
   :hook
-  (after-init  .  recentf-mode))
+  (after-init-hook  .  recentf-mode))
 #+end_src
 ** =replace=
 #+begin_src emacs-lisp
@@ -700,7 +707,7 @@ and later sets cursor at that point when you open that file.
 #+begin_src emacs-lisp
 (use-package saveplace
   :straight nil
-  :hook (after-init . save-place-mode))
+  :hook (after-init-hook . save-place-mode))
 #+end_src
 ** =simple=
 #+begin_src emacs-lisp
@@ -717,7 +724,7 @@ and later sets cursor at that point when you open that file.
            "L R"  'read-only-mode)
   :bind
   ("M-Q" . kill-current-buffer)
-  :hook (after-init . column-number-mode)
+  :hook (after-init-hook . column-number-mode)
   )
 #+end_src
 
@@ -815,7 +822,7 @@ and later sets cursor at that point when you open that file.
   (vertico-resize    nil)
 
   ;; :config (vertico-mode)
-  :hook (after-init . vertico-mode)
+  :hook (after-init-hook . vertico-mode)
   )
 #+end_src
 ** =consult=: consulting
@@ -924,7 +931,7 @@ and later sets cursor at that point when you open that file.
   :custom
   (marginalia-annotators '(marginalia-annotators-heavy
                            marginalia-annotators-light nil))
-  :hook (after-init . marginalia-mode) ;; :init (marginalia-mode)
+  :hook (after-init-hook . marginalia-mode) ;; :init (marginalia-mode)
   )
 #+end_src
 ** =orderless=: orderless completion
@@ -942,7 +949,7 @@ and later sets cursor at that point when you open that file.
 #+begin_src emacs-lisp
 (use-package savehist
   :straight t
-  :hook (after-init . savehist-mode))
+  :hook (after-init-hook . savehist-mode))
 #+end_src
 
 * Org related
@@ -1261,7 +1268,7 @@ and later sets cursor at that point when you open that file.
 
 
   :hook
-  (org-after-refile-insert . org-mode-restart)
+  (org-after-refile-insert-hook . org-mode-restart)
   ;; (add-hook 'org-after-refile-insert-hook 'org-mode-restart)
   )
 #+end_src
@@ -1294,7 +1301,7 @@ and later sets cursor at that point when you open that file.
   (org-appear-autolinks    t)
   (org-appear-delay     0.25)
   :hook
-  (org-mode . org-appear-mode))
+  (org-mode-hook . org-appear-mode))
 #+end_src
 
 *** =org-num=
@@ -1322,7 +1329,7 @@ and later sets cursor at that point when you open that file.
   :after    org
   :delight  ""
   :custom (org-auto-tangle-default    nil)
-  :hook   (org-mode . org-auto-tangle-mode))
+  :hook   (org-mode-hook . org-auto-tangle-mode))
 #+end_src
 
 *** org-babel languages related
@@ -1395,7 +1402,7 @@ https://stackoverflow.com/questions/78982629/in-emacs-how-to-prevent-org-babel-d
             "n L B"  'denote-backlinks
             "n L a"  'denote-add-links)
 
-  :hook (dired-mode . denote-dired-mode)
+  :hook (dired-mode-hook . denote-dired-mode)
   )
 
 ;; :config
@@ -1498,8 +1505,8 @@ https://stackoverflow.com/questions/78982629/in-emacs-how-to-prevent-org-babel-d
                                  ("pdf"  . garid/ask-pdf-openner    )
                                  (t      . find-file                )))
   :hook
-  (org-mode   . citar-capf-setup)
-  (LaTeX-mode . citar-capf-setup)
+  (org-mode-hook   . citar-capf-setup)
+  (LaTeX-mode-hook . citar-capf-setup)
   )
 
 
@@ -1531,7 +1538,7 @@ license.
   (citar-denote-use-bib-keywords      nil          )
 
   :hook
-  (after-hook . citar-denote-mode))
+  (after-init-hook . citar-denote-mode))
 #+end_src
 
 ** Org Time managements
@@ -1596,7 +1603,7 @@ license.
      ))
 
   :hook
-  (org-capture-mode . evil-insert-state)
+  (org-capture-mode-hook . evil-insert-state)
   )
 #+end_src
 *** COMMENT org super agenda
@@ -1686,8 +1693,8 @@ license.
   :after  org-agenda
   :demand t
   :hook
-  ;; (after-init . org-edna-mode)
-  (emacs-startup . org-edna-mode)
+  ;; (after-init-hook . org-edna-mode)
+  (emacs-startup-hook . org-edna-mode)
   )
 #+end_src
 *** =org-gtd=
@@ -1738,8 +1745,8 @@ license.
            :prefix "SPC"
            "o c  "     'org-gtd-capture)
   :hook
-  ;; (after-init    . org-gtd-mode)
-  (emacs-startup . org-gtd-mode)
+  ;; (after-init-hook    . org-gtd-mode)
+  (emacs-startup-hook . org-gtd-mode)
   )
 #+end_src
 ** Org Exporting related
@@ -2185,8 +2192,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
            "SPC P r"  'python-shell-restart)
 
   :hook
-  (python-base-mode . auto-revert-mode)
-  ;;(inferior-python-mode  . (lambda () (interactive)(setq comint-ptyp nil)))
+  (python-base-mode-hook . auto-revert-mode)
   )
 
 
@@ -2236,7 +2242,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   (code-cells-boundary-regexp
    "^\\s<+\\(?:\\s-*%\\(?1:%+\\)\\| In\\[[[:space:][:digit:]]*]:\\| \\[\\[\\)")
 
-  :hook (python-base-mode . code-cells-mode)
+  :hook (python-base-mode-hook . code-cells-mode)
   :bind (:map code-cells-mode-map
               ("C-j"        . code-cells-forward-cell   )
               ("C-k"        . code-cells-backward-cell  )
@@ -2317,9 +2323,9 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   ;; (add-hook 'text-mode-hook 'tempel-setup-capf)
 
   :hook
-  (conf-mode . (lambda () (setq-local completion-at-point-functions (cons #'tempel-expand completion-at-point-functions))))
-  (prog-mode . (lambda () (setq-local completion-at-point-functions (cons #'tempel-expand completion-at-point-functions))))
-  (text-mode . (lambda () (setq-local completion-at-point-functions (cons #'tempel-expand completion-at-point-functions))))
+  (conf-mode-hook . (lambda () (setq-local completion-at-point-functions (cons #'tempel-expand completion-at-point-functions))))
+  (prog-mode-hook . (lambda () (setq-local completion-at-point-functions (cons #'tempel-expand completion-at-point-functions))))
+  (text-mode-hook . (lambda () (setq-local completion-at-point-functions (cons #'tempel-expand completion-at-point-functions))))
   )
 
 (defun garid/choose-from-list-and-insert-it (asdf)
@@ -2344,7 +2350,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
      (if (char-equal c ?\<) t (electric-pair-default-inhibit c))))
 
   :hook
-  (after-init . electric-pair-mode)
+  (after-init-hook . electric-pair-mode)
   )
 #+end_src
 
@@ -2360,7 +2366,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 
 ** TODO =abbrev=
 
-- [ ] abbrev-mode not working with after-init hook?
+- [ ] abbrev-mode not working with after-init-hook hook?
 
 #+begin_src emacs-lisp
 (use-package abbrev
@@ -2374,8 +2380,8 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   (if (file-exists-p abbrev-file-name) (quietly-read-abbrev-file))
 
   :hook
-  (after-init . abbrev-mode) ;; (setq-default abbrev-mode t)
-  (org-mode   . abbrev-mode) ;; (setq-default abbrev-mode t)       
+  (after-init-hook . abbrev-mode) ;; (setq-default abbrev-mode t)
+  (org-mode-hook   . abbrev-mode) ;; (setq-default abbrev-mode t)       
   )
 #+end_src
 
@@ -2445,10 +2451,10 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   ;; (corfu-popupinfo-mode)
 
   :hook
-  (after-init  . global-corfu-mode   )
-  (after-init  . corfu-history-mode  )
-  (after-init  . corfu-popupinfo-mode)
-  (eshell-mode . (lambda ()
+  (after-init-hook  . global-corfu-mode   )
+  (after-init-hook  . corfu-history-mode  )
+  (after-init-hook  . corfu-popupinfo-mode)
+  (eshell-mode-hook . (lambda ()
                         ;; (message "test")
                         (setq-local corfu-quit-at-boundary t
         			                         corfu-quit-no-match t
@@ -2461,7 +2467,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 (use-package eglot
   :straight nil ;; :after project
   :hook
-  (python-base-mode . eglot-ensure)
+  (python-base-mode-hook . eglot-ensure)
 
   :general
   (:states 'normal
@@ -2498,7 +2504,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
              :repo "jdtsmith/eglot-booster")
   :after eglot
   :hook 
-  (after-init . eglot-booster-mode)
+  (after-init-hook . eglot-booster-mode)
   )
 #+end_src
 
@@ -2568,23 +2574,9 @@ Similar to vim-signify.
             "g n"  'git-gutter:next-hunk
             "g p"  'git-gutter:previous-hunk)
   :hook
-  (magit-post-commit . git-gutter:update-all-windows )
-  (emacs-startup     . global-git-gutter-mode        )
-  ;; (after-init     . global-git-gutter-mode        )
-  )
-#+end_src
-
-** =diff-mode=:
-#+begin_src emacs-lisp
-(use-package diff-mode
-  :delight  " gtg"
-  :straight nil
-  :demand t
-  :bind (
-         :map diff-mode-map
-         ("M-K" . nil)   ;; was conflict with my window movement
-         ("M-J" . nil)   ;; was conflict with my window movement
-         )
+  (magit-post-commit-hook . git-gutter:update-all-windows )
+  (emacs-startup-hook     . global-git-gutter-mode        )
+  ;; (after-init-hook     . global-git-gutter-mode        )
   )
 #+end_src
 
@@ -2600,7 +2592,7 @@ Similar to vim-signify.
 
 
   ;; :config (direnv-mode)
-  :hook (after-init . direnv-mode))
+  :hook (after-init-hook . direnv-mode))
 #+end_src
 
 ** =eshell=
@@ -2615,8 +2607,8 @@ Similar to vim-signify.
   ;;          :keymaps 'eshell-mode-map
   ;;          "C-a"    'eshell-bol)
   :hook
-  (eshell-mode   . compilation-shell-minor-mode)
-  (emacs-startup . eshell-atuin-mode)
+  (eshell-mode-hook   . compilation-shell-minor-mode)
+  (emacs-startup-hook . eshell-atuin-mode)
   )
 #+end_src
 
@@ -2655,8 +2647,7 @@ Similar to vim-signify.
 (use-package outline-indent
   :straight t
   :delight ""
-  ;; :hook (python-base-mode  . outline-indent-minor-mode))
-  :hook (prog-mode  . outline-indent-minor-mode))
+  :hook (prog-mode-hook  . outline-indent-minor-mode))
 #+end_src
 ** =rg=: ripgrep in Emacs
 Probably requires external =rg= command.
@@ -2677,8 +2668,6 @@ Probably requires external =rg= command.
   :demand t
   :custom
   (gptel-default-mode 'org-mode)
-  ;; (gptel-model        'gpt-5.2)
-  ;; (gptel-backend      (gptel-make-openai "OpenAI" :key 'gptel-api-key-from-auth-source))
 
   :general
   (:states 'normal
@@ -2713,9 +2702,6 @@ Probably requires external =rg= command.
            :prefix "SPC"
            "g c"  'gptel-commit
            "g C"  'gptel-commit-rationale)
-  ;; :config 
-  ;; (define-key evil-normal-state-map (kbd "SPC g c") 'gptel-commit          )  ;; needed to use this
-  ;; (define-key evil-normal-state-map (kbd "SPC g C") 'gptel-commit-rationale)  ;; because :bind/:general won't 
   )
 #+end_src
 
@@ -2745,8 +2731,6 @@ Probably requires external =rg= command.
 ** spell-checking & synonym
 #+begin_src emacs-lisp
 (use-package jinx :straight t)
-;; :hook (org-mode . jinx-mode)) sometimes too intrusive 
-
 ;; also needed to change nix config:
 ;; ((emacsPackagesFor emacs-pgtk).emacsWithPackages (
 ;;     epkgs: [ epkgs.jinx ]
@@ -2759,12 +2743,11 @@ Probably requires external =rg= command.
           "SPC z s t"    'mw-thesaurus-lookup-at-point
           "SPC z s T"    'mw-thesaurus-lookup)
   )
-;;(use-package org-wc        :straight t :after org)
 #+end_src
 
 ** Writing package
 #+begin_src emacs-lisp
-(use-package darkroom             :straight t)
+(use-package darkroom :straight t)
 (use-package focus
   :straight t
   :general
@@ -2778,7 +2761,7 @@ Probably requires external =rg= command.
   :straight t
   :bind (:map pdf-view-mode-map ("t" . pdf-outline))
   :mode  ("\\.pdf\\'" . pdf-view-mode)
-  :hook (after-init . pdf-tools-install)
+  :hook (after-init-hook . pdf-tools-install)
   )
 #+end_src
 
@@ -2792,11 +2775,11 @@ Probably requires external =rg= command.
   (sentence-end-double-space nil)
 
   :hook
-  (after-init . global-captain-mode) ;; :config (global-captain-mode t)
-  (latex-mode . (lambda () (captain-mode -1)))
-  (text-mode  . (lambda () (setq captain-predicate (lambda () t))))
-  (org-mode   . (lambda () (setq captain-predicate (lambda () (not (org-in-src-block-p))))))
-  (prog-mode  . (lambda () (setq captain-predicate (lambda () (nth 8 (syntax-ppss (point)))))))
+  (after-init-hook . global-captain-mode) ;; :config (global-captain-mode t)
+  (latex-mode-hook . (lambda () (captain-mode -1)))
+  (text-mode-hook  . (lambda () (setq captain-predicate (lambda () t))))
+  (org-mode-hook   . (lambda () (setq captain-predicate (lambda () (not (org-in-src-block-p))))))
+  (prog-mode-hook  . (lambda () (setq captain-predicate (lambda () (nth 8 (syntax-ppss (point)))))))
   ;; this (org-in-src-block-p) checks whether cursor is in the src block
   )
 #+end_src
@@ -3012,9 +2995,8 @@ Probably requires external =rg= command.
                               compilation-mode))
 
   :hook
-  (after-init . popper-mode)
-  (after-init . popper-echo-mode)
-
+  (after-init-hook . popper-mode     )
+  (after-init-hook . popper-echo-mode)
   )
 #+end_src
 
@@ -3114,7 +3096,7 @@ Probably requires external =rg= command.
   :straight t
   :delight " gb"
   ;; :config (gcmh-mode 1)
-  :hook (after-init . gcmh-mode)
+  :hook (after-init-hook . gcmh-mode)
   )
 #+end_src
 ** google related
@@ -3158,7 +3140,7 @@ Probably requires external =rg= command.
 (use-package server
   :straight nil
   :hook
-  (emacs-startup . (lambda ()
+  (emacs-startup-hook . (lambda ()
                      (server-start)
                      (call-process-shell-command
                       "notify-send \"Emacs\" \"Emacs Daemon initialized, 'emacsclient -c' should be available.\" &")
