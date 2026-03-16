@@ -375,10 +375,10 @@ mark or parenthesis.
 (use-package pulsar
   :straight t
   :custom
-  (pulsar-delay           0.06)
-  (pulsar-iterations      2)
-  (pulsar-face            'pulsar-red)
-  (pulsar-highlight-face  'pulsar-blue)
+  (pulsar-delay                   0.06 )
+  (pulsar-face             'pulsar-red )
+  (pulsar-highlight-face  'pulsar-blue )
+  (pulsar-iterations                 2 )
   ;; :config (pulsar-global-mode)
   :hook (after-init . pulsar-global-mode)
   )
