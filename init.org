@@ -308,9 +308,7 @@ mark or parenthesis.
 #+end_src
 
 ** =modus= theme                                                                     :by_prot:
-[[https://protesilaos.com/emacs/modus-themes][Modus themes]] is a nice built-in theme for emacs that [[https://protesilaos.com/][Protesilaos
-Stavrou]]. Following is customization of the theme. Actual in the
-loading the theme is in the section [[id:20251007T133457.470613][=emacs=]]
+[[https://protesilaos.com/emacs/modus-themes][Modus themes]] is a nice built-in theme for emacs that [[https://protesilaos.com/][Protesilaos Stavrou]].
 
 #+begin_src emacs-lisp
 (use-package modus-themes
