@@ -408,6 +408,7 @@ graphviz-dot-mode
 (fontcolor "fontcolor=" :post (garid/choose-from-list-and-insert-it '("gray" "red" "blue" "yellow" "green" "aliceblue" "black" "blueviolet" "brown" "cadetblue" "coral" "darkblue" "darkcyan" "1" "2" "3" "4" "5" "6" "7" "8" "9")))
 (dir       "dir=both")
 
+
 org-mode :when (re-search-backward "^\\S-*$" (line-beginning-position) 'noerror)
 
 
@@ -443,22 +444,24 @@ org-mode :when (re-search-backward "^\\S-*$" (line-beginning-position) 'noerror)
 ;; org export related
 (oxt         "#+setupfile: ~/.config/emacs/org-templates/lua.org")
 (oxh         "#+setupfile: ~/.config/emacs/org-templates/level-0-html-export-template.org")
-(oxr         "#+reveal_root:          https://cdn.jsdelivr.net/npm/reveal.js"                                n
-             "#+reveal_version:       4"                                                                     n
-             "#+options:              reveal_center:t reveal_progress:t reveal_history:nil reveal_control:t" n
-             "#+options:              reveal_rolling_links:t reveal_keyboard:t reveal_overview:t num:nil"    n
-             ;; "#+options:              reveal_width:1920 reveal_height:1080"                                  n
-             "#+options:              toc:1"                                                                 n
-             "#+options:              reveal_klipsify_src:t"                                                 n
-             "#+reveal_min_scale:     1.0"                                                                   n
-             "#+reveal_max_scale:     1.0"                                                                   n
-             "#+reveal_plugins:       (notes search zoom markdown)"                                          n
-             "#+reveal_margin:        0.1"                                                                   n
-             "#+reveal_extra_css:     ./local.css"                                                           n
-             "#+reveal_trans:         fade"                                                                  n
-             "#+reveal_hlevel:        2"                                                                     n
-             "#+reveal_theme:         "
-             :post (garid/choose-from-list-and-insert-it '("black" "white" "league" "beige" "night" "serif" "solarized" "moon" "dracula" "sky" "blood")))
+(oxr         ":src-header-at-top:"                                                                       n
+             "#+reveal_root:      https://cdn.jsdelivr.net/npm/reveal.js"                                n
+             "#+reveal_version:   4"                                                                     n
+             "#+options:          reveal_center:t reveal_progress:t reveal_history:nil reveal_control:t" n
+             "#+options:          reveal_rolling_links:t reveal_keyboard:t reveal_overview:t num:nil"    n
+             ;; "#+options:       reveal_width:1920 reveal_height:1080"                                  n
+             "#+options:          toc:1"                                                                 n
+             "#+options:          reveal_klipsify_src:nil"                                               n
+             "#+reveal_min_scale: 1.0"                                                                   n
+             "#+reveal_max_scale: 1.0"                                                                   n
+             "#+reveal_plugins:   (notes search zoom markdown)"                                          n
+             "#+reveal_margin:    0.1"                                                                   n
+             "#+reveal_extra_css: ./local.css"                                                           n
+             "#+reveal_trans:     fade"                                                                  n
+             "#+reveal_hlevel:    2"                                                                     n
+             "#+reveal_theme:     REVEAL_THEME_LIST"                                                   q n
+              ":end:"                                                                                    n)
+             ;;:post (garid/choose-from-list-and-insert-it '("black" "white" "league" "beige" "night" "serif" "solarized" "moon" "dracula" "sky" "blood")))
 (oxsplit     "#+reveal: split")
 (ox2r        "#+reveal_html: <div style=\"float:left; width:50%\">" n
              "#+reveal_html: </div>" n n n
@@ -487,48 +490,53 @@ org-mode :when (re-search-backward "^\\S-*$" (line-beginning-position) 'noerror)
               "#+property: header-args:python+ :results output"                                                                r n
               "#+property: header-args:python+ :exports both"                                                                  r n
               "#+property: header-args:python+ :session (concat \"python-\" (my/org-attach-dir-calculator \"\") \"-session\")" r n
-              ":end:"                                                                                                            r n)
+              ":end:"                                                                                                          r n)
 
 ;; (pySess1    "#+begin_src python :session pySess1 :results output :exports both :eval no-export :async yes :comments link :dir (my/org-attach-dir \"\")" n "# %%" n "#+end_src")
-(src         "#+begin_src LANG"         q n r n "#+end_src")
-(py          "#+begin_src python :async yes" n q n "#+end_src")
-(nix         "#+begin_src " n q n "#+end_src")
+(conf        "#+begin_src conf" q n r n "#+end_src")
 (dot         "#+begin_src dot :eval no-export :exports both :file"  q n n "#+end_src")
-(shell       "#+begin_src sh :shebang #!/usr/bin/env bash :eval no-export :results output :exports both" n r n "#+end_src")
-(conf        "#+begin_src conf"     q n r n "#+end_src")
-(gnuplot     "#+begin_src gnuplot :var data=" (p "table") " :file " (p "plot.png") n r n "#+end_src") ;;  :post (org-edit-src-code))
 (elisp       "#+begin_src emacs-lisp" n r n "#+end_src") ;; :post (org-edit-src-code)  
-(inlsrc      "src_" p "[:exports code]{" q "}")
-(vardown      "#+header: :var outputVar=" :post (insert (concat org-download-image-dir "/filename.svg")))
+(gnuplot     "#+begin_src gnuplot :var data=" (p "table") " :file " (p "plot.png") n r n "#+end_src") ;;  :post (org-edit-src-code))
+(nix         "#+begin_src nix" n q n "#+end_src")
+(py          "#+begin_src python :async yes" n q n "#+end_src")
+(shell       "#+begin_src sh :shebang #!/usr/bin/env bash :eval no-export :results output :exports both" n r n "#+end_src")
+(src         "#+begin_src LANG" q n r n "#+end_src")
+(vardown     "#+header: :var outputVar=" :post (insert (concat org-download-image-dir "/filename.svg")))
 
 (latex_equation            "\\begin{equation}" r> n> "\\end{equation}")
 (latex_equationaligned     "\\begin{equation}" n> "\\begin{aligned}" r> n> "\\end{aligned}" n> "\\end{equation}")
-(latex_equationlabel       "\\label{"  r  "}" )
-(latex_equationref         "\\ref{"    r  "}" )
+(latex_equationlabel       "\\label{" r "}")
+(latex_equationref         "\\ref{" r "}")
+
+org-mode :when (re-search-backward "^#\\+reveal\\b" (line-beginning-position) 'noerror)
+(REVEAL_THEME_LIST :post (garid/choose-from-list-and-insert-it '("black" "white" "league" "beige" "night" "serif" "solarized" "moon" "dracula" "sky" "blood")))
+
 
 org-mode :when (re-search-backward "^#\\+begin_src\\b" (line-beginning-position) 'noerror)
-(async        "session "  :post (garid/choose-from-list-and-insert-it '("yes" "no")))
-(cache        "cache "    :post (garid/choose-from-list-and-insert-it '("yes" "no")))
-(comments     "comments " :post (garid/choose-from-list-and-insert-it '("noweb" "link" "no" "org" "both")))
-(dir          "dir "      :post (garid/choose-from-list-and-insert-it '("'attach" "(my/org-attach-dir \"\") ")))
-(eval         "eval "     :post (garid/choose-from-list-and-insert-it '("never-export" "no" "yes")))
-(exports      "exports "  :post (garid/choose-from-list-and-insert-it '("code" "results" "both" "none")))
-(file         "file (my/org-attach-dir \"" p "\") ")
-(LANG         ""          :post (garid/choose-from-list-and-insert-it '("sh" "python" "conf" "nix")) )
-(mkdirp       "mkdirp "   :post (garid/choose-from-list-and-insert-it '("yes" "no")))
-(noweb        "noweb "    :post (garid/choose-from-list-and-insert-it '("yes" "no" "tangle" "strip-tangle" "no-export" "strip-export" "eval")))
-(results      "results "  :post (garid/choose-from-list-and-insert-it '("verbatim" "value" "output" "table" "file" "list" "scalar" "code" "drawer" "html" "latex" "link" "org" "pp" "silent" )))
-(session      "session "  :post (garid/choose-from-list-and-insert-it '("SessionName" "" "/ssh:localhost:py" "/jpy:localhost#8888")))
-(shebang      "shebang #!/usr/bin/env bash") ;; (shebang      "shebang #!/bin/bash")
-(tangle       "tangle ~/")
-(tangle_iff   "tangle (if (not file-exists-p \"foo\") \"foo\" \"no\")")
-(wrap         "wrap "     :post (garid/choose-from-list-and-insert-it '("example" "src python" "src sh" "src bash")))
+(LANG       ""          :post (garid/choose-from-list-and-insert-it '("sh" "python" "conf" "nix")) )
+(async      "session "  :post (garid/choose-from-list-and-insert-it '("yes" "no")))
+(cache      "cache "    :post (garid/choose-from-list-and-insert-it '("yes" "no")))
+(comments   "comments " :post (garid/choose-from-list-and-insert-it '("noweb" "link" "no" "org" "both")))
+(dir        "dir "      :post (garid/choose-from-list-and-insert-it '("'attach" "(my/org-attach-dir \"\") ")))
+(eval       "eval "     :post (garid/choose-from-list-and-insert-it '("never-export" "no" "yes")))
+(exports    "exports "  :post (garid/choose-from-list-and-insert-it '("code" "results" "both" "none")))
+(file       "file (my/org-attach-dir \"" p "\") ")
+(mkdirp     "mkdirp "   :post (garid/choose-from-list-and-insert-it '("yes" "no")))
+(noweb      "noweb "    :post (garid/choose-from-list-and-insert-it '("yes" "no" "tangle" "strip-tangle" "no-export" "strip-export" "eval")))
+(results    "results "  :post (garid/choose-from-list-and-insert-it '("verbatim" "value" "output" "table" "file" "list" "scalar" "code" "drawer" "html" "latex" "link" "org" "pp" "silent" )))
+(session    "session "  :post (garid/choose-from-list-and-insert-it '("SessionName" "" "/ssh:localhost:py" "/jpy:localhost#8888")))
+(shebang    "shebang #!/usr/bin/env bash") ;; (shebang      "shebang #!/bin/bash")
+(tangle     "tangle ~/")
+(tangle_iff "tangle (if (not file-exists-p \"foo\") \"foo\" \"no\")")
+(wrap       "wrap "     :post (garid/choose-from-list-and-insert-it '("example" "src python" "src sh" "src bash")))
 
 org-mode
-(dailywork           "Daily work today")
-(eq                  "\\(" r> "\\)")
-(Eq                  "\\[" r> "\\]")
-(frac                "\\frac{" p "}{" q "}")
+(Eq           "\\[" r> "\\]")
+(dailywork    "Daily work today")
+(dataan       "data analysis")
+(eq           "\\(" r> "\\)")
+(frac         "\\frac{" p "}{" q "}")
+(inlsrc       "src_" p "[:exports code]{" q "}")
 (project_path_insert "" :post (garid/choose-from-list-and-insert-it project--list))
 
 notmuch-message-mode  :when (re-search-backward "^To:" (line-beginning-position) 'noerror)
