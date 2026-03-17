@@ -1756,9 +1756,8 @@ license.
            :keymaps 'org-agenda-mode-map
            :prefix "SPC"
            "o c  "     'org-gtd-capture)
-  :hook
-  ;; (after-init-hook    . org-gtd-mode)
-  (emacs-startup-hook . org-gtd-mode)
+  ;; :hook
+  ;; (emacs-startup-hook . org-gtd-mode) 
   )
 #+end_src
 ** Org Exporting related
@@ -2139,6 +2138,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 #+begin_src emacs-lisp
 (use-package eldoc
   :straight nil
+  :demand t
   :general
   (:states 'normal "K"      'eldoc)
   )
@@ -3028,22 +3028,29 @@ Probably requires external =rg= command.
            "SPC s c L"  'clm/command-log-clear)
   )
 #+end_src
-** =format-all=
+** COMMENT =format-all=
 #+begin_src emacs-lisp
 (use-package format-all
   :straight t
   :commands format-all-mode
   :general
   (:states 'normal
-           "SPC v q" 'format-all-buffer )
+           "SPC v q" 'format-all-buffer)
 
   :custom
   (format-all-formatters
-                '(("C"      (astyle "--mode=c"                     ))
-                  ("Python" (ruff   "format" "--line-length" "120" ))
-                  ("Shell"  (shfmt  "-i" "4" "-ci"                 ))
+                '(("C"        (astyle "--mode=c"    ))
+                  ("Shell"    (shfmt  "-i" "4" "-ci"))
+                  ;;("Python" (ruff   "format" "--line-length" "120" ))
                   ))
   )
+#+end_src
+
+** apheleia
+#+begin_src emacs-lisp
+(use-package apheleia
+  :straight t
+  :hook (prog-mode-hook . apheleia-mode))
 #+end_src
 ** =crux=
 #+begin_src emacs-lisp

@@ -4,6 +4,7 @@ fundamental-mode ;; Available everywhere
 
 (today      (format-time-string "%Y-%m-%d"))
 (yesterday  (format-time-string "%Y-%m-%d" (time-subtract (current-time) (days-to-time 1))))
+(tomorrow   (format-time-string "%Y-%m-%d" (time-add      (current-time) (days-to-time 1))))
 (update     (format-time-string "Regular update: %Y-%m-%d %Hh%M") )
 (date       (org-read-date "%Y-%m-%d"))
 
