@@ -214,14 +214,12 @@ mark or parenthesis.
                   (push '(45  . ("\\overbrace{"     . "}_{ }"     )) evil-surround-pairs-alist)))  ;; -
 
   (org-mode-hook   . (lambda ()
-                  (push '(?s  . ("#+begin_src LANG" . "#+end_src"     )) evil-surround-pairs-alist)
-                  (push '(?S  . ("#+begin_src LANG" . "#+end_src"     )) evil-surround-pairs-alist)
-                  (push '(?x  . ("#+begin_example"  . "#+end_example" )) evil-surround-pairs-alist)
-                  (push '(?X  . ("#+begin_example"  . "#+end_example" )) evil-surround-pairs-alist)
-                  (push '(?e  . ("\\("              . "\\)"           )) evil-surround-pairs-alist)
-                  (push '(?E  . ("\\("              . "\\)"           )) evil-surround-pairs-alist)
-                  (push '(?d  . (":drawername:"     . ":end:"         )) evil-surround-pairs-alist)
-                  (push '(?D  . (":drawername:"     . ":end:"         )) evil-surround-pairs-alist)))
+                  (push '(?S  . ("#+begin_src sh"     . "#+end_src"     )) evil-surround-pairs-alist)
+                  (push '(?d  . (":drawername:"       . ":end:"         )) evil-surround-pairs-alist)
+                  (push '(?e  . ("\\("                . "\\)"           )) evil-surround-pairs-alist)
+                  (push '(?p  . ("#+begin_src python" . "#+end_src"     )) evil-surround-pairs-alist)
+                  (push '(?s  . ("#+begin_src LANG"   . "#+end_src"     )) evil-surround-pairs-alist)
+                  (push '(?x  . ("#+begin_example"    . "#+end_example" )) evil-surround-pairs-alist)))
 
   (python-base-mode-hook . (lambda ()
                         (push '(?>  . ("#"          . "#"             )) evil-surround-pairs-alist)))
