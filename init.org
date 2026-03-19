@@ -864,7 +864,7 @@ and later sets cursor at that point when you open that file.
 
            "s r f" 'consult-recent-file
            "c R f" 'consult-recent-file
-           "p l"   'consult-project-buffer
+           ;; "p l"   'consult-project-buffer
            "p v"   'consult-imenu
            "p s"   'consult-git-grep
            "p d"   'consult-flymake
@@ -2535,14 +2535,41 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
             :states 'normal
             :prefix "SPC"
             "p"      '(:which-key "project")
-            "p f"     'project-find-file
-            "p z"     'project-switch-project
-            "p S"     'project-find-regexp
-            "p k"     'project-kill-buffers
+            "p b"     'project-switch-to-buffer
             "p c"     'project-recompile
+            "p C"     'project-compile
+            "p d"     'project-dired
+            "p D"     'project-find-dir
+            "p e"     'project-eshell
+            "p f"     'project-find-file
+            "p k"     'project-kill-buffers
+            "p l"     'consult-project-buffer
+            "p L"     'project-list-buffers
             "p q r r" 'project-query-replace-regexp
+            "p s"     'project-find-regexp
+            "p z"     'project-switch-project
+            )
+  :general (
+            :states 'normal
+            :prefix "C-SPC" ;; it does the command in the other window
+            "p"      '(:which-key "project")
+            ;; "p b"     '(lambda () (interactive) (project-other-window-command) (project-switch-to-buffer (list (project--read-project-buffer))))
+            "p c"     '(lambda () (interactive) (project-other-window-command) (project-recompile))
+            "p C"     '(lambda () (interactive) (project-other-window-command) (project-compile))
+            "p d"     '(lambda () (interactive) (project-other-window-command) (project-dired))
+            "p D"     '(lambda () (interactive) (project-other-window-command) (project-find-dir))
+            "p e"     '(lambda () (interactive) (project-other-window-command) (project-eshell))
+            "p f"     '(lambda () (interactive) (project-other-window-command) (project-find-file))
+            "p k"     '(lambda () (interactive) (project-other-window-command) (project-kill-buffers))
+            "p l"     '(lambda () (interactive) (project-other-window-command) (consult-project-buffer))
+            "p L"     '(lambda () (interactive) (project-other-window-command) (project-list-buffers))
+            "p q r r" '(lambda () (interactive) (project-other-window-command) (project-query-replace-regexp))
+            "p s"     '(lambda () (interactive) (project-other-window-command) (project-find-regexp))
+            "p z"     '(lambda () (interactive) (project-other-window-command) (project-switch-project))
             )
   )
+
+
 #+end_src
 
 * Git version control
