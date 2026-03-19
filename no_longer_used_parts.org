@@ -2531,3 +2531,21 @@ Following is customization of the theme. Actual in the loading the theme is in t
   )
 #+end_src
 
+* COMMENT =format-all=
+#+begin_src emacs-lisp
+(use-package format-all
+  :straight t
+  :commands format-all-mode
+  :general
+  (:states 'normal
+           "SPC v q" 'format-all-buffer)
+
+  :custom
+  (format-all-formatters
+                '(("C"        (astyle "--mode=c"    ))
+                  ("Shell"    (shfmt  "-i" "4" "-ci"))
+                  ;;("Python" (ruff   "format" "--line-length" "120" ))
+                  ))
+  )
+#+end_src
+
