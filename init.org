@@ -1386,12 +1386,36 @@ https://stackoverflow.com/questions/78982629/in-emacs-how-to-prevent-org-babel-d
   (denote-templates        '((biblio . "* Abstract\n\n* Review")
                              (plain  . nil                   )))
   (denote-file-type        'org)
-  :general (
-            :states  'normal
+
+
+  :hook (dired-mode-hook . denote-dired-mode)
+
+  :config
+  (when (not (assoc 'python denote-file-types))
+    (push '(python :extension ".py"
+                   :date-function denote-date-iso-8601
+                   :front-matter "# title:      %s\n# date:       %s\n# tags:       %s\n# identifier: %s\n# ---------------------------\n\n"
+                   :title-key-regexp "^# title\\s-*:"
+                   :title-value-function denote-format-string-for-org-front-matter
+                   :title-value-reverse-function denote-trim-whitespace
+                   :keywords-key-regexp "^# tags\\s-*:"
+                   :keywords-value-function denote-format-keywords-for-text-front-matter
+                   :keywords-value-reverse-function denote-extract-keywords-from-front-matter
+                   :link denote-org-link-format
+                   :link-in-context-regexp denote-org-link-in-context-regexp)
+          denote-file-types))
+
+  :general ;; base denote
+  (:states  'normal
             :prefix  "SPC"
             "n"      '(:which-key "+denote...")
             "n r"    'denote-rename-file
-            "n R"    'denote-rename-file-date
+            "n R d"  'denote-rename-file-date
+            "n R i"  'denote-rename-file-identifier
+            "n R s"  'denote-rename-file-signature
+            "n R t"  'denote-rename-file-keywords
+            "n R k"  'denote-rename-file-keywords
+
             "n f"    'denote-open-or-create
             "n d"    'denote-dired
 
@@ -1412,63 +1436,66 @@ https://stackoverflow.com/questions/78982629/in-emacs-how-to-prevent-org-babel-d
             "n L B"  'denote-backlinks
             "n L a"  'denote-add-links)
 
-  :hook (dired-mode-hook . denote-dired-mode)
-  )
+  ;; :general ;; for denote silo
+  (:states  'normal
+            :prefix  "SPC"
+            "n s"    '(:which-key "+denote-silo...")
+            "n s t"  'denote-silo-select-silo-then-command
+            "n s d"  'denote-silo-dired
+            "n s f"  'denote-silo-open-or-create
+            )
 
-;; :config
-;; (when (not (assoc 'python denote-file-types))
-;;   (push '(python :extension ".py"
-;;                  :date-function denote-date-iso-8601
-;;                  :front-matter "# title:      %s\n# date:       %s\n# tags:       %s\n# identifier: %s\n# ---------------------------\n\n"
-;;                  :title-key-regexp "^# title\\s-*:"
-;;                  :title-value-function denote-format-string-for-org-front-matter
-;;                  :title-value-reverse-function denote-trim-whitespace
-;;                  :keywords-key-regexp "^# tags\\s-*:"
-;;                  :keywords-value-function denote-format-keywords-for-text-front-matter
-;;                  :keywords-value-reverse-function denote-extract-keywords-from-front-matter
-;;                  :link denote-org-link-format
-;;                  :link-in-context-regexp denote-org-link-in-context-regexp)
-;;         denote-file-types))
-#+end_src
+  ;; :general  ;; for denote-journal
+  (:states 'normal
+           :prefix "SPC"
+           "n j"    '(:which-key "+denote-journal...")
+           "n j n"  'denote-journal-new-entry
+           "n j e"  'denote-journal-new-or-existing-entry
+           )
 
-#+RESULTS:
-
-*** =denote-journal= denote journal                                                :by_prot:
-#+begin_src emacs-lisp
-(use-package denote-journal
-  :straight t
-  :after denote
-  :custom
-  (denote-journal-title-format "Week-%V %A (Date: %Y-%B-%e)")
-
-  :general (:states 'normal
-                    :prefix "SPC"
-                    "n j"    '(:which-key "+denote-journal...")
-                    "n j n"  'denote-journal-new-entry
-                    "n j e"  'denote-journal-new-or-existing-entry
-                    )
-  )
-#+end_src
-
-#+RESULTS:
-
-*** =denote-org=                                                                   :by_prot:
-#+begin_src emacs-lisp
-(use-package denote-org
-  :straight t
-  :after denote
-  :general (
-            :states  'normal
+  ;; :general ;; denote-org
+  (:states  'normal
             :prefix  "SPC"
             "n o"   '(:which-key "+denote-org...")
             "n o d" 'denote-org-dblock-insert-links
             "n o e" 'denote-org-extract-org-subtree
             "n o l" 'denote-org-link-to-heading
             )
+
+
   )
+
+#+end_src
+
+#+RESULTS:
+
+*** =denote-journal= denote journal                                                :by_prot:
+
+Deferred by default; loaded via keybinding in the Denote config.
+
+#+begin_src emacs-lisp
+(use-package denote-journal
+  :straight t
+  :after    denote
+  :custom   (denote-journal-title-format "Week-%V %A (Date: %Y-%B-%e)"))
+#+end_src
+
+#+RESULTS:
+
+*** =denote-org=                                                                   :by_prot:
+
+Deferred by default; loaded via keybinding in the Denote config.
+
+#+begin_src emacs-lisp
+(use-package denote-org
+  :straight t
+  :after denote)
 #+end_src
 
 *** =denote-silo=                                                                  :by_prot:
+
+Deferred by default; loaded via keybinding in the Denote config.
+
 #+begin_src emacs-lisp
 (use-package denote-silo
   :straight t
@@ -1478,16 +1505,7 @@ https://stackoverflow.com/questions/78982629/in-emacs-how-to-prevent-org-babel-d
                             (lambda (y) (concat "~/BrainDump/" y))
                             (seq-filter
                              (lambda (x) (string-match "denote.*" x))
-                             (directory-files "~/BrainDump/"))))
-  :general (
-            :states  'normal
-            :prefix  "SPC"
-            "n s"    '(:which-key "+denote-silo...")
-            "n s t"  'denote-silo-select-silo-then-command
-            "n s d"  'denote-silo-dired
-            "n s f"  'denote-silo-open-or-create
-            )
-  )
+                             (directory-files "~/BrainDump/")))))
 #+end_src
 
 #+RESULTS:
@@ -1742,9 +1760,10 @@ license.
   (:states 'normal
            :keymaps 'org-mode-map
            :prefix "SPC o"
-           "s c"      'org-gtd-clarify-item
-           "g c"      'org-gtd-clarify-item
-           "g a"      'org-gtd-archive-completed-items)
+           "s c"    'org-gtd-clarify-item
+           "g c"    'org-gtd-clarify-item
+           "g a"    'org-gtd-archive-completed-items
+           "g A"    'org-gtd-archive-item-at-point)
 
   (:states 'normal
            :prefix "SPC"
@@ -2275,12 +2294,22 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 
   :general
   (:states 'normal
-           :map code-cells-mode-map
+           ;; :keymaps 'python-mode-base-map
+           :predicate '(bound-and-true-p code-cells-mode)
+           :keymaps 'outline-minor-mode-map
+           ;; :map 
            "[ [" 'code-cells-backward-cell
            "] ]" 'code-cells-forward-cell
-           ))
-)
+           )
+  )
+
 #+end_src
+
+#+RESULTS:
+: #[nil ((code-cells-forward-cell) (insert "
+: # %%
+: 
+: ") (previous-line)) nil nil nil nil]
 
 ** =scad-mode=
 #+begin_src emacs-lisp
@@ -2586,7 +2615,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 #+begin_src emacs-lisp
 (use-package magit
   :straight t
-  :demand t
+  :demand   t
   :general
   (:states 'normal
            :prefix "SPC"
@@ -2711,9 +2740,8 @@ Probably requires external =rg= command.
 (use-package gptel
   :straight t
   :after    org
-  :demand t
-  :custom
-  (gptel-default-mode 'org-mode)
+  :demand   t
+  :custom   (gptel-default-mode 'org-mode)
 
   :general
   (:states 'normal
