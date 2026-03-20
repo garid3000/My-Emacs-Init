@@ -2261,16 +2261,25 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
               ("M-<RET>"    . code-cells-eval           )
               ("M-D"        . code-cells-duplicate      )
               ("M-d"        . code-cells-kill           )
-              ("M-j"        . code-cells-move-cell-down )
-              ("M-k"        . code-cells-move-cell-up   )
+              ("M-j"        . code-cells-move-cell-down ) ;; conflict with outline indent mode, maybe later think on it
+              ("M-k"        . code-cells-move-cell-up   ) ;; conflict with outline indent mode, maybe later think on it
               ("M-l"        . (lambda () (interactive) (insert "\n# %%\n")))
               ("M-v"        . code-cells-mark-cell      )
 
               ("M-;"        . code-cells-comment-or-uncomment)
               ("S-<return>" . code-cells-eval-and-step  )
               ("C-<return>" . (lambda () (interactive) (code-cells-forward-cell) (insert "\n# %%\n\n") (previous-line)))
+
               )
-  )
+
+
+  :general
+  (:states 'normal
+           :map code-cells-mode-map
+           "[ [" 'code-cells-backward-cell
+           "] ]" 'code-cells-forward-cell
+           ))
+)
 #+end_src
 
 ** =scad-mode=
