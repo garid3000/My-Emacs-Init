@@ -1187,6 +1187,7 @@ and later sets cursor at that point when you open that file.
                                  (python     . t)   ;; (nim        . t)
                                  (shell      . t)   ;; (nix        . t)
                                  (sqlite     . t)
+                                 (R          . t)
                                  (plantuml   . t)))
 
   (defcustom org-inline-image-background nil
@@ -1846,16 +1847,16 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
            :keymaps 'org-mode-map
            :prefix "SPC"
            "o x p"   'org-latex-export-to-pdf
-           "o x P"   '((lambda () (interactive)
+           "o x P"   '(lambda () (interactive)
                          (org-latex-export-to-pdf nil t))
                        ;; :which-key "org-latex-export-to-pdf SUBTREE"
-                       )
-           "o x o"   '((lambda () (interactive)
+                       
+           "o x o"   '(lambda () (interactive)
                          (browse-url-xdg-open
                           (replace-regexp-in-string
                            "\\.tex$" ".pdf" (org-export-output-file-name ".tex"))))
                        ;; :which-key "Open exported PDF"
-                       )
+                       
            )
   )
 
@@ -1888,11 +1889,11 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
            :keymaps 'org-mode-map
            :prefix  "SPC"
            "o x d"   'org-odt-export-to-odt
-           "o x D"   '((lambda ()
-                         (interactive)
-                         (org-odt-export-to-odf nil t))
-                       ;; :which-key "org-html-export-to-html SUBTREE"
-                       )
+           ;; "o x D"   '((lambda ()
+           ;;               (interactive)
+           ;;               (org-odt-export-to-odf nil t))
+           ;;             ;; :which-key "org-html-export-to-html SUBTREE"
+           ;;             )
            )
   :config
   (defun my-org-odt-timestamp-unstyled (timestamp _contents info)
@@ -1933,14 +1934,14 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
            :keymaps 'org-mode-map
            :prefix "SPC"
            "o x h"   'org-html-export-to-html
-           "o x H"   '((lambda () (interactive)
+           "o x H"   '(lambda () (interactive)
                          (org-html-export-to-html nil t))
                        ;; :which-key "org-html-export-to-html SUBTREE"
-                       )
-           "o x O"   '((lambda () (interactive)
+                       
+           "o x O"   '(lambda () (interactive)
                          (browse-url-xdg-open (org-export-output-file-name ".html")))
                        ;; :which-key "Open exported HTML"
-                       )
+                       
            )
   )
 #+end_src
@@ -2312,13 +2313,6 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 
 #+end_src
 
-#+RESULTS:
-: #[nil ((code-cells-forward-cell) (insert "
-: # %%
-: 
-: ") (previous-line)) nil nil nil nil]
-
-
 ** =scad-mode=
 #+begin_src emacs-lisp
 (use-package scad-mode :straight t)
@@ -2348,6 +2342,13 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 (use-package arduino-mode
   :straight t)
 #+end_src
+
+** ess (for Rlang) 
+#+begin_src emacs-lisp
+(use-package ess
+  :straight t)
+#+end_src
+
 * Coding input
 ** =tempel=: snippet system
 #+begin_src emacs-lisp

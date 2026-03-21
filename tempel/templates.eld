@@ -490,6 +490,7 @@ org-mode :when (re-search-backward "^\\S-*$" (line-beginning-position) 'noerror)
               "#+property: header-args:python+ :results output"                                                                r n
               "#+property: header-args:python+ :exports both"                                                                  r n
               "#+property: header-args:python+ :session (concat \"python-\" (my/org-attach-dir-calculator \"\") \"-session\")" r n
+              "#+property: header-args:R+ :session (concat \"R-ses-\" (my/org-attach-dir-calculator \"\") \"-session\")" r n
               ":end:"                                                                                                          r n)
 
 ;; (pySess1    "#+begin_src python :session pySess1 :results output :exports both :eval no-export :async yes :comments link :dir (my/org-attach-dir \"\")" n "# %%" n "#+end_src")
@@ -499,6 +500,7 @@ org-mode :when (re-search-backward "^\\S-*$" (line-beginning-position) 'noerror)
 (gnuplot     "#+begin_src gnuplot :var data=" (p "table") " :file " (p "plot.png") n r n "#+end_src") ;;  :post (org-edit-src-code))
 (nix         "#+begin_src nix" n q n "#+end_src")
 (py          "#+begin_src python :async yes" n q n "#+end_src")
+(rlang       "#+begin_src R" n q n "#+end_src")
 (shell       "#+begin_src sh :shebang #!/usr/bin/env bash :eval no-export :results output :exports both" n r n "#+end_src")
 (src         "#+begin_src LANG" q n r n "#+end_src")
 (vardown     "#+header: :var outputVar=" :post (insert (concat org-download-image-dir "/filename.svg")))
