@@ -754,14 +754,16 @@ and later sets cursor at that point when you open that file.
 (use-package dired-preview
   :straight t
   :after dired
-  :bind (:map dired-preview-mode-map
-              ("J" . dired-preview-page-down)
-              ("K" . dired-preview-page-up))
-
   :general
   (:states 'normal
            :keymaps   'dired-mode-map
            "SPC D p"  'dired-preview-mode)
+
+  (:states 'normal
+           :keymaps   'dired-mode-map ;; #'dired-preview-mode-map
+           :predicate '(bound-and-true-p dired-preview-mode)
+           "J"        'dired-preview-page-down
+           "K"        'dired-preview-page-up)
   )
 #+end_src
 
