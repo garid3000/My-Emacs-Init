@@ -434,6 +434,23 @@ mark or parenthesis.
 #+end_src
 
 * Configuration of General Built-in Packages
+** =abbrev=
+
+#+begin_src emacs-lisp
+(use-package abbrev
+  :straight nil
+  :delight "" ;;" abb"
+  ;;:demand t 
+  ;;:custom
+  ;;(abbrev-file-name (expand-file-name "abbrev_defs" user-emacs-directory))
+
+  :config
+  (if (file-exists-p abbrev-file-name) (quietly-read-abbrev-file))
+
+  :hook
+  (emacs-startup-hook . abbrev-mode)
+  )
+#+end_src
 
 ** =align=
 #+begin_src emacs-lisp
@@ -460,100 +477,6 @@ mark or parenthesis.
            "B c" 'consult-bookmark
            )
   )
-#+end_src
-
-** Dired related
-*** =dired= - directory
-
-#+begin_src emacs-lisp
-(use-package dired
-  :straight   nil
-  :after evil-collection
-  :demand t
-  ;; :commands   (dired dired-jump) ;; :after  evil-collection (test if the evil-collection-mode-list is default value)
-  :custom ((dired-listing-switches  "-agho --group-directories-first")
-           (dired-kill-when-opening-new-dired-buffer t)
-           (dired-hide-details-mode                  t)
-           (insert-directory-program (if (eq system-type 'berkeley-unix) "gls"  ;; in case for BSD
-                                       "ls"))
-           )
-
-  :hook     (;;(dired-mode . denote-dired-mode       ) <-- perhaps should be at denote conf
-             (dired-mode-hook . dired-omit-mode         )
-             (dired-mode-hook . auto-revert-mode        )
-             (dired-mode-hook . dired-hide-details-mode ))
-
-
-  :general
-  (:states 'normal
-           :keymaps 'dired-mode-map
-           "h"          'dired-up-directory
-           "l"          'dired-find-file
-           "N"          'dired-create-directory
-           (kbd "C-n")  'mkdir
-           (kbd "C-s")  'dired-omit-mode
-           "SPC"         nil
-           )
-  (:states 'normal
-           :prefix "SPC"
-           ;; :global-prefix "C-SPC"
-           ;; "D"     '(:which-key "dired...")
-           "d"     'dired-jump
-           "D s"   'dired)
-  :config
-  (with-eval-after-load 'evil-collection
-    (evil-collection-define-key 'normal 'dired-mode-map
-      " "  nil
-      ;; "g/" dired-filter-map
-      ))
-  )
-#+end_src
-
-#+RESULTS:
-
-*** =wdired=
-#+begin_src emacs-lisp
-(use-package wdired
-  :straight   nil
-  :after dired
-  :general
-  (:states 'normal
-           :keymaps  'dired-mode-map
-           :prefix   "SPC"
-           "W"       'wdired-change-to-wdired-mode)
-  )
-#+end_src
-
-#+RESULTS:
-
-*** =dired-preview= - preview                                                      :by_prot:
-#+begin_src emacs-lisp
-(use-package dired-preview
-  :straight t
-  :after dired
-  :bind (:map dired-preview-mode-map
-              ("J" . dired-preview-page-down)
-              ("K" . dired-preview-page-up))
-
-  :general
-  (:states 'normal
-           :keymaps   'dired-mode-map
-           "SPC D p"  'dired-preview-mode)
-  )
-#+end_src
-
-*** =dired-filter=
-
-#+begin_src emacs-lisp
-(use-package dired-filter
-  :straight t
-  :after dired
-  :demand t
-  :general
-  (:states 'normal
-           :keymaps 'dired-mode-map
-           "g f"    'dired-filter-by-name
-           "g F"    'dired-filter-pop))
 #+end_src
 
 ** =emacs=
@@ -675,6 +598,18 @@ mark or parenthesis.
            "SPC z s f" 'flyspell-mode))
 #+end_src
 
+** =imenu=
+#+begin_src emacs-lisp
+(use-package imenu
+  :straight nil
+
+  :general
+  (:states 'normal
+           :prefix "SPC"
+           "i m "     'imenu) ;; technically (originally M-g i)
+  )
+#+end_src
+
 ** =newcomment=
 #+begin_src emacs-lisp
 (use-package newcomment
@@ -750,8 +685,102 @@ and later sets cursor at that point when you open that file.
   (:states 'normal "SPC s w" 'whitespace-mode))
 #+end_src
 
-** Window & buffer realted
-*** =window=
+* Dired related
+** =dired= - directory
+
+#+begin_src emacs-lisp
+(use-package dired
+  :straight   nil
+  :after      evil-collection
+  :demand t
+  ;; :commands   (dired dired-jump) ;; :after  evil-collection (test if the evil-collection-mode-list is default value)
+  :custom ((dired-listing-switches  "-agho --group-directories-first")
+           (dired-kill-when-opening-new-dired-buffer t)
+           (dired-hide-details-mode                  t)
+           (insert-directory-program (if (eq system-type 'berkeley-unix) "gls"  ;; in case for BSD
+                                       "ls"))
+           )
+
+  :hook     (;;(dired-mode . denote-dired-mode          ) <-- perhaps should be at denote conf
+             (dired-mode-hook . dired-omit-mode         )
+             (dired-mode-hook . auto-revert-mode        )
+             (dired-mode-hook . dired-hide-details-mode ))
+
+
+  :general
+  (:states 'normal
+           :keymaps 'dired-mode-map
+           "h"          'dired-up-directory
+           "l"          'dired-find-file
+           "N"          'dired-create-directory
+           (kbd "C-n")  'mkdir
+           (kbd "C-s")  'dired-omit-mode
+           "SPC"         nil
+           )
+  (:states 'normal
+           :prefix "SPC"
+           ;; :global-prefix "C-SPC"
+           ;; "D"     '(:which-key "dired...")
+           "d"     'dired-jump
+           "D s"   'dired)
+  ;; :config
+  ;; (with-eval-after-load 'evil-collection
+  ;;   (evil-collection-define-key 'normal 'dired-mode-map
+  ;;     " "  nil
+  ;;     ;; "g/" dired-filter-map
+  ;;     ))
+  )
+#+end_src
+
+#+RESULTS:
+
+** =wdired=
+#+begin_src emacs-lisp
+(use-package wdired
+  :straight   nil
+  :after dired
+  :general
+  (:states 'normal
+           :keymaps  'dired-mode-map
+           :prefix   "SPC"
+           "W"       'wdired-change-to-wdired-mode)
+  )
+#+end_src
+
+#+RESULTS:
+
+** =dired-preview= - preview                                                        :by_prot:
+#+begin_src emacs-lisp
+(use-package dired-preview
+  :straight t
+  :after dired
+  :bind (:map dired-preview-mode-map
+              ("J" . dired-preview-page-down)
+              ("K" . dired-preview-page-up))
+
+  :general
+  (:states 'normal
+           :keymaps   'dired-mode-map
+           "SPC D p"  'dired-preview-mode)
+  )
+#+end_src
+
+** =dired-filter=
+
+#+begin_src emacs-lisp
+(use-package dired-filter
+  :straight t
+  :after dired
+  :demand t
+  :general
+  (:states 'normal
+           :keymaps 'dired-mode-map
+           "g f"    'dired-filter-by-name
+           "g F"    'dired-filter-pop))
+#+end_src
+
+* Window & buffer related
+** =window=
 #+begin_src emacs-lisp
 (use-package window
   :straight nil
@@ -770,7 +799,7 @@ and later sets cursor at that point when you open that file.
   )
 #+end_src
 
-*** =window= movements
+** =window= movements
 #+begin_src emacs-lisp
 (use-package windmove
   :straight nil
@@ -800,7 +829,7 @@ and later sets cursor at that point when you open that file.
          ))
 #+end_src
 
-*** =ibuffer=
+** =ibuffer=
 #+begin_src emacs-lisp
 (use-package ibuffer
   :straight nil
@@ -808,6 +837,61 @@ and later sets cursor at that point when you open that file.
   (:states 'normal
            "SPC L i"  'ibuffer))
 #+end_src
+
+** =popper=                                                                     :by_karthink:
+#+begin_src emacs-lisp
+(use-package popper
+  :straight t
+  :bind (("C-`"   . popper-toggle      )
+         ("M-`"   . popper-cycle       )
+         ("C-M-`" . popper-toggle-type )
+         :repeat-map garid/popper-repeat
+         ("`" .      popper-cycle )
+         ("q" .      popper-close-latest ))
+  :custom
+  (popper-window-height 15)
+  (popper-reference-buffers '("\\*Messages\\*"
+                              "\\*eldoc\\*"
+                              "\\*eldoc.*\\*"
+                              "\\*Outline.*\\*"
+                              "\\*xref\\*"
+                              "\\*Help\\*"
+                              "Output\\*$"
+                              "\\*Async Shell Command\\*"
+                              "\\*devdocs\\*"
+                              "\\*lsp-bridge-doc\\*"
+                              "\\*git-gutter:diff\\*"
+                              "\\*Org Select\\*"
+                              "\\*Google Translate\\*"
+                              "\\*Org Attach\\*"
+                              "\\*Org Lint\\*"
+                              "\\*git-gutter:.*\\*"
+                              "\\* Merriam-Webster Thesaurus \\*"
+                              "CAPTURE-inbox.org"
+                              help-mode
+                              compilation-mode))
+
+  :hook
+  (after-init-hook . popper-mode     )
+  (after-init-hook . popper-echo-mode)
+  )
+#+end_src
+
+** =zoom-window=
+#+begin_src emacs-lisp
+(use-package zoom-window
+  :straight t
+  :custom
+  (zoom-window-mode-line-color "gray60")
+  :bind (("M-F" . zoom-window-zoom)
+         :repeat-map garid/windmove-repeat
+         ("f" . zoom-window-zoom)
+         ("n" . zoom-window-next))
+  )
+#+end_src
+
+#+RESULTS:
+: zoom-window-next
 
 * Mini-buffer related
 ** =vertico=
@@ -976,14 +1060,14 @@ and later sets cursor at that point when you open that file.
               ("C-S-p"  . org-previous-visible-heading   )
               ("C-S-n"  . org-next-visible-heading       )
               :repeat-map garid/org-repeat
-              ("["         . org-previous-visible-heading)
-              ("]"         . org-next-visible-heading    )
-              ("u"         . org-up-heading              )
-              ("{"         . org-backward-paragraph      )
-              ("}"         . org-forward-paragraph       )
-              ("n"         . org-next-block              )
-              ("p"         . org-previous-block          )
-              ("c"         . org-ctrl-c-ctrl-c           )
+              ("["      . org-previous-visible-heading   )
+              ("]"      . org-next-visible-heading       )
+              ("u"      . org-up-heading                 )
+              ("{"      . org-backward-paragraph         )
+              ("}"      . org-forward-paragraph          )
+              ("n"      . org-next-block                 )
+              ("p"      . org-previous-block             )
+              ("c"      . org-ctrl-c-ctrl-c              )
               ;; :exit
               ;; ("'"         . org-edit-special            )
               ;; :repeat-map garid/org-repeat-heading
@@ -996,8 +1080,7 @@ and later sets cursor at that point when you open that file.
 
   :general
   (:keymaps  'org-mode-map
-             "M-S-<return>" 'org-insert-todo-heading-respect-content
-             )
+             "M-S-<return>" 'org-insert-todo-heading-respect-content)
 
   (:states 'normal
            :keymaps  'org-mode-map
@@ -1023,8 +1106,8 @@ and later sets cursor at that point when you open that file.
            "o T s"   'org-table-sum
            "o T x"   'org-table-export
 
+           "o a"     'org-attach
            ;; "o a"     '(:which-key "agenda/schedule...")
-           "o a" 'org-attach
            ;; "o a C"   'org-clock-out
            ;; "o a c"   'org-clock-in
            ;; "o a d"   'org-deadline
@@ -1094,6 +1177,9 @@ and later sets cursor at that point when you open that file.
            "o b g d"   'org-babel-tangle-jump-to-org
            "o C  "     'org-capture)
 
+  (:states 'normal
+           :keymaps  'org-mode-map
+           "z u"     'garid/org-up-heading-dwim)
 
   :custom
   (org-extend-today-until                                    2) ;; for the night owl
@@ -1135,13 +1221,13 @@ and later sets cursor at that point when you open that file.
                              "TODO(t)" "NEXT(n)" "WAIT(w)" "PRJT(p)" "VAGUE(v)"
                              "|"  "DONE(d)" "CNCL(c)")))
 
-  ( org-todo-keyword-faces '(("TODO"  . org-todo                           )
-                             ("PRJT"  . org-tag                            )
-                             ("NEXT"  . org-formula                        )
-                             ("WAIT"  . org-warning                        )
-                             ("DONE"  . org-done                           )
-                             ("VAGUE" . "medium purple"                    )
-                             ("CNCL"  . (:foreground "gray30" :weight bold ))))
+  (org-todo-keyword-faces '(("TODO"  . org-todo                           )
+                            ("PRJT"  . org-tag                            )
+                            ("NEXT"  . org-formula                        )
+                            ("WAIT"  . org-warning                        )
+                            ("DONE"  . org-done                           )
+                            ("VAGUE" . "medium purple"                    )
+                            ("CNCL"  . (:foreground "gray30" :weight bold ))))
 
   (org-log-done            'time)
   (org-tags-column           -93)
@@ -1165,7 +1251,6 @@ and later sets cursor at that point when you open that file.
   (org-latex-packages-alist '((#1="" "color") (#1# "listings")))
   ;; (add-to-list 'org-latex-packages-alist   '("" "listings" ))
   ;; (add-to-list 'org-latex-packages-alist   '("" "color"    ))
-  ;; (setq org-inline-image-background "white")
   (org-inline-image-background "white")
 
   ;; ---------------- Personal vars ----------------------------------------------------------
@@ -1273,13 +1358,11 @@ and later sets cursor at that point when you open that file.
         (org-up-heading arg)
       (org-back-to-heading t)))
 
-  (with-eval-after-load 'evil
-    (evil-define-key 'normal org-mode-map (kbd "z u") #'garid/org-up-heading-dwim))
-
+  ;; (with-eval-after-load 'evil
+  ;;   (evil-define-key 'normal org-mode-map (kbd "z u") #'garid/org-up-heading-dwim))
 
   :hook
   (org-after-refile-insert-hook . org-mode-restart)
-  ;; (add-hook 'org-after-refile-insert-hook 'org-mode-restart)
   )
 #+end_src
 
@@ -1342,12 +1425,13 @@ and later sets cursor at that point when you open that file.
   :hook   (org-mode-hook . org-auto-tangle-mode))
 #+end_src
 
-*** org-babel languages related
+*** org-babel languages related                                                        :ob:
 #+begin_src emacs-lisp
 (use-package plantuml-mode :after org :straight t
   :custom
   (org-plantuml-executable-path  "plantuml")
   (org-plantuml-exec-mode        'plantuml))
+
 (use-package ob-nim       :after org :straight t)
 (use-package ob-go        :after org :straight t)
 (use-package ob-asymptote :after org :straight t)
@@ -2139,11 +2223,58 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 #+end_src
 
 * Programming languages
-** =prog-mode=
+** =arduino=
 #+begin_src emacs-lisp
-(use-package prog-mode
-  :straight nil
-  :bind (:map prog-mode-map ("M-q" .  nil)))
+(use-package arduino-mode
+  :straight t)
+#+end_src
+
+** =code-cells-mode=
+#+begin_src emacs-lisp
+(use-package code-cells
+  :straight t
+  :after comint
+  :custom
+  (code-cells-boundary-regexp
+   "^\\s<+\\(?:\\s-*%\\(?1:%+\\)\\| In\\[[[:space:][:digit:]]*]:\\| \\[\\[\\)")
+
+  :hook (python-base-mode-hook . code-cells-mode)
+  :bind (:map code-cells-mode-map
+              ("C-j"        . code-cells-forward-cell   )
+              ("C-k"        . code-cells-backward-cell  )
+              ("C-n"        . code-cells-forward-cell   )
+              ("C-p"        . code-cells-backward-cell  )
+              ("M-<RET>"    . code-cells-eval           )
+              ("M-D"        . code-cells-duplicate      )
+              ("M-d"        . code-cells-kill           )
+              ("M-j"        . code-cells-move-cell-down ) ;; conflict with outline indent mode, maybe later think on it
+              ("M-k"        . code-cells-move-cell-up   ) ;; conflict with outline indent mode, maybe later think on it
+              ("M-l"        . (lambda () (interactive) (insert "\n# %%\n")))
+              ("M-v"        . code-cells-mark-cell      )
+              ("M-;"        . code-cells-comment-or-uncomment)
+              ("S-<return>" . code-cells-eval-and-step  )
+              ("C-<return>" . (lambda () (interactive) (code-cells-forward-cell) (insert "\n# %%\n\n") (previous-line)))
+              )
+
+
+  :general
+  (:states 'normal
+           ;; :keymaps 'python-mode-base-map
+           ;; :predicate '(bound-and-true-p code-cells-mode)
+           :keymaps 'outline-minor-mode-map
+           "[ ["    'code-cells-backward-cell
+           "] ]"    'code-cells-forward-cell
+           "[ c"    'code-cells-backward-cell
+           "] c"    'code-cells-forward-cell
+
+           "C-j"    'code-cells-forward-cell   
+           "C-k"    'code-cells-backward-cell  
+           "C-n"    'code-cells-forward-cell   
+           "C-p"    'code-cells-backward-cell  
+           "<left>" 'code-cells-backward-cell  
+           )
+  )
+
 #+end_src
 
 ** =comint= 
@@ -2161,16 +2292,20 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 ** =eldoc=
 #+begin_src emacs-lisp
 (use-package eldoc
-  :straight nil
-  :demand t
-  :general
-  (:states 'normal "K"      'eldoc)
-  )
+  :straight nil)
 #+end_src
 ** =elixir= 
 #+begin_src emacs-lisp
 (use-package elixir-mode :straight t)
 (use-package ob-elixir   :straight t)
+#+end_src
+
+** ESS (for Rlang)                                                                      :ob:
+Emacs Speaks Statistics
+
+#+begin_src emacs-lisp
+(use-package ess
+  :straight t)
 #+end_src
 
 ** =graphviz-dot-mode=
@@ -2188,11 +2323,38 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 (use-package lua-mode :straight t)
 #+end_src
 
-** =nix= 
+** =nix=                                                                                  :ob:
 #+begin_src emacs-lisp
 (use-package nix-mode :straight t)
 (use-package ob-nix :straight t)
 #+end_src
+** =prog-mode=
+#+begin_src emacs-lisp
+(use-package prog-mode
+  :straight nil
+  :bind (:map prog-mode-map ("M-q" .  nil))
+
+  :general
+  (:states 'normal
+           :keymaps 'prog-mode-map
+           "K"      'eldoc
+           "g o"     'eglot-find-typeDefinition
+           "] d"     'flymake-goto-next-error
+           "[ d"     'flymake-goto-prev-error
+
+           "SPC s e" 'eglot
+           "SPC v r" 'eglot-rename
+           "SPC e h" 'eglot-show-type-hierarchy
+           "SPC e h" 'flymake-show-buffer-diagnostics
+           "SPC e H" 'flymake-show-project-diagnostics
+            ;; "g       d "evil-goto-definition
+
+           "SPC p r" 'xref-find-references
+           )
+
+  )
+#+end_src
+
 ** =python=
 #+begin_src emacs-lisp
 (use-package python
@@ -2265,55 +2427,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 #+RESULTS:
 : comint-clear-buffer
 
-** =code-cells-mode=
-#+begin_src emacs-lisp
-(use-package code-cells
-  :straight t
-  :after comint
-  :custom
-  (code-cells-boundary-regexp
-   "^\\s<+\\(?:\\s-*%\\(?1:%+\\)\\| In\\[[[:space:][:digit:]]*]:\\| \\[\\[\\)")
-
-  :hook (python-base-mode-hook . code-cells-mode)
-  :bind (:map code-cells-mode-map
-              ("C-j"        . code-cells-forward-cell   )
-              ("C-k"        . code-cells-backward-cell  )
-              ("C-n"        . code-cells-forward-cell   )
-              ("C-p"        . code-cells-backward-cell  )
-              ("M-<RET>"    . code-cells-eval           )
-              ("M-D"        . code-cells-duplicate      )
-              ("M-d"        . code-cells-kill           )
-              ("M-j"        . code-cells-move-cell-down ) ;; conflict with outline indent mode, maybe later think on it
-              ("M-k"        . code-cells-move-cell-up   ) ;; conflict with outline indent mode, maybe later think on it
-              ("M-l"        . (lambda () (interactive) (insert "\n# %%\n")))
-              ("M-v"        . code-cells-mark-cell      )
-              ("M-;"        . code-cells-comment-or-uncomment)
-              ("S-<return>" . code-cells-eval-and-step  )
-              ("C-<return>" . (lambda () (interactive) (code-cells-forward-cell) (insert "\n# %%\n\n") (previous-line)))
-              )
-
-
-  :general
-  (:states 'normal
-           ;; :keymaps 'python-mode-base-map
-           ;; :predicate '(bound-and-true-p code-cells-mode)
-           :keymaps 'outline-minor-mode-map
-           "[ ["    'code-cells-backward-cell
-           "] ]"    'code-cells-forward-cell
-           "[ c"    'code-cells-backward-cell
-           "] c"    'code-cells-forward-cell
-
-           "C-j"    'code-cells-forward-cell   
-           "C-k"    'code-cells-backward-cell  
-           "C-n"    'code-cells-forward-cell   
-           "C-p"    'code-cells-backward-cell  
-           "<left>" 'code-cells-backward-cell  
-           )
-  )
-
-#+end_src
-
-** =scad-mode=
+** =scad-mode=                                                                            :ob:
 #+begin_src emacs-lisp
 (use-package scad-mode :straight t)
 #+end_src
@@ -2336,18 +2450,6 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
                                (scad       . t)
                                ))
 #+end_example
-
-** =arduino=
-#+begin_src emacs-lisp
-(use-package arduino-mode
-  :straight t)
-#+end_src
-
-** ess (for Rlang) 
-#+begin_src emacs-lisp
-(use-package ess
-  :straight t)
-#+end_src
 
 * Coding input
 ** =tempel=: snippet system
@@ -2391,7 +2493,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
             (completing-read "Choose: " choices))))
 #+end_src
 
-** TODO =elec-pair=: auto parenthesis pair [/]
+** =elec-pair=: auto parenthesis pair
 
 - [ ] I might need disable elec-pair mode when in =SPC z r= align-regexp
   which is technically minibuffer, but I do need elec-pair mode in
@@ -2416,29 +2518,6 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 #+begin_src emacs-lisp
 (use-package xref
   :straight nil
-  ;; :demand t
-  :general
-  (:states 'normal "SPC p r" 'xref-find-references))
-#+end_src
-
-** TODO =abbrev=
-
-- [ ] abbrev-mode not working with after-init-hook hook?
-
-#+begin_src emacs-lisp
-(use-package abbrev
-  :straight nil
-  :delight "" ;;" abb"
-  ;; :demand t 
-  ;;:custom
-  ;;(abbrev-file-name (expand-file-name "abbrev_defs" user-emacs-directory))
-
-  :config
-  (if (file-exists-p abbrev-file-name) (quietly-read-abbrev-file))
-
-  :hook
-  (after-init-hook . abbrev-mode) ;; (setq-default abbrev-mode t)
-  (org-mode-hook   . abbrev-mode) ;; (setq-default abbrev-mode t)       
   )
 #+end_src
 
@@ -2448,7 +2527,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   :straight t
   :bind ("C-c p" . cape-prefix-map)
   :init
-  (add-hook 'completion-at-point-functions #'cape-dabbrev ) ;; why add-hook is used here? 
+  ;; (add-hook 'completion-at-point-functions #'cape-dabbrev ) ;; why add-hook is used here? 
   (add-hook 'completion-at-point-functions #'cape-file    ) ;; 
   (add-hook 'completion-at-point-functions #'cape-history )
 
@@ -2512,29 +2591,18 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   (after-init-hook  . corfu-history-mode  )
   (after-init-hook  . corfu-popupinfo-mode)
   (eshell-mode-hook . (lambda ()
-                        ;; (message "test")
                         (setq-local corfu-quit-at-boundary t
         			                         corfu-quit-no-match t
         			                         corfu-auto nil)
                         (corfu-mode)))
   )
 #+end_src
-** TODO =eglot=: LSP
+** =eglot=: LSP
 #+begin_src emacs-lisp
 (use-package eglot
-  :straight nil ;; :after project
+  :straight nil
   :hook
   (python-base-mode-hook . eglot-ensure)
-
-  :general
-  (:states 'normal
-           :keymaps  'prog-mode-map
-           "SPC s e" 'eglot
-           "SPC v r" 'eglot-rename
-           "g o"     'eglot-find-typeDefinition
-           "] d"     'flymake-goto-next-error
-           "[ d"     'flymake-goto-prev-error
-           )
 
   :config
   (add-to-list 'eglot-server-programs
@@ -2547,9 +2615,6 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
                                  "-cli" "arduino-cli" ;;"-cli" "/opt/homebrew/bin/arduino-cli"
                                  "-cli-config" "~/.arduino15/arduino-cli.yaml"
                                  "-fqbn" "esp32:esp32:esp32da")))
-  (add-hook 'eglot-managed-mode-hook
-            (lambda ()
-              (eldoc-mode -1)))
   )
 #+end_src
 ** =eglot-booster=: faster eglot
@@ -2789,7 +2854,8 @@ Probably requires external =rg= command.
 #+end_src
 
 * Writing & Reading
-** =ispell= configuration
+** Spelling & synonyms
+*** =ispell= configuration
 #+begin_src emacs-lisp
 (use-package ispell
   :straight nil
@@ -2811,20 +2877,32 @@ Probably requires external =rg= command.
 
 #+RESULTS:
 
-** spell-checking & synonym
+*** =jinx=
 #+begin_src emacs-lisp
 (use-package jinx :straight t)
-;; also needed to change nix config:
-;; ((emacsPackagesFor emacs-pgtk).emacsWithPackages (
-;;     epkgs: [ epkgs.jinx ]
-;; ))
+#+end_src
 
+For NixOS only: add the following configuration to
+=/etc/nixos/configuration.nix= for proper jinx-mode operation.
+
+#+begin_src nix :tangle no
+environment.systemPackages = with pkgs; [
+    ...
+    ((emacsPackagesFor emacs-pgtk).emacsWithPackages (
+        epkgs: [ epkgs.jinx ]
+    ))
+    ...
+];
+#+end_src
+
+*** =mw-thesaurus=: checking up synonyms with Thesaurus
+#+begin_src emacs-lisp
 (use-package mw-thesaurus
   :straight t
   :general
   (:states 'normal
-          "SPC z s t"    'mw-thesaurus-lookup-at-point
-          "SPC z s T"    'mw-thesaurus-lookup)
+           "SPC z s t"    'mw-thesaurus-lookup-at-point
+           "SPC z s T"    'mw-thesaurus-lookup)
   )
 #+end_src
 
@@ -2845,7 +2923,7 @@ Probably requires external =rg= command.
 (use-package pdf-tools
   :straight t
   :bind (:map pdf-view-mode-map ("t" . pdf-outline))
-  :mode  ("\\.pdf\\'" . pdf-view-mode)
+  :mode ("\\.pdf\\'"     . pdf-view-mode)
   :hook (after-init-hook . pdf-tools-install)
   )
 #+end_src
@@ -3046,45 +3124,6 @@ Probably requires external =rg= command.
 #+end_src
 
 * Misc Packages
-** =popper=                                                                      :by_karthink:
-#+begin_src emacs-lisp
-(use-package popper
-  :straight t
-  :bind (("C-`"   . popper-toggle      )
-         ("M-`"   . popper-cycle       )
-         ("C-M-`" . popper-toggle-type )
-         :repeat-map garid/popper-repeat
-         ("`" .      popper-cycle )
-         ("q" .      popper-close-latest ))
-  :custom
-  (popper-window-height 15)
-  (popper-reference-buffers '("\\*Messages\\*"
-                              "\\*eldoc\\*"
-                              "\\*eldoc.*\\*"
-                              "\\*Outline.*\\*"
-                              "\\*xref\\*"
-                              "\\*Help\\*"
-                              "Output\\*$"
-                              "\\*Async Shell Command\\*"
-                              "\\*devdocs\\*"
-                              "\\*lsp-bridge-doc\\*"
-                              "\\*git-gutter:diff\\*"
-                              "\\*Org Select\\*"
-                              "\\*Google Translate\\*"
-                              "\\*Org Attach\\*"
-                              "\\*Org Lint\\*"
-                              "\\*git-gutter:.*\\*"
-                              "\\* Merriam-Webster Thesaurus \\*"
-                              "CAPTURE-inbox.org"
-                              help-mode
-                              compilation-mode))
-
-  :hook
-  (after-init-hook . popper-mode     )
-  (after-init-hook . popper-echo-mode)
-  )
-#+end_src
-
 ** =command-log-mode=
 #+begin_src emacs-lisp
 (use-package command-log-mode
@@ -3129,22 +3168,6 @@ Probably requires external =rg= command.
 #+begin_src emacs-lisp
 (use-package exercism :straight t)
 #+end_src
-** =zoom-window=
-#+begin_src emacs-lisp
-(use-package zoom-window
-  :straight t
-  :custom
-  (zoom-window-mode-line-color "gray60")
-  :bind (("M-F" . zoom-window-zoom)
-         :repeat-map garid/windmove-repeat
-         ("f" . zoom-window-zoom)
-         ("n" . zoom-window-next))
-  )
-#+end_src
-
-#+RESULTS:
-: zoom-window-next
-
 ** =screencast=
 #+begin_src emacs-lisp
 (use-package gif-screencast

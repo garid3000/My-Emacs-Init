@@ -528,8 +528,7 @@ org-mode :when (re-search-backward "^#\\+begin_src\\b" (line-beginning-position)
 (results    "results "  :post (garid/choose-from-list-and-insert-it '("verbatim" "value" "output" "table" "file" "list" "scalar" "code" "drawer" "html" "latex" "link" "org" "pp" "silent" )))
 (session    "session "  :post (garid/choose-from-list-and-insert-it '("SessionName" "" "/ssh:localhost:py" "/jpy:localhost#8888")))
 (shebang    "shebang #!/usr/bin/env bash") ;; (shebang      "shebang #!/bin/bash")
-(tangle     "tangle ~/")
-(tangle_iff "tangle (if (not file-exists-p \"foo\") \"foo\" \"no\")")
+(tangle     "tangle "   :post (garid/choose-from-list-and-insert-it '("~/" "no" "yes" "(if (not file-exists-p \"foo\") \"foo\" \"no\")")))
 (wrap       "wrap "     :post (garid/choose-from-list-and-insert-it '("example" "src python" "src sh" "src bash")))
 
 org-mode
