@@ -698,37 +698,41 @@ and later sets cursor at that point when you open that file.
            (dired-kill-when-opening-new-dired-buffer t)
            (dired-hide-details-mode                  t)
            (insert-directory-program (if (eq system-type 'berkeley-unix) "gls"  ;; in case for BSD
-                                       "ls"))
-           )
+                                       "ls")))
 
-  :hook     (;;(dired-mode . denote-dired-mode          ) <-- perhaps should be at denote conf
+  :hook     ((dired-mode-hook . denote-dired-mode       )
              (dired-mode-hook . dired-omit-mode         )
              (dired-mode-hook . auto-revert-mode        )
              (dired-mode-hook . dired-hide-details-mode ))
 
-
   :general
   (:states 'normal
+           :prefix "SPC"
+           "d"     'dired-jump
+           "D s"   'dired)
+
+  (:states 'normal
            :keymaps 'dired-mode-map
+           "SPC"         nil
            "h"          'dired-up-directory
            "l"          'dired-find-file
            "N"          'dired-create-directory
            (kbd "C-n")  'mkdir
            (kbd "C-s")  'dired-omit-mode
-           "SPC"         nil
+           "SPC D p"    'dired-preview-mode
+           "SPC W"      'wdired-change-to-wdired-mode
+           ;; dired-filter
+           "g f"        'dired-filter-by-name 
+           "g F"        'dired-filter-pop 
            )
+
   (:states 'normal
-           :prefix "SPC"
-           ;; :global-prefix "C-SPC"
-           ;; "D"     '(:which-key "dired...")
-           "d"     'dired-jump
-           "D s"   'dired)
-  ;; :config
-  ;; (with-eval-after-load 'evil-collection
-  ;;   (evil-collection-define-key 'normal 'dired-mode-map
-  ;;     " "  nil
-  ;;     ;; "g/" dired-filter-map
-  ;;     ))
+           :keymaps   'dired-mode-map ;; #'dired-preview-mode-map
+           :predicate '(bound-and-true-p dired-preview-mode)
+           "J"        'dired-preview-page-down
+           "K"        'dired-preview-page-up)
+
+
   )
 #+end_src
 
@@ -737,14 +741,8 @@ and later sets cursor at that point when you open that file.
 ** =wdired=
 #+begin_src emacs-lisp
 (use-package wdired
-  :straight   nil
-  :after dired
-  :general
-  (:states 'normal
-           :keymaps  'dired-mode-map
-           :prefix   "SPC"
-           "W"       'wdired-change-to-wdired-mode)
-  )
+  :straight nil
+  :after dired)
 #+end_src
 
 #+RESULTS:
@@ -754,17 +752,8 @@ and later sets cursor at that point when you open that file.
 (use-package dired-preview
   :straight t
   :after dired
-  :general
-  (:states 'normal
-           :keymaps   'dired-mode-map
-           "SPC D p"  'dired-preview-mode)
-
-  (:states 'normal
-           :keymaps   'dired-mode-map ;; #'dired-preview-mode-map
-           :predicate '(bound-and-true-p dired-preview-mode)
-           "J"        'dired-preview-page-down
-           "K"        'dired-preview-page-up)
-  )
+  :custom
+  (dired-preview-delay 0.15))
 #+end_src
 
 ** =dired-filter=
@@ -772,13 +761,7 @@ and later sets cursor at that point when you open that file.
 #+begin_src emacs-lisp
 (use-package dired-filter
   :straight t
-  :after dired
-  :demand t
-  :general
-  (:states 'normal
-           :keymaps 'dired-mode-map
-           "g f"    'dired-filter-by-name
-           "g F"    'dired-filter-pop))
+  :after dired)
 #+end_src
 
 * Window & buffer related
@@ -1652,7 +1635,9 @@ license.
   (citar-denote-use-bib-keywords      nil          )
 
   :hook
-  (after-init-hook . citar-denote-mode))
+  ;; (after-init-hook . citar-denote-mode)
+  (emacs-startup-hook . citar-denote-mode)
+  )
 #+end_src
 
 ** Org Time managements
@@ -2354,6 +2339,7 @@ Emacs Speaks Statistics
            "SPC p r" 'xref-find-references
            )
 
+  :hook (prog-mode-hook . apheleia-mode)
   )
 #+end_src
 
@@ -2958,7 +2944,6 @@ environment.systemPackages = with pkgs; [
 #+begin_src emacs-lisp
 (use-package notmuch
   :straight t
-  :defer    t
   :custom
   (notmuch-search-oldest-first nil)
   (notmuch-address-command     nil)
@@ -3146,9 +3131,9 @@ environment.systemPackages = with pkgs; [
   :straight t
   :general (:states 'normal
                     "SPC v q" 'apheleia-format-buffer)
-  :hook (prog-mode-hook . apheleia-mode)
   )
 #+end_src
+
 ** =crux=
 #+begin_src emacs-lisp
 (use-package crux
