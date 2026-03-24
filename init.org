@@ -2534,12 +2534,6 @@ Emacs Speaks Statistics
            "SPC <"  'recompile))
 #+end_src
 
-** =consult-eglot=: consulting with LSP
-#+begin_src emacs-lisp
-(use-package consult-eglot
-  :straight t
-  :after eglot)
-#+end_src
 ** =corfu=: completion
 #+begin_src emacs-lisp
 (use-package corfu
@@ -2595,6 +2589,8 @@ Emacs Speaks Statistics
   :config
   (add-to-list 'eglot-server-programs
                '(python-mode . ("pyright-langserver" "--stdio")))
+  ;; (add-to-list 'eglot-server-programs
+  ;;              '(python-mode . ("basedpyright-langserver" "--stdio")))
   (add-to-list 'eglot-server-programs
                '(org-mode . ("harper-ls" "--stdio")))
   (add-to-list 'eglot-server-programs
@@ -2604,6 +2600,12 @@ Emacs Speaks Statistics
                                  "-cli-config" "~/.arduino15/arduino-cli.yaml"
                                  "-fqbn" "esp32:esp32:esp32da")))
   )
+#+end_src
+** =consult-eglot=: consulting with LSP
+#+begin_src emacs-lisp
+(use-package consult-eglot
+  :straight t
+  :after eglot)
 #+end_src
 ** =eglot-booster=: faster eglot
 #+begin_src emacs-lisp
