@@ -854,7 +854,9 @@ and later sets cursor at that point when you open that file.
                               "\\* Merriam-Webster Thesaurus \\*"
                               "CAPTURE-inbox.org"
                               help-mode
-                              compilation-mode))
+                              compilation-mode
+                              gptel-commit-rationale-mode
+                              ))
 
   :hook
   (after-init-hook . popper-mode     )
