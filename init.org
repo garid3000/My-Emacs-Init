@@ -3131,6 +3131,7 @@ environment.systemPackages = with pkgs; [
 #+begin_src emacs-lisp
 (use-package apheleia
   :straight t
+  :demand t
   :general (:states 'normal
                     "SPC v q" 'apheleia-format-buffer)
   )
