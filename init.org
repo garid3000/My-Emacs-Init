@@ -2211,6 +2211,14 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   )
 #+end_src
 
+** Misc.
+*** org present
+#+begin_src emacs-lisp
+(use-package org-present
+  :straight t
+  :after evil-collection)
+#+end_src
+
 * Programming languages
 ** =arduino=
 #+begin_src emacs-lisp
@@ -2322,7 +2330,6 @@ Emacs Speaks Statistics
 (use-package prog-mode
   :straight nil
   :bind (:map prog-mode-map ("M-q" .  nil))
-
   :general
   (:states 'normal
            :keymaps 'prog-mode-map
@@ -2341,7 +2348,6 @@ Emacs Speaks Statistics
            "SPC p r" 'xref-find-references
            )
 
-  :hook (prog-mode-hook . apheleia-mode)
   )
 #+end_src
 
@@ -2916,7 +2922,10 @@ environment.systemPackages = with pkgs; [
   :straight t
   :bind (:map pdf-view-mode-map ("t" . pdf-outline))
   :mode ("\\.pdf\\'"     . pdf-view-mode)
-  :hook (after-init-hook . pdf-tools-install)
+  :hook
+  (after-init-hook . pdf-tools-install)
+  (pdf-view-mode-hook . (lambda () (interactive) (blink-cursor-mode-1)));; this was causing pdf-view-mode's border to blink annoyingly
+  (pdf-view-mode-hook . pdf-view-roll-minor-mode) ;; roll
   )
 #+end_src
 
@@ -2948,6 +2957,7 @@ environment.systemPackages = with pkgs; [
 #+begin_src emacs-lisp
 (use-package notmuch
   :straight t
+  :after      evil-collection
   :custom
   (notmuch-search-oldest-first nil)
   (notmuch-address-command     nil)
@@ -3136,6 +3146,8 @@ environment.systemPackages = with pkgs; [
   :demand t
   :general (:states 'normal
                     "SPC v q" 'apheleia-format-buffer)
+
+  :hook (prog-mode-hook . apheleia-mode)
   )
 #+end_src
 
