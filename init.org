@@ -119,8 +119,10 @@ run:
            :prefix "SPC"
            "a" 'evil-avy-goto-char-2)
 
-  :hook
-  (after-init-hook . evil-mode)
+  ;; :hook
+  ;; (after-init-hook . evil-mode)
+  :config
+  (evil-mode +1)
   )
 #+end_src
 ** =evil-collection=: vi-movements everywhere
@@ -526,6 +528,10 @@ mark or parenthesis.
   (scroll-step                  1)
   (use-short-answers            t) ;; yes/no to y/n
   (truncate-lines               t)             ;; <----------------------- tests ---------------
+  (world-clock-list             '(("Asia/Tokyo"       "Tokyo"       )
+                                  ("Asia/Ulaanbaatar" "Ulaanbaatar" )
+                                  ("Europe/Rome"      "Rome"        )
+                                  ("Asia/Manila"      "Manila"      )))
 
   :bind (:map minibuffer-local-map
               ( "M-f" . forward-word ))
@@ -856,6 +862,7 @@ and later sets cursor at that point when you open that file.
                               help-mode
                               compilation-mode
                               gptel-commit-rationale-mode
+                              world-clock-mode 
                               ))
 
   :hook
@@ -1205,7 +1212,7 @@ and later sets cursor at that point when you open that file.
 
   ;; ---------------- TODO --------------------------------------------------------------
   (org-todo-keywords      '((sequence
-                             "TODO(t)" "NEXT(n)" "WAIT(w)" "PRJT(p)" "VAGUE(v)"
+                             "TODO(t)" "NEXT(n)" "WAIT(w)" "PRJT(p)" ;; "VAGUE(v)"
                              "|"  "DONE(d)" "CNCL(c)")))
 
   (org-todo-keyword-faces '(("TODO"  . org-todo                           )
@@ -1213,7 +1220,7 @@ and later sets cursor at that point when you open that file.
                             ("NEXT"  . org-formula                        )
                             ("WAIT"  . org-warning                        )
                             ("DONE"  . org-done                           )
-                            ("VAGUE" . "medium purple"                    )
+                            ;; ("VAGUE" . "medium purple"                    )
                             ("CNCL"  . (:foreground "gray30" :weight bold ))))
 
   (org-log-done            'time)
@@ -1659,14 +1666,14 @@ license.
   (org-agenda-files '("~/BrainDump/gtd/org-gtd-tasks.org"))
   (org-agenda-span             1) ;;  90)
   (org-agenda-custom-commands
-   '(("i" "Inbox"                tags-todo "+TODO=\"VAGUE\"" ((org-agenda-files (file-expand-wildcards "~/BrainDump/gtd/inbox.org"))))
+   '(;("i" "Inbox"                tags-todo "+TODO=\"VAGUE\"" ((org-agenda-files (file-expand-wildcards "~/BrainDump/gtd/inbox.org"))))
      ("n" "Next actions"         tags-todo "+TODO=\"NEXT\"")
      ("w" "Waiting"              tags-todo "+TODO=\"WAIT\"")
      ("s" "Someday"              tags-todo "+TODO=\"TODO\"|TODO=\"PRJT\"" ((org-agenda-files (file-expand-wildcards "~/BrainDump/gtd/someday.org"))))
      ("o" "Actions and Projects" tags-todo "+TODO=\"TODO\"|TODO=\"PRJT\"")))
 
   (org-agenda-current-time-string "← now ───────────────────────────────────────────────")
-  (org-agenda-prefix-format '((agenda . " %i %-16:c%?-12t% s")
+  (org-agenda-prefix-format '((agenda   . " %i %-16:c%?-12t% s")
                               (timeline . "  % s"             )
                               (todo     . "  %-12:c"          )
                               (tags     . "  %-25:c"          )
@@ -1683,24 +1690,22 @@ license.
                                  (search category-keep)))
 
   ;; M-x org-agenda # to show the stuck projects
-  (org-stuck-projects '("+TODO=\"PRJT\"" ("TODO") nil "") )
+  (org-stuck-projects    '("+TODO=\"PRJT\"" ("TODO") nil ""))
 
   (org-refile-use-outline-path             'file)
   (org-outline-path-complete-in-steps      'nil)
 
-  ;; (refile-targets                          (file-expand-wildcards "~/BrainDump/gtd/*.org"))
-  (org-refile-targets '( (nil :maxlevel . 3) ;; aka the current file
-                         ("~/BrainDump/denote_bps/20250911T174108--bps__gtd.org"       :maxlevel . 3)
-                         ("~/BrainDump/denote_bps/20250926T122541--someday__gtd.org"   :maxlevel . 1)
+  
+  (org-refile-targets '( (nil :maxlevel . 3)  ;; aka the current file
+                         ;; (file-expand-wildcards "~/BrainDump/gtd/*.org")
+                         ;; ("~/BrainDump/denote_bps/20250911T174108--bps__gtd.org"       :maxlevel . 3)
+                         ;; ("~/BrainDump/denote_bps/20250926T122541--someday__gtd.org"   :maxlevel . 1)
                          ))
 
 
   (org-capture-templates
-   '(("i" "Inbox"      entry (file "~/BrainDump/inbox.org")      "* VAGUE %?\nAdded: %U\n"         :empty-lines 1 :prepend t)
-     ("I" "Inbox from" entry (file "~/BrainDump/inbox.org")      "* VAGUE %?\nAdded: %U\nFrom: %a" :empty-lines 1 :prepend t)
-     ;;("n" "Next"       entry (file+headline "~/BrainDump/gtd/main.org"    "Single")  "** NEXT  %?\nAdded: %U\n"                                         :empty-lines 1 :prepend t)
-     ;;("p" "Project"    entry (file+headline "~/BrainDump/gtd/main.org"    "Project")  "* PRJT  %?\n:PROPERTIES:\n:CATEGORY: %^{Id}\n:END:\nAdded: %U\n" :empty-lines 1 :prepend t)
-     ;;("s" "Someday"    entry (file+headline "~/BrainDump/gtd/someday.org" "Someday")  "* TODO  %?\nAdded: %U\n"                                         :empty-lines 1 :prepend t)
+   '(("i" "Inbox"      entry (file "~/BrainDump/gtd/inbox.org")      "* TODO %?\nAdded: %U\n"         :empty-lines 1 :prepend t)
+     ("I" "Inbox from" entry (file "~/BrainDump/gtd/inbox.org")      "* TODO %?\nAdded: %U\nFrom: %a" :empty-lines 1 :prepend t)
      ))
 
   :hook
