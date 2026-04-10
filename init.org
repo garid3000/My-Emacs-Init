@@ -1061,7 +1061,8 @@ and later sets cursor at that point when you open that file.
               ("}"      . org-forward-paragraph          )
               ("n"      . org-next-block                 )
               ("p"      . org-previous-block             )
-              ("c"      . org-ctrl-c-ctrl-c              )
+              ;; ("c"      . org-ctrl-c-ctrl-c              )
+
               ;; :exit
               ;; ("'"         . org-edit-special            )
               ;; :repeat-map garid/org-repeat-heading
@@ -1431,7 +1432,12 @@ and later sets cursor at that point when you open that file.
 (use-package ob-asymptote :after org :straight t)
 (use-package mermaid-mode :after org :straight t)
 (use-package ob-mermaid   :after org :straight t
-  :custom (ob-mermaid-cli-path "mmdc"))
+  :custom (ob-mermaid-cli-path "mmdc")
+  :config
+  (add-to-list 'org-babel-load-languages '(mermaid . t))
+  (org-babel-do-load-languages 'org-babel-load-languages
+                               org-babel-load-languages)
+  )
 #+end_src
 
 **** COMMENT Later
