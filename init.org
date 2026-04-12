@@ -1214,14 +1214,14 @@ and later sets cursor at that point when you open that file.
   ;; ---------------- TODO --------------------------------------------------------------
   (org-todo-keywords      '((sequence
                              "TODO(t)" "NEXT(n)" "WAIT(w)" "PRJT(p)" ;; "VAGUE(v)"
-                             "|"  "DONE(d)" "CNCL(c)")))
+                             "|"  "DONE(d)" "DID(D)" "CNCL(c)")))
 
   (org-todo-keyword-faces '(("TODO"  . org-todo                           )
                             ("PRJT"  . org-tag                            )
                             ("NEXT"  . org-formula                        )
                             ("WAIT"  . org-warning                        )
                             ("DONE"  . org-done                           )
-                            ;; ("VAGUE" . "medium purple"                    )
+                            ("DID"   . org-done                           )
                             ("CNCL"  . (:foreground "gray30" :weight bold ))))
 
   (org-log-done            'time)
