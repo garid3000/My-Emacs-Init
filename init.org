@@ -2837,7 +2837,8 @@ Probably requires external =rg= command.
            "g r"      'gptel-rewrite)
 
   :config
-  (setopt gptel-model        'gpt-5.2)
+  ;; (setopt gptel-model     'gpt-5.2)
+  (setopt gptel-model        'gpt-5-nano)
   (setopt gptel-backend      (gptel-make-openai "OpenAI" :key 'gptel-api-key-from-auth-source))
   )
 #+end_src
