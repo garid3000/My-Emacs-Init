@@ -2646,11 +2646,11 @@ Emacs Speaks Statistics
   :demand t
   :custom
   (project-switch-commands
-   '((project-find-file    "Find file"      )
-     (project-find-regexp  "Find regexp"    )
-     (project-find-dir     "Find directory" )
-     (magit-project-status "Magit"          )
-     (project-eshell       "Eshell"         )
+   '((project-find-file    "Find file"      "f")
+     (project-find-regexp  "Find regexp"    "r")
+     (project-find-dir     "Find directory" "d")
+     (magit-project-status "Magit"          "g")
+     (project-eshell       "Eshell"         "e")
      (project-any-command  "Other"          )))
   :general (
             :states 'normal
