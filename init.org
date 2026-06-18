@@ -1262,7 +1262,8 @@ and later sets cursor at that point when you open that file.
                                  (emacs-lisp . t)   ;; (ditaa      . t)
                                  (gnuplot    . t)   ;; (go         . t)
                                  (latex      . t)   ;; (jupyter    . t)
-                                 (makefile   . t)   ;; (lua        . t)
+                                 (makefile   . t)
+                                 (lua        . t)
                                  (maxima     . t)   ;; (mermaid    . t)
                                  (python     . t)   ;; (nim        . t)
                                  (shell      . t)   ;; (nix        . t)
@@ -3160,6 +3161,8 @@ environment.systemPackages = with pkgs; [
                     "SPC v q" 'apheleia-format-buffer)
 
   :hook (prog-mode-hook . apheleia-mode)
+  :custom
+  (apheleia-formatters-respect-fill-column t)
   )
 #+end_src
 
