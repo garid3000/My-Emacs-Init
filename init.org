@@ -99,7 +99,7 @@ run:
 ;; Vim Bindings
 (use-package evil
   :straight t
-  :demand t
+  ;; :demand t
 
   :custom
   (evil-toggle-key               "")  ;; removes the C-z toggling evil accidentally
@@ -320,6 +320,7 @@ mark or parenthesis.
 #+begin_src emacs-lisp
 (use-package faces
   :straight nil
+  :defer t
   :custom
   (face-font-family-alternatives
    '(("Monospace" "Aporetic Sans Mono" "Noto Sans Mono CJK JP" "Iosevka SS06" "Iosevka Term SS06" "Liberation Mono" "courier" "fixed")
@@ -496,16 +497,6 @@ mark or parenthesis.
 #+begin_src emacs-lisp
 (use-package bookmark
   :straight nil
-  ;; :general
-  ;; (:states 'normal
-  ;;          :prefix "SPC"
-  ;;          "b" 'consult-bookmark
-  ;;          ;; "B" '(:which-key "bookmark...")
-  ;;          "B b" 'list-bookmarks
-  ;;          "B s" 'bookmark-set
-  ;;          "B j" 'bookmark-jump
-  ;;          "B c" 'consult-bookmark
-  ;;          )
   :bind (:map evil-normal-state-map
               ("SPC b"   . consult-bookmark)
               ("SPC B b" . list-bookmarks  )
@@ -662,7 +653,7 @@ mark or parenthesis.
 #+begin_src emacs-lisp
 (use-package recentf
   :straight nil
-  :demand t
+  :defer t
   :custom
   (recentf-max-menu-items   40)
   (recentf-max-saved-items  40)
@@ -1087,13 +1078,13 @@ and later sets cursor at that point when you open that file.
   ;; :demand t
   :delight "org"
   :bind (:map org-mode-map
-              ("C-S-k"  . org-previous-visible-heading   )
-              ("C-S-j"  . org-next-visible-heading       )
-              ("C-k"    . org-backward-heading-same-level)
-              ("C-j"    . org-forward-heading-same-level )
-
-              ("C-S-p"  . org-previous-visible-heading   )
-              ("C-S-n"  . org-next-visible-heading       )
+              ("C-S-k"         . org-previous-visible-heading   )
+              ("C-S-j"         . org-next-visible-heading       )
+              ("C-k"           . org-backward-heading-same-level)
+              ("C-j"           . org-forward-heading-same-level )
+              ("C-S-p"         . org-previous-visible-heading   )
+              ("C-S-n"         . org-next-visible-heading       )
+              ("M-S-<return>"  . org-insert-todo-heading-respect-content)
               :repeat-map garid/org-repeat
               ("["      . org-previous-visible-heading   )
               ("]"      . org-next-visible-heading       )
@@ -1114,9 +1105,6 @@ and later sets cursor at that point when you open that file.
               )
 
   :general
-  (:keymaps  'org-mode-map
-             "M-S-<return>" 'org-insert-todo-heading-respect-content)
-
   (:states 'normal
            :keymaps  'org-mode-map
            :prefix   "SPC"
@@ -1525,7 +1513,28 @@ https://stackoverflow.com/questions/78982629/in-emacs-how-to-prevent-org-babel-d
 (use-package denote
   :straight t
   :after    org
-  :demand   t   ;; because I usually it just after starting emacs 
+  :defer    t 
+  :bind
+  (:map evil-normal-state-map
+        ("SPC n r"    .  'denote-rename-file            )
+        ("SPC n R d"  .  'denote-rename-file-date       )
+        ("SPC n R i"  .  'denote-rename-file-identifier )
+        ("SPC n R s"  .  'denote-rename-file-signature  )
+        ("SPC n R t"  .  'denote-rename-file-keywords   )
+        ("SPC n R k"  .  'denote-rename-file-keywords   )
+        ("SPC n f"    .  'denote-open-or-create         )
+        ("SPC n d"    .  'denote-dired                  )
+        ("SPC n n t"  .  'denote-type                   )
+        ("SPC n n d"  .  'denote-date                   )
+        ("SPC n n s"  .  'denote-subdirectory           )
+        ("SPC n n t"  .  'denote-template               )
+        ("SPC n n S"  .  'denote-singature              )
+        ("SPC n l i"  .  'denote-link                   )
+        ("SPC n l c"  .  'denote-link-or-create         )
+        ("SPC n L b"  .  'denote-find-backlink          )
+        ("SPC n L f"  .  'denote-find-link              )
+        ("SPC n L B"  .  'denote-backlinks              )
+        ("SPC n L a"  .  'denote-add-links              ))
   :custom
   (denote-excluded-directories-regexp  ".*export_.*\\|.*website.*")
   (denote-directory (mapcar             ;; dynamically creating list based on directory name
@@ -1555,30 +1564,6 @@ https://stackoverflow.com/questions/78982629/in-emacs-how-to-prevent-org-babel-d
                    :link denote-org-link-format
                    :link-in-context-regexp denote-org-link-in-context-regexp)
           denote-file-types))
-  :bind
-  (:map evil-normal-state-map
-        ;; base denote
-        ("SPC n r"    .  'denote-rename-file            )
-        ("SPC n R d"  .  'denote-rename-file-date       )
-        ("SPC n R i"  .  'denote-rename-file-identifier )
-        ("SPC n R s"  .  'denote-rename-file-signature  )
-        ("SPC n R t"  .  'denote-rename-file-keywords   )
-        ("SPC n R k"  .  'denote-rename-file-keywords   )
-        ("SPC n f"    .  'denote-open-or-create         )
-        ("SPC n d"    .  'denote-dired                  )
-        ("SPC n n t"  .  'denote-type                   )
-        ("SPC n n d"  .  'denote-date                   )
-        ("SPC n n s"  .  'denote-subdirectory           )
-        ("SPC n n t"  .  'denote-template               )
-        ("SPC n n S"  .  'denote-singature              )
-        ("SPC n l i"  .  'denote-link                   )
-        ("SPC n l c"  .  'denote-link-or-create         )
-        ("SPC n L b"  .  'denote-find-backlink          )
-        ("SPC n L f"  .  'denote-find-link              )
-        ("SPC n L B"  .  'denote-backlinks              )
-        ("SPC n L a"  .  'denote-add-links              )
-
-        )
   )
 
 #+end_src
@@ -1844,10 +1829,6 @@ license.
          :map ibuffer-mode-map    ("<f7>" . casual-ibuffer-tmenu )
          :map calc-mode-map       ("<f7>" . casual-calc-tmenu    )
          :map dired-mode-map      ("<f7>" . casual-dired-tmenu   ))
-  :general
-  ;; (:states 'normal
-  ;;          :keymaps   'dired-mode-map
-  ;;          ","        'casual-dired-sort-by-tmenu )
   )
 #+end_src
 *** =consult-todo=
@@ -1899,7 +1880,6 @@ license.
               ("SPC o g n" . 'org-gtd-show-all-next         )
               ("SPC o g s" . 'org-gtd-reflect-stuck-projects))
 
-  ;; :general
   ;; (:keymaps 'org-gtd-clarify-mode-map
   ;;           "C-c C-c" 'org-gtd-organize)
 
@@ -1935,14 +1915,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 (use-package ox
   :straight nil
   :after org
-  ;; :demand t
-  :defer t ;; 2026-06-23 trial
-  ;; :general
-  ;; (:states 'normal
-  ;;          :keymaps  'org-mode-map
-  ;;          :prefix    "SPC"
-  ;;          ;; "o x"     '(:which-key "export...")
-  ;;          )
+  :defer t
   :config
 
   ;;(defadvice org-export-output-file-name (before org-add-export-dir activate)
@@ -2149,6 +2122,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 (use-package org-attach
   :after org
   :straight nil
+  :defer t
   :custom
   (org-id-method                       'ts) ;;'org)
   (org-attach-id-to-path-function-list '(my/org-attach-dir-calculator
@@ -2308,6 +2282,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 (use-package code-cells
   :straight t
   :after comint
+  :defer t
   :custom
   (code-cells-boundary-regexp
    "^\\s<+\\(?:\\s-*%\\(?1:%+\\)\\| In\\[[[:space:][:digit:]]*]:\\| \\[\\[\\)")
@@ -2321,8 +2296,8 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
               ("M-<RET>"    . code-cells-eval           )
               ("M-D"        . code-cells-duplicate      )
               ("M-d"        . code-cells-kill           )
-              ("M-j"        . code-cells-move-cell-down ) ;; conflict with outline indent mode, maybe later think on it
-              ("M-k"        . code-cells-move-cell-up   ) ;; conflict with outline indent mode, maybe later think on it
+              ("M-j"        . code-cells-move-cell-down )
+              ("M-k"        . code-cells-move-cell-up   )
               ("M-l"        . (lambda () (interactive) (insert "\n# %%\n")))
               ("M-v"        . code-cells-mark-cell      )
               ("M-;"        . code-cells-comment-or-uncomment)
@@ -2447,16 +2422,13 @@ Emacs Speaks Statistics
          :map inferior-python-mode-map
          ("C-l"    . comint-clear-buffer))
 
-  :general
-  (:states 'normal
-           :prefix "SPC"
-           ;; "P"      '(:which-key "Python...")
-           "P P"    'run-python
-           "P S"    'garid/set-python-send-buffer
-           "P L"    'garid/switch-python-shell-buffer
-           "L P"    'garid/switch-python-shell-buffer
-           )
+  (:map evil-normal-state-map
+        ( "SPC P P" .  'run-python                      )
+        ( "SPC P S" .  'garid/set-python-send-buffer    )
+        ( "SPC P L" .  'garid/switch-python-shell-buffer)
+        ( "SPC L P" .  'garid/switch-python-shell-buffer))
 
+  :general
   (:states 'normal
            :keymaps 'inferior-python-mode-map
            "SPC P r"  'python-shell-restart)
@@ -2612,11 +2584,13 @@ Emacs Speaks Statistics
 #+begin_src emacs-lisp
 (use-package compile
   :straight nil
+  :defer t
+  :after evil
   :custom
   (compilation-scroll-output t)
-  :general
-  (:states 'normal
-           "SPC <"  'recompile))
+  :bind (:map evil-normal-state-map
+              ("SPC <" .     'recompile))
+  )
 #+end_src
 
 ** =corfu=: completion
@@ -2636,22 +2610,16 @@ Emacs Speaks Statistics
   (corfu-preview-current          nil)
 
   ;; Optionally use TAB for cycling, default is `corfu-complete'.
-  :bind (:map corfu-map
-              ("M-SPC"      . corfu-insert-separator )
-              ;; ("TAB"     . corfu-insert           )
-              ;; ([tab]     . corfu-insert           )
-              ("S-<return>" . corfu-insert           )
-              ("M-h"        . corfu-insert           )
-              ("RET"        . nil                    ))
-  :general
-  (:states 'normal
-           "SPC s c o"  'corfu-mode
-           )
-
-  ;; :config
-  ;; (global-corfu-mode   )
-  ;; (corfu-history-mode  )
-  ;; (corfu-popupinfo-mode)
+  :bind
+  (:map evil-normal-state-map
+        ("SPC s c o"  . 'corfu-mode))
+  (:map corfu-map
+        ("M-SPC"      . corfu-insert-separator )
+        ;; ("TAB"     . corfu-insert           )
+        ;; ([tab]     . corfu-insert           )
+        ("S-<return>" . corfu-insert           )
+        ("M-h"        . corfu-insert           )
+        ("RET"        . nil                    ))
 
   :hook
   (after-init-hook  . global-corfu-mode   )
@@ -2659,8 +2627,8 @@ Emacs Speaks Statistics
   (after-init-hook  . corfu-popupinfo-mode)
   (eshell-mode-hook . (lambda ()
                         (setq-local corfu-quit-at-boundary t
-        			                         corfu-quit-no-match t
-        			                         corfu-auto nil)
+        			                corfu-quit-no-match t
+        			                corfu-auto nil)
                         (corfu-mode)))
   )
 #+end_src
@@ -2673,9 +2641,8 @@ Emacs Speaks Statistics
 
   :config
   (add-to-list 'eglot-server-programs
-               '(python-mode . ("pyright-langserver" "--stdio")))
-  ;; (add-to-list 'eglot-server-programs
-  ;;              '(python-mode . ("basedpyright-langserver" "--stdio")))
+               '(python-mode . ("pyright-langserver"      "--stdio")))
+  ;;           '(python-mode . ("basedpyright-langserver" "--stdio")))
   (add-to-list 'eglot-server-programs
                '(org-mode . ("harper-ls" "--stdio")))
   (add-to-list 'eglot-server-programs
@@ -2735,23 +2702,19 @@ Emacs Speaks Statistics
               ("SPC p s" .     'project-find-regexp)
               ("SPC p z" .     'project-switch-project)
 
-              ( "C-SPC p c"     . (lambda () (interactive) (project-other-window-command) (project-recompile)) )
-              ( "C-SPC p C"     . (lambda () (interactive) (project-other-window-command) (project-compile)) )
-              ( "C-SPC p d"     . (lambda () (interactive) (project-other-window-command) (project-dired)) )
-              ( "C-SPC p D"     . (lambda () (interactive) (project-other-window-command) (project-find-dir)) )
-              ( "C-SPC p e"     . (lambda () (interactive) (project-other-window-command) (project-eshell)) )
-              ( "C-SPC p f"     . (lambda () (interactive) (project-other-window-command) (project-find-file)) )
-              ( "C-SPC p k"     . (lambda () (interactive) (project-other-window-command) (project-kill-buffers)) )
-              ( "C-SPC p l"     . (lambda () (interactive) (project-other-window-command) (consult-project-buffer)) )
-              ( "C-SPC p L"     . (lambda () (interactive) (project-other-window-command) (project-list-buffers)) )
+              ( "C-SPC p c"     . (lambda () (interactive) (project-other-window-command) (project-recompile))            )
+              ( "C-SPC p C"     . (lambda () (interactive) (project-other-window-command) (project-compile))              )
+              ( "C-SPC p d"     . (lambda () (interactive) (project-other-window-command) (project-dired))                )
+              ( "C-SPC p D"     . (lambda () (interactive) (project-other-window-command) (project-find-dir))             )
+              ( "C-SPC p e"     . (lambda () (interactive) (project-other-window-command) (project-eshell))               )
+              ( "C-SPC p f"     . (lambda () (interactive) (project-other-window-command) (project-find-file))            )
+              ( "C-SPC p k"     . (lambda () (interactive) (project-other-window-command) (project-kill-buffers))         )
+              ( "C-SPC p l"     . (lambda () (interactive) (project-other-window-command) (consult-project-buffer))       )
+              ( "C-SPC p L"     . (lambda () (interactive) (project-other-window-command) (project-list-buffers))         )
               ( "C-SPC p q r r" . (lambda () (interactive) (project-other-window-command) (project-query-replace-regexp)) )
-              ( "C-SPC p s"     . (lambda () (interactive) (project-other-window-command) (project-find-regexp)) )
-              ( "C-SPC p z"     . (lambda () (interactive) (project-other-window-command) (project-switch-project)) )
-              )
-  
+              ( "C-SPC p s"     . (lambda () (interactive) (project-other-window-command) (project-find-regexp))          )
+              ( "C-SPC p z"     . (lambda () (interactive) (project-other-window-command) (project-switch-project))       ))
   )
-
-
 #+end_src
 
 * Git version control
@@ -2761,9 +2724,8 @@ Emacs Speaks Statistics
   :straight t
   :defer    t
   :bind (:map evil-normal-state-map
-              ( "SPC g m" .  'magit-status )
-              ( "SPC g d" .  'magit-ediff-compare )
-              )
+              ("SPC g m" . 'magit-status        )
+              ("SPC g d" . 'magit-ediff-compare ))
   )
 #+end_src
 
@@ -2773,13 +2735,7 @@ Similar to vim-signify.
 (use-package git-gutter
   :delight  " gtg"
   :straight t
-  :bind (:repeat-map git-gutter:repeat-map
-                     ("n" . git-gutter:next-hunk     )
-                     ("p" . git-gutter:previous-hunk )
-                     ("s" . git-gutter:popup-hunk    )
-                     ("S" . git-gutter:stage-hunk    )
-                     ("r" . git-gutter:revert-hunk   ))
-
+  :bind
   (:map evil-normal-state-map
         ( "SPC g S" .  'git-gutter:stage-hunk        )
         ( "SPC g s" .  'git-gutter:popup-hunk        )
@@ -2788,6 +2744,13 @@ Similar to vim-signify.
         ( "SPC g g" .  'git-gutter-mode              )
         ( "SPC g n" .  'git-gutter:next-hunk         )
         ( "SPC g p" .  'git-gutter:previous-hunk     ))
+  (:repeat-map git-gutter:repeat-map
+               ("n" . git-gutter:next-hunk     )
+               ("p" . git-gutter:previous-hunk )
+               ("s" . git-gutter:popup-hunk    )
+               ("S" . git-gutter:stage-hunk    )
+               ("r" . git-gutter:revert-hunk   ))
+
   :hook
   (magit-post-commit-hook . git-gutter:update-all-windows )
   (emacs-startup-hook     . global-git-gutter-mode        )
@@ -2804,8 +2767,6 @@ Similar to vim-signify.
   ;; (direnv-show-paths-in-summary t)
   ;; (direnv-use-faces-in-summary nil)
 
-
-  ;; :config (direnv-mode)
   :hook (after-init-hook . direnv-mode))
 #+end_src
 
@@ -2813,7 +2774,7 @@ Similar to vim-signify.
 #+begin_src emacs-lisp
 (use-package eshell
   :straight nil
-  :general
+  :after evil-collection
   :bind (:map evil-normal-state-map
               ( "SPC t e" .  'eshell ))
   :hook
@@ -2827,10 +2788,10 @@ Similar to vim-signify.
 (use-package eshell-atuin
   :straight t
   :after eshell
-  :demand t
   :general (:states '(normal insert)
                     :keymaps 'eshell-mode-map
                     "C-r" 'eshell-atuin-history)
+  ;; :bind (:map eshell-mode-map ("C-r" .  'eshell-atuin-history))  ;; <-- don't know why it's not working
   )
 #+end_src
 
@@ -2846,9 +2807,8 @@ Similar to vim-signify.
   ("M-5"   .  harpoon-go-to-5           )
   ("M-6"   .  harpoon-go-to-6           )
   ("<f9>"  .  harpoon-quick-menu-hydra  )
-  :general
-  (:states 'normal
-           "SPC B H"      'harpoon-quick-menu-hydra)
+  (:map evil-normal-state-map
+        ("SPC B H"   .  'harpoon-quick-menu-hydra))
   )
 #+end_src
 
@@ -2866,9 +2826,13 @@ Probably requires external =rg= command.
 #+begin_src emacs-lisp
 (use-package rg
   :straight t
-  :general
-  (:states '(normal visual)
-           "SPC r g"  'rg))
+  :after evil
+  :defer t
+  :bind
+  (:map evil-normal-state-map
+        ("SPC r g" .  'rg))
+
+  )
 #+end_src
 * AI helpers:
 ** =gptel=                                                                :demand:by_karthink:
@@ -2876,18 +2840,18 @@ Probably requires external =rg= command.
 (use-package gptel
   :straight t
   :after    org
-  :demand   t
+  :defer   t
   :custom   (gptel-default-mode 'org-mode)
 
-  :general
-  (:states 'normal
-           :prefix "SPC"
-           "G p"  'gptel
-           "L g"  'gptel
-           "G m"  'gptel-menu)
 
-  (:states 'visual
-           "g r"      'gptel-rewrite)
+  :bind
+  (:map evil-normal-state-map
+        ("SPC G p" .  'gptel)
+        ("SPC L g" .  'gptel)
+        ("SPC G m" .  'gptel-menu))
+
+  (:map evil-visual-state-map
+        ("g r" .  'gptel-rewrite))
 
   :config
   ;; (setopt gptel-model     'gpt-5.2)
@@ -2903,7 +2867,7 @@ Probably requires external =rg= command.
 (use-package gptel-commit
   :straight t
   :after (gptel magit)
-  :demand t
+  :defer t
   :custom
   (gptel-commit-stream t)
 
@@ -2922,27 +2886,29 @@ Probably requires external =rg= command.
 #+begin_src emacs-lisp
 (use-package ispell
   :straight nil
+  :defer t
+  :after evil
   :custom
   (ispell-alternate-dictionary "/home/garid/.config/emacs/ispell-wl.txt")
-  :general (:states 'normal
-            :prefix "SPC z"
-            ;; "s"      '(:which-key "ispell...")
-            "s w"    'ispell-word
-            "s r"    'ispell-region
-            "s C"    'ispell-comments-and-strings
-            "s c"    'ispell-comment-or-string-at-point
-            "s b"    'ispell-buffer
-            "s m"    'ispell-message
-            "s q"    'ispell-kill-ispell
-            "s l"    'ispell-change-dictionary
-            ))
+  :bind
+  (:map evil-normal-state-map
+        ("SPC z s w"  . 'ispell-word                       )
+        ("SPC z s r"  . 'ispell-region                     )
+        ("SPC z s C"  . 'ispell-comments-and-strings       )
+        ("SPC z s c"  . 'ispell-comment-or-string-at-point )
+        ("SPC z s b"  . 'ispell-buffer                     )
+        ("SPC z s m"  . 'ispell-message                    )
+        ("SPC z s q"  . 'ispell-kill-ispell                )
+        ("SPC z s l"  . 'ispell-change-dictionary          ))
+
+  )
 #+end_src
 
 #+RESULTS:
 
 *** =jinx=
 #+begin_src emacs-lisp
-(use-package jinx :straight t)
+(use-package jinx :straight t :defer t)
 #+end_src
 
 For NixOS only: add the following configuration to
@@ -2962,11 +2928,13 @@ environment.systemPackages = with pkgs; [
 #+begin_src emacs-lisp
 (use-package mw-thesaurus
   :straight t
-  :general
-  (:states 'normal
-           "SPC z s t"    'mw-thesaurus-lookup-at-point
-           "SPC z s T"    'mw-thesaurus-lookup)
-  )
+  :after evil
+  :defer t
+  :bind
+  (:map evil-normal-state-map
+        ( "SPC z s t" .  'mw-thesaurus-lookup-at-point )
+        ( "SPC z s T" .  'mw-thesaurus-lookup          ))
+)
 #+end_src
 
 ** Writing package
@@ -2976,16 +2944,20 @@ environment.systemPackages = with pkgs; [
 
 (use-package focus
   :straight t
-  :general
-  (:states 'normal
-           "SPC s f m " 'focus-mode))
+  :defer t
+  :bind
+  (:map evil-normal-state-map
+        ("SPC s f m" . 'focus-mode))
+  )
 #+end_src
 
 ** =pdf-tools=: reading PDF in Emacs
 #+begin_src emacs-lisp
 (use-package pdf-tools
   :straight t
-  :bind (:map pdf-view-mode-map ("t" . pdf-outline))
+  :defer t
+  :bind (:map pdf-view-mode-map
+              ("t" . pdf-outline))
   :mode ("\\.pdf\\'"     . pdf-view-mode)
   :hook
   (after-init-hook . pdf-tools-install)
@@ -3022,7 +2994,8 @@ environment.systemPackages = with pkgs; [
 #+begin_src emacs-lisp
 (use-package notmuch
   :straight t
-  :after      evil-collection
+  :after    evil-collection
+  :defer    t
   :custom
   (notmuch-search-oldest-first nil)
   (notmuch-address-command     nil)
@@ -3070,16 +3043,11 @@ environment.systemPackages = with pkgs; [
                                      :query "tag:todo  and tag:bps"
                                      :sort-order newest-first
                                      :key ,(kbd "t"))))
-
-  :general
-  (:states 'normal
-           :prefix "SPC"
-           ;; "m"   '(:which-key "mail...")
-           "m a" 'notmuch
-           "m n" 'notmuch-mua-new-mail)
-
-  ;; (:states '(normal notmuch-show-mode )
-  ;;          "SPC o o" 'notmuch-show-interactively-view-part) ;; probably no need
+  :bind
+  (:map evil-normal-state-map
+        ( "SPC m a" .  'notmuch )
+        ( "SPC m n" .  'notmuch-mua-new-mail ))
+  ;;      "SPC o o" 'notmuch-show-interactively-view-part) ;; probably no need
   )
 
 
@@ -3165,9 +3133,9 @@ environment.systemPackages = with pkgs; [
                              :with-author nil
                              :with-toc nil))
   :general
-   (:states '(normal notmuch-message-mode)
-            "SPC m m m" 'org-mime-edit-mail-in-org-mode
-            "SPC m m h" 'org-mime-htmlize)
+  (:states '(normal notmuch-message-mode)
+           "SPC m m m" 'org-mime-edit-mail-in-org-mode
+           "SPC m m h" 'org-mime-htmlize)
   )
 #+end_src
 
@@ -3175,9 +3143,12 @@ environment.systemPackages = with pkgs; [
 #+begin_src emacs-lisp
 (use-package consult-notmuch
   :straight t
-  :general
-  (:states 'normal
-           "SPC m s" 'consult-notmuch))
+  :after evil
+  :defer t
+  :bind
+  (:map evil-normal-state-map
+        ("SPC m s" .  'consult-notmuch))
+  )
 #+end_src
 
 ** =ol-notmuch= (org link notmuch)
@@ -3185,9 +3156,12 @@ environment.systemPackages = with pkgs; [
 #+begin_src emacs-lisp
 (use-package ol-notmuch
   :straight  t
-  :general
-  (:states 'normal
-           "SPC o l s" 'org-store-link))
+  :after evil
+  :defer t
+  :bind
+  (:map evil-normal-state-map
+        ("SPC o l s" . 'org-store-link))
+  )
 #+end_src
 
 * Misc Packages
@@ -3196,12 +3170,11 @@ environment.systemPackages = with pkgs; [
 (use-package command-log-mode
   :straight t
   :commands global-command-log-mode clm/open-command-log-buffer
-  :general
-  (:states 'normal
-           "SPC s c l" '(lambda () (interactive)
-                           (global-command-log-mode)
-                           (clm/open-command-log-buffer))
-           "SPC s c L"  'clm/command-log-clear)
+  :bind
+  (:map evil-normal-state-map
+        ("SPC s c l" .  (lambda () (interactive) (global-command-log-mode) (clm/open-command-log-buffer)))
+        ("SPC s c L" .  'clm/command-log-clear)
+        )
   )
 #+end_src
 ** =apheleia= formatter
@@ -3212,9 +3185,9 @@ environment.systemPackages = with pkgs; [
   :defer t
   :custom
   (apheleia-formatters-respect-fill-column t)
-  :bind (:map evil-normal-state-map
-              ("SPC v q" . 'apheleia-format-buffer)
-              )
+  :bind
+  (:map evil-normal-state-map
+        ("SPC v q" . 'apheleia-format-buffer))
 
   :hook (prog-mode-hook . apheleia-mode)
   )
@@ -3224,17 +3197,18 @@ environment.systemPackages = with pkgs; [
 #+begin_src emacs-lisp
 (use-package crux
   :straight t
-  ;; :demand t  ;; demand due to :general keyword issue
-  :general
-  (:states 'normal
-           "SPC L d"   'crux-delete-file-and-buffer
-           "SPC L s"   'crux-create-scratch-buffer
-           "SPC s r d" 'crux-recentf-find-directory))
+  :after evil
+  :defer t
+  :bind
+  (:map evil-normal-state-map
+        ("SPC L d"    . 'crux-delete-file-and-buffer)
+        ("SPC L s"    . 'crux-create-scratch-buffer )
+        ("SPC s r d"  . 'crux-recentf-find-directory))
+  )
 #+end_src
 ** =hydra=
 #+begin_src emacs-lisp
-(use-package hydra
-  :straight t)
+(use-package hydra :straight t :defer t)
 #+end_src
 
 ** =exercism=
@@ -3245,20 +3219,16 @@ environment.systemPackages = with pkgs; [
 #+begin_src emacs-lisp
 (use-package gif-screencast
   :straight t
-  :general
-  (:states 'normal
-           "SPC s s s" 'gif-screencast-start-or-stop)
+  :defer t
+  :bind
+  (:map evil-normal-state-map
+           ("SPC s s s" . 'gif-screencast-start-or-stop))
   :custom
   (gif-screencast-program "hyprshot")
   (gif-screencast-args    '("-m" "window" "-m" "active" "-o" "/" "-f"))
-
-  ;; :config
-  ;; ;; for niri 
+  ;; for niri 
   ;; (setq gif-screencast-program "niri")
   ;; (setq gif-screencast-args    '("msg" "action" "screenshot-window" "--path"))
-  ;; ;; for hyprland
-  ;; ;; (setq gif-screencast-program "hyprshot")
-  ;; ;; (setq gif-screencast-args    '("-m" "window" "-m" "active" "-o" "/" "-f"))
   )
 #+end_src
 ** garbage-collect
@@ -3266,36 +3236,42 @@ environment.systemPackages = with pkgs; [
 (use-package gcmh
   :straight t
   :delight " gb"
-  ;; :config (gcmh-mode 1)
-  :hook (after-init-hook . gcmh-mode)
-  )
+  :hook (after-init-hook . gcmh-mode))
 #+end_src
 ** google related
 #+begin_src emacs-lisp
 (use-package google-translate
   :straight t
+  :after evil
+  :defer t
   :init
   (setq google-translate-translation-directions-alist '(("ja" . "en") ;; This only works with :init
                                                         ("en" . "ja") ;; won't work with :custom & :config
                                                         ("en" . "mn")
                                                         ("mn" . "en")))
-  :general
-  (:states '(normal visual)
-           :prefix "SPC"
-           "G t" 'google-translate-smooth-translate)
+  :bind
+  (:map evil-normal-state-map ("SPC G t" . 'google-translate-smooth-translate))
+  (:map evil-visual-state-map ("SPC G t" . 'google-translate-smooth-translate))
   )
 
 (use-package google-this
   :straight t
-  :general
-  (:states '(normal visual)
-           :prefix "SPC"
-           ;; "G"   '(:which-key "Google...") ;; which stops loading google-translate package
-           "G w" 'google-this-forecast
-           "G s" 'google-this-search
-           "G r" 'google-this-region
-           "G m" 'google-this-maps
-           ))
+  :after evil
+  :defer t
+  :bind
+  (:map evil-normal-state-map
+        ("SPC G w" . 'google-this-forecast)
+        ("SPC G s" . 'google-this-search  )
+        ("SPC G r" . 'google-this-region  )
+        ("SPC G m" . 'google-this-maps    ))
+
+  (:map evil-visual-state-map
+        ("SPC G w" . 'google-this-forecast)
+        ("SPC G s" . 'google-this-search  )
+        ("SPC G r" . 'google-this-region  )
+        ("SPC G m" . 'google-this-maps    ))
+
+  )
 #+end_src
 
 ** =csv-mode=
