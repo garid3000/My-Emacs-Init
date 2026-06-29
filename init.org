@@ -117,27 +117,12 @@ run:
                      ("+" . evil-window-increase-height  ))
 
   (:map evil-normal-state-map
-        ("SPC a" . evil-avy-goto-char-2)
-        )
-
-
-  ;; :general
-  ;; (:states 'normal
-  ;;          :prefix "SPC"
-  ;;          "a" 'evil-avy-goto-char-2)
+        ("SPC a" . evil-avy-goto-char-2))
 
   :hook
-  ;; (after-init-hook . evil-mode) 
   (emacs-startup-hook . evil-mode) 
   )
 #+end_src
-
-
-(evil-global-set-key 'normal (kbd "w") 'some-function)
-
-(add-hook 'some-mode-hook
-          (lambda ()
-            (evil-local-set-key 'normal (kbd "w") 'some-function)))
 
 ** =evil-collection=: vi-movements everywhere
 #+begin_src emacs-lisp
@@ -145,7 +130,7 @@ run:
   :straight t
   :after evil
   :delight ""
-  :defer t
+  ;; :defer t
   ;; :custom
   ;; (evil-collection-mode-list
   ;;  '(
@@ -199,13 +184,13 @@ run:
 
   ;; :hook
   ;; (after-init-hook . evil-collection-init) ;; 
-  ;; :config
-  ;; (evil-collection-init)
+  :config
+  (evil-collection-init)
   ;; I needed to load this as :config, because hooking above
   ;; (evil-collection-init) with after-init-hook causes overrides 
   ;; keybinding setup in the below configurations
-  :hook
-  (emacs-startup-hook . evil-collection-init)
+  ;; :hook
+  ;; (emacs-startup-hook . evil-collection-init)
   
   )
 #+end_src
@@ -281,13 +266,8 @@ mark or parenthesis.
 (use-package evil-visual-mark-mode
   :straight t
   :after evil
-  ;; :general (:states 'normal "<f3>" 'evil-visual-mark-mode)
-
-  ;; :config
-  ;; (evil-global-set-key 'normal (kbd "<f3>") 'evil-visual-mark-mode)
   :bind (:map evil-normal-state-map
          ("<f3>" . evil-visual-mark-mode))
-
   )
 #+end_src
 
@@ -727,7 +707,7 @@ and later sets cursor at that point when you open that file.
 #+begin_src emacs-lisp
 (use-package dired
   :straight   nil
-  :after      evil evil-collection
+  :after      evil-collection
   :demand t
   ;; :commands   (dired dired-jump) ;; :after  evil-collection (test if the evil-collection-mode-list is default value)
   :custom ((dired-listing-switches  "-agho --group-directories-first")
@@ -747,10 +727,12 @@ and later sets cursor at that point when you open that file.
         ("SPC D s" . 'dired)
         )
 
-  ;; (:map dired-mode-map
-  ;;       ("h" . 'dired-up-directory)
-  ;;       ("l" . 'dired-find-file)
-  ;;       ("q" . 'quit-window))
+  (:map dired-mode-map
+        ("<backspace>" . 'dired-up-directory)
+        ("SPC"    .     nil)
+        ;; ("a" . 'dired-create-empty-file)
+        ;; ("L" . 'dired-find-file   )
+        ("q" . 'quit-window       ))
 
 
   ;; :general
@@ -1076,6 +1058,7 @@ and later sets cursor at that point when you open that file.
 (use-package org
   :straight t
   ;; :demand t
+  :defer t
   :delight "org"
   :bind (:map org-mode-map
               ("C-S-k"         . org-previous-visible-heading   )
@@ -1323,8 +1306,10 @@ and later sets cursor at that point when you open that file.
                                                     (plantuml   . t)))
 
                      (setf (alist-get "python" org-src-lang-modes nil nil #'equal) 'python-ts)
-
                      ))
+
+  (after-init-hook . (lambda ()
+                       (message "hello org mode")))
   )
 
 
@@ -1716,8 +1701,8 @@ license.
 *** =org-agenda=: the agenda
 #+begin_src emacs-lisp :results none
 (use-package org-agenda
-  :after      org
   :straight   nil
+  ;; :after      org <--- weird? 
   ;; :demand     t
   :custom
   (org-agenda-files '("~/BrainDump/gtd/org-gtd-tasks.org"))
@@ -1849,20 +1834,24 @@ license.
 #+begin_src emacs-lisp
 (use-package org-edna
   :straight t
-  :after  org-agenda
-  ;; :demand t
+  ;; :after  org-agenda
+  :defer t
   :hook
-  ;; (after-init-hook . org-edna-mode)
-  (emacs-startup-hook . org-edna-mode)
+  (after-init-hook . org-edna-mode)
+  ;; (emacs-startup-hook . org-edna-mode)
   )
 #+end_src
-*** TODO =org-gtd=
+*** =org-gtd=
+:PROPERTIES:
+:ID:       org-gtd-2026-06-29-16-56-54
+:END:
 
 #+begin_src emacs-lisp
 (use-package org-gtd
   :straight t
-  :after  org-edna
-  ;; :demand t;;  commented on  2026-06-19
+  ;; :after  org
+  ;; :requires org-edna
+  :defer t
   :init
   (setq org-gtd-update-ack "4.0.0") ;; Suppress upgrade warnings (must be set before package loads)
 
@@ -1874,35 +1863,29 @@ license.
                                  (wait     . "WAIT")
                                  (canceled . "CNCL")))
 
-  :bind (:map evil-normal-state-map
-              ("SPC o g p" . 'org-gtd-process-inbox         )
-              ("SPC o g e" . 'org-gtd-engage                )
-              ("SPC o g n" . 'org-gtd-show-all-next         )
-              ("SPC o g s" . 'org-gtd-reflect-stuck-projects))
+  :bind
+  (:map evil-normal-state-map
+        ("SPC o c" .   'org-gtd-capture               )
+        ("SPC o g e" . 'org-gtd-engage                )
+        ("SPC o g p" . 'org-gtd-process-inbox         )
+        ("SPC o g n" . 'org-gtd-show-all-next         )
+        ("SPC o g s" . 'org-gtd-reflect-stuck-projects)
+        ("SPC o g c" . 'org-gtd-clarify-item          )
+        )
+  (:map org-gtd-clarify-mode-map
+        ("C-c C-c"   . 'org-gtd-organize              ))
 
-  ;; (:keymaps 'org-gtd-clarify-mode-map
-  ;;           "C-c C-c" 'org-gtd-organize)
+  (:map org-agenda-mode-map
+        ("C-c ."     .  'org-gtd-agenda-transient     ))
 
-  ;; (:keymaps 'org-agenda-mode-map
-  ;;           "C-c ." 'org-gtd-agenda-transient)
+  ;; ;; (:states 'normal
+  ;; ;;          :keymaps 'org-mode-map
+  ;; ;;          :prefix "SPC o"
+  ;; ;;          "s c"    'org-gtd-clarify-item
+  ;; ;;          "g c"    'org-gtd-clarify-item
+  ;; ;;          "g a"    'org-gtd-archive-completed-items
+  ;; ;;          "g A"    'org-gtd-archive-item-at-point)
 
-
-  ;; (:states 'normal
-  ;;          :keymaps 'org-mode-map
-  ;;          :prefix "SPC o"
-  ;;          "s c"    'org-gtd-clarify-item
-  ;;          "g c"    'org-gtd-clarify-item
-  ;;          "g a"    'org-gtd-archive-completed-items
-  ;;          "g A"    'org-gtd-archive-item-at-point)
-
-  ;; (:states 'normal
-  ;;          :prefix "SPC"
-  ;;          "o c  "     'org-gtd-capture)
-
-  ;; (:states 'normal
-  ;;          :keymaps 'org-agenda-mode-map
-  ;;          :prefix "SPC"
-  ;;          "o c  "     'org-gtd-capture)
   :hook
   (emacs-startup-hook . org-gtd-mode) 
   )
@@ -2219,8 +2202,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
                                                  (stroke-width . 2))
                                         (path (fill            . "none")
                                               (stroke          . #2#)
-                                              (stroke-width    . 2)
-                                              ;;(marker-end . "arrow")   p > or p <
+                                              (stroke-width    . 2) ;;(marker-end . "arrow")   p > or p <
                                               )
                                         (text (fill            . #2#)
                                               (font-size       . 24)
@@ -2230,36 +2212,24 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   (edraw-default-document-properties '((width .  900)
                                        (height . 400)
                                        (background . "#fff")))
+  :bind
+  (:map edraw-editor-map
+        ( "C-r" . 'edraw-editor-redo )
+        ( "P"   . 'edraw-editor-paste-and-select )
+        ( "S"   . 'edraw-editor-select-tool-custom-shape )
+        ( "u"   . 'edraw-editor-undo )
+        ( "x"   . 'edraw-editor-cut-selected-shapes )
+        ( "y"   . 'edraw-editor-copy-selected-shapes) )
 
   :general
-  (:keymaps 'edraw-editor-map
-            "C-r"  'edraw-editor-redo
-            "P"    'edraw-editor-paste-and-select
-            "S"    'edraw-editor-select-tool-custom-shape
-            "u"    'edraw-editor-undo
-            "x"    'edraw-editor-cut-selected-shapes
-            "y"    'edraw-editor-copy-selected-shapes)
-
   (:states 'normal
            :keymaps 'org-mode-map
            :prefix "SPC"
            "o i e"     'edraw-org-edit-regular-file-link
            "o i i"     '(lambda () (interactive) (insert "[[edraw:]]")))
-
-  ;; :init
-  ;; (require 'edraw-org)
-
   :config
-  ;; (edraw-org-setup-default)
-  ;; (edraw-org-setup-exporter)
-  ;; (with-eval-after-load 'org
-  ;;   (require 'edraw-org)
-  ;;   (edraw-org-setup-default))  ;; this was causing some issues with the org-mode
-
-  ;; (with-eval-after-load "ox"
   (require 'edraw-org)
   (edraw-org-setup-exporter)
-  ;; )
   )
 #+end_src
 
@@ -2866,19 +2836,21 @@ Probably requires external =rg= command.
 #+begin_src emacs-lisp
 (use-package gptel-commit
   :straight t
-  :after (gptel magit)
-  :defer t
+  :ensure t
+  ;; :after (gptel magit)
   :custom
   (gptel-commit-stream t)
 
-  :general
-  (:states 'normal
-           :keymaps 'git-commit-mode-map
-           :prefix "SPC"
-           "g c"  'gptel-commit
-           "g C"  'gptel-commit-rationale)
+  :bind
+  (:map evil-normal-state-map 
+        ("SPC g c" . 'gptel-commit)
+        ("SPC g C" . 'gptel-commit-rationale)
+        )
   )
 #+end_src
+
+#+RESULTS:
+: #s(hash-table data (:use-package (27202 9863 837322 595000) :use-package-secs (0 0 9037 285000) :init (27202 9863 837252 595000) :config (27202 9863 837244 860000) :config-secs (0 0 1 633000) :init-secs (0 0 11 102000)))
 
 * Writing & Reading
 ** Spelling & synonyms
