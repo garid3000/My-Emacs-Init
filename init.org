@@ -2805,7 +2805,7 @@ Probably requires external =rg= command.
   )
 #+end_src
 * AI helpers:
-** =gptel=                                                                :demand:by_karthink:
+** =gptel=                                                                       :by_karthink:
 #+begin_src emacs-lisp
 (use-package gptel
   :straight t
@@ -2848,9 +2848,6 @@ Probably requires external =rg= command.
         )
   )
 #+end_src
-
-#+RESULTS:
-: #s(hash-table data (:use-package (27202 9863 837322 595000) :use-package-secs (0 0 9037 285000) :init (27202 9863 837252 595000) :config (27202 9863 837244 860000) :config-secs (0 0 1 633000) :init-secs (0 0 11 102000)))
 
 * Writing & Reading
 ** Spelling & synonyms
