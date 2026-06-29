@@ -22,6 +22,7 @@ run:
 ** Turning off the package.el                                                   :early_init:
 #+begin_src emacs-lisp :tangle ./early-init.el
 (setq package-enable-at-startup nil)
+(setq use-package-compute-statistics t) ;; for the (use-package-report) for check stats
 #+end_src
 ** Straight.el initialization
 #+begin_src emacs-lisp
@@ -107,31 +108,44 @@ run:
   (evil-want-integration          t)  ;;  are for the evil-collection
   (evil-want-keybinding         nil)  ;;  these
 
-  :bind (:repeat-map evil/window-related
+  :bind
+  (:repeat-map evil/window-related
                      ("<" . evil-window-decrease-width   )
                      (">" . evil-window-increase-width   )
                      ("r" . evil-window-rotate-downwards )
                      ("-" . evil-window-decrease-height  )
                      ("+" . evil-window-increase-height  ))
 
-  :general
-  (:states 'normal
-           :prefix "SPC"
-           "a" 'evil-avy-goto-char-2)
+  (:map evil-normal-state-map
+        ("SPC a" . evil-avy-goto-char-2)
+        )
 
-  ;; :hook
-  ;; (after-init-hook . evil-mode)
-  :config
-  (evil-mode +1)
+
+  ;; :general
+  ;; (:states 'normal
+  ;;          :prefix "SPC"
+  ;;          "a" 'evil-avy-goto-char-2)
+
+  :hook
+  ;; (after-init-hook . evil-mode) 
+  (emacs-startup-hook . evil-mode) 
   )
 #+end_src
+
+
+(evil-global-set-key 'normal (kbd "w") 'some-function)
+
+(add-hook 'some-mode-hook
+          (lambda ()
+            (evil-local-set-key 'normal (kbd "w") 'some-function)))
+
 ** =evil-collection=: vi-movements everywhere
 #+begin_src emacs-lisp
 (use-package evil-collection
   :straight t
   :after evil
   :delight ""
-  :demand t
+  :defer t
   ;; :custom
   ;; (evil-collection-mode-list
   ;;  '(
@@ -185,12 +199,46 @@ run:
 
   ;; :hook
   ;; (after-init-hook . evil-collection-init) ;; 
-  :config
-  (evil-collection-init)
+  ;; :config
+  ;; (evil-collection-init)
   ;; I needed to load this as :config, because hooking above
   ;; (evil-collection-init) with after-init-hook causes overrides 
   ;; keybinding setup in the below configurations
+  :hook
+  (emacs-startup-hook . evil-collection-init)
+  
   )
+#+end_src
+
+** =evil-textobj-tree-sitter=: tree-sitter based visual selection:
+#+begin_src emacs-lisp
+(use-package evil-textobj-tree-sitter
+  :straight t
+  :after evil
+  :bind (:map evil-normal-state-map
+              ("] f" . (lambda () (interactive) (evil-textobj-tree-sitter-goto-textobj "function.outer"       )))
+              ("[ f" . (lambda () (interactive) (evil-textobj-tree-sitter-goto-textobj "function.outer" t     )))
+              ("] F" . (lambda () (interactive) (evil-textobj-tree-sitter-goto-textobj "function.outer" nil t )))
+              ("[ F" . (lambda () (interactive) (evil-textobj-tree-sitter-goto-textobj "function.outer" t t   )))
+              )
+
+  ;; :config
+  ;; (define-key evil-inner-text-objects-map "f" (evil-textobj-tree-sitter-get-textobj "function.inner" ))
+  ;; (define-key evil-inner-text-objects-map "c" (evil-textobj-tree-sitter-get-textobj "class.inner"    ))
+  ;; (define-key evil-outer-text-objects-map "f" (evil-textobj-tree-sitter-get-textobj "function.outer"                  ))
+  ;; (define-key evil-outer-text-objects-map "c" (evil-textobj-tree-sitter-get-textobj "class.inner"                     ))
+  ;; (define-key evil-outer-text-objects-map "a" (evil-textobj-tree-sitter-get-textobj ("conditional.outer" "loop.outer" )))
+
+  :hook
+  (emacs-startup-hook . (lambda ()
+                          (define-key evil-inner-text-objects-map "f" (evil-textobj-tree-sitter-get-textobj "function.inner" ))
+                          (define-key evil-inner-text-objects-map "c" (evil-textobj-tree-sitter-get-textobj "class.inner"    ))
+                          (define-key evil-outer-text-objects-map "f" (evil-textobj-tree-sitter-get-textobj "function.outer" ))
+                          (define-key evil-outer-text-objects-map "c" (evil-textobj-tree-sitter-get-textobj "class.inner"    ))
+                          (define-key evil-outer-text-objects-map "a" (evil-textobj-tree-sitter-get-textobj ("conditional.outer" "loop.outer" )))
+                          ))
+  )
+
 #+end_src
 
 ** =evil-surround=: easily surround selected region
@@ -200,6 +248,7 @@ mark or parenthesis.
 #+begin_src emacs-lisp
 (use-package evil-surround
   :straight t
+  :defer t ;; 2026-06-23 trial
   :after evil
   :hook
   (after-init-hook . global-evil-surround-mode)
@@ -227,41 +276,19 @@ mark or parenthesis.
   )
 #+end_src
 
-** =evil-textobj-tree-sitter=: tree-sitter based visual selection:
-#+begin_src emacs-lisp
-(use-package evil-textobj-tree-sitter
-  :straight t
-  :after evil
-  :config
-  (define-key evil-inner-text-objects-map "f" (evil-textobj-tree-sitter-get-textobj "function.inner" ))
-  (define-key evil-inner-text-objects-map "c" (evil-textobj-tree-sitter-get-textobj "class.inner"    ))
-
-  (define-key evil-outer-text-objects-map "f" (evil-textobj-tree-sitter-get-textobj "function.outer"                  ))
-  (define-key evil-outer-text-objects-map "c" (evil-textobj-tree-sitter-get-textobj "class.inner"                     ))
-  (define-key evil-outer-text-objects-map "a" (evil-textobj-tree-sitter-get-textobj ("conditional.outer" "loop.outer" )))
-
-  ;; (define-key evil-normal-state-map (kbd "]f") (lambda () (interactive) (evil-textobj-tree-sitter-goto-textobj "function.outer"       ))) ;; Goto start of next function
-  ;; (define-key evil-normal-state-map (kbd "[f") (lambda () (interactive) (evil-textobj-tree-sitter-goto-textobj "function.outer" t     ))) ;; Goto start of previous function
-  ;; (define-key evil-normal-state-map (kbd "]F") (lambda () (interactive) (evil-textobj-tree-sitter-goto-textobj "function.outer" nil t ))) ;; Goto end of next function
-  ;; (define-key evil-normal-state-map (kbd "[F") (lambda () (interactive) (evil-textobj-tree-sitter-goto-textobj "function.outer" t t   ))) ;; Goto end of previous function
-
-  :bind (
-         :map evil-normal-state-map
-         ("] f" . (lambda () (interactive) (evil-textobj-tree-sitter-goto-textobj "function.outer"       )))
-         ("[ f" . (lambda () (interactive) (evil-textobj-tree-sitter-goto-textobj "function.outer" t     )))
-         ("] F" . (lambda () (interactive) (evil-textobj-tree-sitter-goto-textobj "function.outer" nil t )))
-         ("[ F" . (lambda () (interactive) (evil-textobj-tree-sitter-goto-textobj "function.outer" t t   )))
-         )
-  )
-
-#+end_src
-
 ** =evil-visual-mark-mode= for visualizing evil marker
 #+begin_src emacs-lisp
 (use-package evil-visual-mark-mode
   :straight t
   :after evil
-  :general (:states 'normal "<f3>" 'evil-visual-mark-mode))
+  ;; :general (:states 'normal "<f3>" 'evil-visual-mark-mode)
+
+  ;; :config
+  ;; (evil-global-set-key 'normal (kbd "<f3>") 'evil-visual-mark-mode)
+  :bind (:map evil-normal-state-map
+         ("<f3>" . evil-visual-mark-mode))
+
+  )
 #+end_src
 
 * Undo and Trash
@@ -269,14 +296,15 @@ mark or parenthesis.
 #+begin_src emacs-lisp
 (use-package vundo
   :straight t
-  :after    general
-  :demand   t
-  :general (:states 'normal "SPC u t" 'vundo))
+  :after    evil
+  :defer   t
+  :bind (:map evil-normal-state-map
+         ("SPC u t" . vundo))
+  )
 #+end_src
 ** =trashed=: trash directory interaction
 #+begin_src emacs-lisp
-(use-package trashed
-  :straight t)
+(use-package trashed :straight t :defer t)
 #+end_src
 * Theme & colors
 ** =delight=
@@ -344,7 +372,7 @@ mark or parenthesis.
                                            (fringe                     bg-main     )))
 
   :config
-  (modus-themes-load-theme (car modus-themes-to-toggle))
+  ;; (modus-themes-load-theme (car modus-themes-to-toggle))
   (modus-themes-with-colors
     (custom-set-faces
      `(font-lock-comment-face           ((t (:foreground ,border :slant italic))))
@@ -363,21 +391,23 @@ mark or parenthesis.
 #+begin_src emacs-lisp
 (use-package display-line-numbers
   :straight nil
+  :after evil
   :demand t
   :custom
   (display-line-numbers-type 'relative)
   (ring-bell-function        'ignore)
 
-  :general
-  (:states 'normal
-           :prefix "SPC"
-           ;; "s l"    '(:which-key "line number...")
-           "s l n" 'display-line-numbers-mode
-           "s l N" 'global-display-line-numbers-mode
-           )
+  :bind (:map evil-normal-state-map
+              ("SPC s l n" . display-line-numbers-mode)
+              ("SPC s l N" . global-display-line-numbers-mode))
 
   ;; :config
   ;; (global-display-line-numbers-mode -1)
+  ;; :hook
+  ;; (after-init-hook . (lambda ()
+  ;;                      (evil-global-set-key 'normal (kbd "SPC s l n") 'display-line-numbers-mode)
+  ;;                      (evil-global-set-key 'normal (kbd "SPC s l N") 'global-display-line-numbers-mode)
+  ;;                      ))
   )
 #+end_src
 
@@ -412,11 +442,10 @@ mark or parenthesis.
 #+begin_src emacs-lisp
 (use-package hi-lock
   :straight nil
-  :general
-  (:states 'normal
-           :prefix "SPC"
-           "z h"   'highlight-symbol-at-point
-           "z H"   'unhighlight-regexp)
+  :bind (:map evil-normal-state-map
+              ("SPC z h" . highlight-symbol-at-point)
+              ("SPC z H" . 'unhighlight-regexp)
+              )
   )
 #+end_src
 
@@ -424,14 +453,10 @@ mark or parenthesis.
 #+begin_src emacs-lisp
 (use-package indent-bars
   :straight t
-  :demand t
-
-  :general
-  (:states 'normal
-           :prefix "SPC"
-           "s l i" 'indent-bars-mode
-           )
-
+  :after evil
+  :defer t
+  :bind (:map evil-normal-state-map
+              ("SPC s l i" . indent-bars-mode))
   )
 #+end_src
 
@@ -442,15 +467,19 @@ mark or parenthesis.
 (use-package abbrev
   :straight nil
   :delight "" ;;" abb"
-  ;;:demand t 
-  ;;:custom
-  ;;(abbrev-file-name (expand-file-name "abbrev_defs" user-emacs-directory))
+  ;; ;;:demand t 
+  ;; ;;:custom
+  ;; ;;(abbrev-file-name (expand-file-name "abbrev_defs" user-emacs-directory))
 
-  :config
-  (if (file-exists-p abbrev-file-name) (quietly-read-abbrev-file))
+  ;; :config
+  ;; (if (file-exists-p abbrev-file-name) (quietly-read-abbrev-file))
 
   :hook
   (emacs-startup-hook . abbrev-mode)
+  (after-init-hook . (lambda ()
+                       (if (file-exists-p abbrev-file-name) (quietly-read-abbrev-file))
+                       )
+                   )
   )
 #+end_src
 
@@ -458,9 +487,8 @@ mark or parenthesis.
 #+begin_src emacs-lisp
 (use-package align
   :straight nil
-  :general
-  (:states '(visual)
-           "SPC z a"  'align-regexp)
+  :bind (:map evil-visual-state-map
+              ("SPC z a" . align-regexp))
   )
 #+end_src
 
@@ -468,16 +496,23 @@ mark or parenthesis.
 #+begin_src emacs-lisp
 (use-package bookmark
   :straight nil
-  :general
-  (:states 'normal
-           :prefix "SPC"
-           "b" 'consult-bookmark
-           ;; "B" '(:which-key "bookmark...")
-           "B b" 'list-bookmarks
-           "B s" 'bookmark-set
-           "B j" 'bookmark-jump
-           "B c" 'consult-bookmark
-           )
+  ;; :general
+  ;; (:states 'normal
+  ;;          :prefix "SPC"
+  ;;          "b" 'consult-bookmark
+  ;;          ;; "B" '(:which-key "bookmark...")
+  ;;          "B b" 'list-bookmarks
+  ;;          "B s" 'bookmark-set
+  ;;          "B j" 'bookmark-jump
+  ;;          "B c" 'consult-bookmark
+  ;;          )
+  :bind (:map evil-normal-state-map
+              ("SPC b"   . consult-bookmark)
+              ("SPC B b" . list-bookmarks  )
+              ("SPC B s" . bookmark-set    )
+              ("SPC B j" . bookmark-jump   )
+              ("SPC B c" . consult-bookmark)
+              )
   )
 #+end_src
 
@@ -486,6 +521,7 @@ mark or parenthesis.
 #+begin_src emacs-lisp
 (use-package emacs
   :straight nil
+  :after evil
   ;; :demand t
   :init
   (setq-default tab-width 4)
@@ -497,28 +533,23 @@ mark or parenthesis.
   (menu-bar-mode         -1)   ; Disable the menu bar
   ;; (set-fringe-mode       10)   ; Give some breathing room
 
-  :general
-  (:states 'normal
-           :prefix "SPC"
-           ;; "L"       '(:which-key "buffer ...")
-           "L e"     'eval-buffer
-           "L n"     'rename-buffer
-           "L o"     'garid/new-org-scratch
-           "L p"     'garid/new-python-scratch
-           "Z Q"     'kill-emacs
-           "t x"     'garid/open-terminal-at-current-working-dir
 
-           ;; "s"      '(:which-key "system...")
-           ;; "s n"    '(:which-key "narrow...")
-           "s n f"   'narrow-to-defun
-           "s n w"   'widen
-           "s n SPC" 'widen
-           )
+  :bind
+  (:map evil-normal-state-map
+        ("SPC L e"      . eval-buffer                                )
+        ("SPC L n"      . rename-buffer                              )
+        ("SPC L o"      . garid/new-org-scratch                      )
+        ("SPC L p"      . garid/new-python-scratch                   )
+        ("SPC Z Q"      . kill-emacs                                 )
+        ("SPC t x"      . garid/open-terminal-at-current-working-dir )
+        ("SPC s n f"    . narrow-to-defun                            )
+        ("SPC s n w"    . widen                                      )
+        ("SPC s n SPC"  . widen                                      ))
+  (:map evil-visual-state-map
+        ("SPC s n r"    . narrow-to-region                           )
+        ("SPC s n f"    . narrow-to-defun                            ))
 
-  (:states 'visual
-           :prefix "SPC"
-           "s n r"   'narrow-to-region
-           "s n f"   'narrow-to-defun)
+
 
   :custom
   (delete-by-moving-to-trash    t) ;; deletes to trash
@@ -574,45 +605,44 @@ mark or parenthesis.
 #+begin_src emacs-lisp
 (use-package ffap
   :straight nil
-  :general
-  (:states 'normal
-           :prefix "SPC"
-           "D f"     'ffap           ;; already bind to normal mode: g-f 
-           "D F m"   'ffap-menu
-           ))
+  :bind (:map evil-normal-state-map
+              ("SPC D f" . ffap)
+              ("SPC D F m " . ffap-menu)
+              ))
 #+end_src
 ** =files=
 #+begin_src emacs-lisp
 (use-package files
   :straight nil
+  :after evil
   :custom
   (major-mode-remap-alist '((bash-mode   . bash-ts-mode)
                             (python-mode . python-ts-mode)))
-  :general (:states 'normal
-                    :prefix "SPC"
-                    "f"  'find-file
-                    "O c"  'citar-open
-                    "L r"  'revert-buffer-quick
-                    ))
+
+  :bind (:map evil-normal-state-map
+         ("SPC f" . find-file)
+         ("SPC L r" . revert-buffer-quick)
+         )
+  )
 #+end_src
 ** =flyspell=
 #+begin_src emacs-lisp
 (use-package flyspell
   :straight nil
-  :general
-  (:states 'normal
-           "SPC z s f" 'flyspell-mode))
+  :after evil
+  :defer t
+  :bind (:map evil-normal-state-map
+         ("SPC z s f" . 'flyspell-mode))
+  )
 #+end_src
 
 ** =imenu=
 #+begin_src emacs-lisp
 (use-package imenu
   :straight nil
-
-  :general
-  (:states 'normal
-           :prefix "SPC"
-           "i m "     'imenu) ;; technically (originally M-g i)
+  :after evil
+  :bind (:map evil-normal-state-map
+         ("SPC i m" . 'imenu))
   )
 #+end_src
 
@@ -620,9 +650,11 @@ mark or parenthesis.
 #+begin_src emacs-lisp
 (use-package newcomment
   :straight nil
-  :general
-  (:states '(normal insert) "C-/"  'comment-line)
-  (:states '(visual)        "C-/"  'comment-or-uncomment-region)
+  :after evil
+  :bind
+  (:map evil-normal-state-map ("C-/" . 'comment-line))
+  (:map evil-insert-state-map ("C-/" . 'comment-line))
+  (:map evil-visual-state-map ("C-/" . 'comment-or-uncomment-region))
   )
 #+end_src
 
@@ -641,9 +673,11 @@ mark or parenthesis.
 #+begin_src emacs-lisp
 (use-package replace
   :straight nil
-  :general
-  (:states 'visual
-           "SPC z r"  'replace-regexp))
+  :after evil
+  :bind
+  (:map evil-visual-state-map ("SPC z r" . 'replace-regexp))
+  )
+
 #+end_src
 
 ** =saveplace= - Save (last) cursor position
@@ -659,17 +693,16 @@ and later sets cursor at that point when you open that file.
 #+begin_src emacs-lisp
 (use-package simple
   :straight nil
+  :after evil
   :custom
   (mail-user-agent     'notmuch-user-agent)
   (indent-tabs-mode     nil               )
-  :general
-  (:states 'normal
-           :prefix "SPC"
-           "SPC"  'execute-extended-command
-           "L c"  'clone-indirect-buffer
-           "L R"  'read-only-mode)
   :bind
   ("M-Q" . kill-current-buffer)
+  (:map evil-normal-state-map
+        ("SPC SPC" . 'execute-extended-command)
+        ("SPC L c" . 'clone-indirect-buffer)
+        ("SPC L R" . 'read-only-mode))
   :hook (after-init-hook . column-number-mode)
   )
 #+end_src
@@ -678,17 +711,23 @@ and later sets cursor at that point when you open that file.
 #+begin_src emacs-lisp
 (use-package tramp-cmds
   :straight nil
-  :general
-  (:states 'normal "SPC L S" 'tramp-revert-buffer-with-sudo)
+  :after evil
+  :defer t
+  :bind
+  (:map evil-normal-state-map
+        ("SPC L S" . 'tramp-revert-buffer-with-sudo))
  )
 #+end_src
 
 ** =whitespace-mode=
 #+begin_src emacs-lisp
-(use-package whitespace-mode
+(use-package whitespace
   :straight nil
-  :general
-  (:states 'normal "SPC s w" 'whitespace-mode))
+  :after evil
+  :bind
+  (:map evil-normal-state-map
+        ("SPC s w" . 'whitespace-mode))
+  )
 #+end_src
 
 * Dired related
@@ -697,7 +736,7 @@ and later sets cursor at that point when you open that file.
 #+begin_src emacs-lisp
 (use-package dired
   :straight   nil
-  :after      evil-collection
+  :after      evil evil-collection
   :demand t
   ;; :commands   (dired dired-jump) ;; :after  evil-collection (test if the evil-collection-mode-list is default value)
   :custom ((dired-listing-switches  "-agho --group-directories-first")
@@ -711,32 +750,44 @@ and later sets cursor at that point when you open that file.
              (dired-mode-hook . auto-revert-mode        )
              (dired-mode-hook . dired-hide-details-mode ))
 
-  :general
-  (:states 'normal
-           :prefix "SPC"
-           "d"     'dired-jump
-           "D s"   'dired)
+  :bind
+  (:map evil-normal-state-map
+        ("SPC d"   . 'dired-jump)
+        ("SPC D s" . 'dired)
+        )
 
-  (:states 'normal
-           :keymaps 'dired-mode-map
-           "SPC"         nil
-           "h"          'dired-up-directory
-           "l"          'dired-find-file
-           "N"          'dired-create-directory
-           (kbd "C-n")  'mkdir
-           (kbd "C-s")  'dired-omit-mode
-           "SPC D p"    'dired-preview-mode
-           "SPC W"      'wdired-change-to-wdired-mode
-           ;; dired-filter
-           "g f"        'dired-filter-by-name 
-           "g F"        'dired-filter-pop 
-           )
+  ;; (:map dired-mode-map
+  ;;       ("h" . 'dired-up-directory)
+  ;;       ("l" . 'dired-find-file)
+  ;;       ("q" . 'quit-window))
 
-  (:states 'normal
-           :keymaps   'dired-mode-map ;; #'dired-preview-mode-map
-           :predicate '(bound-and-true-p dired-preview-mode)
-           "J"        'dired-preview-page-down
-           "K"        'dired-preview-page-up)
+
+  ;; :general
+  ;; ;; (:states 'normal
+  ;; ;;          :prefix "SPC"
+  ;; ;;          "d"     'dired-jump
+  ;; ;;          "D s"   'dired)
+
+  ;; ;; (:states 'normal
+  ;; ;;          :keymaps 'dired-mode-map
+  ;; ;;          "SPC"         nil
+  ;; ;;          "h"          'dired-up-directory
+  ;; ;;          "l"          'dired-find-file
+  ;; ;;          "N"          'dired-create-directory
+  ;; ;;          (kbd "C-n")  'mkdir
+  ;; ;;          (kbd "C-s")  'dired-omit-mode
+  ;; ;;          "SPC D p"    'dired-preview-mode
+  ;; ;;          "SPC W"      'wdired-change-to-wdired-mode
+  ;; ;;          ;; dired-filter
+  ;; ;;          "g f"        'dired-filter-by-name 
+  ;; ;;          "g F"        'dired-filter-pop 
+  ;; ;;          )
+
+  ;; (:states 'normal
+  ;;          :keymaps   'dired-mode-map ;; #'dired-preview-mode-map
+  ;;          :predicate '(bound-and-true-p dired-preview-mode)
+  ;;          "J"        'dired-preview-page-down
+  ;;          "K"        'dired-preview-page-up)
 
 
   )
@@ -767,7 +818,8 @@ and later sets cursor at that point when you open that file.
 #+begin_src emacs-lisp
 (use-package dired-filter
   :straight t
-  :after dired)
+  :after dired
+  :defer t)
 #+end_src
 
 * Window & buffer related
@@ -775,18 +827,18 @@ and later sets cursor at that point when you open that file.
 #+begin_src emacs-lisp
 (use-package window
   :straight nil
-  :general
-  (:states 'normal
-           :prefix "SPC"
-           "L <"  'switch-to-prev-buffer
-           "L >"  'switch-to-next-buffer)
-
+  :after evil
   :bind (("M-q" . delete-window)
          :repeat-map garid/switch-buffer-repeat
          ("<"  . switch-to-prev-buffer)
          (">"  . switch-to-next-buffer)
          (","  . switch-to-prev-buffer)
          ("."  . switch-to-next-buffer))
+
+  (:map evil-normal-state-map
+        ("SPC L <" . 'switch-to-prev-buffer)
+        ("SPC L >" . 'switch-to-next-buffer)
+        )
   )
 #+end_src
 
@@ -824,9 +876,13 @@ and later sets cursor at that point when you open that file.
 #+begin_src emacs-lisp
 (use-package ibuffer
   :straight nil
-  :general
-  (:states 'normal
-           "SPC L i"  'ibuffer))
+  :after evil
+  :defer t
+  :bind
+  (:map evil-normal-state-map
+        ("SPC L i" . 'ibuffer))
+  )
+
 #+end_src
 
 ** =popper=                                                                     :by_karthink:
@@ -919,42 +975,27 @@ and later sets cursor at that point when you open that file.
   ("M-y" . consult-yank-from-kill-ring)
   ("M-f" . consult-line               )
 
-  :general
-  (:states 'normal
-           :prefix "SPC"
-           "l"     'consult-buffer
-           ;; "c"     '(:which-key "consult...")
-           "c I"   'consult-info
-           "c M"   'consult-man
-           "c a"   'consult-org-agenda
-           "c b"   'consult-bookmark
-           "c c"   'garid/consult-preview-change
-           "c f"   'consult-flymake
-           "c g"   'consult-git-grep
-           "c i"   'consult-imenu
-           "c m"   'consult-mark
-           "c o"   'consult-outline
-           "c p"   'consult-project-buffer
-           "c r"   'consult-ripgrep
-           "c k"   'consult-keep
-           ;; "c k"   'consult-keep
-
-           "s r f" 'consult-recent-file
-           "c R f" 'consult-recent-file
-           ;; "p l"   'consult-project-buffer
-           "p v"   'consult-imenu
-           "p s"   'consult-git-grep
-           "p d"   'consult-flymake
-           )
-  (:states 'normal
-           :keymaps 'org-mode-map
-           :prefix "SPC"
-           "o f n"    '(labmda () (interactive)  (consult-line "^#+name"       ))
-           "o f r"    '(labmda () (interactive)  (consult-line "^#+result"     ))
-           "o f s"    '(labmda () (interactive)  (consult-line "^#+begin_"     ))
-           "o f l"    '(labmda () (interactive)  (consult-line "\\\\label{.*}" ))
-           "o f r"    '(labmda () (interactive)  (consult-line "\\\\ref{.*}"   ))
-           )
+  (:map evil-normal-state-map
+        ("SPC l"     .  'consult-buffer)
+        ("SPC c I"   .  'consult-info                 )
+        ("SPC c M"   .  'consult-man                  )
+        ("SPC c a"   .  'consult-org-agenda           )
+        ("SPC c b"   .  'consult-bookmark             )
+        ("SPC c c"   .  'garid/consult-preview-change )
+        ("SPC c f"   .  'consult-flymake              )
+        ("SPC c g"   .  'consult-git-grep             )
+        ("SPC c i"   .  'consult-imenu                )
+        ("SPC c m"   .  'consult-mark                 )
+        ("SPC c o"   .  'consult-outline              )
+        ("SPC c p"   .  'consult-project-buffer       )
+        ("SPC c r"   .  'consult-ripgrep              )
+        ("SPC c k"   .  'consult-keep                 )
+        ("SPC s r f" .  'consult-recent-file          )
+        ("SPC c R f" .  'consult-recent-file          )
+        ("SPC p v"   .  'consult-imenu                )
+        ("SPC p s"   .  'consult-git-grep             )
+        ("SPC p d"   .  'consult-flymake              )
+        )
 
   )
 ;; :config
@@ -1043,7 +1084,7 @@ and later sets cursor at that point when you open that file.
 #+begin_src emacs-lisp
 (use-package org
   :straight t
-  :demand t
+  ;; :demand t
   :delight "org"
   :bind (:map org-mode-map
               ("C-S-k"  . org-previous-visible-heading   )
@@ -1062,7 +1103,6 @@ and later sets cursor at that point when you open that file.
               ("n"      . org-next-block                 )
               ("p"      . org-previous-block             )
               ;; ("c"      . org-ctrl-c-ctrl-c              )
-
               ;; :exit
               ;; ("'"         . org-edit-special            )
               ;; :repeat-map garid/org-repeat-heading
@@ -1158,6 +1198,17 @@ and later sets cursor at that point when you open that file.
            "o s v"   'org-mark-element
            "o s y"   'org-copy-subtree)
 
+  (:states 'normal
+           :keymaps 'org-mode-map
+           :prefix "SPC"
+           "o f n"    '(labmda () (interactive)  (consult-line "^#+name"       ))
+           "o f r"    '(labmda () (interactive)  (consult-line "^#+result"     ))
+           "o f s"    '(labmda () (interactive)  (consult-line "^#+begin_"     ))
+           "o f l"    '(labmda () (interactive)  (consult-line "\\\\label{.*}" ))
+           "o f r"    '(labmda () (interactive)  (consult-line "\\\\ref{.*}"   ))
+           )
+
+
   (:states '(normal visual)
            :keymaps  'org-mode-map
            :prefix "SPC"
@@ -1250,116 +1301,131 @@ and later sets cursor at that point when you open that file.
 
   ;; ---------------- Personal vars ----------------------------------------------------------
   (garid-orgvar-is-img-shown nil "Personal variable that control both inline-image and edraw")
+  (org-format-latex-options ;;; emulating (plist-put    org-format-latex-options   :scale 1.7      )    ;; latex equation previewing
+   '(:foreground default :background default :scale 1.7 :html-foreground
+                 "Black" :html-background "Transparent" :html-scale 1.0
+                 :matchers ("begin" "$1" "$" "$$" "\\(" "\\[")))
 
-  :config
-  (make-variable-buffer-local    'garid-orgvar-is-img-shown)
-  (plist-put    org-format-latex-options   :scale 1.7      )    ;; latex equation previewing
+  ;; :config ;; ----------------------------------------------------------------------------
+  ;; (make-variable-buffer-local    'garid-orgvar-is-img-shown)
 
-  (org-babel-do-load-languages 'org-babel-load-languages
-                               '((awk        . t)
-                                 (calc       . t)
-                                 (dot        . t)   ;; (asymptote  . t)
-                                 (emacs-lisp . t)   ;; (ditaa      . t)
-                                 (gnuplot    . t)   ;; (go         . t)
-                                 (latex      . t)   ;; (jupyter    . t)
-                                 (makefile   . t)
-                                 (lua        . t)
-                                 (maxima     . t)   ;; (mermaid    . t)
-                                 (python     . t)   ;; (nim        . t)
-                                 (shell      . t)   ;; (nix        . t)
-                                 (sqlite     . t)
-                                 (R          . t)
-                                 (plantuml   . t)))
-
-  (defcustom org-inline-image-background nil
-    "The color used as the default background for inline images. When nil, use the default face background."
-    :group 'org
-    :type '(choice color (const nil)))
-
-  (defun create-image-with-background-color (args)
-    "Specify background color of Org-mode inline image through modify `ARGS'."
-    (let* ((file (car args))
-           (type (cadr args))
-           (data-p (caddr args))
-           (props (cdddr args)))
-      ;; Get this return result style from `create-image'.
-      (append (list file type data-p)
-              (list :background (or org-inline-image-background (face-background 'default)))
-              props)))
-
-  (advice-add 'create-image :filter-args
-              #'create-image-with-background-color)
-
-
-
-
-  (defun garid/open-org-link-at-point-with-dired (&optional arg) ;; https://emacs.stackexchange.com/a/60555/38482
-    "Extract URL from org-mode link and add it to kill ring." ;;;
-    (interactive "P")
-    (let* ((link (org-element-lineage (org-element-context) '(link) t))
-           (type (org-element-property :type link))
-           (url (org-element-property  :path link)))
-      (message (concat "Copied URL: " url))
-      (dired-jump t (file-name-directory url))))
-
-  (defun garid/jump-label-def-of-ref-at-point-word ()
-    ""
-    (interactive)
-    ;; jump to closing } part of:  \ref{...}
-    (progn
-      (search-forward "}")
-      (backward-char 1))
-
-    ;; copy and consult-line with thing inside of {} parenthesis of \ref{...}
-    (let ((start (search-backward "{" nil t))
-          (end (search-forward "}" nil t)))
-      (if (and start end)
-          (let ((content (buffer-substring-no-properties (1+ start) (1- end))))
-            (consult-line (format "\\label{%s}" content))
-            )
-        (message "No matching braces found."))))
-   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;; setting latex preview
-  ;;(setq org-preview-latex-default-process 'imagemagick)
-  ;;(setf (plist-get (cdr (assq 'imagemagick org-preview-latex-process-alist)) :latex-compiler)
-  ;;     '("xelatex -interaction nonstopmode -output-directory %o %f"))
-
-  (defun garid/org-toggle-display-images-n-edraw ()
-    (interactive)
-    (if garid-orgvar-is-img-shown
-        (progn (edraw-org-link-image-mode -1)
-               (org-link-preview-clear)) ;; (org-remove-inline-images)
-      (progn (edraw-org-link-image-mode +1)
-             (org-link-preview) ;; (org-display-inline-images)
-             )) ;; may need to check org-link-preview as of org mode 9.8 release
-    (setq garid-orgvar-is-img-shown (not garid-orgvar-is-img-shown)))
-
-  (defun garid/org-toggle-link-n-emphasis ()
-    (interactive)
-    (setq org-hide-emphasis-markers (not org-hide-emphasis-markers))
-    (setq org-link-descriptive           org-hide-emphasis-markers)
-    (org-restart-font-lock)
-    (font-lock-update))
-
-
-  ;; from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][mastering emacs article]].
-  (setf (alist-get "python" org-src-lang-modes nil nil #'equal) 'python-ts)
-
-   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-  (defun garid/org-up-heading-dwim (&optional arg)
-    "If on a heading, go to parent heading. If in body text, go to the current entry's heading."
-    (interactive "p")
-    (if (org-at-heading-p)
-        (org-up-heading arg)
-      (org-back-to-heading t)))
+  
 
   ;; (with-eval-after-load 'evil
   ;;   (evil-define-key 'normal org-mode-map (kbd "z u") #'garid/org-up-heading-dwim))
 
   :hook
   (org-after-refile-insert-hook . org-mode-restart)
+  (after-init-hook . 
+                   (lambda ()
+                     (org-babel-do-load-languages 'org-babel-load-languages
+                                                  '((awk        . t)
+                                                    (calc       . t)
+                                                    (dot        . t)   ;; (asymptote  . t)
+                                                    (emacs-lisp . t)   ;; (ditaa      . t)
+                                                    (gnuplot    . t)   ;; (go         . t)
+                                                    (latex      . t)   ;; (jupyter    . t)
+                                                    (makefile   . t)
+                                                    (lua        . t)
+                                                    (maxima     . t)   ;; (mermaid    . t)
+                                                    (python     . t)   ;; (nim        . t)
+                                                    (shell      . t)   ;; (nix        . t)
+                                                    (sqlite     . t)
+                                                    (R          . t)
+                                                    (plantuml   . t)))
+
+                     (setf (alist-get "python" org-src-lang-modes nil nil #'equal) 'python-ts)
+
+                     ))
   )
+
+
+
+
+(defcustom org-inline-image-background nil
+  "The color used as the default background for inline images. When nil, use the default face background."
+  :group 'org
+  :type '(choice color (const nil)))
+
+(defun create-image-with-background-color (args)
+  "Specify background color of Org-mode inline image through modify `ARGS'."
+  (let* ((file (car args))
+         (type (cadr args))
+         (data-p (caddr args))
+         (props (cdddr args)))
+    ;; Get this return result style from `create-image'.
+    (append (list file type data-p)
+            (list :background (or org-inline-image-background (face-background 'default)))
+            props)))
+
+(advice-add 'create-image :filter-args
+            #'create-image-with-background-color)
+
+
+
+
+(defun garid/open-org-link-at-point-with-dired (&optional arg) ;; https://emacs.stackexchange.com/a/60555/38482
+  "Extract URL from org-mode link and add it to kill ring." ;;;
+  (interactive "P")
+  (let* ((link (org-element-lineage (org-element-context) '(link) t))
+         (type (org-element-property :type link))
+         (url (org-element-property  :path link)))
+    (message (concat "Copied URL: " url))
+    (dired-jump t (file-name-directory url))))
+
+(defun garid/jump-label-def-of-ref-at-point-word ()
+  ""
+  (interactive)
+  ;; jump to closing } part of:  \ref{...}
+  (progn
+    (search-forward "}")
+    (backward-char 1))
+
+  ;; copy and consult-line with thing inside of {} parenthesis of \ref{...}
+  (let ((start (search-backward "{" nil t))
+        (end (search-forward "}" nil t)))
+    (if (and start end)
+        (let ((content (buffer-substring-no-properties (1+ start) (1- end))))
+          (consult-line (format "\\label{%s}" content))
+          )
+      (message "No matching braces found."))))
+   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; setting latex preview
+;;(setq org-preview-latex-default-process 'imagemagick)
+;;(setf (plist-get (cdr (assq 'imagemagick org-preview-latex-process-alist)) :latex-compiler)
+;;     '("xelatex -interaction nonstopmode -output-directory %o %f"))
+
+(defun garid/org-toggle-display-images-n-edraw ()
+  (interactive)
+  (if garid-orgvar-is-img-shown
+      (progn (edraw-org-link-image-mode -1)
+             (org-link-preview-clear)) ;; (org-remove-inline-images)
+    (progn (edraw-org-link-image-mode +1)
+           (org-link-preview) ;; (org-display-inline-images)
+           )) ;; may need to check org-link-preview as of org mode 9.8 release
+  (setq garid-orgvar-is-img-shown (not garid-orgvar-is-img-shown)))
+
+(defun garid/org-toggle-link-n-emphasis ()
+  (interactive)
+  (setq org-hide-emphasis-markers (not org-hide-emphasis-markers))
+  (setq org-link-descriptive           org-hide-emphasis-markers)
+  (org-restart-font-lock)
+  (font-lock-update))
+
+
+;; from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][mastering emacs article]].
+
+   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun garid/org-up-heading-dwim (&optional arg)
+  "If on a heading, go to parent heading. If in body text, go to the current entry's heading."
+  (interactive "p")
+  (if (org-at-heading-p)
+      (org-up-heading arg)
+    (org-back-to-heading t)))
+
+
+
 #+end_src
 
 *** =org-link=
@@ -1400,7 +1466,7 @@ and later sets cursor at that point when you open that file.
   :after org
   :delight "")
 #+end_src
-*** =org-contacts=
+*** COMMENT =org-contacts=
 #+begin_src emacs-lisp
 (use-package org-contacts
   :straight t
@@ -1489,65 +1555,30 @@ https://stackoverflow.com/questions/78982629/in-emacs-how-to-prevent-org-babel-d
                    :link denote-org-link-format
                    :link-in-context-regexp denote-org-link-in-context-regexp)
           denote-file-types))
+  :bind
+  (:map evil-normal-state-map
+        ;; base denote
+        ("SPC n r"    .  'denote-rename-file            )
+        ("SPC n R d"  .  'denote-rename-file-date       )
+        ("SPC n R i"  .  'denote-rename-file-identifier )
+        ("SPC n R s"  .  'denote-rename-file-signature  )
+        ("SPC n R t"  .  'denote-rename-file-keywords   )
+        ("SPC n R k"  .  'denote-rename-file-keywords   )
+        ("SPC n f"    .  'denote-open-or-create         )
+        ("SPC n d"    .  'denote-dired                  )
+        ("SPC n n t"  .  'denote-type                   )
+        ("SPC n n d"  .  'denote-date                   )
+        ("SPC n n s"  .  'denote-subdirectory           )
+        ("SPC n n t"  .  'denote-template               )
+        ("SPC n n S"  .  'denote-singature              )
+        ("SPC n l i"  .  'denote-link                   )
+        ("SPC n l c"  .  'denote-link-or-create         )
+        ("SPC n L b"  .  'denote-find-backlink          )
+        ("SPC n L f"  .  'denote-find-link              )
+        ("SPC n L B"  .  'denote-backlinks              )
+        ("SPC n L a"  .  'denote-add-links              )
 
-  :general ;; base denote
-  (:states  'normal
-            :prefix  "SPC"
-            ;; "n"      '(:which-key "+denote...")
-            "n r"    'denote-rename-file
-            "n R d"  'denote-rename-file-date
-            "n R i"  'denote-rename-file-identifier
-            "n R s"  'denote-rename-file-signature
-            "n R t"  'denote-rename-file-keywords
-            "n R k"  'denote-rename-file-keywords
-
-            "n f"    'denote-open-or-create
-            "n d"    'denote-dired
-
-            ;; "n n"    '(:which-key "+new...")
-            "n n t"  'denote-type
-            "n n d"  'denote-date
-            "n n s"  'denote-subdirectory
-            "n n t"  'denote-template
-            "n n S"  'denote-singature
-
-            ;; "n l"    '(:which-key "+link...")
-            "n l i"  'denote-link
-            "n l c"  'denote-link-or-create
-
-            ;; "n L"    '(:which-key "+Link...")
-            "n L b"  'denote-find-backlink
-            "n L f"  'denote-find-link
-            "n L B"  'denote-backlinks
-            "n L a"  'denote-add-links)
-
-  ;; :general ;; for denote silo
-  (:states  'normal
-            :prefix  "SPC"
-            ;; "n s"    '(:which-key "+denote-silo...")
-            "n s t"  'denote-silo-select-silo-then-command
-            "n s d"  'denote-silo-dired
-            "n s f"  'denote-silo-open-or-create
-            )
-
-  ;; :general  ;; for denote-journal
-  (:states 'normal
-           :prefix "SPC"
-           ;; "n j"    '(:which-key "+denote-journal...")
-           "n j n"  'denote-journal-new-entry
-           "n j e"  'denote-journal-new-or-existing-entry
-           )
-
-  ;; :general ;; denote-org
-  (:states  'normal
-            :prefix  "SPC"
-            ;; "n o"   '(:which-key "+denote-org...")
-            "n o d" 'denote-org-dblock-insert-links
-            "n o e" 'denote-org-extract-org-subtree
-            "n o l" 'denote-org-link-to-heading
-            )
-
-
+        )
   )
 
 #+end_src
@@ -1562,7 +1593,16 @@ Deferred by default; loaded via keybinding in the Denote config.
 (use-package denote-journal
   :straight t
   :after    denote
-  :custom   (denote-journal-title-format "Week-%V %A (Date: %Y-%B-%e)"))
+  :custom   (denote-journal-title-format "Week-%V %A (Date: %Y-%B-%e)")
+
+  ;; denote-journal-directory make new function
+  :bind
+  (:map evil-normal-state-map
+        ("SPC n j n " .  'denote-journal-new-entry             )
+        ("SPC n j e " .  'denote-journal-new-or-existing-entry )
+        )
+
+  )
 #+end_src
 
 #+RESULTS:
@@ -1574,7 +1614,16 @@ Deferred by default; loaded via keybinding in the Denote config.
 #+begin_src emacs-lisp
 (use-package denote-org
   :straight t
-  :after denote)
+  :after denote
+
+  :bind
+  (:map evil-normal-state-map
+        ;; denote org
+        ("SPC n o d " .  'denote-org-dblock-insert-links )
+        ("SPC n o e " .  'denote-org-extract-org-subtree )
+        ("SPC n o l " .  'denote-org-link-to-heading     )
+        )
+  )
 #+end_src
 
 *** =denote-silo=                                                                  :by_prot:
@@ -1585,12 +1634,24 @@ Deferred by default; loaded via keybinding in the Denote config.
 (use-package denote-silo
   :straight t
   :after denote
+
   :custom
   (denote-silo-directories (mapcar
                             (lambda (y) (concat "~/BrainDump/" y))
                             (seq-filter
                              (lambda (x) (string-match "denote.*" x))
-                             (directory-files "~/BrainDump/")))))
+                             (directory-files "~/BrainDump/"))))
+
+  
+  :bind
+  (:map evil-normal-state-map
+        ;; denote silo
+        ("SPC n s t " .  'denote-silo-select-silo-then-command )
+        ("SPC n s d " .  'denote-silo-dired                    )
+        ("SPC n s f " .  'denote-silo-open-or-create           )
+        )
+
+  )
 #+end_src
 
 #+RESULTS:
@@ -1617,6 +1678,8 @@ Deferred by default; loaded via keybinding in the Denote config.
   (citar-file-open-functions   '(("html" . citar-file-open-external )
                                  ("pdf"  . garid/ask-pdf-openner    )
                                  (t      . find-file                )))
+
+         ;; ("SPC O c" . citar-open)
   :hook
   (org-mode-hook   . citar-capf-setup)
   (LaTeX-mode-hook . citar-capf-setup)
@@ -1626,6 +1689,7 @@ Deferred by default; loaded via keybinding in the Denote config.
 (defun garid/ask-pdf-openner (file)
   (interactive)
   (call-process (completing-read "Application" '("sioyek" "okular" "xournalpp")) nil 0 nil file))
+
 #+end_src
 
 Citation style files are downloaded and placed in the
@@ -1661,6 +1725,7 @@ license.
 #+begin_src emacs-lisp
 (use-package calendar
   :straight nil
+  :defer t
   :custom (calendar-week-start-day 1))
 #+end_src
 *** =org-agenda=: the agenda
@@ -1668,7 +1733,7 @@ license.
 (use-package org-agenda
   :after      org
   :straight   nil
-  :demand     t
+  ;; :demand     t
   :custom
   (org-agenda-files '("~/BrainDump/gtd/org-gtd-tasks.org"))
   (org-agenda-span             1) ;;  90)
@@ -1780,21 +1845,21 @@ license.
          :map calc-mode-map       ("<f7>" . casual-calc-tmenu    )
          :map dired-mode-map      ("<f7>" . casual-dired-tmenu   ))
   :general
-  (:states 'normal
-           :keymaps   'dired-mode-map
-           ","        'casual-dired-sort-by-tmenu )
+  ;; (:states 'normal
+  ;;          :keymaps   'dired-mode-map
+  ;;          ","        'casual-dired-sort-by-tmenu )
   )
 #+end_src
 *** =consult-todo=
 #+begin_src emacs-lisp
 (use-package consult-todo
   :straight t
-  :demand t
-  :general
-  (:states 'normal
-           :prefix "SPC"
-           "c t" 'consult-todo
-           "c T" 'consult-todo-project))
+  :after evil
+  :defer t
+  :bind (:map evil-normal-state-map
+              ("SPC c t" . 'consult-todo        )
+              ("SPC c T" . 'consult-todo-project))
+  )
 #+end_src
 
 #+RESULTS:
@@ -1804,19 +1869,19 @@ license.
 (use-package org-edna
   :straight t
   :after  org-agenda
-  :demand t
+  ;; :demand t
   :hook
   ;; (after-init-hook . org-edna-mode)
   (emacs-startup-hook . org-edna-mode)
   )
 #+end_src
-*** =org-gtd=
+*** TODO =org-gtd=
 
 #+begin_src emacs-lisp
 (use-package org-gtd
   :straight t
   :after  org-edna
-  :demand t
+  ;; :demand t;;  commented on  2026-06-19
   :init
   (setq org-gtd-update-ack "4.0.0") ;; Suppress upgrade warnings (must be set before package loads)
 
@@ -1828,55 +1893,56 @@ license.
                                  (wait     . "WAIT")
                                  (canceled . "CNCL")))
 
-  :general
-  (:keymaps 'org-gtd-clarify-mode-map
-            "C-c C-c" 'org-gtd-organize)
+  :bind (:map evil-normal-state-map
+              ("SPC o g p" . 'org-gtd-process-inbox         )
+              ("SPC o g e" . 'org-gtd-engage                )
+              ("SPC o g n" . 'org-gtd-show-all-next         )
+              ("SPC o g s" . 'org-gtd-reflect-stuck-projects))
 
-  (:keymaps 'org-agenda-mode-map
-            "C-c ." 'org-gtd-agenda-transient)
+  ;; :general
+  ;; (:keymaps 'org-gtd-clarify-mode-map
+  ;;           "C-c C-c" 'org-gtd-organize)
 
-  (:states 'normal
-           :prefix "SPC o g"
-           "p"      'org-gtd-process-inbox
-           "e"      'org-gtd-engage
-           "n"      'org-gtd-show-all-next
-           "s"      'org-gtd-reflect-stuck-projects)
+  ;; (:keymaps 'org-agenda-mode-map
+  ;;           "C-c ." 'org-gtd-agenda-transient)
 
-  (:states 'normal
-           :keymaps 'org-mode-map
-           :prefix "SPC o"
-           "s c"    'org-gtd-clarify-item
-           "g c"    'org-gtd-clarify-item
-           "g a"    'org-gtd-archive-completed-items
-           "g A"    'org-gtd-archive-item-at-point)
 
-  (:states 'normal
-           :prefix "SPC"
-           "o c  "     'org-gtd-capture)
+  ;; (:states 'normal
+  ;;          :keymaps 'org-mode-map
+  ;;          :prefix "SPC o"
+  ;;          "s c"    'org-gtd-clarify-item
+  ;;          "g c"    'org-gtd-clarify-item
+  ;;          "g a"    'org-gtd-archive-completed-items
+  ;;          "g A"    'org-gtd-archive-item-at-point)
 
-  (:states 'normal
-           :keymaps 'org-agenda-mode-map
-           :prefix "SPC"
-           "o c  "     'org-gtd-capture)
-  ;; :hook
-  ;; (emacs-startup-hook . org-gtd-mode) 
+  ;; (:states 'normal
+  ;;          :prefix "SPC"
+  ;;          "o c  "     'org-gtd-capture)
+
+  ;; (:states 'normal
+  ;;          :keymaps 'org-agenda-mode-map
+  ;;          :prefix "SPC"
+  ;;          "o c  "     'org-gtd-capture)
+  :hook
+  (emacs-startup-hook . org-gtd-mode) 
   )
 #+end_src
 ** Org Exporting related
-*** =ox=
+*** =ox= (load 0.2ms)
 ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stackexchange]]
 
 #+begin_src emacs-lisp
 (use-package ox
   :straight nil
   :after org
-  :demand t
-  :general
-  (:states 'normal
-           :keymaps  'org-mode-map
-           :prefix    "SPC"
-           ;; "o x"     '(:which-key "export...")
-           )
+  ;; :demand t
+  :defer t ;; 2026-06-23 trial
+  ;; :general
+  ;; (:states 'normal
+  ;;          :keymaps  'org-mode-map
+  ;;          :prefix    "SPC"
+  ;;          ;; "o x"     '(:which-key "export...")
+  ;;          )
   :config
 
   ;;(defadvice org-export-output-file-name (before org-add-export-dir activate)
@@ -1902,15 +1968,15 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
         )
       )
     (apply orig-fun extension subtreep pub-dir nil))
-  (advice-add 'org-export-output-file-name :around #'org-export-output-file-name-modified)
+  (advice-add 'org-export-output-file-name :around #'org-export-output-file-name-modified) 
   )
 #+end_src
 
 *** Latex related
 #+begin_src emacs-lisp
-(use-package tex-mode :straight nil)
-(use-package auctex   :straight   t)
-(use-package cdlatex  :straight   t)
+(use-package tex-mode :straight nil :defer t)
+(use-package auctex   :straight   t :defer t)
+(use-package cdlatex  :straight   t :defer t)
 #+end_src
 *** =ox-latex= org export latex
 #+begin_src emacs-lisp
@@ -1968,7 +2034,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 (use-package ox-odt
   :straight nil
   :after ox
-  ;; :demand t
+  :defer t
   :general
   (:states 'normal
            :keymaps 'org-mode-map
@@ -2091,10 +2157,10 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   (org-attach-use-inheritance t)
   (org-attach-auto-tag      nil)
 
-  :general
-  (:states 'normal
-           :keymaps 'dired-mode-map
-           "SPC D a" 'org-attach-dired-to-subtree)
+  ;; :general
+  ;; (:states 'normal
+  ;;          :keymaps 'dired-mode-map
+  ;;          "SPC D a" 'org-attach-dired-to-subtree)
 
   :config
   (require 'org-attach-git)
@@ -2234,8 +2300,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 * Programming languages
 ** =arduino=
 #+begin_src emacs-lisp
-(use-package arduino-mode
-  :straight t)
+(use-package arduino-mode :straight t :defer t)
 #+end_src
 
 ** =code-cells-mode=
@@ -2305,37 +2370,36 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 #+end_src
 ** =elixir= 
 #+begin_src emacs-lisp
-(use-package elixir-mode :straight t)
-(use-package ob-elixir   :straight t)
+(use-package elixir-mode :straight t :defer t)
+(use-package ob-elixir   :straight t :defer t)
 #+end_src
 
 ** ESS (for Rlang)                                                                      :ob:
 Emacs Speaks Statistics
 
 #+begin_src emacs-lisp
-(use-package ess
-  :straight t)
+(use-package ess :straight t :defer t)
 #+end_src
 
 ** =graphviz-dot-mode=
 #+begin_src emacs-lisp
-(use-package graphviz-dot-mode :straight t)
+(use-package graphviz-dot-mode :straight t :defer t)
 #+end_src
 
 ** =json-mode=
 #+begin_src emacs-lisp
-(use-package json-mode :straight t)
+(use-package json-mode :straight t :defer t)
 #+end_src
 
 ** =lua-mode=
 #+begin_src emacs-lisp
-(use-package lua-mode :straight t)
+(use-package lua-mode :straight t :defer t)
 #+end_src
 
 ** =nix=                                                                                  :ob:
 #+begin_src emacs-lisp
-(use-package nix-mode :straight t)
-(use-package ob-nix :straight t)
+(use-package nix-mode :straight t :defer t)
+(use-package ob-nix   :straight t :defer t)
 #+end_src
 ** =prog-mode=
 #+begin_src emacs-lisp
@@ -2437,7 +2501,7 @@ Emacs Speaks Statistics
 
 ** =scad-mode=                                                                            :ob:
 #+begin_src emacs-lisp
-(use-package scad-mode :straight t)
+(use-package scad-mode :straight t :defer t)
 #+end_src
 
 #+begin_example
@@ -2526,6 +2590,7 @@ Emacs Speaks Statistics
 #+begin_src emacs-lisp
 (use-package xref
   :straight nil
+  :defer t
   )
 #+end_src
 
@@ -2644,7 +2709,7 @@ Emacs Speaks Statistics
 #+begin_src emacs-lisp
 (use-package project
   :straight nil
-  :demand t
+  :defer t
   :custom
   (project-switch-commands
    '((project-find-file    "Find file"      "f")
@@ -2653,42 +2718,37 @@ Emacs Speaks Statistics
      (magit-project-status "Magit"          "g")
      (project-eshell       "Eshell"         "e")
      (project-any-command  "Other"          )))
-  :general (
-            :states 'normal
-            :prefix "SPC"
-            ;; "p"      '(:which-key "project")
-            "p b"     'project-switch-to-buffer
-            "p c"     'project-recompile
-            "p C"     'project-compile
-            "p d"     'project-dired
-            "p D"     'project-find-dir
-            "p e"     'project-eshell
-            "p f"     'project-find-file
-            "p k"     'project-kill-buffers
-            "p l"     'consult-project-buffer
-            "p L"     'project-list-buffers
-            "p q r r" 'project-query-replace-regexp
-            "p s"     'project-find-regexp
-            "p z"     'project-switch-project
-            )
-  :general (
-            :states 'normal
-            :prefix "C-SPC" ;; it does the command in the other window
-            ;; "p"      '(:which-key "project")
-            ;; "p b"     '(lambda () (interactive) (project-other-window-command) (project-switch-to-buffer (list (project--read-project-buffer))))
-            "p c"     '(lambda () (interactive) (project-other-window-command) (project-recompile))
-            "p C"     '(lambda () (interactive) (project-other-window-command) (project-compile))
-            "p d"     '(lambda () (interactive) (project-other-window-command) (project-dired))
-            "p D"     '(lambda () (interactive) (project-other-window-command) (project-find-dir))
-            "p e"     '(lambda () (interactive) (project-other-window-command) (project-eshell))
-            "p f"     '(lambda () (interactive) (project-other-window-command) (project-find-file))
-            "p k"     '(lambda () (interactive) (project-other-window-command) (project-kill-buffers))
-            "p l"     '(lambda () (interactive) (project-other-window-command) (consult-project-buffer))
-            "p L"     '(lambda () (interactive) (project-other-window-command) (project-list-buffers))
-            "p q r r" '(lambda () (interactive) (project-other-window-command) (project-query-replace-regexp))
-            "p s"     '(lambda () (interactive) (project-other-window-command) (project-find-regexp))
-            "p z"     '(lambda () (interactive) (project-other-window-command) (project-switch-project))
-            )
+
+
+  :bind (:map evil-normal-state-map
+              ("SPC p b" .     'project-switch-to-buffer)
+              ("SPC p c" .     'project-recompile)
+              ("SPC p C" .     'project-compile)
+              ("SPC p d" .     'project-dired)
+              ("SPC p D" .     'project-find-dir)
+              ("SPC p e" .     'project-eshell)
+              ("SPC p f" .     'project-find-file)
+              ("SPC p k" .     'project-kill-buffers)
+              ("SPC p l" .     'consult-project-buffer)
+              ("SPC p L" .     'project-list-buffers)
+              ("SPC p q r r" . 'project-query-replace-regexp)
+              ("SPC p s" .     'project-find-regexp)
+              ("SPC p z" .     'project-switch-project)
+
+              ( "C-SPC p c"     . (lambda () (interactive) (project-other-window-command) (project-recompile)) )
+              ( "C-SPC p C"     . (lambda () (interactive) (project-other-window-command) (project-compile)) )
+              ( "C-SPC p d"     . (lambda () (interactive) (project-other-window-command) (project-dired)) )
+              ( "C-SPC p D"     . (lambda () (interactive) (project-other-window-command) (project-find-dir)) )
+              ( "C-SPC p e"     . (lambda () (interactive) (project-other-window-command) (project-eshell)) )
+              ( "C-SPC p f"     . (lambda () (interactive) (project-other-window-command) (project-find-file)) )
+              ( "C-SPC p k"     . (lambda () (interactive) (project-other-window-command) (project-kill-buffers)) )
+              ( "C-SPC p l"     . (lambda () (interactive) (project-other-window-command) (consult-project-buffer)) )
+              ( "C-SPC p L"     . (lambda () (interactive) (project-other-window-command) (project-list-buffers)) )
+              ( "C-SPC p q r r" . (lambda () (interactive) (project-other-window-command) (project-query-replace-regexp)) )
+              ( "C-SPC p s"     . (lambda () (interactive) (project-other-window-command) (project-find-regexp)) )
+              ( "C-SPC p z"     . (lambda () (interactive) (project-other-window-command) (project-switch-project)) )
+              )
+  
   )
 
 
@@ -2699,14 +2759,11 @@ Emacs Speaks Statistics
 #+begin_src emacs-lisp
 (use-package magit
   :straight t
-  :demand   t
-  :general
-  (:states 'normal
-           :prefix "SPC"
-           ;; "g"   '(:which-key "git...")
-           "g m"  'magit-status
-           "g d"  'magit-ediff-compare
-           )
+  :defer    t
+  :bind (:map evil-normal-state-map
+              ( "SPC g m" .  'magit-status )
+              ( "SPC g d" .  'magit-ediff-compare )
+              )
   )
 #+end_src
 
@@ -2722,20 +2779,18 @@ Similar to vim-signify.
                      ("s" . git-gutter:popup-hunk    )
                      ("S" . git-gutter:stage-hunk    )
                      ("r" . git-gutter:revert-hunk   ))
-  :general (
-            :states 'normal
-            :prefix "SPC"
-            "g S"  'git-gutter:stage-hunk
-            "g s"  'git-gutter:popup-hunk
-            "g u"  'git-gutter:update-all-windows
-            "g r"  'git-gutter:revert-hunk
-            "g g"  'git-gutter-mode
-            "g n"  'git-gutter:next-hunk
-            "g p"  'git-gutter:previous-hunk)
+
+  (:map evil-normal-state-map
+        ( "SPC g S" .  'git-gutter:stage-hunk        )
+        ( "SPC g s" .  'git-gutter:popup-hunk        )
+        ( "SPC g u" .  'git-gutter:update-all-windows)
+        ( "SPC g r" .  'git-gutter:revert-hunk       )
+        ( "SPC g g" .  'git-gutter-mode              )
+        ( "SPC g n" .  'git-gutter:next-hunk         )
+        ( "SPC g p" .  'git-gutter:previous-hunk     ))
   :hook
   (magit-post-commit-hook . git-gutter:update-all-windows )
   (emacs-startup-hook     . global-git-gutter-mode        )
-  ;; (after-init-hook     . global-git-gutter-mode        )
   )
 #+end_src
 
@@ -2759,12 +2814,8 @@ Similar to vim-signify.
 (use-package eshell
   :straight nil
   :general
-  (:states 'normal
-           ;; "SPC t"   '(:which-key "terminal")
-           "SPC t e" 'eshell)
-  ;; (:states 'insert
-  ;;          :keymaps 'eshell-mode-map
-  ;;          "C-a"    'eshell-bol)
+  :bind (:map evil-normal-state-map
+              ( "SPC t e" .  'eshell ))
   :hook
   (eshell-mode-hook   . compilation-shell-minor-mode)
   (emacs-startup-hook . eshell-atuin-mode)
@@ -2805,6 +2856,7 @@ Similar to vim-signify.
 #+begin_src emacs-lisp
 (use-package outline-indent
   :straight t
+  :defer t
   :delight ""
   :hook (prog-mode-hook  . outline-indent-minor-mode))
 #+end_src
@@ -2963,7 +3015,7 @@ environment.systemPackages = with pkgs; [
 
 ** =tmr=: timer may ring                                                             :by_prot:
 #+begin_src emacs-lisp
-(use-package tmr :straight t)
+(use-package tmr :straight t :defer t)
 #+end_src
 * Email
 ** =notmuch=
@@ -3080,6 +3132,7 @@ environment.systemPackages = with pkgs; [
 #+begin_src emacs-lisp
 (use-package sendmail
   :straight nil
+  :defer t
   :custom
   (send-mail-function              'sendmail-send-it )
   (sendmail-program                "msmtp"           )
@@ -3151,18 +3204,19 @@ environment.systemPackages = with pkgs; [
            "SPC s c L"  'clm/command-log-clear)
   )
 #+end_src
-** =apheleia=
+** =apheleia= formatter
 
 #+begin_src emacs-lisp
 (use-package apheleia
   :straight t
-  :demand t
-  :general (:states 'normal
-                    "SPC v q" 'apheleia-format-buffer)
-
-  :hook (prog-mode-hook . apheleia-mode)
+  :defer t
   :custom
   (apheleia-formatters-respect-fill-column t)
+  :bind (:map evil-normal-state-map
+              ("SPC v q" . 'apheleia-format-buffer)
+              )
+
+  :hook (prog-mode-hook . apheleia-mode)
   )
 #+end_src
 
@@ -3170,7 +3224,7 @@ environment.systemPackages = with pkgs; [
 #+begin_src emacs-lisp
 (use-package crux
   :straight t
-  :demand t
+  ;; :demand t  ;; demand due to :general keyword issue
   :general
   (:states 'normal
            "SPC L d"   'crux-delete-file-and-buffer
@@ -3185,7 +3239,7 @@ environment.systemPackages = with pkgs; [
 
 ** =exercism=
 #+begin_src emacs-lisp
-(use-package exercism :straight t)
+(use-package exercism :straight t :defer t)
 #+end_src
 ** =screencast=
 #+begin_src emacs-lisp
@@ -3246,8 +3300,7 @@ environment.systemPackages = with pkgs; [
 
 ** =csv-mode=
 #+begin_src emacs-lisp
-(use-package csv-mode
-  :straight t)
+(use-package csv-mode :straight t :defer t)
 #+end_src
 
 #+RESULTS:
