@@ -54,7 +54,7 @@ run:
 #+end_src
 
 * Keybinding related
-** =general= configuration
+** COMMENT =general= configuration
 #+begin_src emacs-lisp
 (use-package general
   :straight t
@@ -89,7 +89,7 @@ run:
 (use-package repeat
   :straight nil
   :hook 
-  (emacs-startup-hook . repeat-mode) ;; (after-init-hook . repeat-mode)
+  (after-init-hook . repeat-mode) ;; (after-init-hook . repeat-mode)
   )
 #+end_src
 
@@ -99,7 +99,7 @@ run:
 ;; Vim Bindings
 (use-package evil
   :straight t
-  ;; :demand t
+  :demand t
 
   :custom
   (evil-toggle-key               "")  ;; removes the C-z toggling evil accidentally
@@ -120,78 +120,7 @@ run:
         ("SPC a" . evil-avy-goto-char-2))
 
   :hook
-  (emacs-startup-hook . evil-mode) 
-  )
-#+end_src
-
-** =evil-collection=: vi-movements everywhere
-#+begin_src emacs-lisp
-(use-package evil-collection
-  :straight t
-  :after evil
-  :delight ""
-  ;; :defer t
-  ;; :custom
-  ;; (evil-collection-mode-list
-  ;;  '(
-  ;;    org org-present outline
-  ;;    vundo bookmark
-  ;;    (magit magit-submodule) magit-repos magit-section  magit-todos
-  ;;    gptel
-  ;;    info
-  ;;    notmuch
-  ;;    (pdf pdf-view)
-  ;;    ;; dired dired-sidebar wdired
-  ;;    diff-hl diff-mode ediff
-  ;;    ))
-
-  ;; maybe use;
-  ;; bm calc calendar comint compile consult corfu (csv "csv-mode")
-  ;;  eglot flycheck flymake  grep
-  ;; ibufferr  pass  python rg ripgrep
-  ;; smerge-mode trashed vertico which-key xref
-
-  ;; stoped
-  ;; dired dired-sidebar wdired
-
-  ;; bluetooth ag alchemist anaconda-mode apropos arc-mode
-  ;; atomic-chrome 2048-game kotlin-mode eat auto-package-update
-  ;; beginend (buff-menu "buff-menu") bufler cider citre cmake-mode
-  ;; color-rg company crdt (custom cus-edit) cus-theme dape dashboard
-  ;; daemons deadgrep debbugs debug devdocs dictionary difftastic
-  ;; disk-usage distel doc-view docker ebib ebuku edbi edebug elpaca
-  ;; ement explain-pause-mode eldoc elfeed elisp-mode elisp-refs
-  ;; elisp-slime-nav embark emms emoji epa ert eshell eval-sexp-fu
-  ;; evil-mc eww fanyi finder forge free-keys geiser ggtags
-  ;; git-timemachine gited gnus go-mode guix hackernews helm help
-  ;; helpful hg-histedit hideshow hungry-delete hyrolo (image
-  ;; image-mode) image-dired image+ imenu imenu-list (indent "indent")
-  ;; indium  ivy js2-mode kmacro leetcode lispy lms log-edit
-  ;; log-view lsp-ui-imenu lua-mode macrostep man markdown-mode
-  ;; message minesweeper monky mpc mpdel mpdired mu4e
-  ;; mu4e-conversation neotree newsticker nov omnisharp
-  ;; org-roam osx-dictionary outline ovpn-mode p4 (package-menu
-  ;; package) popup proced (process-menu simple) prodigy profiler
-  ;; p-search quickrun racer racket-describe reader realgud reftex
-  ;; replace restclient rjsx-mode robe rtags ruby-mode scheme
-  ;; scroll-lock selectrum sh-script shortdoc simple simple-mpc slime
-  ;; sly snake so-long speedbar tab-bar tablist tabulated-list
-  ;; tar-mode telega (term term ansi-term multi-term) tetris thread
-  ;; tide timer-list transmission tuareg typescript-mode ultra-scroll
-  ;; vc-annotate vc-dir vc-git vdiff view vlf vterm w3m wgrep
-  ;; with-editor woman xwidget yaml-mode youtube-dl zmusic (ztree
-  ;; ztree-diff ztree-dir)
-
-  ;; :hook
-  ;; (after-init-hook . evil-collection-init) ;; 
-  :config
-  (evil-collection-init)
-  ;; I needed to load this as :config, because hooking above
-  ;; (evil-collection-init) with after-init-hook causes overrides 
-  ;; keybinding setup in the below configurations
-  ;; :hook
-  ;; (emacs-startup-hook . evil-collection-init)
-  
+  (after-init-hook . evil-mode) 
   )
 #+end_src
 
@@ -215,7 +144,7 @@ run:
   ;; (define-key evil-outer-text-objects-map "a" (evil-textobj-tree-sitter-get-textobj ("conditional.outer" "loop.outer" )))
 
   :hook
-  (emacs-startup-hook . (lambda ()
+  (after-init-hook . (lambda ()
                           (define-key evil-inner-text-objects-map "f" (evil-textobj-tree-sitter-get-textobj "function.inner" ))
                           (define-key evil-inner-text-objects-map "c" (evil-textobj-tree-sitter-get-textobj "class.inner"    ))
                           (define-key evil-outer-text-objects-map "f" (evil-textobj-tree-sitter-get-textobj "function.outer" ))
@@ -233,7 +162,7 @@ mark or parenthesis.
 #+begin_src emacs-lisp
 (use-package evil-surround
   :straight t
-  :defer t ;; 2026-06-23 trial
+  :demand nil
   :after evil
   :hook
   (after-init-hook . global-evil-surround-mode)
@@ -271,13 +200,27 @@ mark or parenthesis.
   )
 #+end_src
 
+** =evil-collection=: vi-movements everywhere
+#+begin_src emacs-lisp
+(use-package evil-collection
+  :straight t
+  :after evil
+  :delight ""
+  :demand t 
+  :config (evil-collection-init)
+  ;; :hook
+  ;; (after-init-hook . evil-collection-init)
+  )
+#+end_src
+
+
 * Undo and Trash
 ** =vundo=: visual undo
 #+begin_src emacs-lisp
 (use-package vundo
   :straight t
   :after    evil
-  :defer   t
+  :demand   nil
   :bind (:map evil-normal-state-map
          ("SPC u t" . vundo))
   )
@@ -292,7 +235,7 @@ mark or parenthesis.
 #+begin_src emacs-lisp
 (use-package delight
   :straight t
-  :demand t
+  :demand nil
   )
 #+end_src
 
@@ -300,7 +243,8 @@ mark or parenthesis.
 #+begin_src emacs-lisp
 (use-package faces
   :straight nil
-  :defer t
+  ;; :defer t
+  :demand nil
   :custom
   (face-font-family-alternatives
    '(("Monospace" "Aporetic Sans Mono" "Noto Sans Mono CJK JP" "Iosevka SS06" "Iosevka Term SS06" "Liberation Mono" "courier" "fixed")
@@ -364,7 +308,7 @@ mark or parenthesis.
 
   :hook
   (after-init-hook . (lambda () (modus-themes-load-theme (car modus-themes-to-toggle))))
-  ;; (emacs-startup-hook . (lambda () (modus-themes-load-theme (car modus-themes-to-toggle))))
+  ;; (after-init-hook . (lambda () (modus-themes-load-theme (car modus-themes-to-toggle))))
   )
 #+end_src
 
@@ -456,7 +400,7 @@ mark or parenthesis.
   ;; (if (file-exists-p abbrev-file-name) (quietly-read-abbrev-file))
 
   :hook
-  (emacs-startup-hook . abbrev-mode)
+  (after-init-hook . abbrev-mode)
   (after-init-hook . (lambda ()
                        (if (file-exists-p abbrev-file-name) (quietly-read-abbrev-file))
                        )
@@ -538,7 +482,7 @@ mark or parenthesis.
   :bind (:map minibuffer-local-map
               ( "M-f" . forward-word ))
   :hook
-  (emacs-startup-hook . (lambda ()
+  (after-init-hook . (lambda ()
                           (call-process-shell-command
                            "notify-send \"Emacs\" \"Emacs startup initialized\"")))
   )
@@ -707,66 +651,46 @@ and later sets cursor at that point when you open that file.
 #+begin_src emacs-lisp
 (use-package dired
   :straight   nil
-  :after      evil-collection
+  :after      evil;; -collection
   :demand t
   ;; :commands   (dired dired-jump) ;; :after  evil-collection (test if the evil-collection-mode-list is default value)
   :custom ((dired-listing-switches  "-agho --group-directories-first")
            (dired-kill-when-opening-new-dired-buffer t)
            (dired-hide-details-mode                  t)
-           (insert-directory-program (if (eq system-type 'berkeley-unix) "gls"  ;; in case for BSD
+           (insert-directory-program (if (eq system-type 'berkeley-unix)
+                                         "gls"  ;; in case for BSD
                                        "ls")))
-
-  :hook     ((dired-mode-hook . denote-dired-mode       )
-             (dired-mode-hook . dired-omit-mode         )
-             (dired-mode-hook . auto-revert-mode        )
-             (dired-mode-hook . dired-hide-details-mode ))
 
   :bind
   (:map evil-normal-state-map
         ("SPC d"   . 'dired-jump)
-        ("SPC D s" . 'dired)
-        )
+        ("SPC D s" . 'dired))
 
-  (:map dired-mode-map
-        ("<backspace>" . 'dired-up-directory)
-        ("SPC"    .     nil)
-        ;; ("a" . 'dired-create-empty-file)
-        ;; ("L" . 'dired-find-file   )
-        ("q" . 'quit-window       ))
+  ;; (:map dired-mode-map
+  ;;       ("q" . 'quit-window       ))
 
+  :hook
+  (dired-mode-hook . denote-dired-mode       )
+  (dired-mode-hook . dired-omit-mode         )
+  (dired-mode-hook . auto-revert-mode        )
+  (dired-mode-hook . dired-hide-details-mode )
+  (after-init-hook . 
+                   (lambda (&rest a)
+                     (evil-define-key 'normal dired-mode-map (kbd "SPC")          nil)
+                     (evil-define-key 'normal dired-mode-map (kbd "<backspace>") 'dired-up-directory)
+                     (evil-define-key 'normal dired-mode-map (kbd "<backspace>") 'dired-up-directory)
+                     (evil-define-key 'normal dired-mode-map (kbd "SPC D p")     'dired-preview-mode)
+                     (evil-define-key 'normal dired-mode-map (kbd "C-s")         'dired-omit-mode)
+                     (evil-define-key 'normal dired-mode-map (kbd "a")           'dired-create-empty-file)
+                     (evil-define-key 'normal dired-mode-map (kbd "A")           'dired-create-directory)
 
-  ;; :general
-  ;; ;; (:states 'normal
-  ;; ;;          :prefix "SPC"
-  ;; ;;          "d"     'dired-jump
-  ;; ;;          "D s"   'dired)
-
-  ;; ;; (:states 'normal
-  ;; ;;          :keymaps 'dired-mode-map
-  ;; ;;          "SPC"         nil
-  ;; ;;          "h"          'dired-up-directory
-  ;; ;;          "l"          'dired-find-file
-  ;; ;;          "N"          'dired-create-directory
-  ;; ;;          (kbd "C-n")  'mkdir
-  ;; ;;          (kbd "C-s")  'dired-omit-mode
-  ;; ;;          "SPC D p"    'dired-preview-mode
-  ;; ;;          "SPC W"      'wdired-change-to-wdired-mode
-  ;; ;;          ;; dired-filter
-  ;; ;;          "g f"        'dired-filter-by-name 
-  ;; ;;          "g F"        'dired-filter-pop 
-  ;; ;;          )
-
-  ;; (:states 'normal
-  ;;          :keymaps   'dired-mode-map ;; #'dired-preview-mode-map
-  ;;          :predicate '(bound-and-true-p dired-preview-mode)
-  ;;          "J"        'dired-preview-page-down
-  ;;          "K"        'dired-preview-page-up)
-
-
+                     (evil-define-key 'normal dired-mode-map (kbd "H")   'dired-up-directory)
+                     (evil-define-key 'normal dired-mode-map (kbd "L")   'dired-find-file)
+                     (evil-define-key 'normal dired-mode-map (kbd "J")   '(lambda () (interactive) (if (bound-and-true-p dired-preview-mode) (dired-preview-page-down) (dired-next-line 1)))  )
+                     (evil-define-key 'normal dired-mode-map (kbd "K")   '(lambda () (interactive) (if (bound-and-true-p dired-preview-mode) (dired-preview-page-up) (dired-previous-line 1)))) 
+                     ))
   )
 #+end_src
-
-#+RESULTS:
 
 ** =wdired=
 #+begin_src emacs-lisp
@@ -1057,8 +981,7 @@ and later sets cursor at that point when you open that file.
 #+begin_src emacs-lisp
 (use-package org
   :straight t
-  ;; :demand t
-  :defer t
+  :demand nil ;; :defer t
   :delight "org"
   :bind (:map org-mode-map
               ("C-S-k"         . org-previous-visible-heading   )
@@ -1069,134 +992,23 @@ and later sets cursor at that point when you open that file.
               ("C-S-n"         . org-next-visible-heading       )
               ("M-S-<return>"  . org-insert-todo-heading-respect-content)
               :repeat-map garid/org-repeat
-              ("["      . org-previous-visible-heading   )
-              ("]"      . org-next-visible-heading       )
-              ("u"      . org-up-heading                 )
-              ("{"      . org-backward-paragraph         )
-              ("}"      . org-forward-paragraph          )
-              ("n"      . org-next-block                 )
-              ("p"      . org-previous-block             )
-              ;; ("c"      . org-ctrl-c-ctrl-c              )
-              ;; :exit
-              ;; ("'"         . org-edit-special            )
-              ;; :repeat-map garid/org-repeat-heading
-              ;; ("n"         . org-next-visible-heading    )
-              ;; ("p"         . org-previous-visible-heading)
-              ;; :repeat-map garid/org-repeat-babel-src-block
-              ;; ("n"         . org-babel-next-src-block    )
-              ;; ("p"         . org-babel-previous-src-block)
-              )
+              ("["             . org-previous-visible-heading   )
+              ("]"             . org-next-visible-heading       )
+              ("u"             . org-up-heading                 )
+              ("{"             . org-backward-paragraph         )
+              ("}"             . org-forward-paragraph          )
+              ("n"             . org-next-block                 )
+              ("p"             . org-previous-block             ))
 
-  :general
-  (:states 'normal
-           :keymaps  'org-mode-map
-           :prefix   "SPC"
-           ","       'org-ctrl-c-ctrl-c
-           "j"       'org-next-block
-           "k"       'org-previous-block
-           ;; "o"       '(:which-key "org...")
-           "o O"     'garid/jump-label-def-of-ref-at-point-word
-           "o o"     'org-open-at-point
-           "o m r"   'org-mode-restart
-           "o p"     'org-latex-preview
-           "o d"     'garid/open-org-link-at-point-with-dired
-           "o f h"   'consult-org-heading
-
-           ;; "o T"     '(:which-key "Table...")
-           "o T C"   'org-table-toggle-coordinate-overlays
-           "o T T"   'org-table-toggle-column-width
-           "o T c"   'orgtbl-create-or-convert-from-region
-           "o T i c" 'org-table-insert-column
-           "o T i r" 'org-table-insert-row
-           "o T m"   'orgtbl-mode
-           "o T s"   'org-table-sum
-           "o T x"   'org-table-export
-
-           "o a"     'org-attach
-           ;; "o a"     '(:which-key "agenda/schedule...")
-           ;; "o a C"   'org-clock-out
-           ;; "o a c"   'org-clock-in
-           ;; "o a d"   'org-deadline
-           ;; "o a s"   'org-schedule
-
-           ;; "o a"     '(:which-key "agenda/schedule...")
-           ;; "o a o"   'org-attach-open
-
-           ;; "o b"     '(:which-key "babel...")
-           "o b ,"   'org-babel-execute-subtree
-           "o b k"   'org-babel-remove-result-one-or-many
-           "o b n"   'org-babel-next-src-block
-           "o b o"   'org-babel-open-src-block-result
-           "o b p"   'org-babel-pop-to-session
-           "o b p"   'org-babel-previous-src-block
-           "o b s"   'org-babel-demarcate-block
-           "o b t"   'org-babel-tangle
-           "o b v"   'org-babel-view-src-block-info
-
-           ;; "o b j"   '(:which-key "jump...")
-           "o b i h" 'org-babel-insert-header-arg
-           "o b j S" 'org-babel-goto-src-block-head
-           "o b j r" 'org-babel-goto-named-result
-           "o b j s" 'org-babel-goto-named-src-block
-
-           ;; "o i"     '(:which-key "images...")
-           "o i t"   'garid/org-toggle-display-images-n-edraw
-           "o i p"   'yank-media
-
-           ;; "o l"     '(:which-key "links...")
-           "o l c"   'org-cite-insert
-           "o l d"   'garid/org-toggle-link-n-emphasis
-           "o l l"   'org-lint
-           "o l n"   'org-next-link
-           "o l o"   'org-open-at-point
-           "o l p"   'org-previous-link
-           ;; "o l f"    '(:which-key "footnote...")
-           "o l f n"  'org-footnote-new
-           ;; "o l f a"  'org-footnote-action
-           "o l f N"  'org-footnote-normalize
-
-           ;; "o s"     '(:which-key "subtree...")
-           "o s I"   'org-indent-mode
-           "o s Y"   'org-id-copy
-           "o s a"   'org-archive-subtree-default-with-confirmation
-           "o s d"   'org-cut-subtree
-           "o s e"   'org-set-effort
-           "o s m"   'org-refile
-           "o s n"   'org-num-mode
-           "o s p"   'org-set-property
-           "o s s"   'org-sort
-           "o s t"   'org-toggle-narrow-to-subtree
-           "o s v"   'org-mark-element
-           "o s y"   'org-copy-subtree)
-
-  (:states 'normal
-           :keymaps 'org-mode-map
-           :prefix "SPC"
-           "o f n"    '(labmda () (interactive)  (consult-line "^#+name"       ))
-           "o f r"    '(labmda () (interactive)  (consult-line "^#+result"     ))
-           "o f s"    '(labmda () (interactive)  (consult-line "^#+begin_"     ))
-           "o f l"    '(labmda () (interactive)  (consult-line "\\\\label{.*}" ))
-           "o f r"    '(labmda () (interactive)  (consult-line "\\\\ref{.*}"   ))
-           )
-
-
-  (:states '(normal visual)
-           :keymaps  'org-mode-map
-           :prefix "SPC"
-           "o t"     'org-todo
-           "o l i"   'org-insert-link)
-
-  (:states 'normal
-           :prefix "SPC"
-           ;; "o a g"     'org-agenda
-           "o b d"     'org-babel-detangle
-           "o b j"     'org-babel-tangle-jump-to-org
-           "o b g d"   'org-babel-tangle-jump-to-org
-           "o C  "     'org-capture)
-
-  (:states 'normal
-           :keymaps  'org-mode-map
-           "z u"     'garid/org-up-heading-dwim)
+  ;; ("c"      . org-ctrl-c-ctrl-c              )
+  ;; :exit
+  ;; ("'"         . org-edit-special            )
+  ;; :repeat-map garid/org-repeat-heading
+  ;; ("n"         . org-next-visible-heading    )
+  ;; ("p"         . org-previous-visible-heading)
+  ;; :repeat-map garid/org-repeat-babel-src-block
+  ;; ("n"         . org-babel-next-src-block    )
+  ;; ("p"         . org-babel-previous-src-block)
 
   :custom
   (org-extend-today-until                                    2) ;; for the night owl
@@ -1280,122 +1092,191 @@ and later sets cursor at that point when you open that file.
   ;; :config ;; ----------------------------------------------------------------------------
   ;; (make-variable-buffer-local    'garid-orgvar-is-img-shown)
 
-  
-
-  ;; (with-eval-after-load 'evil
-  ;;   (evil-define-key 'normal org-mode-map (kbd "z u") #'garid/org-up-heading-dwim))
-
   :hook
   (org-after-refile-insert-hook . org-mode-restart)
-  (after-init-hook . 
-                   (lambda ()
-                     (org-babel-do-load-languages 'org-babel-load-languages
-                                                  '((awk        . t)
-                                                    (calc       . t)
-                                                    (dot        . t)   ;; (asymptote  . t)
-                                                    (emacs-lisp . t)   ;; (ditaa      . t)
-                                                    (gnuplot    . t)   ;; (go         . t)
-                                                    (latex      . t)   ;; (jupyter    . t)
-                                                    (makefile   . t)
-                                                    (lua        . t)
-                                                    (maxima     . t)   ;; (mermaid    . t)
-                                                    (python     . t)   ;; (nim        . t)
-                                                    (shell      . t)   ;; (nix        . t)
-                                                    (sqlite     . t)
-                                                    (R          . t)
-                                                    (plantuml   . t)))
-
-                     (setf (alist-get "python" org-src-lang-modes nil nil #'equal) 'python-ts)
-                     ))
-
   (after-init-hook . (lambda ()
-                       (message "hello org mode")))
-  )
+                       (setf (alist-get "python" org-src-lang-modes nil nil #'equal) 'python-ts)
+                       (org-babel-do-load-languages 'org-babel-load-languages
+                                                    '((awk        . t)
+                                                      (calc       . t)
+                                                      (dot        . t)   ;; (asymptote  . t)
+                                                      (emacs-lisp . t)   ;; (ditaa      . t)
+                                                      (gnuplot    . t)   ;; (go         . t)
+                                                      (latex      . t)   ;; (jupyter    . t)
+                                                      (makefile   . t)
+                                                      (lua        . t)
+                                                      (maxima     . t)   ;; (mermaid    . t)
+                                                      (python     . t)   ;; (nim        . t)
+                                                      (shell      . t)   ;; (nix        . t)
+                                                      (sqlite     . t)
+                                                      (R          . t)
+                                                      (plantuml   . t)))
+
+
+                       (message "hello org mode")
+                       (evil-define-key 'normal org-mode-map (kbd "SPC ,"        ) 'org-ctrl-c-ctrl-c                              )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC j"        ) 'org-next-block                                 )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC k"        ) 'org-previous-block                             )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o O"      ) 'garid/jump-label-def-of-ref-at-point-word      )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o o"      ) 'org-open-at-point                              )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o m r"    ) 'org-mode-restart                               )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o p"      ) 'org-latex-preview                              )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o d"      ) 'garid/open-org-link-at-point-with-dired        )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o f h"    ) 'consult-org-heading                            )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o T C"    ) 'org-table-toggle-coordinate-overlays           )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o T T"    ) 'org-table-toggle-column-width                  )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o T c"    ) 'orgtbl-create-or-convert-from-region           )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o T i c"  ) 'org-table-insert-column                        )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o T i r"  ) 'org-table-insert-row                           )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o T m"    ) 'orgtbl-mode                                    )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o T s"    ) 'org-table-sum                                  )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o T x"    ) 'org-table-export                               )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o a"      ) 'org-attach                                     )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o b ,"    ) 'org-babel-execute-subtree                      )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o b k"    ) 'org-babel-remove-result-one-or-many            )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o b n"    ) 'org-babel-next-src-block                       )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o b o"    ) 'org-babel-open-src-block-result                )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o b p"    ) 'org-babel-pop-to-session                       )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o b p"    ) 'org-babel-previous-src-block                   )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o b s"    ) 'org-babel-demarcate-block                      )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o b t"    ) 'org-babel-tangle                               )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o b v"    ) 'org-babel-view-src-block-info                  )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o b i h"  ) 'org-babel-insert-header-arg                    )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o b j S"  ) 'org-babel-goto-src-block-head                  )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o b j r"  ) 'org-babel-goto-named-result                    )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o b j s"  ) 'org-babel-goto-named-src-block                 )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o i t"    ) 'garid/org-toggle-display-images-n-edraw        )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o i p"    ) 'yank-media                                     )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o l c"    ) 'org-cite-insert                                )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o l d"    ) 'garid/org-toggle-link-n-emphasis               )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o l l"    ) 'org-lint                                       )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o l n"    ) 'org-next-link                                  )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o l o"    ) 'org-open-at-point                              )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o l p"    ) 'org-previous-link                              )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o l f n"  ) 'org-footnote-new                               )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o l f N"  ) 'org-footnote-normalize                         )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o s I"    ) 'org-indent-mode                                )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o s Y"    ) 'org-id-copy                                    )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o s a"    ) 'org-archive-subtree-default-with-confirmation  )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o s d"    ) 'org-cut-subtree                                )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o s e"    ) 'org-set-effort                                 )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o s m"    ) 'org-refile                                     )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o s n"    ) 'org-num-mode                                   )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o s p"    ) 'org-set-property                               )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o s s"    ) 'org-sort                                       )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o s t"    ) 'org-toggle-narrow-to-subtree                   )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o s v"    ) 'org-mark-element                               )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o s y"    ) 'org-copy-subtree                               )
+                       (evil-define-key 'normal org-mode-map (kbd "z u"          ) 'garid/org-up-heading-dwim                      )
+                       ;; (evil-define-key 'normal org-mode-map (kbd   ) #')
+                       ;; (evil-define-key 'normal org-mode-map (kbd   ) #')
+
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o f n"    ) '(labmda () (interactive)  (consult-line "^#+name"       ))                )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o f r"    ) '(labmda () (interactive)  (consult-line "^#+result"     ))                )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o f s"    ) '(labmda () (interactive)  (consult-line "^#+begin_"     ))                )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o f l"    ) '(labmda () (interactive)  (consult-line "\\\\label{.*}" ))                )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o f r"    ) '(labmda () (interactive)  (consult-line "\\\\ref{.*}"   ))                )
+
+                       (evil-define-key '(normal visual) org-mode-map (kbd  "SPC o t"  ) 'org-todo       )
+                       (evil-define-key '(normal visual) org-mode-map (kbd  "SPC o l i") 'org-insert-link)             
+
+                       (define-key     evil-normal-state-map (kbd "SPC o b d") 'org-babel-detangle)
+                       (evil-define-key 'normal org-mode-map (kbd "SPC  o b d"  )   'org-babel-detangle          )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC  o b j"  )   'org-babel-tangle-jump-to-org)
+                       (evil-define-key 'normal org-mode-map (kbd "SPC  o b g d")   'org-babel-tangle-jump-to-org)
+                       (evil-define-key 'normal org-mode-map (kbd "SPC  o C  "  )   'org-capture                 )
+
+
+
+                       ;; --------------------------------------------------------------------------------------------- ;;
+                       (defcustom org-inline-image-background nil
+                         "The color used as the default background for inline images. When nil, use the default face background."
+                         :group 'org
+                         :type '(choice color (const nil)))
+
+                       (defun create-image-with-background-color (args)
+                         "Specify background color of Org-mode inline image through modify `ARGS'."
+                         (let* ((file (car args))
+                                (type (cadr args))
+                                (data-p (caddr args))
+                                (props (cdddr args)))
+                           ;; Get this return result style from `create-image'.
+                           (append (list file type data-p)
+                                   (list :background (or org-inline-image-background (face-background 'default)))
+                                   props)))
+
+                       (advice-add 'create-image :filter-args
+                                   #'create-image-with-background-color)
 
 
 
 
-(defcustom org-inline-image-background nil
-  "The color used as the default background for inline images. When nil, use the default face background."
-  :group 'org
-  :type '(choice color (const nil)))
+                       (defun garid/open-org-link-at-point-with-dired (&optional arg) ;; https://emacs.stackexchange.com/a/60555/38482
+                         "Extract URL from org-mode link and add it to kill ring." ;;;
+                         (interactive "P")
+                         (let* ((link (org-element-lineage (org-element-context) '(link) t))
+                                (type (org-element-property :type link))
+                                (url (org-element-property  :path link)))
+                           (message (concat "Copied URL: " url))
+                           (dired-jump t (file-name-directory url))))
 
-(defun create-image-with-background-color (args)
-  "Specify background color of Org-mode inline image through modify `ARGS'."
-  (let* ((file (car args))
-         (type (cadr args))
-         (data-p (caddr args))
-         (props (cdddr args)))
-    ;; Get this return result style from `create-image'.
-    (append (list file type data-p)
-            (list :background (or org-inline-image-background (face-background 'default)))
-            props)))
+                       (defun garid/jump-label-def-of-ref-at-point-word ()
+                         ""
+                         (interactive)
+                         ;; jump to closing } part of:  \ref{...}
+                         (progn
+                           (search-forward "}")
+                           (backward-char 1))
 
-(advice-add 'create-image :filter-args
-            #'create-image-with-background-color)
-
-
-
-
-(defun garid/open-org-link-at-point-with-dired (&optional arg) ;; https://emacs.stackexchange.com/a/60555/38482
-  "Extract URL from org-mode link and add it to kill ring." ;;;
-  (interactive "P")
-  (let* ((link (org-element-lineage (org-element-context) '(link) t))
-         (type (org-element-property :type link))
-         (url (org-element-property  :path link)))
-    (message (concat "Copied URL: " url))
-    (dired-jump t (file-name-directory url))))
-
-(defun garid/jump-label-def-of-ref-at-point-word ()
-  ""
-  (interactive)
-  ;; jump to closing } part of:  \ref{...}
-  (progn
-    (search-forward "}")
-    (backward-char 1))
-
-  ;; copy and consult-line with thing inside of {} parenthesis of \ref{...}
-  (let ((start (search-backward "{" nil t))
-        (end (search-forward "}" nil t)))
-    (if (and start end)
-        (let ((content (buffer-substring-no-properties (1+ start) (1- end))))
-          (consult-line (format "\\label{%s}" content))
-          )
-      (message "No matching braces found."))))
+                         ;; copy and consult-line with thing inside of {} parenthesis of \ref{...}
+                         (let ((start (search-backward "{" nil t))
+                               (end (search-forward "}" nil t)))
+                           (if (and start end)
+                               (let ((content (buffer-substring-no-properties (1+ start) (1- end))))
+                                 (consult-line (format "\\label{%s}" content))
+                                 )
+                             (message "No matching braces found."))))
    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; setting latex preview
-;;(setq org-preview-latex-default-process 'imagemagick)
-;;(setf (plist-get (cdr (assq 'imagemagick org-preview-latex-process-alist)) :latex-compiler)
-;;     '("xelatex -interaction nonstopmode -output-directory %o %f"))
+                       ;; setting latex preview
+                       ;;(setq org-preview-latex-default-process 'imagemagick)
+                       ;;(setf (plist-get (cdr (assq 'imagemagick org-preview-latex-process-alist)) :latex-compiler)
+                       ;;     '("xelatex -interaction nonstopmode -output-directory %o %f"))
 
-(defun garid/org-toggle-display-images-n-edraw ()
-  (interactive)
-  (if garid-orgvar-is-img-shown
-      (progn (edraw-org-link-image-mode -1)
-             (org-link-preview-clear)) ;; (org-remove-inline-images)
-    (progn (edraw-org-link-image-mode +1)
-           (org-link-preview) ;; (org-display-inline-images)
-           )) ;; may need to check org-link-preview as of org mode 9.8 release
-  (setq garid-orgvar-is-img-shown (not garid-orgvar-is-img-shown)))
+                       (defun garid/org-toggle-display-images-n-edraw ()
+                         (interactive)
+                         (if garid-orgvar-is-img-shown
+                             (progn (edraw-org-link-image-mode -1)
+                                    (org-link-preview-clear)) ;; (org-remove-inline-images)
+                           (progn (edraw-org-link-image-mode +1)
+                                  (org-link-preview) ;; (org-display-inline-images)
+                                  )) ;; may need to check org-link-preview as of org mode 9.8 release
+                         (setq garid-orgvar-is-img-shown (not garid-orgvar-is-img-shown)))
 
-(defun garid/org-toggle-link-n-emphasis ()
-  (interactive)
-  (setq org-hide-emphasis-markers (not org-hide-emphasis-markers))
-  (setq org-link-descriptive           org-hide-emphasis-markers)
-  (org-restart-font-lock)
-  (font-lock-update))
+                       (defun garid/org-toggle-link-n-emphasis ()
+                         (interactive)
+                         (setq org-hide-emphasis-markers (not org-hide-emphasis-markers))
+                         (setq org-link-descriptive           org-hide-emphasis-markers)
+                         (org-restart-font-lock)
+                         (font-lock-update))
 
 
-;; from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][mastering emacs article]].
+                       ;; from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][mastering emacs article]].
 
    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun garid/org-up-heading-dwim (&optional arg)
-  "If on a heading, go to parent heading. If in body text, go to the current entry's heading."
-  (interactive "p")
-  (if (org-at-heading-p)
-      (org-up-heading arg)
-    (org-back-to-heading t)))
+                       (defun garid/org-up-heading-dwim (&optional arg)
+                         "If on a heading, go to parent heading. If in body text, go to the current entry's heading."
+                         (interactive "p")
+                         (if (org-at-heading-p)
+                             (org-up-heading arg)
+                           (org-back-to-heading t)))
+
+                       
+                       )
+                   )
+  )
+
+
 
 
 
@@ -1470,7 +1351,7 @@ and later sets cursor at that point when you open that file.
 (use-package ob-nim       :after org :straight t)
 (use-package ob-go        :after org :straight t)
 (use-package ob-asymptote :after org :straight t)
-(use-package mermaid-mode :after org :straight t)
+(use-package mermaid-mode :after org :straight t :defer t)
 (use-package ob-mermaid   :after org :straight t
   :custom (ob-mermaid-cli-path "mmdc")
   :config
@@ -1603,7 +1484,8 @@ Deferred by default; loaded via keybinding in the Denote config.
 #+begin_src emacs-lisp
 (use-package denote-silo
   :straight t
-  :after denote
+  ;; :after denote
+  :defer t
 
   :custom
   (denote-silo-directories (mapcar
@@ -1686,7 +1568,7 @@ license.
 
   :hook
   ;; (after-init-hook . citar-denote-mode)
-  (emacs-startup-hook . citar-denote-mode)
+  (after-init-hook . citar-denote-mode)
   )
 #+end_src
 
@@ -1703,7 +1585,7 @@ license.
 (use-package org-agenda
   :straight   nil
   ;; :after      org <--- weird? 
-  ;; :demand     t
+  :demand     nil
   :custom
   (org-agenda-files '("~/BrainDump/gtd/org-gtd-tasks.org"))
   (org-agenda-span             1) ;;  90)
@@ -1835,10 +1717,10 @@ license.
 (use-package org-edna
   :straight t
   ;; :after  org-agenda
-  :defer t
+  :demand nil
   :hook
   (after-init-hook . org-edna-mode)
-  ;; (emacs-startup-hook . org-edna-mode)
+  ;; (after-init-hook . org-edna-mode)
   )
 #+end_src
 *** =org-gtd=
@@ -1869,25 +1751,19 @@ license.
         ("SPC o g e" . 'org-gtd-engage                )
         ("SPC o g p" . 'org-gtd-process-inbox         )
         ("SPC o g n" . 'org-gtd-show-all-next         )
-        ("SPC o g s" . 'org-gtd-reflect-stuck-projects)
-        ("SPC o g c" . 'org-gtd-clarify-item          )
-        )
-  (:map org-gtd-clarify-mode-map
-        ("C-c C-c"   . 'org-gtd-organize              ))
-
-  (:map org-agenda-mode-map
-        ("C-c ."     .  'org-gtd-agenda-transient     ))
-
-  ;; ;; (:states 'normal
-  ;; ;;          :keymaps 'org-mode-map
-  ;; ;;          :prefix "SPC o"
-  ;; ;;          "s c"    'org-gtd-clarify-item
-  ;; ;;          "g c"    'org-gtd-clarify-item
-  ;; ;;          "g a"    'org-gtd-archive-completed-items
-  ;; ;;          "g A"    'org-gtd-archive-item-at-point)
+        ("SPC o g s" . 'org-gtd-reflect-stuck-projects))
 
   :hook
-  (emacs-startup-hook . org-gtd-mode) 
+  (after-init-hook . (lambda ()
+                       ;; (org-gtd-mode)
+                       (evil-define-key 'normal org-gtd-clarify-mode-map (kbd "C-c C-c")     'org-gtd-organize)
+                       (evil-define-key 'normal org-agenda-mode-map      (kbd "C-c .")       'org-gtd-agenda-transient)
+                       (evil-define-key 'normal org-mode-map             (kbd "SPC o g c")   'org-gtd-clarify-item)
+                       (evil-define-key 'normal org-mode-map             (kbd "SPC o s c")   'org-gtd-clarify-item)
+                       (evil-define-key 'normal org-mode-map             (kbd "SPC o g a")   'org-gtd-archive-completed-items)
+                       (evil-define-key 'normal org-mode-map             (kbd "SPC o g A")   'org-gtd-archive-item-at-point)
+                       )) 
+
   )
 #+end_src
 ** Org Exporting related
@@ -1939,7 +1815,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 (use-package ox-latex
   :straight nil
   :after ox
-  :demand t
+  ;; :demand t
   :custom
   (org-latex-compiler                    "lualatex"                      )
   (org-latex-src-block-backend           'listings                       )
@@ -1949,77 +1825,58 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   (org-latex-pdf-process
    '("latexmk -shell-escape -f -pdf -%latex -interaction=nonstopmode -output-directory=%o %f"))
 
-  :general
-  (:states 'normal
-           :keymaps 'org-mode-map
-           :prefix "SPC"
-           "o x p"   'org-latex-export-to-pdf
-           "o x P"   '(lambda () (interactive)
-                         (org-latex-export-to-pdf nil t))
-                       ;; :which-key "org-latex-export-to-pdf SUBTREE"
-                       
-           "o x o"   '(lambda () (interactive)
-                         (browse-url-xdg-open
-                          (replace-regexp-in-string
-                           "\\.tex$" ".pdf" (org-export-output-file-name ".tex"))))
-                       ;; :which-key "Open exported PDF"
-                       
-           )
-  )
+  :hook
+  (after-init-hook . (lambda ()
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o x p") 'org-latex-export-to-pdf)
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o x P") '(lambda () (interactive)
+                                                                                  (org-latex-export-to-pdf nil t)))
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o x o") '(lambda () (interactive)
+                                                                                  (browse-url-xdg-open
+                                                                                   (replace-regexp-in-string
+                                                                                    "\\.tex$" ".pdf" (org-export-output-file-name ".tex")))))
 
-;; :config --------------------------------------------------------------
-(defun garid/latex-formattig-headings
-    (todo todo-type priority text tags _info)
-  "Default format function for a headline.
-  See `org-latex-format-headline-function' for details."
-  (concat
-   (and todo
-        (format "{\\framebox{\\bfseries\\color{%s} %s}} "
-                (pcase todo-type
-                  ('todo "olive") ('done "teal")
-                  ;;('todo "Black") ('done "Brown")
-                  )
-                todo))
-   (and priority (format "\\framebox{\\#%c} " priority)) text
-   (and tags
-        (format "\\hfill{}\\textsc{%s}"
-                (mapconcat #'org-latex--protect-text tags ":")))))
+                       (defun garid/latex-formattig-headings (todo todo-type priority text tags _info)
+                         (concat
+                          (and todo
+                               (format "{\\framebox{\\bfseries\\color{%s} %s}} "
+                                       (pcase todo-type
+                                         ('todo "olive") ('done "teal")
+                                         ;;('todo "Black") ('done "Brown")
+                                         )
+                                       todo))
+                          (and priority (format "\\framebox{\\#%c} " priority)) text
+                          (and tags
+                               (format "\\hfill{}\\textsc{%s}"
+                                       (mapconcat #'org-latex--protect-text tags ":")))))
+                       ))
+  )
 #+end_src
 *** =ox-odt= org export ODT
 #+begin_src emacs-lisp
 (use-package ox-odt
   :straight nil
   :after ox
-  :defer t
-  :general
-  (:states 'normal
-           :keymaps 'org-mode-map
-           :prefix  "SPC"
-           "o x d"   'org-odt-export-to-odt
-           ;; "o x D"   '((lambda ()
-           ;;               (interactive)
-           ;;               (org-odt-export-to-odf nil t))
-           ;;             ;; :which-key "org-html-export-to-html SUBTREE"
-           ;;             )
-           )
-  :config
-  (defun my-org-odt-timestamp-unstyled (timestamp _contents info)
-    (let ((use-fields (plist-get info :odt-use-date-fields)))
-      (if (not use-fields)
-          (org-odt-plain-text (org-timestamp-translate timestamp) info)
-        ;; Keep the textual decorations but no style span
-        (pcase (org-element-property :type timestamp)
-          ('active         (format "&lt;%s&gt;" (org-odt--format-timestamp timestamp)))
-          ('inactive       (format "[%s]"      (org-odt--format-timestamp timestamp)))
-          ('active-range   (format "&lt;%s&gt;&#x2013;&lt;%s&gt;"
-                                   (org-odt--format-timestamp timestamp)
-                                   (org-odt--format-timestamp timestamp 'end)))
-          ('inactive-range (format "[%s]&#x2013;[%s]"
-                                   (org-odt--format-timestamp timestamp)
-                                   (org-odt--format-timestamp timestamp 'end)))
-          (_               (org-odt-plain-text (org-timestamp-translate timestamp) info)))))
-    )
-  (advice-add 'org-odt-timestamp :override #'my-org-odt-timestamp-unstyled)
+  :hook
+  (after-init-hook . (lambda ()
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o x d") 'org-odt-export-to-odt)
+                       (defun my-org-odt-timestamp-unstyled (timestamp _contents info)
+                         (let ((use-fields (plist-get info :odt-use-date-fields)))
+                           (if (not use-fields)
+                               (org-odt-plain-text (org-timestamp-translate timestamp) info)
+                             ;; Keep the textual decorations but no style span
+                             (pcase (org-element-property :type timestamp)
+                               ('active         (format "&lt;%s&gt;" (org-odt--format-timestamp timestamp)))
+                               ('inactive       (format "[%s]"      (org-odt--format-timestamp timestamp)))
+                               ('active-range   (format "&lt;%s&gt;&#x2013;&lt;%s&gt;"
+                                                        (org-odt--format-timestamp timestamp)
+                                                        (org-odt--format-timestamp timestamp 'end)))
+                               ('inactive-range (format "[%s]&#x2013;[%s]"
+                                                        (org-odt--format-timestamp timestamp)
+                                                        (org-odt--format-timestamp timestamp 'end)))
+                               (_               (org-odt-plain-text (org-timestamp-translate timestamp) info)))))
+                         )
+                       (advice-add 'org-odt-timestamp :override #'my-org-odt-timestamp-unstyled)
+                       ))
   )
 #+end_src
 *** =ox-html=
@@ -2036,20 +1893,15 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   ;; (org-html-head-include-default-style   nil) ;; Use our own styles
   ;; (org-html-head "<link rel=\"stylesheet\" type=\"text/css\" href=\"https://orgmode.org/worg/style/worg.css\"/>" )
   ;; (org-html-head "<link rel=\"stylesheet\" href=\"/home/garid/.config/emacs/org-templates/syntax.css\" type=\"text/css\"/>" )
-  :general
-  (:states 'normal
-           :keymaps 'org-mode-map
-           :prefix "SPC"
-           "o x h"   'org-html-export-to-html
-           "o x H"   '(lambda () (interactive)
-                         (org-html-export-to-html nil t))
-                       ;; :which-key "org-html-export-to-html SUBTREE"
+  :hook
+  (after-init-hook . (lambda ()
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o x h") 'org-html-export-to-html) 
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o x H") '(lambda () (interactive)
+                                                                                  (org-html-export-to-html nil t))) 
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o x O") '(lambda () (interactive)
+                                                                                  (browse-url-xdg-open (org-export-output-file-name ".html"))))
                        
-           "o x O"   '(lambda () (interactive)
-                         (browse-url-xdg-open (org-export-output-file-name ".html")))
-                       ;; :which-key "Open exported HTML"
-                       
-           )
+                       ))
   )
 #+end_src
 
@@ -2058,17 +1910,11 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 (use-package org-re-reveal
   :after ox
   :straight t
-  :demand t
-  :general
-  (:states 'normal
-           :keymaps 'org-mode-map
-           :prefix "SPC"
-           "o x r"   'org-re-reveal-export-to-html
-           "o x R"   '((lambda () (interactive)
-                         (org-re-reveal-export-to-html nil t))
-                       ;; :which-key "org-re-reveal-export-to-html SUBTREE"
-                       )
-           )
+  :hook
+  (after-init-hook . (lambda ()
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o x r") 'org-re-reveal-export-to-html ) 
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o x R") '(lambda () (interactive) (org-re-reveal-export-to-html nil t))) 
+                       ))
   )
 #+end_src
 
@@ -2161,11 +2007,12 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
              :host github
              :branch "master"
              :repo "Stefanomarton/org-ipe")
-  :general
-  (:states 'normal
-           :keymaps 'org-mode-map
-           :prefix  "SPC"
-           "o i c"  'org-ipe-insert-drawing))
+
+  :hook
+  (after-init-hook . (lambda ()
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o i c") 'org-ipe-insert-drawing ) 
+                       ))
+  )
 #+end_src
 
 *** COMMENT org ODT libreoffice-draw
@@ -2221,15 +2068,18 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
         ( "x"   . 'edraw-editor-cut-selected-shapes )
         ( "y"   . 'edraw-editor-copy-selected-shapes) )
 
-  :general
-  (:states 'normal
-           :keymaps 'org-mode-map
-           :prefix "SPC"
-           "o i e"     'edraw-org-edit-regular-file-link
-           "o i i"     '(lambda () (interactive) (insert "[[edraw:]]")))
+
   :config
   (require 'edraw-org)
   (edraw-org-setup-exporter)
+
+  :hook
+  (after-init-hook . (lambda ()
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o i e") 'edraw-org-edit-regular-file-link                       ) 
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o i i") '(lambda () (interactive) (insert "[[edraw:]]"))        ) 
+                       ))
+
+
   )
 #+end_src
 
@@ -2238,7 +2088,8 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 #+begin_src emacs-lisp
 (use-package org-present
   :straight t
-  :after evil-collection)
+  :after evil ;;-collection
+  )
 #+end_src
 
 * Programming languages
@@ -2257,7 +2108,6 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
   (code-cells-boundary-regexp
    "^\\s<+\\(?:\\s-*%\\(?1:%+\\)\\| In\\[[[:space:][:digit:]]*]:\\| \\[\\[\\)")
 
-  :hook (python-base-mode-hook . code-cells-mode)
   :bind (:map code-cells-mode-map
               ("C-j"        . code-cells-forward-cell   )
               ("C-k"        . code-cells-backward-cell  )
@@ -2275,23 +2125,20 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
               ("C-<return>" . (lambda () (interactive) (code-cells-forward-cell) (insert "\n# %%\n\n") (previous-line)))
               )
 
+  :hook
+  (python-base-mode-hook . code-cells-mode)
+  (after-init-hook . (lambda ()
+                       (evil-define-key 'normal outline-minor-mode-map (kbd "[ [")    'code-cells-backward-cell) 
+                       (evil-define-key 'normal outline-minor-mode-map (kbd "] ]")    'code-cells-forward-cell ) 
+                       (evil-define-key 'normal outline-minor-mode-map (kbd "[ c")    'code-cells-backward-cell) 
+                       (evil-define-key 'normal outline-minor-mode-map (kbd "] c")    'code-cells-forward-cell ) 
+                       (evil-define-key 'normal outline-minor-mode-map (kbd "C-j")    'code-cells-forward-cell ) 
+                       (evil-define-key 'normal outline-minor-mode-map (kbd "C-k")    'code-cells-backward-cell) 
+                       (evil-define-key 'normal outline-minor-mode-map (kbd "C-n")    'code-cells-forward-cell ) 
+                       (evil-define-key 'normal outline-minor-mode-map (kbd "C-p")    'code-cells-backward-cell) 
+                       (evil-define-key 'normal outline-minor-mode-map (kbd "<left>") 'code-cells-backward-cell) 
+                       ))
 
-  :general
-  (:states 'normal
-           ;; :keymaps 'python-mode-base-map
-           ;; :predicate '(bound-and-true-p code-cells-mode)
-           :keymaps 'outline-minor-mode-map
-           "[ ["    'code-cells-backward-cell
-           "] ]"    'code-cells-forward-cell
-           "[ c"    'code-cells-backward-cell
-           "] c"    'code-cells-forward-cell
-
-           "C-j"    'code-cells-forward-cell   
-           "C-k"    'code-cells-backward-cell  
-           "C-n"    'code-cells-forward-cell   
-           "C-p"    'code-cells-backward-cell  
-           "<left>" 'code-cells-backward-cell  
-           )
   )
 
 #+end_src
@@ -2301,11 +2148,10 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 (use-package comint
   :straight nil
   :bind (:map comint-mode-map ("C-M-l" .  nil)) ;; C-M-l bind for window movement
-  :general
-  (:states 'normal
-           :keymaps 'comint-mode-map
-           "SPC P k"  'comint-send-eof)
-  )
+  :hook
+  (after-init-hook . (lambda ()
+                       (evil-define-key 'normal comint-mode-map (kbd "SPC P k")    'comint-send-eof) 
+                       )))
 #+end_src
 
 ** =eldoc=
@@ -2351,24 +2197,19 @@ Emacs Speaks Statistics
 (use-package prog-mode
   :straight nil
   :bind (:map prog-mode-map ("M-q" .  nil))
-  :general
-  (:states 'normal
-           :keymaps 'prog-mode-map
-           "K"      'eldoc
-           "g o"     'eglot-find-typeDefinition
-           "] d"     'flymake-goto-next-error
-           "[ d"     'flymake-goto-prev-error
-
-           "SPC s e" 'eglot
-           "SPC v r" 'eglot-rename
-           "SPC e h" 'eglot-show-type-hierarchy
-           "SPC e h" 'flymake-show-buffer-diagnostics
-           "SPC e H" 'flymake-show-project-diagnostics
-            ;; "g       d "evil-goto-definition
-
-           "SPC p r" 'xref-find-references
-           )
-
+  :hook
+  (after-init-hook . (lambda ()
+                       (evil-define-key 'normal prog-mode-map (kbd "K"      )   'eldoc                           ) 
+                       (evil-define-key 'normal prog-mode-map (kbd "g o"    )   'eglot-find-typeDefinition       ) 
+                       (evil-define-key 'normal prog-mode-map (kbd "] d"    )   'flymake-goto-next-error         ) 
+                       (evil-define-key 'normal prog-mode-map (kbd "[ d"    )   'flymake-goto-prev-error         ) 
+                       (evil-define-key 'normal prog-mode-map (kbd "SPC s e")   'eglot                           ) 
+                       (evil-define-key 'normal prog-mode-map (kbd "SPC v r")   'eglot-rename                    ) 
+                       (evil-define-key 'normal prog-mode-map (kbd "SPC e h")   'eglot-show-type-hierarchy       ) 
+                       (evil-define-key 'normal prog-mode-map (kbd "SPC e h")   'flymake-show-buffer-diagnostics ) 
+                       (evil-define-key 'normal prog-mode-map (kbd "SPC e H")   'flymake-show-project-diagnostics) 
+                       (evil-define-key 'normal prog-mode-map (kbd "SPC p r")   'xref-find-references            ) 
+                       ))
   )
 #+end_src
 
@@ -2398,13 +2239,10 @@ Emacs Speaks Statistics
         ( "SPC P L" .  'garid/switch-python-shell-buffer)
         ( "SPC L P" .  'garid/switch-python-shell-buffer))
 
-  :general
-  (:states 'normal
-           :keymaps 'inferior-python-mode-map
-           "SPC P r"  'python-shell-restart)
-
   :hook
   (python-base-mode-hook . auto-revert-mode)
+  (after-init-hook . (lambda ()
+                       (evil-define-key 'normal inferior-python-mode-map (kbd "SPC P r"      )   'python-shell-restart)))
   )
 
 
@@ -2723,7 +2561,7 @@ Similar to vim-signify.
 
   :hook
   (magit-post-commit-hook . git-gutter:update-all-windows )
-  (emacs-startup-hook     . global-git-gutter-mode        )
+  (after-init-hook     . global-git-gutter-mode        )
   )
 #+end_src
 
@@ -2744,12 +2582,12 @@ Similar to vim-signify.
 #+begin_src emacs-lisp
 (use-package eshell
   :straight nil
-  :after evil-collection
+  :after evil ;; -collection
   :bind (:map evil-normal-state-map
               ( "SPC t e" .  'eshell ))
   :hook
   (eshell-mode-hook   . compilation-shell-minor-mode)
-  (emacs-startup-hook . eshell-atuin-mode)
+  (after-init-hook . eshell-atuin-mode)
   )
 #+end_src
 
@@ -2758,10 +2596,10 @@ Similar to vim-signify.
 (use-package eshell-atuin
   :straight t
   :after eshell
-  :general (:states '(normal insert)
-                    :keymaps 'eshell-mode-map
-                    "C-r" 'eshell-atuin-history)
-  ;; :bind (:map eshell-mode-map ("C-r" .  'eshell-atuin-history))  ;; <-- don't know why it's not working
+  :hook
+  (after-init-hook . (lambda ()
+                       (evil-define-key '(normal insert) eshell-mode-map (kbd "C-r"      )   'eshell-atuin-history)
+                       ))
   )
 #+end_src
 
@@ -2810,7 +2648,7 @@ Probably requires external =rg= command.
 (use-package gptel
   :straight t
   :after    org
-  :defer   t
+  ;; :defer   t
   :custom   (gptel-default-mode 'org-mode)
 
 
@@ -2837,7 +2675,9 @@ Probably requires external =rg= command.
 (use-package gptel-commit
   :straight t
   :ensure t
-  ;; :after (gptel magit)
+  :after (gptel magit)
+  :commands  (gptel-commit)
+
   :custom
   (gptel-commit-stream t)
 
@@ -2963,7 +2803,7 @@ environment.systemPackages = with pkgs; [
 #+begin_src emacs-lisp
 (use-package notmuch
   :straight t
-  :after    evil-collection
+  :after    evil ;; -collection
   :defer    t
   :custom
   (notmuch-search-oldest-first nil)
@@ -3088,11 +2928,12 @@ environment.systemPackages = with pkgs; [
   )
 #+end_src
 
-** writing with org mode
+** MIME with org mode
 #+begin_src emacs-lisp
 (use-package org-mime
   :straight t
   :after    org
+  :defer t
   :custom
   (org-mime-library 'mml)
   (org-mime-export-options '(
@@ -3101,10 +2942,13 @@ environment.systemPackages = with pkgs; [
                              :section-numbers nil
                              :with-author nil
                              :with-toc nil))
-  :general
-  (:states '(normal notmuch-message-mode)
-           "SPC m m m" 'org-mime-edit-mail-in-org-mode
-           "SPC m m h" 'org-mime-htmlize)
+
+  :hook
+  (after-init-hook . (lambda ()
+                       (evil-define-key 'normal notmuch-message-mode-map (kbd "SPC m m m") 'org-mime-edit-mail-in-org-mode) 
+                       (evil-define-key 'normal notmuch-message-mode-map (kbd "SPC m m h") 'org-mime-htmlize              ) 
+                       ))
+
   )
 #+end_src
 
@@ -3250,12 +3094,13 @@ environment.systemPackages = with pkgs; [
 
 #+RESULTS:
 
+** test 
 * COMMENT Daemon
 #+begin_src emacs-lisp
 (use-package server
   :straight nil
   :hook
-  (emacs-startup-hook . (lambda ()
+  (after-init-hook . (lambda ()
                      (server-start)
                      (call-process-shell-command
                       "notify-send \"Emacs\" \"Emacs Daemon initialized, 'emacsclient -c' should be available.\" &")
@@ -3274,5 +3119,6 @@ environment.systemPackages = with pkgs; [
  '(safe-local-variable-values
    '((dired-omit-files . "\\`[.]?#\\|\\`[.][.]?\\'\\|\\.html\\'\\|\\.tex\\'"))))
 #+end_src
+
 
 
