@@ -1305,15 +1305,16 @@ and later sets cursor at that point when you open that file.
   :after org
   :delight "")
 #+end_src
-*** COMMENT =org-contacts=
+*** =org-contacts=
 #+begin_src emacs-lisp
 (use-package org-contacts
   :straight t
   :after org
+  :defer t
   :custom
   (org-contacts-files
-        '("~/BrainDump/denote/20240802T185223--contacts__info.org"
-          "~/BrainDump/denote_bps/20250306T114521--contacts__info.org"))
+   '("~/BrainDump/denote/20240802T185223--contacts__info.org"
+     "~/BrainDump/denote_bps/20250306T114521--contacts__info.org"))
   )
 #+end_src
 *** =org-auto-tangle=
