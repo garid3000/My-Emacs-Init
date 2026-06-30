@@ -981,7 +981,8 @@ and later sets cursor at that point when you open that file.
 #+begin_src emacs-lisp
 (use-package org
   :straight t
-  :demand nil ;; :defer t
+  :demand t ;;
+  ;; :defer t
   :delight "org"
   :bind (:map org-mode-map
               ("C-S-k"         . org-previous-visible-heading   )
@@ -1011,38 +1012,37 @@ and later sets cursor at that point when you open that file.
   ;; ("p"         . org-babel-previous-src-block)
 
   :custom
-  (org-extend-today-until                                    2) ;; for the night owl
-  (org-use-effective-time                                    t) ;; for the night owl
-  ;; ---------------- theme/styling ------------------------------------------------------
-  (org-hide-emphasis-markers         t                        )
-  (org-hide-leading-stars t                                   )
-  (org-highlight-latex-and-related    '(latex entities native))
-  (org-image-actual-width            1.0                      )
-  (org-preview-latex-default-process 'dvisvgm                 )
-  (org-src-fontify-natively          t                        )
-  (org-startup-folded                "show2levels"            ) ;; fold
-  (org-startup-indented              t                        )
-  (org-startup-with-inline-images    t                        )
-  (org-startup-with-latex-preview    nil                      )
-
+  (org-extend-today-until  2                       ) ;; for the night owl
+  (org-use-effective-time  t                       ) ;; for the night owl
   ;; ---------------- source code in org -------------------------------------------------
-  (org-src-tab-acts-natively         t      ) ;; org-src?
-  (org-src-preserve-indentation      nil    )
-  (org-edit-src-content-indentation  0      )
+  (org-src-tab-acts-natively         t             )
+  (org-src-preserve-indentation      nil           )
+  (org-edit-src-content-indentation  0             )
+  ;; ---------------- theme/styling ------------------------------------------------------
+  (org-hide-emphasis-markers         t             )
+  (org-hide-leading-stars t                        )
+  (org-image-actual-width            1.0           )
+  (org-preview-latex-default-process 'dvisvgm      )
+  (org-src-fontify-natively          t             )
+  (org-startup-folded                "show2levels" ) ;; fold
+  (org-startup-indented              t             )
+  (org-startup-with-inline-images    t             )
+  (org-startup-with-latex-preview    nil           )
+  (org-highlight-latex-and-related   '(latex entities native))
 
   ;; ---------------- how to open links in the org mode ----------------------------------
-  (org-return-follows-link                           t)
-  (org-file-apps '((auto-mode     . emacs             )
-                   ("\\.html\\'"  . "firefox   \"%s\"")
-                   ("\\.gif\\'"   . "mpv       \"%s\"")
-                   ("\\.mp4\\'"   . "mpv       \"%s\"")
-                   ("\\.png\\'"   . "nsxiv     \"%s\"")
-                   ("\\.svg\\'"   . "inkview   \"%s\"")
-                   ("\\.jpeg\\'"  . "nsxiv     \"%s\"")
-                   ("\\.jpg\\'"   . "nsxiv     \"%s\"")
-                   ("\\.pdf\\'"   . "sioyek    \"%s\"")
-                   ("\\.mkv\\'"   . "mpv       \"%s\"")
-                   ("\\.xopp\\'"  . "xournalpp \"%s\"")))
+  (org-return-follows-link                          t)
+  (org-file-apps '((auto-mode    . emacs             )
+                   ("\\.html\\'" . "firefox   \"%s\"")
+                   ("\\.gif\\'"  . "mpv       \"%s\"")
+                   ("\\.mp4\\'"  . "mpv       \"%s\"")
+                   ("\\.png\\'"  . "nsxiv     \"%s\"")
+                   ("\\.svg\\'"  . "inkview   \"%s\"")
+                   ("\\.jpeg\\'" . "nsxiv     \"%s\"")
+                   ("\\.jpg\\'"  . "nsxiv     \"%s\"")
+                   ("\\.pdf\\'"  . "sioyek    \"%s\"")
+                   ("\\.mkv\\'"  . "mpv       \"%s\"")
+                   ("\\.xopp\\'" . "xournalpp \"%s\"")))
   ;; ("\\.pdf::\\([0-9]+\\)?\\'" . "sioyek    \"%s\" --page %1")
 
   ;; ---------------- TODO --------------------------------------------------------------
@@ -1117,12 +1117,8 @@ and later sets cursor at that point when you open that file.
                        (evil-define-key 'normal org-mode-map (kbd "SPC ,"        ) 'org-ctrl-c-ctrl-c                              )
                        (evil-define-key 'normal org-mode-map (kbd "SPC j"        ) 'org-next-block                                 )
                        (evil-define-key 'normal org-mode-map (kbd "SPC k"        ) 'org-previous-block                             )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o C"      ) 'org-capture                                    )
                        (evil-define-key 'normal org-mode-map (kbd "SPC o O"      ) 'garid/jump-label-def-of-ref-at-point-word      )
-                       (evil-define-key 'normal org-mode-map (kbd "SPC o o"      ) 'org-open-at-point                              )
-                       (evil-define-key 'normal org-mode-map (kbd "SPC o m r"    ) 'org-mode-restart                               )
-                       (evil-define-key 'normal org-mode-map (kbd "SPC o p"      ) 'org-latex-preview                              )
-                       (evil-define-key 'normal org-mode-map (kbd "SPC o d"      ) 'garid/open-org-link-at-point-with-dired        )
-                       (evil-define-key 'normal org-mode-map (kbd "SPC o f h"    ) 'consult-org-heading                            )
                        (evil-define-key 'normal org-mode-map (kbd "SPC o T C"    ) 'org-table-toggle-coordinate-overlays           )
                        (evil-define-key 'normal org-mode-map (kbd "SPC o T T"    ) 'org-table-toggle-column-width                  )
                        (evil-define-key 'normal org-mode-map (kbd "SPC o T c"    ) 'orgtbl-create-or-convert-from-region           )
@@ -1133,6 +1129,13 @@ and later sets cursor at that point when you open that file.
                        (evil-define-key 'normal org-mode-map (kbd "SPC o T x"    ) 'org-table-export                               )
                        (evil-define-key 'normal org-mode-map (kbd "SPC o a"      ) 'org-attach                                     )
                        (evil-define-key 'normal org-mode-map (kbd "SPC o b ,"    ) 'org-babel-execute-subtree                      )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o b d"    ) 'org-babel-detangle                             )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o b g d"  ) 'org-babel-tangle-jump-to-org                   )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o b i h"  ) 'org-babel-insert-header-arg                    )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o b j S"  ) 'org-babel-goto-src-block-head                  )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o b j r"  ) 'org-babel-goto-named-result                    )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o b j s"  ) 'org-babel-goto-named-src-block                 )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o b j"    ) 'org-babel-tangle-jump-to-org                   )
                        (evil-define-key 'normal org-mode-map (kbd "SPC o b k"    ) 'org-babel-remove-result-one-or-many            )
                        (evil-define-key 'normal org-mode-map (kbd "SPC o b n"    ) 'org-babel-next-src-block                       )
                        (evil-define-key 'normal org-mode-map (kbd "SPC o b o"    ) 'org-babel-open-src-block-result                )
@@ -1141,20 +1144,26 @@ and later sets cursor at that point when you open that file.
                        (evil-define-key 'normal org-mode-map (kbd "SPC o b s"    ) 'org-babel-demarcate-block                      )
                        (evil-define-key 'normal org-mode-map (kbd "SPC o b t"    ) 'org-babel-tangle                               )
                        (evil-define-key 'normal org-mode-map (kbd "SPC o b v"    ) 'org-babel-view-src-block-info                  )
-                       (evil-define-key 'normal org-mode-map (kbd "SPC o b i h"  ) 'org-babel-insert-header-arg                    )
-                       (evil-define-key 'normal org-mode-map (kbd "SPC o b j S"  ) 'org-babel-goto-src-block-head                  )
-                       (evil-define-key 'normal org-mode-map (kbd "SPC o b j r"  ) 'org-babel-goto-named-result                    )
-                       (evil-define-key 'normal org-mode-map (kbd "SPC o b j s"  ) 'org-babel-goto-named-src-block                 )
-                       (evil-define-key 'normal org-mode-map (kbd "SPC o i t"    ) 'garid/org-toggle-display-images-n-edraw        )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o d"      ) 'garid/open-org-link-at-point-with-dired        )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o f h"    ) 'consult-org-heading                            )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o f l"    ) '(labmda () (interactive)  (consult-line "\\\\label{.*}" )))
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o f n"    ) '(labmda () (interactive)  (consult-line "^#+name"       )))
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o f r"    ) '(labmda () (interactive)  (consult-line "\\\\ref{.*}"   )))
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o f r"    ) '(labmda () (interactive)  (consult-line "^#+result"     )))
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o f s"    ) '(labmda () (interactive)  (consult-line "^#+begin_"     )))
                        (evil-define-key 'normal org-mode-map (kbd "SPC o i p"    ) 'yank-media                                     )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o i t"    ) 'garid/org-toggle-display-images-n-edraw        )
                        (evil-define-key 'normal org-mode-map (kbd "SPC o l c"    ) 'org-cite-insert                                )
                        (evil-define-key 'normal org-mode-map (kbd "SPC o l d"    ) 'garid/org-toggle-link-n-emphasis               )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o l f N"  ) 'org-footnote-normalize                         )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o l f n"  ) 'org-footnote-new                               )
                        (evil-define-key 'normal org-mode-map (kbd "SPC o l l"    ) 'org-lint                                       )
                        (evil-define-key 'normal org-mode-map (kbd "SPC o l n"    ) 'org-next-link                                  )
                        (evil-define-key 'normal org-mode-map (kbd "SPC o l o"    ) 'org-open-at-point                              )
                        (evil-define-key 'normal org-mode-map (kbd "SPC o l p"    ) 'org-previous-link                              )
-                       (evil-define-key 'normal org-mode-map (kbd "SPC o l f n"  ) 'org-footnote-new                               )
-                       (evil-define-key 'normal org-mode-map (kbd "SPC o l f N"  ) 'org-footnote-normalize                         )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o m r"    ) 'org-mode-restart                               )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o o"      ) 'org-open-at-point                              )
+                       (evil-define-key 'normal org-mode-map (kbd "SPC o p"      ) 'org-latex-preview                              )
                        (evil-define-key 'normal org-mode-map (kbd "SPC o s I"    ) 'org-indent-mode                                )
                        (evil-define-key 'normal org-mode-map (kbd "SPC o s Y"    ) 'org-id-copy                                    )
                        (evil-define-key 'normal org-mode-map (kbd "SPC o s a"    ) 'org-archive-subtree-default-with-confirmation  )
@@ -1168,25 +1177,11 @@ and later sets cursor at that point when you open that file.
                        (evil-define-key 'normal org-mode-map (kbd "SPC o s v"    ) 'org-mark-element                               )
                        (evil-define-key 'normal org-mode-map (kbd "SPC o s y"    ) 'org-copy-subtree                               )
                        (evil-define-key 'normal org-mode-map (kbd "z u"          ) 'garid/org-up-heading-dwim                      )
-                       ;; (evil-define-key 'normal org-mode-map (kbd   ) #')
-                       ;; (evil-define-key 'normal org-mode-map (kbd   ) #')
-
-                       (evil-define-key 'normal org-mode-map (kbd "SPC o f n"    ) '(labmda () (interactive)  (consult-line "^#+name"       ))                )
-                       (evil-define-key 'normal org-mode-map (kbd "SPC o f r"    ) '(labmda () (interactive)  (consult-line "^#+result"     ))                )
-                       (evil-define-key 'normal org-mode-map (kbd "SPC o f s"    ) '(labmda () (interactive)  (consult-line "^#+begin_"     ))                )
-                       (evil-define-key 'normal org-mode-map (kbd "SPC o f l"    ) '(labmda () (interactive)  (consult-line "\\\\label{.*}" ))                )
-                       (evil-define-key 'normal org-mode-map (kbd "SPC o f r"    ) '(labmda () (interactive)  (consult-line "\\\\ref{.*}"   ))                )
-
-                       (evil-define-key '(normal visual) org-mode-map (kbd  "SPC o t"  ) 'org-todo       )
-                       (evil-define-key '(normal visual) org-mode-map (kbd  "SPC o l i") 'org-insert-link)             
-
-                       (define-key     evil-normal-state-map (kbd "SPC o b d") 'org-babel-detangle)
-                       (evil-define-key 'normal org-mode-map (kbd "SPC  o b d"  )   'org-babel-detangle          )
-                       (evil-define-key 'normal org-mode-map (kbd "SPC  o b j"  )   'org-babel-tangle-jump-to-org)
-                       (evil-define-key 'normal org-mode-map (kbd "SPC  o b g d")   'org-babel-tangle-jump-to-org)
-                       (evil-define-key 'normal org-mode-map (kbd "SPC  o C  "  )   'org-capture                 )
 
 
+                       (evil-define-key '(normal visual) org-mode-map (kbd "SPC o t"  ) 'org-todo       )
+                       (evil-define-key '(normal visual) org-mode-map (kbd "SPC o l i") 'org-insert-link)             
+                       (define-key     evil-normal-state-map          (kbd "SPC o b d") 'org-babel-detangle)
 
                        ;; --------------------------------------------------------------------------------------------- ;;
                        (defcustom org-inline-image-background nil
@@ -1236,7 +1231,6 @@ and later sets cursor at that point when you open that file.
                                  (consult-line (format "\\label{%s}" content))
                                  )
                              (message "No matching braces found."))))
-   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
                        ;; setting latex preview
                        ;;(setq org-preview-latex-default-process 'imagemagick)
                        ;;(setf (plist-get (cdr (assq 'imagemagick org-preview-latex-process-alist)) :latex-compiler)
@@ -1262,7 +1256,6 @@ and later sets cursor at that point when you open that file.
 
                        ;; from [[https://www.masteringemacs.org/article/how-to-get-started-tree-sitter][mastering emacs article]].
 
-   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
                        (defun garid/org-up-heading-dwim (&optional arg)
                          "If on a heading, go to parent heading. If in body text, go to the current entry's heading."
@@ -1270,16 +1263,8 @@ and later sets cursor at that point when you open that file.
                          (if (org-at-heading-p)
                              (org-up-heading arg)
                            (org-back-to-heading t)))
-
-                       
-                       )
-                   )
+                       ))
   )
-
-
-
-
-
 #+end_src
 
 *** =org-link=
@@ -1584,7 +1569,7 @@ license.
 #+begin_src emacs-lisp :results none
 (use-package org-agenda
   :straight   nil
-  ;; :after      org <--- weird? 
+  :after      org ;;<--- weird? 
   :demand     nil
   :custom
   (org-agenda-files '("~/BrainDump/gtd/org-gtd-tasks.org"))
@@ -1716,7 +1701,7 @@ license.
 #+begin_src emacs-lisp
 (use-package org-edna
   :straight t
-  ;; :after  org-agenda
+  :after  org-agenda
   :demand nil
   :hook
   (after-init-hook . org-edna-mode)
@@ -2648,9 +2633,9 @@ Probably requires external =rg= command.
 (use-package gptel
   :straight t
   :after    org
-  ;; :defer   t
+  :defer   t
+  ;; :demand nil
   :custom   (gptel-default-mode 'org-mode)
-
 
   :bind
   (:map evil-normal-state-map
@@ -2659,12 +2644,17 @@ Probably requires external =rg= command.
         ("SPC G m" .  'gptel-menu))
 
   (:map evil-visual-state-map
-        ("g r" .  'gptel-rewrite))
+        ("g r"     .  'gptel-rewrite))
 
-  :config
-  ;; (setopt gptel-model     'gpt-5.2)
-  (setopt gptel-model        'gpt-5-nano)
-  (setopt gptel-backend      (gptel-make-openai "OpenAI" :key 'gptel-api-key-from-auth-source))
+  :hook
+  (after-init-hook . (lambda ()
+                       (setopt gptel-model        'gpt-5.4-nano)
+                       (setopt gptel-backend      (gptel-make-openai "OpenAI" :key 'gptel-api-key-from-auth-source))
+                       ))
+
+  ;; :config
+  ;; (setopt gptel-model        'gpt-5.4-nano)
+  ;; (setopt gptel-backend      (gptel-make-openai "OpenAI" :key 'gptel-api-key-from-auth-source))
   )
 #+end_src
 
