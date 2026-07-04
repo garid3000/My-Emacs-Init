@@ -2549,3 +2549,13 @@ Following is customization of the theme. Actual in the loading the theme is in t
   )
 #+end_src
 
+* COMMENT =general= configuration
+#+begin_src emacs-lisp
+(use-package general
+  :straight t
+  :demand t
+  :config
+  (general-evil-setup t)
+  )
+#+end_src
+

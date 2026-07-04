@@ -54,16 +54,6 @@ run:
 #+end_src
 
 * Keybinding related
-** COMMENT =general= configuration
-#+begin_src emacs-lisp
-(use-package general
-  :straight t
-  :demand t
-  :config
-  (general-evil-setup t)
-  )
-#+end_src
-
 ** =which-key= keybinding shower
 
 #+begin_src emacs-lisp
@@ -89,7 +79,8 @@ run:
 (use-package repeat
   :straight nil
   :hook 
-  (after-init-hook . repeat-mode) ;; (after-init-hook . repeat-mode)
+  (after-init-hook . repeat-mode)
+  ;; (after-init-hook . repeat-mode)
   )
 #+end_src
 
@@ -325,14 +316,6 @@ mark or parenthesis.
   :bind (:map evil-normal-state-map
               ("SPC s l n" . display-line-numbers-mode)
               ("SPC s l N" . global-display-line-numbers-mode))
-
-  ;; :config
-  ;; (global-display-line-numbers-mode -1)
-  ;; :hook
-  ;; (after-init-hook . (lambda ()
-  ;;                      (evil-global-set-key 'normal (kbd "SPC s l n") 'display-line-numbers-mode)
-  ;;                      (evil-global-set-key 'normal (kbd "SPC s l N") 'global-display-line-numbers-mode)
-  ;;                      ))
   )
 #+end_src
 
@@ -352,29 +335,34 @@ mark or parenthesis.
   )
 #+end_src
 
-** Line visibility
+** =hl-line= Line visibility
 #+begin_src emacs-lisp
 (use-package hl-line
   :straight nil
   :hook (after-init-hook . global-hl-line-mode))
-
-(use-package hl-todo
-  :straight t
-  :hook (after-init-hook . global-hl-todo-mode))
 #+end_src
 
-** =hilock= highlight
+** =hl-todo= Highlighting todo keywords
+#+begin_src emacs-lisp
+(use-package hl-todo
+  :straight t
+  :hook (after-init-hook . global-hl-todo-mode)
+  :bind (:map evil-normal-state-map
+              ("SPC z t" . hl-todo-mode))
+  )
+#+end_src
+
+** =hi-lock= highlight
 #+begin_src emacs-lisp
 (use-package hi-lock
   :straight nil
   :bind (:map evil-normal-state-map
               ("SPC z h" . highlight-symbol-at-point)
-              ("SPC z H" . 'unhighlight-regexp)
-              )
+              ("SPC z H" . 'unhighlight-regexp))
   )
 #+end_src
 
-** Indent bars
+** =Indent-bars=
 #+begin_src emacs-lisp
 (use-package indent-bars
   :straight t
@@ -385,7 +373,7 @@ mark or parenthesis.
   )
 #+end_src
 
-* Configuration of General Built-in Packages
+* Configuration of some Built-in Packages
 ** =abbrev=
 
 #+begin_src emacs-lisp
@@ -521,23 +509,22 @@ mark or parenthesis.
 (use-package ffap
   :straight nil
   :bind (:map evil-normal-state-map
-              ("SPC D f" . ffap)
-              ("SPC D F m " . ffap-menu)
-              ))
+              ("SPC D f"   . ffap)
+              ("SPC D F m" . ffap-menu)))
 #+end_src
 ** =files=
 #+begin_src emacs-lisp
 (use-package files
   :straight nil
-  :after evil
+  :after    evil
   :custom
   (major-mode-remap-alist '((bash-mode   . bash-ts-mode)
                             (python-mode . python-ts-mode)))
 
   :bind (:map evil-normal-state-map
-         ("SPC f" . find-file)
-         ("SPC L r" . revert-buffer-quick)
-         )
+              ("SPC f" . find-file)
+              ("SPC L r" . revert-buffer-quick)
+              )
   )
 #+end_src
 ** =flyspell=
@@ -592,7 +579,6 @@ mark or parenthesis.
   :bind
   (:map evil-visual-state-map ("SPC z r" . 'replace-regexp))
   )
-
 #+end_src
 
 ** =saveplace= - Save (last) cursor position
@@ -716,7 +702,10 @@ and later sets cursor at that point when you open that file.
 (use-package dired-filter
   :straight t
   :after dired
-  :defer t)
+  ;; :defer 1
+  :hook
+  (dired-mode-hook . dired-filter-mode)
+  )
 #+end_src
 
 * Window & buffer related
@@ -1034,13 +1023,13 @@ and later sets cursor at that point when you open that file.
   (org-return-follows-link                          t)
   (org-file-apps '((auto-mode    . emacs             )
                    ("\\.html\\'" . "firefox   \"%s\"")
-                   ("\\.gif\\'"  . "mpv       \"%s\"")
+                   ;; ("\\.gif\\'"  . "mpv       \"%s\"")
                    ("\\.mp4\\'"  . "mpv       \"%s\"")
-                   ("\\.png\\'"  . "nsxiv     \"%s\"")
-                   ("\\.svg\\'"  . "inkview   \"%s\"")
-                   ("\\.jpeg\\'" . "nsxiv     \"%s\"")
-                   ("\\.jpg\\'"  . "nsxiv     \"%s\"")
-                   ("\\.pdf\\'"  . "sioyek    \"%s\"")
+                   ;; ("\\.png\\'"  . "nsxiv     \"%s\"")
+                   ;; ("\\.svg\\'"  . "inkview   \"%s\"")
+                   ;; ("\\.jpeg\\'" . "nsxiv     \"%s\"")
+                   ;; ("\\.jpg\\'"  . "nsxiv     \"%s\"")
+                   ;; ("\\.pdf\\'"  . "sioyek    \"%s\"")
                    ("\\.mkv\\'"  . "mpv       \"%s\"")
                    ("\\.xopp\\'" . "xournalpp \"%s\"")))
   ;; ("\\.pdf::\\([0-9]+\\)?\\'" . "sioyek    \"%s\" --page %1")
@@ -1323,8 +1312,8 @@ and later sets cursor at that point when you open that file.
   :straight t
   :after    org
   :delight  ""
-  :custom (org-auto-tangle-default    nil)
-  :hook   (org-mode-hook . org-auto-tangle-mode))
+  :custom   (org-auto-tangle-default nil)
+  :hook     (org-mode-hook . org-auto-tangle-mode))
 #+end_src
 
 *** org-babel languages related                                                        :ob:
@@ -1554,7 +1543,7 @@ license.
 
   :hook
   ;; (after-init-hook . citar-denote-mode)
-  (after-init-hook . citar-denote-mode)
+  (after-init-hook . citar-denote-mode) ;; <-- mostly didn't enabled currently
   )
 #+end_src
 
@@ -1759,8 +1748,8 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 #+begin_src emacs-lisp
 (use-package ox
   :straight nil
-  :after org
-  :defer t
+  ;; :after org
+  ;; :defer t
   :config
 
   ;;(defadvice org-export-output-file-name (before org-add-export-dir activate)
@@ -1800,7 +1789,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 #+begin_src emacs-lisp
 (use-package ox-latex
   :straight nil
-  :after ox
+  ;; :after ox
   ;; :demand t
   :custom
   (org-latex-compiler                    "lualatex"                      )
@@ -1841,7 +1830,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 #+begin_src emacs-lisp
 (use-package ox-odt
   :straight nil
-  :after ox
+  ;; :after ox
   :hook
   (after-init-hook . (lambda ()
                        (evil-define-key 'normal org-mode-map (kbd "SPC o x d") 'org-odt-export-to-odt)
@@ -1869,7 +1858,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 #+begin_src emacs-lisp
 (use-package ox-html
   :straight nil
-  :after ox
+  ;; :after ox
   :demand t
   :custom
   (org-html-validation-link              nil) ;; Don't show validation link
@@ -1894,7 +1883,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 *** =org-re-reveal=
 #+begin_src emacs-lisp
 (use-package org-re-reveal
-  :after ox
+  ;; :after ox
   :straight t
   :hook
   (after-init-hook . (lambda ()
