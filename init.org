@@ -204,7 +204,6 @@ mark or parenthesis.
   )
 #+end_src
 
-
 * Undo and Trash
 ** =vundo=: visual undo
 #+begin_src emacs-lisp
@@ -471,6 +470,7 @@ mark or parenthesis.
               ( "M-f" . forward-word ))
   :hook
   (after-init-hook . (lambda ()
+                        (evil-define-key 'normal Info-mode-map (kbd "SPC")          nil)
                           (call-process-shell-command
                            "notify-send \"Emacs\" \"Emacs startup initialized\"")))
   )
@@ -1377,7 +1377,8 @@ https://stackoverflow.com/questions/78982629/in-emacs-how-to-prevent-org-babel-d
         ("SPC n L B"  .  'denote-backlinks              )
         ("SPC n L a"  .  'denote-add-links              ))
   :custom
-  (denote-excluded-directories-regexp  ".*export_.*\\|.*website.*")
+  ;; (denote-excluded-directories-regexp  ".*export_.*\\|.*website.*")
+  (denote-excluded-directories-regexp ".*export_.*\\|.*website.*\\|\\`data\\'\\|\\`data_large_untracked\\'")
   (denote-directory (mapcar             ;; dynamically creating list based on directory name
                      (lambda (y) (concat "~/BrainDump/" y))
                      (seq-filter
@@ -2750,9 +2751,13 @@ environment.systemPackages = with pkgs; [
   :mode ("\\.pdf\\'"     . pdf-view-mode)
   :hook
   (after-init-hook . pdf-tools-install)
+
   (pdf-view-mode-hook . (lambda () (interactive) (blink-cursor-mode-1)));; this was causing pdf-view-mode's border to blink annoyingly
-  (pdf-view-mode-hook . pdf-view-roll-minor-mode) ;; roll
+  ;; (pdf-view-mode-hook . pdf-view-roll-minor-mode) ;; roll
+  :config
+  (evil-define-key 'normal pdf-view-mode-map (kbd "SPC") nil)
   )
+
 #+end_src
 
 ** =captain= Capitalizes first word of sentences.
