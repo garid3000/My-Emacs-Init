@@ -1974,7 +1974,7 @@ ref: [[https://emacs.stackexchange.com/a/7989/38482][this answer on emacs-stacke
 (use-package f :straight t)
 #+end_src
 
-*** =org-ipe=
+*** COMMENT =org-ipe=
 #+begin_src emacs-lisp
 (use-package org-ipe
   :after (f org)
@@ -2420,8 +2420,8 @@ Emacs Speaks Statistics
 #+begin_src emacs-lisp
 (use-package eglot
   :straight nil
-  :hook
-  (python-base-mode-hook . eglot-ensure)
+  ;; :hook
+  ;; (python-base-mode-hook . eglot-ensure)
 
   :config
   (add-to-list 'eglot-server-programs
@@ -2564,6 +2564,10 @@ Similar to vim-signify.
   :hook
   (eshell-mode-hook   . compilation-shell-minor-mode)
   (after-init-hook . eshell-atuin-mode)
+
+  (after-init-hook . (lambda ()
+                       (evil-define-key '(normal insert) eshell-mode-map (kbd "C-r"      )   'eshell-atuin-history)
+                       ))
   )
 #+end_src
 
@@ -2572,12 +2576,13 @@ Similar to vim-signify.
 (use-package eshell-atuin
   :straight t
   :after eshell
-  :hook
-  (after-init-hook . (lambda ()
-                       (evil-define-key '(normal insert) eshell-mode-map (kbd "C-r"      )   'eshell-atuin-history)
-                       ))
   )
 #+end_src
+
+  ;; :hook
+  ;; (after-init-hook . (lambda ()
+                       ;; (evil-define-key '(normal insert) eshell-mode-map (kbd "C-r"      )   'eshell-atuin-history)
+                       ;; ))
 
 ** =harpoon=
 #+begin_src emacs-lisp
@@ -2641,11 +2646,10 @@ Probably requires external =rg= command.
   (after-init-hook . (lambda ()
                        (setopt gptel-model        'gpt-5.4-nano)
                        (setopt gptel-backend      (gptel-make-openai "OpenAI" :key 'gptel-api-key-from-auth-source))
-                       ))
 
-  ;; :config
-  ;; (setopt gptel-model        'gpt-5.4-nano)
-  ;; (setopt gptel-backend      (gptel-make-openai "OpenAI" :key 'gptel-api-key-from-auth-source))
+                       (evil-define-key 'normal git-commit-mode-map (kbd "SPC g c")   'gptel-commit)
+                       (evil-define-key 'normal git-commit-mode-map (kbd "SPC g C")   'gptel-commit-rationale)
+                       ))
   )
 #+end_src
 
@@ -2662,11 +2666,11 @@ Probably requires external =rg= command.
   :custom
   (gptel-commit-stream t)
 
-  :bind
-  (:map evil-normal-state-map 
-        ("SPC g c" . 'gptel-commit)
-        ("SPC g C" . 'gptel-commit-rationale)
-        )
+  ;; :bind
+  ;; (:map evil-normal-state-map 
+  ;;       ("SPC g c" . 'gptel-commit)
+  ;;       ("SPC g C" . 'gptel-commit-rationale)
+  ;;       )
   )
 #+end_src
 
