@@ -330,6 +330,8 @@ emacs-lisp-mode
            ";;; " (file-name-nondirectory (or (buffer-file-name) (buffer-name)))
            " ends here" n)
 
+(use    "(use-package " p  n> ":straight t" r> ")")
+
 eshell-mode
 
 (for   "for " (p "i") " in " p " { " q " }")

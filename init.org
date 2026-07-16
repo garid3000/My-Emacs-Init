@@ -446,7 +446,9 @@ mark or parenthesis.
         ("SPC t x"      . garid/open-terminal-at-current-working-dir )
         ("SPC s n f"    . narrow-to-defun                            )
         ("SPC s n w"    . widen                                      )
-        ("SPC s n SPC"  . widen                                      ))
+        ("SPC s n SPC"  . widen                                      )
+        ("SPC s p"      . proced                                     )
+        )
   (:map evil-visual-state-map
         ("SPC s n r"    . narrow-to-region                           )
         ("SPC s n f"    . narrow-to-defun                            ))
@@ -2437,6 +2439,18 @@ Emacs Speaks Statistics
                                  "-fqbn" "esp32:esp32:esp32da")))
   )
 #+end_src
+** =dumb-jump= jump to def
+#+begin_src emacs-lisp
+(use-package dumb-jump
+  :straight t
+  :ensure t
+  :custom
+  (dumb-jump-prefer-searcher      'rg)
+  (xref-show-definitions-function #'consult-xref)
+  :config
+  (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
+  )
+#+end_src
 ** =consult-eglot=: consulting with LSP
 #+begin_src emacs-lisp
 (use-package consult-eglot
@@ -3082,19 +3096,6 @@ environment.systemPackages = with pkgs; [
 #+end_src
 
 #+RESULTS:
-
-** test 
-* COMMENT Daemon
-#+begin_src emacs-lisp
-(use-package server
-  :straight nil
-  :hook
-  (after-init-hook . (lambda ()
-                     (server-start)
-                     (call-process-shell-command
-                      "notify-send \"Emacs\" \"Emacs Daemon initialized, 'emacsclient -c' should be available.\" &")
-                     )))
-#+end_src
 
 * Custom set variable:
 [[https://www.youtube.com/watch?v=tw2-rI2bxSg&t=1s][Initial idea from Systems crafter]], [[https://emacs.stackexchange.com/a/18785/38482][and code structure from this answer on emacs stackexchange]], and need to set ~enble-local-eval~ to ~t~.
