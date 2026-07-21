@@ -2187,6 +2187,7 @@ Emacs Speaks Statistics
                        (evil-define-key 'normal prog-mode-map (kbd "SPC e h")   'flymake-show-buffer-diagnostics ) 
                        (evil-define-key 'normal prog-mode-map (kbd "SPC e H")   'flymake-show-project-diagnostics) 
                        (evil-define-key 'normal prog-mode-map (kbd "SPC p r")   'xref-find-references            ) 
+                       (evil-define-key 'normal prog-mode-map (kbd "g r")       'xref-find-references            ) 
                        ))
   )
 #+end_src
@@ -2450,6 +2451,12 @@ Emacs Speaks Statistics
   :config
   (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
   )
+#+end_src
+** =imenu-list=
+#+begin_src emacs-lisp
+(use-package imenu-list
+  :straight t
+  :ensure t)
 #+end_src
 ** =consult-eglot=: consulting with LSP
 #+begin_src emacs-lisp
@@ -3000,6 +3007,7 @@ environment.systemPackages = with pkgs; [
   :straight t
   :defer t
   :custom
+  (fill-column 115)
   (apheleia-formatters-respect-fill-column t)
   :bind
   (:map evil-normal-state-map
