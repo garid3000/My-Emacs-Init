@@ -765,12 +765,106 @@ and later sets cursor at that point when you open that file.
 (use-package ibuffer
   :straight nil
   :after evil
-  :defer t
+  :ensure nil
   :bind
   (:map evil-normal-state-map
         ("SPC L i" . 'ibuffer))
-  )
-
+  :config
+  (setq ibuffer-expert t)
+  (setq ibuffer-display-summary nil)
+  (setq ibuffer-use-other-window nil)
+  (setq ibuffer-show-empty-filter-groups nil)
+  (setq ibuffer-default-sorting-mode 'filename/process)
+  (setq ibuffer-title-face 'font-lock-doc-face)
+  (setq ibuffer-use-header-line t)
+  (setq ibuffer-default-shrink-to-minimum-size nil)
+  (setq ibuffer-formats
+        '((mark modified read-only locked " "
+                (name 30 30 :left :elide)
+                " "
+                (size 9 -1 :right)
+                " "
+                (mode 16 16 :left :elide)
+                " " filename-and-process)
+          (mark " "
+                (name 16 -1)
+                " " filename)))
+  (setq ibuffer-saved-filter-groups
+        '(("Main"
+           ("Directories" (mode . dired-mode))
+           ("C++" (or
+                   (mode . c++-mode)
+                   (mode . c++-ts-mode)
+                   (mode . c-mode)
+                   (mode . c-ts-mode)
+                   (mode . c-or-c++-ts-mode)))
+           ("Python" (or
+                      (mode . python-ts-mode)
+                      (mode . c-mode)
+                      (mode . python-mode)))
+           ("Build" (or
+                     (mode . make-mode)
+                     (mode . makefile-gmake-mode)
+                     (name . "^Makefile$")
+                     (mode . change-log-mode)))
+           ("Scripts" (or
+                       (mode . shell-script-mode)
+                       (mode . shell-mode)
+                       (mode . sh-mode)
+                       (mode . lua-mode)
+                       (mode . bat-mode)))
+           ("Config" (or
+                      (mode . conf-mode)
+                      (mode . conf-toml-mode)
+                      (mode . toml-ts-mode)
+                      (mode . conf-windows-mode)
+                      (name . "^\\.clangd$")
+                      (name . "^\\.gitignore$")
+                      (name . "^Doxyfile$")
+                      (name . "^config\\.toml$")
+                      (mode . yaml-mode)))
+           ("Web" (or
+                   (mode . mhtml-mode)
+                   (mode . html-mode)
+                   (mode . web-mode)
+                   (mode . nxml-mode)))
+           ("CSS" (or
+                   (mode . css-mode)
+                   (mode . sass-mode)))
+           ("JS" (or
+                  (mode . js-mode)
+                  (mode . rjsx-mode)))
+           ("Markup" (or
+                   (mode . markdown-mode)
+                   (mode . adoc-mode)))
+           ("Org" (mode . org-mode))
+           ("LaTeX" (name . "\.tex$"))
+           ("Magit" (or
+                     (mode . magit-blame-mode)
+                     (mode . magit-cherry-mode)
+                     (mode . magit-diff-mode)
+                     (mode . magit-log-mode)
+                     (mode . magit-process-mode)
+                     (mode . magit-status-mode)))
+           ("Apps" (or
+                    (mode . elfeed-search-mode)
+                    (mode . elfeed-show-mode)))
+           ("Fundamental" (or
+                           (mode . fundamental-mode)
+                           (mode . text-mode)))
+           ("Emacs" (or
+                     (mode . emacs-lisp-mode)
+                     (name . "^\\*Help\\*$")
+                     (name . "^\\*Custom.*")
+                     (name . "^\\*Org Agenda\\*$")
+                     (name . "^\\*info\\*$")
+                     (name . "^\\*scratch\\*$")
+                     (name . "^\\*Backtrace\\*$")
+                     (name . "^\\*Messages\\*$"))))))
+  :hook
+  (ibuffer-mode-hook . (lambda ()
+                    (ibuffer-switch-to-saved-filter-groups "Main")))
+)
 #+end_src
 
 ** =popper=                                                                     :by_karthink:
@@ -784,7 +878,7 @@ and later sets cursor at that point when you open that file.
          ("`" .      popper-cycle )
          ("q" .      popper-close-latest ))
   :custom
-  (popper-window-height 15)
+  (popper-window-height 10)
   (popper-reference-buffers '("\\*Messages\\*"
                               "\\*eldoc\\*"
                               "\\*eldoc.*\\*"
@@ -971,7 +1065,8 @@ and later sets cursor at that point when you open that file.
 #+name: lst_org
 #+begin_src emacs-lisp
 (use-package org
-  :straight t
+  ;; :straight t
+  :straight (:type built-in)
   :demand t ;;
   ;; :defer t
   :delight "org"
@@ -1169,6 +1264,9 @@ and later sets cursor at that point when you open that file.
                        (evil-define-key 'normal org-mode-map (kbd "SPC o s y"    ) 'org-copy-subtree                               )
                        (evil-define-key 'normal org-mode-map (kbd "z u"          ) 'garid/org-up-heading-dwim                      )
 
+                       (evil-define-key 'normal org-mode-map (kbd "z j"          ) 'garid/org-up-heading-next-dwim                 )
+                       (evil-define-key 'normal org-mode-map (kbd "z k"          ) 'garid/org-up-heading-prev-dwim                 )
+
 
                        (evil-define-key '(normal visual) org-mode-map (kbd "SPC o t"  ) 'org-todo       )
                        (evil-define-key '(normal visual) org-mode-map (kbd "SPC o l i") 'org-insert-link)             
@@ -1254,6 +1352,19 @@ and later sets cursor at that point when you open that file.
                          (if (org-at-heading-p)
                              (org-up-heading arg)
                            (org-back-to-heading t)))
+
+
+                       (defun garid/org-up-heading-next-dwim (&optional arg)
+                         (interactive "p")
+                         (garid/org-up-heading-dwim 1)
+                         (org-forward-heading-same-level 1))
+
+                       (defun garid/org-up-heading-prev-dwim (&optional arg)
+                         (interactive "p")
+                         (garid/org-up-heading-dwim 1)
+                         (org-backward-heading-same-level 1))
+
+                       
                        ))
   )
 #+end_src
