@@ -540,6 +540,25 @@ mark or parenthesis.
   )
 #+end_src
 
+** flycheck
+#+begin_src emacs-lisp
+;;; package --- Summary
+;;; Commentary:
+
+;;; Code:
+(use-package flycheck
+  :straight t
+  :after evil
+  :defer t
+  :bind (:map evil-normal-state-map
+              ("SPC z f" . 'flycheck-mode)
+              ("SPC z n" . 'flycheck-next-error)
+              ("SPC z p" . 'flycheck-previous-error)
+              ("SPC z l" . 'flycheck-list-errors)
+              ("SPC z F" . 'flycheck-annotate-mode)
+              ))
+#+end_src
+
 ** =imenu=
 #+begin_src emacs-lisp
 (use-package imenu
