@@ -2588,8 +2588,10 @@ Emacs Speaks Statistics
 
   :config
   (add-to-list 'eglot-server-programs
-               '(python-mode . ("pyright-langserver"      "--stdio")))
-  ;;           '(python-mode . ("basedpyright-langserver" "--stdio")))
+               '(python-mode . ("pyrefly" "lsp")))
+  ;; (add-to-list 'eglot-server-programs
+  ;;              '(python-mode . ("pyright-langserver"      "--stdio")))
+  ;;              '(python-mode . ("basedpyright-langserver" "--stdio")))
   (add-to-list 'eglot-server-programs
                '(org-mode . ("harper-ls" "--stdio")))
   (add-to-list 'eglot-server-programs
@@ -2600,7 +2602,7 @@ Emacs Speaks Statistics
                                  "-fqbn" "esp32:esp32:esp32da")))
   )
 #+end_src
-** =dumb-jump= jump to def
+** COMMENT =dumb-jump= jump to def
 #+begin_src emacs-lisp
 (use-package dumb-jump
   :straight t
