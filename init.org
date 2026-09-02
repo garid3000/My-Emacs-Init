@@ -130,19 +130,61 @@ run:
   (evil-want-keybinding         nil)  ;;  these
 
   :bind
+  ("M-1"   . garid/tab-select-by-number)  ;; tab
+  ("M-2"   . garid/tab-select-by-number)  ;; tab
+  ("M-3"   . garid/tab-select-by-number)  ;; tab
+  ("M-4"   . garid/tab-select-by-number)  ;; tab
+  ("M-5"   . garid/tab-select-by-number)  ;; tab
+  ("M-6"   . garid/tab-select-by-number)  ;; tab
+  ("M-7"   . garid/tab-select-by-number)  ;; tab
+  ("M-8"   . garid/tab-select-by-number)  ;; tab
+  ("M-9"   . garid/tab-select-by-number)  ;; tab
+
   (:repeat-map evil/window-related
-                     ("<" . evil-window-decrease-width   )
-                     (">" . evil-window-increase-width   )
-                     ("r" . evil-window-rotate-downwards )
-                     ("-" . evil-window-decrease-height  )
-                     ("+" . evil-window-increase-height  ))
+               ("<" . evil-window-decrease-width   )
+               (">" . evil-window-increase-width   )
+               ("r" . evil-window-rotate-downwards )
+               ("-" . evil-window-decrease-height  )
+               ("+" . evil-window-increase-height  ))
+
+  (:repeat-map evil/tab-related
+               ("<"   . tab-previous)               ;; tab
+               (">"   . tab-next    )               ;; tab
+               ("1"   . garid/tab-select-by-number) ;; tab
+               ("2"   . garid/tab-select-by-number) ;; tab
+               ("3"   . garid/tab-select-by-number) ;; tab
+               ("4"   . garid/tab-select-by-number) ;; tab
+               ("5"   . garid/tab-select-by-number) ;; tab
+               ("6"   . garid/tab-select-by-number) ;; tab
+               ("7"   . garid/tab-select-by-number) ;; tab
+               ("8"   . garid/tab-select-by-number) ;; tab
+               ("9"   . garid/tab-select-by-number) ;; tab
+               ("C-w" . tab-close)                  ;; tab
+               )
+  
 
   (:map evil-normal-state-map
-        ("SPC a" . evil-avy-goto-char-2))
+        ("SPC a" . evil-avy-goto-char-2)
+        ("g <"   . tab-previous)   ;; tab
+        ("g >"   . tab-next    )   ;; tab
+        ("g x"   . tab-close   )   ;; tab
+        ("g C-w" . tab-close   )   ;; tab
+        ("C-t"   . tab-new     )   ;; tab
+        )
 
   :hook
-  (after-init-hook . evil-mode) 
+  (after-init-hook . evil-mode)
+
+  :config
+  (defun garid/tab-select-by-number ()
+    (interactive)
+    (tab-select (- (event-basic-type last-command-event) ?0)))
+
+
   )
+
+
+
 #+end_src
 
 ** =evil-textobj-tree-sitter=: tree-sitter based visual selection:
@@ -401,7 +443,11 @@ mark or parenthesis.
               ("SPC s l i" . indent-bars-mode))
   )
 #+end_src
-
+** =vim-tab-bar=
+#+begin_src emacs-lisp
+(use-package vim-tab-bar
+  :straight t)
+#+end_src
 * Configuration of some Built-in Packages
 ** =abbrev=
 
@@ -2772,12 +2818,12 @@ Similar to vim-signify.
 (use-package harpoon
   :straight t
   :bind
-  ("M-1"   .  harpoon-go-to-1           )
-  ("M-2"   .  harpoon-go-to-2           )
-  ("M-3"   .  harpoon-go-to-3           )
-  ("M-4"   .  harpoon-go-to-4           )
-  ("M-5"   .  harpoon-go-to-5           )
-  ("M-6"   .  harpoon-go-to-6           )
+  ;; ("M-1"   .  harpoon-go-to-1           )
+  ;; ("M-2"   .  harpoon-go-to-2           )
+  ;; ("M-3"   .  harpoon-go-to-3           )
+  ;; ("M-4"   .  harpoon-go-to-4           )
+  ;; ("M-5"   .  harpoon-go-to-5           )
+  ;; ("M-6"   .  harpoon-go-to-6           )
   ("<f9>"  .  harpoon-quick-menu-hydra  )
   (:map evil-normal-state-map
         ("SPC B H"   .  'harpoon-quick-menu-hydra))
