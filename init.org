@@ -159,7 +159,9 @@ run:
                ("7"   . garid/tab-select-by-number) ;; tab
                ("8"   . garid/tab-select-by-number) ;; tab
                ("9"   . garid/tab-select-by-number) ;; tab
-               ("C-w" . tab-close)                  ;; tab
+               ("C-w" . tab-close                 ) ;; tab
+               ("C-<" . garid/tab-move-to-left    ) ;; tab
+               ("C->" . garid/tab-move-to-right   ) ;; tab
                )
   
 
@@ -170,6 +172,9 @@ run:
         ("g x"   . tab-close   )   ;; tab
         ("g C-w" . tab-close   )   ;; tab
         ("C-t"   . tab-new     )   ;; tab
+        ("g C-<" . garid/tab-move-to-left )   ;; tab
+        ("g C->" . garid/tab-move-to-right)   ;; tab
+
         )
 
   :hook
@@ -180,7 +185,13 @@ run:
     (interactive)
     (tab-select (- (event-basic-type last-command-event) ?0)))
 
+  (defun garid/tab-move-to-left ()
+    (interactive)
+    (tab-move -1))
 
+  (defun garid/tab-move-to-right ()
+    (interactive)
+    (tab-move +1))
   )
 
 
