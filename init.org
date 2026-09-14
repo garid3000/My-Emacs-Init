@@ -172,6 +172,7 @@ run:
         ("g x"   . tab-close   )   ;; tab
         ("g C-w" . tab-close   )   ;; tab
         ("C-t"   . tab-new     )   ;; tab
+        ("g C-t"   . tab-new     )   ;; tab
         ("g C-<" . garid/tab-move-to-left )   ;; tab
         ("g C->" . garid/tab-move-to-right)   ;; tab
 
@@ -457,7 +458,10 @@ mark or parenthesis.
 ** =vim-tab-bar=
 #+begin_src emacs-lisp
 (use-package vim-tab-bar
-  :straight t)
+  :straight t
+  :hook
+  (tab-bar-mode-hookk . vim-tab-bar-mode)
+  )
 #+end_src
 * Configuration of some Built-in Packages
 ** =abbrev=
@@ -1515,6 +1519,8 @@ and later sets cursor at that point when you open that file.
 #+end_src
 *** =org-contacts=
 #+begin_src emacs-lisp
+(setq org-contacts-capf-completing t)
+
 (use-package org-contacts
   :straight t
   :after org
