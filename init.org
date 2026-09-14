@@ -3347,6 +3347,13 @@ environment.systemPackages = with pkgs; [
   )
 #+end_src
 
+** pass
+#+begin_src emacs-lisp
+(use-package pass
+  :straight t
+  :bind (:map evil-normal-state-map ("SPC p a" . pass)))
+#+end_src
+
 * Custom set variable:
 [[https://www.youtube.com/watch?v=tw2-rI2bxSg&t=1s][Initial idea from Systems crafter]], [[https://emacs.stackexchange.com/a/18785/38482][and code structure from this answer on emacs stackexchange]], and need to set ~enble-local-eval~ to ~t~.
 
