@@ -177,6 +177,9 @@ run:
         ("g C->" . garid/tab-move-to-right)   ;; tab
 
         )
+  (:map evil-visual-state-map
+        ("g c"   . garid/calc-region)   ;; tab
+        )
 
   :hook
   (after-init-hook . evil-mode)
@@ -193,10 +196,21 @@ run:
   (defun garid/tab-move-to-right ()
     (interactive)
     (tab-move +1))
-  )
 
+  (defun garid/calc-region ()
+    (interactive)
 
+    (unless (use-region-p) (user-error "No active region"))
 
+    (let* ((beg (region-beginning))
+           (end (region-end))
+           (text (buffer-substring-no-properties beg end))
+           (result (calc-eval text))
+           )
+      (delete-region beg end)
+      (insert (calc-eval text))
+      (message (concat text " => " result))
+      )))
 #+end_src
 
 ** =evil-textobj-tree-sitter=: tree-sitter based visual selection:
@@ -3033,6 +3047,16 @@ environment.systemPackages = with pkgs; [
 #+begin_src emacs-lisp
 (use-package tmr :straight t :defer t)
 #+end_src
+** COMMENT typewriterr
+#+begin_src emacs-lisp
+(use-package typewriter
+  :straight (typewriter
+             :type git
+             :host github
+             :branch "master"
+             :repo "enricoflor/typewriter.el"))
+#+end_src
+
 * Email
 ** =notmuch=
 #+begin_src emacs-lisp
