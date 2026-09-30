@@ -474,7 +474,7 @@ mark or parenthesis.
 (use-package vim-tab-bar
   :straight t
   :hook
-  (tab-bar-mode-hookk . vim-tab-bar-mode)
+  (after-init-hook . vim-tab-bar-mode)
   )
 #+end_src
 * Configuration of some Built-in Packages
