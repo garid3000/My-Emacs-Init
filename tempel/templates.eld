@@ -502,6 +502,7 @@ org-mode :when (re-search-backward "^\\S-*$" (line-beginning-position) 'noerror)
 (gnuplot     "#+begin_src gnuplot :var data=" (p "table") " :file " (p "plot.png") n r n "#+end_src") ;;  :post (org-edit-src-code))
 (nix         "#+begin_src nix" n q n "#+end_src")
 (py          "#+begin_src python :async yes" n q n "#+end_src")
+(scheme      "#+begin_src scheme :session scheme-repl" n q n "#+end_src")
 (rlang       "#+begin_src R" n q n "#+end_src")
 (shell       "#+begin_src sh :shebang #!/usr/bin/env bash :eval no-export :results output :exports both" n r n "#+end_src")
 (src         "#+begin_src LANG" q n r n "#+end_src")
@@ -517,7 +518,7 @@ org-mode :when (re-search-backward "^#\\+reveal\\b" (line-beginning-position) 'n
 
 
 org-mode :when (re-search-backward "^#\\+begin_src\\b" (line-beginning-position) 'noerror)
-(LANG       ""          :post (garid/choose-from-list-and-insert-it '("sh" "python" "conf" "nix")) )
+(LANG       ""          :post (garid/choose-from-list-and-insert-it '("sh" "python" "conf" "nix" "emacs-lisp" "scheme")) )
 (async      "session "  :post (garid/choose-from-list-and-insert-it '("yes" "no")))
 (cache      "cache "    :post (garid/choose-from-list-and-insert-it '("yes" "no")))
 (comments   "comments " :post (garid/choose-from-list-and-insert-it '("noweb" "link" "no" "org" "both")))

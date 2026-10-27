@@ -302,6 +302,28 @@ mark or parenthesis.
   )
 #+end_src
 
+** =evil-numbers= 
+
+- What does it do :: It increments (or decrements) the numeric value under the cursor, just like classic Vim.
+
+#+begin_src emacs-lisp
+(use-package evil-numbers
+  :straight t
+  :after evil
+  :bind (:map evil-normal-state-map
+              ("g +" . evil-numbers/inc-at-pt)
+              ("g -" . evil-numbers/dec-at-pt  )
+              :repeat-map garid/evil-number-repeating
+              ("+" . evil-numbers/inc-at-pt  )
+              ("-" . evil-numbers/dec-at-pt  )
+              )
+  )
+#+end_src
+
+
+
+
+
 * Undo and Trash
 ** =vundo=: visual undo
 #+begin_src emacs-lisp
@@ -475,6 +497,17 @@ mark or parenthesis.
   :straight t
   :hook
   (after-init-hook . vim-tab-bar-mode)
+  :bind (
+         :repeat-map garid/tab-repeat
+         ("m" .      tab-move )
+         ("o" .      tab-next )
+         ("O" .      tab-previous )
+         ("0" .      tab-close )
+         ("1" .      tab-close-other )
+         ("2" .      tab-new )
+         ("n" .      tab-duplicate )
+         ("r" .      tab-rename )
+         )
   )
 #+end_src
 * Configuration of some Built-in Packages
@@ -1025,6 +1058,7 @@ and later sets cursor at that point when you open that file.
                               compilation-mode
                               gptel-commit-rationale-mode
                               world-clock-mode 
+                              edraw-property-editor-mode
                               ))
 
   :hook
@@ -1319,6 +1353,7 @@ and later sets cursor at that point when you open that file.
                                                       (python     . t)   ;; (nim        . t)
                                                       (shell      . t)   ;; (nix        . t)
                                                       (sqlite     . t)
+                                                      (scheme     . t)
                                                       (R          . t)
                                                       (plantuml   . t)))
 
@@ -2432,7 +2467,7 @@ Emacs Speaks Statistics
 ** =python=
 #+begin_src emacs-lisp
 (use-package python
-  :straight t
+  ;;:straight t
   :bind (("M-["    . python-nav-backward-defun     )
          ("M-]"    . python-nav-forward-defun      )
 
@@ -2518,6 +2553,19 @@ Emacs Speaks Statistics
                                (scad       . t)
                                ))
 #+end_example
+
+** scheme related
+
+#+begin_src emacs-lisp
+(use-package geiser :straight t)
+(use-package geiser-guile :straight t)
+;; (setq geiser-default-implementation 'racket)
+;; (setq geiser-scheme-implementation 'racket)
+#+end_src
+
+#+RESULTS:
+: #s(hash-table data (:use-package (27349 40807 288040 957000) :init (27349 40807 288038 663000) :config (27349 40807 288027 562000) :config-secs (0 0 1 593000) :init-secs (0 0 109245 696000) :use-package-secs (0 0 816961 567000)))
+
 
 * Coding input
 ** =tempel=: snippet system
@@ -3024,6 +3072,54 @@ environment.systemPackages = with pkgs; [
 
 #+end_src
 
+** also pdf reader 
+#+begin_src emacs-lisp
+;; (use-package reader)
+#+end_src
+
+It's faster pdf or document reader. At [[https://codeberg.org/MonadicSheep/emacs-reader#]] 
+
+Also needed to change home nix:
+
+  programs.emacs = {
+    enable = true;
+    package = (pkgs_unstable.emacsPackagesFor pkgs_unstable.emacs31-pgtk).emacsWithPackages (
+      epkgs: with epkgs; [
+        epkgs.jinx
+        epkgs.eglot-booster
+        treesit-grammars.with-all-grammars
+
+        (epkgs.melpaBuild {
+          ename = "reader";
+          pname = "emacs-reader";
+          version = "20250630";
+
+          src = pkgs_unstable.fetchFromGitea {
+            domain = "codeberg.org";
+            owner = "divyaranjan";
+            repo = "emacs-reader";
+            rev = "0.3.2"; # should tag?
+            hash = "sha256-rZ+1PgRS68QN0yXdYyEJafJmbCceaKeDQhT+GfsPiFA=";
+
+          };
+
+          files = ''(:defaults "render-core.so")'';
+          nativeBuildInputs = with pkgs_unstable; [
+            pkg-config
+            gnumake
+          ];
+          buildInputs = with pkgs_unstable; [
+            gcc
+            mupdf
+          ];
+          preBuild = "make clean all";
+        })
+
+      ]
+    );
+  };
+
+  
 ** =captain= Capitalizes first word of sentences.
 #+begin_src emacs-lisp
 (use-package captain

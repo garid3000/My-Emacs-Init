@@ -60,3 +60,4 @@
 /ytr/thumbnails/*.jpg
 /ytr/
 /calc.elc
+calc.el
